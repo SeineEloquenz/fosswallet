@@ -69,4 +69,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
 
+
+    implementation("com.google.zxing:core:3.5.2")
 }
