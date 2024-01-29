@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -32,28 +33,31 @@ fun PassCard(
         }
     ) {
         Row(
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxWidth()
         ) {
             Column {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth()
+                        .padding(5.dp)
                 )
                 Text(
                     text = date,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(5.dp)
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
             Image(
                 bitmap = icon.asImageBitmap(),
                 contentDescription = "logo",
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .align(Alignment.CenterVertically)
             )
         }
