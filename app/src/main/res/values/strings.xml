@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FossWallet</string>
+    <string name="settings">Settings</string>
+    <string name="update">Update</string>
+    <string name="back">Back</string>
+    <string name="permission_rationale">Without the permission(s), Wallet does not work correctly</string>
+    <string name="request_permissions">Request Permission</string>
+    <string name="wallet">Wallet</string>
+</resources>
