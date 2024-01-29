@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -93,18 +92,6 @@ fun WalletScaffold(
                         }
                     }
                 },
-                actions = {
-                    if (!toolWindow) {
-                        IconButton(onClick = {
-                            //TODO
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Sync,
-                                contentDescription = stringResource(R.string.update)
-                            )
-                        }
-                    }
-                }
             )
         },
         bottomBar = {
