@@ -15,6 +15,7 @@ object PassLoader {
     fun load(inputStream: InputStream): RawPass {
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
+        var icon: Bitmap? = null
         ZipInputStream(inputStream).use { zip ->
             var entry = zip.nextEntry
 
@@ -40,17 +41,28 @@ object PassLoader {
                         } else {
                             logo = image
                         }
+                    } else if (entry.name == ("icon.png")) {
+                        val array = baos.toByteArray()
+                        val image = BitmapFactory.decodeByteArray(array, 0, array.size)
+                        if (image == null) {
+                            Log.w(TAG, "Failed parsing image from pkpass!")
+                        } else {
+                            icon = image
+                        }
                     }
                 }
             }
         }
         if (logo == null) {
             //TODO use actual placeholder bitmap
-            logo = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+            logo = icon ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        }
+        if (icon == null) {
+            icon = logo
         }
         //TODO check signature before returning
         if (passJson != null) {
-            return RawPass(passJson!!, logo!!)
+            return RawPass(passJson!!, icon!!, logo!!)
         } else {
             throw InvalidPassException()
         }
