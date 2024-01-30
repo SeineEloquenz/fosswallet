@@ -21,19 +21,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import nz.eloque.foss_wallet.model.PassLoader
+import nz.eloque.foss_wallet.model.PassStore
 import nz.eloque.foss_wallet.model.RawPass
 import nz.eloque.foss_wallet.ui.components.PassCard
 
 @Composable
 fun WalletView(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val contentResolver = LocalContext.current.contentResolver
 
-    val _passes = remember { MutableStateFlow(listOf<RawPass>()) }
+    val _passes = remember { MutableStateFlow(listOf<String>()) }
     val passes by remember { _passes }.collectAsState()
     val state = rememberLazyListState()
 
@@ -41,7 +44,8 @@ fun WalletView(
         println("selected file URI $it")
         contentResolver.openInputStream(it!!)?.use { inputStream ->
             val loaded = PassLoader.load(inputStream)
-            _passes.update { it + loaded }
+            val id = PassStore.add(loaded)
+            _passes.update { it + id }
 
         }
     }
@@ -57,8 +61,12 @@ fun WalletView(
                 .fillMaxWidth()
                 .weight(9f)
         ) {
-            items(passes) { pass ->
+            items(passes) { passId ->
+                val pass = PassStore.get(passId)
                 PassCard(
+                    onClick = {
+                        navController.navigate("pass/${passId}")
+                    },
                     icon = pass.icon,
                     description = pass.passJson.getString("description"),
                     date = "placeholder"

@@ -31,6 +31,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.PassStore
+import nz.eloque.foss_wallet.ui.components.PassView
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
@@ -57,8 +59,12 @@ fun WalletApp(
                     navController = navController,
                     title = stringResource(id = R.string.wallet)
                 ) {
-                    WalletView()
+                    WalletView(navController)
                 }
+            }
+            composable("pass/{passId}") { backStackEntry ->
+                val passId = backStackEntry.arguments?.getString("passId")!!
+                PassView(rawPass = PassStore.get(passId))
             }
         }
     }
