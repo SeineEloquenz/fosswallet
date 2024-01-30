@@ -59,19 +59,19 @@ class PassLoader(
                             passJson = JSONObject(content)
                             println("Content:\n$content")
                         }
-                        ("logo.png") -> {
+                        "logo.png", "logo@2x.png" -> {
                             logo = loadImage(baos)
                         }
-                        ("icon.png") -> {
+                        "icon.png", "icon@2x.png" -> {
                             icon = loadImage(baos)
                         }
-                        ("strip.png") -> {
+                        "strip.png", "strip@2x.png" -> {
                             strip = loadImage(baos)
                         }
-                        "thumbnail.png" -> {
+                        "thumbnail.png", "thumbnail@2x.png" -> {
                             thumbnail = loadImage(baos)
                         }
-                        ("footer.png") -> {
+                        "footer.png", "footer@2x.png" -> {
                             footer = loadImage(baos)
                         }
                     }
