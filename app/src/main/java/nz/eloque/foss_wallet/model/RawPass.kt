@@ -3,4 +3,9 @@ package nz.eloque.foss_wallet.model
 import android.graphics.Bitmap
 import org.json.JSONObject
 
-class RawPass(val passJson: JSONObject, val icon: Bitmap, val logo: Bitmap)
+class RawPass(
+    val passJson: JSONObject,
+    val icon: Bitmap,
+    val logo: Bitmap?,
+    val strip: Bitmap?,
+    val footer: Bitmap?)

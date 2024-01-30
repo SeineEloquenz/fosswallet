@@ -6,4 +6,5 @@
     <string name="permission_rationale">Without the permission(s), Wallet does not work correctly</string>
     <string name="request_permissions">Request Permission</string>
     <string name="wallet">Wallet</string>
+    <string name="image">Image</string>
 </resources>

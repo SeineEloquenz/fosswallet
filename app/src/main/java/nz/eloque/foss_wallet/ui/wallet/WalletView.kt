@@ -68,7 +68,7 @@ fun WalletView(
                         navController.navigate("pass/${passId}")
                     },
                     icon = pass.icon,
-                    description = pass.passJson.getString("description"),
+                    description = pass.description,
                     date = "placeholder"
                 )
             }

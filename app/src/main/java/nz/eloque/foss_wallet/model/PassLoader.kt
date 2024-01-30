@@ -16,6 +16,8 @@ object PassLoader {
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
         var icon: Bitmap? = null
+        var strip: Bitmap? = null
+        var footer: Bitmap? = null
         ZipInputStream(inputStream).use { zip ->
             var entry = zip.nextEntry
 
@@ -29,28 +31,34 @@ object PassLoader {
                     while (zip.read(buffer).also { bytesRead = it } != -1) {
                         baos.write(buffer, 0, bytesRead)
                     }
-                    if (entry.name == "pass.json") {
-                        val content = baos.toString("UTF-8")
-                        passJson = JSONObject(content)
-                        println("Content:\n$content")
-                    } else if (entry.name == ("logo.png")) {
-                        logo = loadImage(baos)
-                    } else if (entry.name == ("icon.png")) {
-                        icon = loadImage(baos)
+                    when (entry.name) {
+                        "pass.json" -> {
+                            val content = baos.toString("UTF-8")
+                            passJson = JSONObject(content)
+                            println("Content:\n$content")
+                        }
+                        ("logo.png") -> {
+                            logo = loadImage(baos)
+                        }
+                        ("icon.png") -> {
+                            icon = loadImage(baos)
+                        }
+                        ("strip.png") -> {
+                            strip = loadImage(baos)
+                        }
+                        ("footer.png") -> {
+                            footer = loadImage(baos)
+                        }
                     }
                 }
             }
         }
-        if (logo == null) {
-            //TODO use actual placeholder bitmap
-            logo = icon ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-        }
         if (icon == null) {
-            icon = logo
+            icon = logo ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         }
         //TODO check signature before returning
         if (passJson != null) {
-            return RawPass(passJson!!, icon!!, logo!!)
+            return RawPass(passJson!!, icon!!, logo, strip, footer)
         } else {
             throw InvalidPassException()
         }
@@ -60,7 +68,7 @@ object PassLoader {
         val array = baos.toByteArray()
         val image = BitmapFactory.decodeByteArray(array, 0, array.size)
         return if (image == null) {
-            Log.w(TAG, "Failed parsing image from pkpass!")
+            Log.w(TAG, "Failed parsing image from pkpass! Is it missing?")
             null
         } else {
             image
