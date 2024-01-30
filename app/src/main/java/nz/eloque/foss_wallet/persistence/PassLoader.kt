@@ -18,6 +18,15 @@ import java.io.InputStream
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
+
+
+private class RawPass(
+    val passJson: JSONObject,
+    val icon: Bitmap,
+    val logo: Bitmap?,
+    val strip: Bitmap?,
+    val footer: Bitmap?)
+
 class PassLoader(
     private val context: Context
 ) {
