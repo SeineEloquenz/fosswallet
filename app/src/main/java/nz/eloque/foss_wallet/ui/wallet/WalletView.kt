@@ -11,11 +11,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +32,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.components.PassCard
+import nz.eloque.foss_wallet.ui.components.SwipeBackground
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletView(
     navController: NavController,
@@ -60,13 +69,31 @@ fun WalletView(
                 .weight(9f)
         ) {
             items(list.value.passes) { pass ->
-                PassCard(
-                    onClick = {
-                        navController.navigate("pass/${pass.id}")
-                    },
-                    icon = pass.icon,
-                    description = pass.description,
-                    date = "placeholder"
+                val currentPass by rememberUpdatedState(pass)
+                val dismissState = rememberDismissState(
+                    positionalThreshold = { 150.dp.toPx() },
+                    confirmValueChange = {
+                        if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
+                            coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(currentPass) }
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = { SwipeBackground(dismissState, Icons.Filled.Delete, Icons.Filled.Delete) },
+                    dismissContent = {
+                        PassCard(
+                            onClick = {
+                                navController.navigate("pass/${pass.id}")
+                            },
+                            icon = pass.icon,
+                            description = pass.description,
+                            date = "placeholder"
+                        )
+                    }
                 )
             }
         }
