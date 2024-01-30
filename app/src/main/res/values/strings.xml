@@ -12,4 +12,5 @@
     <string name="serial_number">Serial Number</string>
     <string name="organization">Organization</string>
     <string name="no_barcode_format_given">No Barcode format given! Defaulting to QR-Code. This Code might not get scanned correctly</string>
+    <string name="flip">Flip</string>
 </resources>

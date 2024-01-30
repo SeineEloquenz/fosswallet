@@ -2,9 +2,11 @@ package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -86,12 +88,23 @@ fun WalletApp(
                     }
                 }
 
+                val passViewFront = remember { mutableStateOf(true) }
+
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(R.string.pass),
-                    toolWindow = true
+                    toolWindow = true,
+                    actions = {
+                        IconButton(onClick = { passViewFront.value = !passViewFront.value }) {
+                            Icon(
+                                imageVector = Icons.Filled.Flip,
+                                contentDescription = stringResource(R.string.flip)
+                            )
+                        }
+                    }
+
                 ) {
-                    PassView(pass.value)
+                    PassView(pass.value, passViewFront.value)
                 }
             }
         }
@@ -106,6 +119,7 @@ fun WalletScaffold(
     title: String = stringResource(R.string.wallet),
     toolWindow: Boolean = false,
     showBack: Boolean = true,
+    actions: @Composable RowScope.() -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val items = listOf(
@@ -125,6 +139,7 @@ fun WalletScaffold(
                         }
                     }
                 },
+                actions = actions
             )
         },
         bottomBar = {

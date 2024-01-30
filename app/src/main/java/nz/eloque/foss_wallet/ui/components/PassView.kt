@@ -12,14 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -36,6 +30,7 @@ import java.time.Instant
 @Composable
 fun PassView(
     pass: Pass,
+    showFront: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -71,34 +66,20 @@ fun PassView(
             )
         }
         PassImage(pass.strip)
-        var tabIndex by remember { mutableIntStateOf(0) }
-        val tabs = listOf("Front", "Back")
-        TabRow(selectedTabIndex = tabIndex) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(title) },
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index }
-                )
-            }
-        }
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier
                 .padding(10.dp)
         ) {
-            when (tabIndex) {
-                0 -> {
-                    BarcodesView(pass.barCodes)
-                    PassFields(pass.primaryFields)
-                    PassFields(pass.secondaryFields)
-                    PassFields(pass.auxiliaryFields)
-                }
-                1 -> {
-                    pass.serialNumber?.let { PassField(stringResource(R.string.serial_number), it) }
-                    pass.organization?.let { PassField(stringResource(R.string.organization), it) }
-                    PassFields(pass.backFields)
-                }
+            if (showFront) {
+                BarcodesView(pass.barCodes)
+                PassFields(pass.primaryFields)
+                PassFields(pass.secondaryFields)
+                PassFields(pass.auxiliaryFields)
+            } else {
+                pass.serialNumber?.let { PassField(stringResource(R.string.serial_number), it) }
+                pass.organization?.let { PassField(stringResource(R.string.organization), it) }
+                PassFields(pass.backFields)
             }
         }
         PassImage(pass.logo)
