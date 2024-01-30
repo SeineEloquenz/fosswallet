@@ -4,9 +4,9 @@ object PassStore {
     private var cnt: Int = 0
     private val passes: MutableMap<String, Pass> = HashMap()
 
-    fun add(rawPass: RawPass): String {
+    fun add(pass: Pass): String {
         val id = "${cnt++}"
-        passes[id] = Pass.from(rawPass)
+        passes[id] = pass
         return id
     }
 

@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.wallet
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -34,16 +35,17 @@ fun WalletView(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val contentResolver = LocalContext.current.contentResolver
+    val context = LocalContext.current
+    val contentResolver = context.contentResolver
 
     val _passes = remember { MutableStateFlow(listOf<String>()) }
     val passes by remember { _passes }.collectAsState()
     val state = rememberLazyListState()
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
-        println("selected file URI $it")
-        contentResolver.openInputStream(it!!)?.use { inputStream ->
-            val loaded = PassLoader.load(inputStream)
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
+        println("selected file URI $res")
+        contentResolver.openInputStream(res!!)?.use { inputStream ->
+            val loaded = PassLoader(context).load(inputStream)
             val id = PassStore.add(loaded)
             _passes.update { it + id }
 
