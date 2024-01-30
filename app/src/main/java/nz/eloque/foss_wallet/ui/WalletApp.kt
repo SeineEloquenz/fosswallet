@@ -66,10 +66,12 @@ fun WalletApp(
             }
             composable("pass/{passId}") { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassView(
-                    pass = PassStore.get(passId),
-                    modifier = Modifier.fillMaxHeight()
-                )
+                WalletScaffold(
+                    navController = navController,
+                    title = stringResource(R.string.pass)
+                ) {
+                    PassView(PassStore.get(passId))
+                }
             }
         }
     }

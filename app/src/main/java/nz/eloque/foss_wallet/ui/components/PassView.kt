@@ -49,9 +49,7 @@ fun PassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            Modifier.padding(10.dp)
-        ) {
+        Column {
             Row(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
