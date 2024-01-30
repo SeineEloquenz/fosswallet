@@ -93,7 +93,7 @@ fun BarcodesView(
     barcodes: Set<BarCode>
 ) {
     barcodes.forEach {
-        PassImage(it.encodeAsBitmap(250, 250))
+        PassImage(it.encodeAsBitmap(1000, 1000))
     }
 }
 
@@ -106,7 +106,7 @@ fun PassImage(
         Image(
             bitmap = it.asImageBitmap(),
             contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxWidth()
         )
