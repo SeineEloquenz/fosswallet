@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.components
 
 import android.graphics.Bitmap
+import android.location.Location
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,42 +27,49 @@ fun PassCard(
     icon: Bitmap,
     description: String,
     relevantDate: Long,
+    location: Location?,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
-                .padding(5.dp)
+                .padding(12.dp)
                 .fillMaxWidth()
         ) {
-            Column(
-                modifier = Modifier.weight(5f)
+            Row(
+                horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
-                        .padding(5.dp)
+                        .weight(5f)
                 )
+                Image(
+                    bitmap = icon.asImageBitmap(),
+                    contentDescription = "logo",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .align(Alignment.CenterVertically)
+                        .weight(2f)
+                )
+            }
+            if (relevantDate != 0L) {
                 Text(
                     text = Instant.ofEpochSecond(relevantDate).prettyPrint(),
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(5.dp)
                 )
             }
-            Image(
-                bitmap = icon.asImageBitmap(),
-                contentDescription = "logo",
-                modifier = Modifier
-                    .padding(5.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(2f)
-            )
+            location?.let {
+                Text(
+                    text = location.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 }
@@ -69,5 +77,5 @@ fun PassCard(
 @Preview
 @Composable
 fun PassCardPreview() {
-    PassCard(icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), description = "KSC - HSV", relevantDate = 1)
+    PassCard(icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), description = "KSC - HSV", relevantDate = 1, location = null)
 }

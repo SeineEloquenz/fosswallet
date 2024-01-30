@@ -96,7 +96,8 @@ fun WalletView(
                         },
                         icon = pass.thumbnail ?: pass.icon,
                         description = pass.description,
-                        relevantDate = pass.relevantDate
+                        relevantDate = pass.relevantDate,
+                        location = pass.locations.firstOrNull()
                     )
                 }
             )

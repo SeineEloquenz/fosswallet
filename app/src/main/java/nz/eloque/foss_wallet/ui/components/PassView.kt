@@ -54,6 +54,7 @@ fun PassView(
                         .padding(5.dp)
                 )
                 HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
+                HeaderContent(pass.locations.firstOrNull()?.toString())
             }
             Image(
                 bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
