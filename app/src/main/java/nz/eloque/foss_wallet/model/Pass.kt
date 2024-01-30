@@ -14,10 +14,10 @@ data class PassField(val key: String, val label: String, val value: String)
 class Pass(
     val description: String,
     val icon: Bitmap,
+    val barCodes: Set<BarCode>
 ) {
     var organization: String? = null
     var type: PassType = PassType.EVENT
-    var barCode: BarCode? = null
     var serialNumber: String? = null
     var logo: Bitmap? = null
     var strip: Bitmap? = null
@@ -45,11 +45,11 @@ class Pass(
 
             return Pass(
                 description,
-                rawPass.icon
+                rawPass.icon,
+                parseBarcodes(rawPass.passJson)
             ).also { pass ->
                 pass.organization = rawPass.passJson.getString("organizationName")
                 pass.serialNumber = rawPass.passJson.getString("serialNumber")
-                pass.barCode = parseBarcode(rawPass.passJson)
                 pass.logo = rawPass.logo
                 pass.strip = rawPass.strip
                 pass.footer = rawPass.footer
@@ -73,31 +73,38 @@ class Pass(
             }
         }
 
-        private fun parseBarcode(passJson: JSONObject): BarCode? {
-            return try {
+        private fun parseBarcodes(passJson: JSONObject): Set<BarCode> {
+            val barcodes: MutableSet<BarCode> = LinkedHashSet()
+            try {
                 if (passJson.has("barcode")) {
-                    val barcodeJSON = passJson.getJSONObject("barcode")
-                    val barcodeFormatString = if (barcodeJSON.has("type")) {
-                        barcodeJSON.getString("type")
-                    } else {
-                        barcodeJSON.getString("format")
+                    barcodes.add(parseBarCode(passJson.getJSONObject("barcode")))
+                }
+                if (passJson.has("barcodes")) {
+                    forEach(passJson.getJSONArray("barcodes")) {
+                        barcodes.add(parseBarCode(it))
                     }
-
-                    val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
-                    val barCode = BarCode(barcodeFormat, barcodeJSON.getString("message"))
-                    if (barcodeJSON.has("altText")) {
-                        barCode.alternativeText = barcodeJSON.getString("altText")
-                    }
-                    barCode
-                } else {
-                    null
                 }
             } catch (e: JSONException) {
                 Log.i(TAG, "Error parsing barcode json")
                 Log.i(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
                 Log.i(TAG, "Exception: $e")
-                null
             }
+            return barcodes
+        }
+
+        private fun parseBarCode(barcodeJSON: JSONObject): BarCode {
+            val barcodeFormatString = if (barcodeJSON.has("type")) {
+                barcodeJSON.getString("type")
+            } else {
+                barcodeJSON.getString("format")
+            }
+
+            val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
+            val barCode = BarCode(barcodeFormat, barcodeJSON.getString("message"))
+            if (barcodeJSON.has("altText")) {
+                barCode.alternativeText = barcodeJSON.getString("altText")
+            }
+            return barCode
         }
 
         private fun collectFields(json: JSONObject, name: String, fieldContainer: MutableList<PassField>) {

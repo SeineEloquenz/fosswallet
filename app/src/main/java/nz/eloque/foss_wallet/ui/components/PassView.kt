@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.RawPass
@@ -96,7 +97,7 @@ fun PassView(
         ) {
             when (tabIndex) {
                 0 -> {
-                    PassImage(pass.barCode?.encodeAsBitmap(250, 250))
+                    BarcodesView(pass.barCodes)
                     PassFields(pass.primaryFields)
                     PassFields(pass.secondaryFields)
                     PassFields(pass.auxiliaryFields)
@@ -110,6 +111,15 @@ fun PassView(
         }
         PassImage(pass.logo)
         PassImage(pass.footer)
+    }
+}
+
+@Composable
+fun BarcodesView(
+    barcodes: Set<BarCode>
+) {
+    barcodes.forEach {
+        PassImage(it.encodeAsBitmap(250, 250))
     }
 }
 

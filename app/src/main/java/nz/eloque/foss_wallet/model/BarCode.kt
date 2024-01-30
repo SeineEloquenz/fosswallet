@@ -27,6 +27,21 @@ class BarCode(
         return bitmap
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as BarCode
+        if (format != other.format) return false
+        if (message != other.message) return false
+        return alternativeText == other.alternativeText
+    }
+
+    override fun hashCode(): Int {
+        var result = format.hashCode()
+        result = 31 * result + message.hashCode()
+        result = 31 * result + (alternativeText?.hashCode() ?: 0)
+        return result
+    }
 
     companion object {
 
