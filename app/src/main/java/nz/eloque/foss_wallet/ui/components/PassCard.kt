@@ -58,17 +58,17 @@ fun PassCard(
                         .weight(2f)
                 )
             }
-            if (relevantDate != 0L) {
-                Text(
-                    text = Instant.ofEpochSecond(relevantDate).prettyPrint(),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-            location?.let {
-                Text(
-                    text = location.toString(),
-                    style = MaterialTheme.typography.bodySmall,
-                )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (relevantDate != 0L) {
+                    Text(
+                        text = Instant.ofEpochSecond(relevantDate).prettyPrint(),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                location?.let { LocationButton(it) }
             }
         }
     }

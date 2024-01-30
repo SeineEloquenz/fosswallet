@@ -53,8 +53,13 @@ fun PassView(
                     modifier = Modifier
                         .padding(5.dp)
                 )
-                HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
-                HeaderContent(pass.locations.firstOrNull()?.toString())
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
+                    pass.locations.firstOrNull()?.let { LocationButton(it) }
+                }
             }
             Image(
                 bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
