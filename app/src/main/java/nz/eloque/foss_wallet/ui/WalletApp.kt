@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,8 +46,7 @@ import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Wallet : Screen("wallet", Icons.Filled.Wallet, R.string.wallet)
-    object Settings : Screen("settings", Icons.Filled.Settings, R.string.settings)
+    data object Wallet : Screen("wallet", Icons.Filled.Wallet, R.string.wallet)
 }
 
 @Composable
@@ -112,7 +110,6 @@ fun WalletScaffold(
 ) {
     val items = listOf(
         Screen.Wallet,
-        Screen.Settings
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
