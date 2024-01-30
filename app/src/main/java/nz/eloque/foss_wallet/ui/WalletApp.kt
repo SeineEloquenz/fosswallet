@@ -42,8 +42,8 @@ import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassViewModel
 import nz.eloque.foss_wallet.ui.components.PassView
+import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {

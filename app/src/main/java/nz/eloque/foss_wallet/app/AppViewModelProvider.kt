@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import nz.eloque.foss_wallet.model.PassViewModel
+import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
