@@ -21,6 +21,8 @@ import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -59,6 +61,10 @@ fun WalletView(
             }
         }
     }
+
+    val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
+        -left.id.compareTo(right.id)
+    }) }
     LazyColumn(
         state = state,
         verticalArrangement = Arrangement
@@ -66,7 +72,8 @@ fun WalletView(
         modifier = modifier
             .fillMaxSize()
     ) {
-        items(list.value.passes, { pass: Pass -> pass.id }) { pass ->
+        val sortedPasses = list.value.passes.sortedWith(comparator)
+        items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
             val currentPass by rememberUpdatedState(pass)
             val dismissState = rememberDismissState(
                 positionalThreshold = { 150.dp.toPx() },
