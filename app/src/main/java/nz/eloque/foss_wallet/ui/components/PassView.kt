@@ -50,36 +50,32 @@ fun PassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Column {
-            Row(
-                horizontalArrangement = Arrangement.End,
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(5f)
             ) {
-                Column(
-                    modifier = Modifier
-                        .weight(5f)
-                ) {
-                    Text(
-                        text = pass.description,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(5.dp)
-                    )
-                    HeaderContent("placeholder")
-                }
-                Image(
-                    bitmap = pass.icon.asImageBitmap(),
-                    contentDescription = stringResource(R.string.image),
-                    contentScale = ContentScale.Fit,
+                Text(
+                    text = pass.description,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                         .padding(5.dp)
-                        .align(Alignment.CenterVertically)
-                        .weight(2f)
                 )
+                HeaderContent("placeholder")
             }
-            HeaderContent(pass.serialNumber)
-            HeaderContent(pass.organization)
+            Image(
+                bitmap = pass.icon.asImageBitmap(),
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .padding(5.dp)
+                    .align(Alignment.CenterVertically)
+                    .weight(2f)
+            )
         }
         PassImage(pass.strip)
         var tabIndex by remember { mutableIntStateOf(0) }
@@ -106,6 +102,8 @@ fun PassView(
                     PassFields(pass.auxiliaryFields)
                 }
                 1 -> {
+                    pass.serialNumber?.let { PassField(stringResource(R.string.serial_number), it) }
+                    pass.organization?.let { PassField(stringResource(R.string.organization), it) }
                     PassFields(pass.backFields)
                 }
             }
@@ -147,24 +145,25 @@ fun HeaderContent(
 
 @Composable
 fun PassField(
-    field: PassField,
+    label: String,
+    value: String,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
-        if (field.label.length + field.value.length <= 25) {
+        if (label.length + value.length <= 25) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = field.label,
+                    text = label,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(8.dp)
                 )
                 Spacer(modifier.weight(1f))
                 Text(
-                    text = field.value,
+                    text = value,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -173,12 +172,12 @@ fun PassField(
             Column(
             ) {
                 Text(
-                    text = field.label,
+                    text = label,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(8.dp)
                 )
                 Text(
-                    text = field.value,
+                    text = value,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -196,7 +195,7 @@ fun PassFields(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         fields.forEach {
-            PassField(it)
+            PassField(it.label, it.value)
         }
     }
 }

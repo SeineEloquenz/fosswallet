@@ -9,4 +9,6 @@
     <string name="image">Image</string>
     <string name="pass">Pass</string>
     <string name="barcode">Barcode</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="organization">Organization</string>
 </resources>
