@@ -34,21 +34,9 @@ object PassLoader {
                         passJson = JSONObject(content)
                         println("Content:\n$content")
                     } else if (entry.name == ("logo.png")) {
-                        val array = baos.toByteArray()
-                        val image = BitmapFactory.decodeByteArray(array, 0, array.size)
-                        if (image == null) {
-                            Log.w(TAG, "Failed parsing image from pkpass!")
-                        } else {
-                            logo = image
-                        }
+                        logo = loadImage(baos)
                     } else if (entry.name == ("icon.png")) {
-                        val array = baos.toByteArray()
-                        val image = BitmapFactory.decodeByteArray(array, 0, array.size)
-                        if (image == null) {
-                            Log.w(TAG, "Failed parsing image from pkpass!")
-                        } else {
-                            icon = image
-                        }
+                        icon = loadImage(baos)
                     }
                 }
             }
@@ -65,6 +53,17 @@ object PassLoader {
             return RawPass(passJson!!, icon!!, logo!!)
         } else {
             throw InvalidPassException()
+        }
+    }
+
+    private fun loadImage(baos: ByteArrayOutputStream): Bitmap? {
+        val array = baos.toByteArray()
+        val image = BitmapFactory.decodeByteArray(array, 0, array.size)
+        return if (image == null) {
+            Log.w(TAG, "Failed parsing image from pkpass!")
+            null
+        } else {
+            image
         }
     }
 }
