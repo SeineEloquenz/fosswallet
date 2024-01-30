@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -39,7 +38,9 @@ fun PassCard(
                 .padding(5.dp)
                 .fillMaxWidth()
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(5f)
+            ) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyLarge,
@@ -53,7 +54,6 @@ fun PassCard(
                         .padding(5.dp)
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
             Image(
                 bitmap = icon.asImageBitmap(),
                 contentDescription = "logo",
