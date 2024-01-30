@@ -38,6 +38,7 @@ data class Pass(
     var serialNumber: String? = null
     var logo: Bitmap? = null
     var strip: Bitmap? = null
+    var thumbnail: Bitmap? = null
     var footer: Bitmap? = null
     var locations: MutableList<Location> = LinkedList()
     var headerFields: MutableList<PassField> = LinkedList()

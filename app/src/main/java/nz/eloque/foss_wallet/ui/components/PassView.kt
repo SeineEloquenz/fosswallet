@@ -66,6 +66,7 @@ fun PassView(
             )
         }
         PassImage(pass.strip)
+        PassImage(pass.thumbnail)
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier

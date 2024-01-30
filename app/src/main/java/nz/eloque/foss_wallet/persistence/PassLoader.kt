@@ -26,6 +26,7 @@ private class RawPass(
     val icon: Bitmap,
     val logo: Bitmap?,
     val strip: Bitmap?,
+    val thumbnail: Bitmap?,
     val footer: Bitmap?)
 
 class PassLoader(
@@ -37,6 +38,7 @@ class PassLoader(
         var logo: Bitmap? = null
         var icon: Bitmap? = null
         var strip: Bitmap? = null
+        var thumbnail: Bitmap? = null
         var footer: Bitmap? = null
         ZipInputStream(inputStream).use { zip ->
             var entry = zip.nextEntry
@@ -66,6 +68,9 @@ class PassLoader(
                         ("strip.png") -> {
                             strip = loadImage(baos)
                         }
+                        "thumbnail.png" -> {
+                            thumbnail = loadImage(baos)
+                        }
                         ("footer.png") -> {
                             footer = loadImage(baos)
                         }
@@ -78,7 +83,7 @@ class PassLoader(
         }
         //TODO check signature before returning
         if (passJson != null) {
-            return fromRaw(RawPass(passJson!!, icon!!, logo, strip, footer))
+            return fromRaw(RawPass(passJson!!, icon!!, logo, strip, thumbnail, footer))
         } else {
             throw InvalidPassException()
         }
@@ -116,6 +121,7 @@ class PassLoader(
             pass.relevantDate = parseDate(rawPass.passJson)
             pass.logo = rawPass.logo
             pass.strip = rawPass.strip
+            pass.thumbnail = rawPass.thumbnail
             pass.footer = rawPass.footer
             if (rawPass.passJson.has("locations")) {
                 rawPass.passJson.getJSONArray("locations").forEach { locJson ->
