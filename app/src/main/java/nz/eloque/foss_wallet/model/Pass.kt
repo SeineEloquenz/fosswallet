@@ -4,9 +4,10 @@ import android.location.Location
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.ZonedDateTime
+import java.util.LinkedList
 
 
-data class PassField(val key: String, private val label: String, private val value: String, val hide: Boolean, val hint:String = "")
+data class PassField(val key: String, private val label: String, private val value: String)
 
 fun fromRaw(rawPass: RawPass): Pass {
     return Pass().also { pass ->
@@ -19,6 +20,21 @@ fun fromRaw(rawPass: RawPass): Pass {
                 it.longitude = locJson.getDouble("longitude")
             })
         }
+        collectFields(rawPass.passJson.getJSONArray("headerFields"), pass.headerFields)
+        collectFields(rawPass.passJson.getJSONArray("primaryFields"), pass.primaryFields)
+        collectFields(rawPass.passJson.getJSONArray("secondaryFields"), pass.secondaryFields)
+        collectFields(rawPass.passJson.getJSONArray("auxiliaryFields"), pass.auxiliaryFields)
+        collectFields(rawPass.passJson.getJSONArray("backFields"), pass.backFields)
+    }
+}
+
+fun collectFields(jsonArray: JSONArray, fieldContainer: MutableList<PassField>) {
+    forEach(jsonArray) {
+        fieldContainer.add(PassField(
+            it.getString("key"),
+            it.getString("label"),
+            it.getString("value")
+        ))
     }
 }
 
@@ -37,10 +53,10 @@ class Pass {
     var barCode: BarCode? = null
     var description: String? = null
     var serialNumber: String? = null
-    class TimeSpan(val from: ZonedDateTime? = null, val to: ZonedDateTime? = null)
-    var fields: MutableList<PassField> = ArrayList()
     var locations: MutableList<Location> = ArrayList()
-    var app: String? = null
-    var authToken: String? = null
-    var webServiceURL: String? = null
+    val headerFields: MutableList<PassField> = LinkedList()
+    val primaryFields: MutableList<PassField> = LinkedList()
+    val secondaryFields: MutableList<PassField> = LinkedList()
+    val auxiliaryFields: MutableList<PassField> = LinkedList()
+    val backFields: MutableList<PassField> = LinkedList()
 }
