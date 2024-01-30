@@ -4,10 +4,20 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
+import org.json.JSONObject
 import java.util.Locale
 
-class BarCode(
-    private val format: BarcodeFormat, private val message: String) {
+data class BarCode(
+    private val format: BarcodeFormat,
+    private val message: String
+) {
+
+    fun toJson(): JSONObject {
+        return JSONObject().also {
+            it.put("format", format.toString())
+            it.put("message", message)
+        }
+    }
 
     var alternativeText: String? = null
 
@@ -44,6 +54,10 @@ class BarCode(
     }
 
     companion object {
+
+        fun fromJson(json: JSONObject): BarCode {
+            return BarCode(formatFromString(json.getString("format")), json.getString("message"))
+        }
 
         fun formatFromString(format: String): BarcodeFormat {
             return when {

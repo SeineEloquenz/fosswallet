@@ -2,7 +2,6 @@ package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,11 +17,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -30,10 +35,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.app.AppViewModelProvider
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassStore
+import nz.eloque.foss_wallet.model.PassViewModel
+import nz.eloque.foss_wallet.persistence.PassDao
+import nz.eloque.foss_wallet.persistence.WalletDb
 import nz.eloque.foss_wallet.ui.components.PassView
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
@@ -47,7 +58,9 @@ fun WalletApp(
     activity: MainActivity,
     modifier: Modifier = Modifier
 ) {
+    val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val navController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
 
     Surface(
         modifier = modifier
@@ -61,17 +74,22 @@ fun WalletApp(
                     navController = navController,
                     title = stringResource(id = R.string.wallet)
                 ) {
-                    WalletView(navController)
+                    WalletView(navController, passViewModel)
                 }
             }
             composable("pass/{passId}") { backStackEntry ->
-                val passId = backStackEntry.arguments?.getString("passId")!!
+                val passId = backStackEntry.arguments?.getInt("passId")!!
+                val pass = remember { mutableStateOf(Pass.placeholder())}
+                LaunchedEffect(coroutineScope) {
+                    pass.value = passViewModel.passById(passId)
+                }
+
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(R.string.pass),
                     toolWindow = true
                 ) {
-                    PassView(PassStore.get(passId))
+                    PassView(pass.value)
                 }
             }
         }

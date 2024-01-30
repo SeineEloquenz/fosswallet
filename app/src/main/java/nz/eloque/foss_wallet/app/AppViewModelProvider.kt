@@ -2,10 +2,15 @@ package nz.eloque.foss_wallet.app
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import nz.eloque.foss_wallet.model.PassViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        initializer {
+            PassViewModel(walletApplication().container.passRepository)
+        }
     }
 }
 

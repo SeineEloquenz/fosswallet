@@ -7,6 +7,7 @@ import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.forEach
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -94,9 +95,9 @@ class PassLoader(
         }
 
         return Pass(
-            description,
-            rawPass.icon,
-            parseBarcodes(rawPass.passJson)
+            description = description,
+            icon = rawPass.icon,
+            barCodes = parseBarcodes(rawPass.passJson)
         ).also { pass ->
             pass.organization = rawPass.passJson.getString("organizationName")
             pass.serialNumber = rawPass.passJson.getString("serialNumber")
@@ -173,16 +174,7 @@ class PassLoader(
                 ))
             }
         } catch (e: JSONException) {
-            Log.i(Companion.TAG, "Fields $name not existing. Stopping parsing.")
-        }
-    }
-
-    private fun forEach(jsonArray: JSONArray, action: (JSONObject) -> Unit) {
-        var i = 0
-        while (i < jsonArray.length()) {
-            val element = jsonArray.getJSONObject(i)
-            action.invoke(element)
-            i++
+            Log.i(TAG, "Fields $name not existing. Stopping parsing.")
         }
     }
 

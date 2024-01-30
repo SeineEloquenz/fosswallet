@@ -3,6 +3,11 @@ package nz.eloque.foss_wallet.model
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.R
 import org.json.JSONArray
 import org.json.JSONException
@@ -10,9 +15,26 @@ import org.json.JSONObject
 import java.util.LinkedList
 
 
-data class PassField(val key: String, val label: String, val value: String)
+@Entity
+data class PassField(val key: String, val label: String, val value: String) {
+    fun toJson(): JSONObject {
+        return JSONObject().also {
+            it.put("key", key)
+            it.put("label", label)
+            it.put("value", value)
+        }
+    }
 
-class Pass(
+    companion object {
+        fun fromJson(json: JSONObject): PassField {
+            return PassField(json.getString("key"), json.getString("label"), json.getString("value"))
+        }
+    }
+}
+
+@Entity
+data class Pass(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val description: String,
     val icon: Bitmap,
     val barCodes: Set<BarCode>
@@ -23,15 +45,16 @@ class Pass(
     var logo: Bitmap? = null
     var strip: Bitmap? = null
     var footer: Bitmap? = null
-    val locations: MutableList<Location> = ArrayList()
-    val headerFields: MutableList<PassField> = LinkedList()
-    val primaryFields: MutableList<PassField> = LinkedList()
-    val secondaryFields: MutableList<PassField> = LinkedList()
-    val auxiliaryFields: MutableList<PassField> = LinkedList()
-    val backFields: MutableList<PassField> = LinkedList()
+    var locations: MutableList<Location> = LinkedList()
+    var headerFields: MutableList<PassField> = LinkedList()
+    var primaryFields: MutableList<PassField> = LinkedList()
+    var secondaryFields: MutableList<PassField> = LinkedList()
+    var auxiliaryFields: MutableList<PassField> = LinkedList()
+    var backFields: MutableList<PassField> = LinkedList()
 
     companion object {
-
-        private const val TAG = "Pass"
+        fun placeholder(): Pass {
+            return Pass(0, "Loading", Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888), setOf())
+        }
     }
 }
