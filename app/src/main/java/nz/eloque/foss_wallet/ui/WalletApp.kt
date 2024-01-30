@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -65,7 +66,10 @@ fun WalletApp(
             }
             composable("pass/{passId}") { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassView(pass = PassStore.get(passId))
+                PassView(
+                    pass = PassStore.get(passId),
+                    modifier = Modifier.fillMaxHeight()
+                )
             }
         }
     }
