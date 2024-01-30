@@ -56,7 +56,7 @@ fun PassView(
                 HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
             }
             Image(
-                bitmap = pass.icon.asImageBitmap(),
+                bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
                 contentDescription = stringResource(R.string.image),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -66,7 +66,6 @@ fun PassView(
             )
         }
         PassImage(pass.strip)
-        PassImage(pass.thumbnail)
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier

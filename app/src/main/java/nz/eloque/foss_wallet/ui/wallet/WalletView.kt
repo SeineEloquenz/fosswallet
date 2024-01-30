@@ -91,7 +91,7 @@ fun WalletView(
                             onClick = {
                                 navController.navigate("pass/${pass.id}")
                             },
-                            icon = pass.icon,
+                            icon = pass.thumbnail ?: pass.icon,
                             description = pass.description,
                             relevantDate = pass.relevantDate
                         )
