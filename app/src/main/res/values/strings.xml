@@ -13,4 +13,7 @@
     <string name="organization">Organization</string>
     <string name="no_barcode_format_given">No Barcode format given! Defaulting to QR-Code. This Code might not get scanned correctly</string>
     <string name="flip">Flip</string>
+    <string name="front">Front</string>
+    <string name="front_side">Front</string>
+    <string name="back_side">Back</string>
 </resources>

@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Flip
+import androidx.compose.material.icons.filled.TurnLeft
+import androidx.compose.material.icons.filled.TurnRight
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -94,11 +95,19 @@ fun WalletApp(
                     navController = navController,
                     title = stringResource(R.string.pass),
                     toolWindow = true,
-                    actions = {
-                        IconButton(onClick = { passViewFront.value = !passViewFront.value }) {
-                            Icon(
-                                imageVector = Icons.Filled.Flip,
-                                contentDescription = stringResource(R.string.flip)
+                    bottomBar = {
+                        BottomAppBar {
+                            NavigationBarItem(
+                                selected = passViewFront.value,
+                                onClick = { passViewFront.value = !passViewFront.value },
+                                icon = {Icon(imageVector = Icons.Filled.TurnLeft, contentDescription = stringResource(R.string.front_side)) },
+                                label = { Text(stringResource(R.string.front_side)) },
+                            )
+                            NavigationBarItem(
+                                selected = !passViewFront.value,
+                                onClick = { passViewFront.value = !passViewFront.value },
+                                icon = { Icon(imageVector = Icons.Filled.TurnRight, contentDescription = stringResource(R.string.back_side)) },
+                                label = { Text(stringResource(R.string.back_side)) },
                             )
                         }
                     }
@@ -120,6 +129,7 @@ fun WalletScaffold(
     toolWindow: Boolean = false,
     showBack: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val items = listOf(
@@ -162,6 +172,8 @@ fun WalletScaffold(
                         )
                     }
                 }
+            } else {
+                bottomBar.invoke()
             }
         }
     ) { innerPadding ->
