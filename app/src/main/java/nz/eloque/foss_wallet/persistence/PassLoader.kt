@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.model
+package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,8 +7,10 @@ import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.forEach
-import org.json.JSONArray
+import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -76,7 +78,7 @@ class PassLoader(
         val array = baos.toByteArray()
         val image = BitmapFactory.decodeByteArray(array, 0, array.size)
         return if (image == null) {
-            Log.w(Companion.TAG, "Failed parsing image from pkpass! Is it missing?")
+            Log.w(TAG, "Failed parsing image from pkpass! Is it missing?")
             null
         } else {
             image
@@ -105,7 +107,7 @@ class PassLoader(
             pass.strip = rawPass.strip
             pass.footer = rawPass.footer
             if (rawPass.passJson.has("locations")) {
-                forEach(rawPass.passJson.getJSONArray("locations")) { locJson ->
+                rawPass.passJson.getJSONArray("locations").forEach { locJson ->
                     pass.locations.add(Location("").also {
                         it.latitude = locJson.getDouble("latitude")
                         it.longitude = locJson.getDouble("longitude")
@@ -131,7 +133,7 @@ class PassLoader(
                 parseBarCode(passJson.getJSONObject("barcode"))?.let { barcodes.add(it) }
             }
             if (passJson.has("barcodes")) {
-                forEach(passJson.getJSONArray("barcodes")) { codeJson ->
+                passJson.getJSONArray("barcodes").forEach { codeJson ->
                     parseBarCode(codeJson)?.let { barcodes.add(it) }
                 }
             }
@@ -166,12 +168,14 @@ class PassLoader(
 
     private fun collectFields(json: JSONObject, name: String, fieldContainer: MutableList<PassField>) {
         try {
-            forEach(json.getJSONArray(name)) {
-                fieldContainer.add(PassField(
+            json.getJSONArray(name).forEach {
+                fieldContainer.add(
+                    PassField(
                     it.getString("key"),
                     it.getString("label"),
                     it.getString("value")
-                ))
+                )
+                )
             }
         } catch (e: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")

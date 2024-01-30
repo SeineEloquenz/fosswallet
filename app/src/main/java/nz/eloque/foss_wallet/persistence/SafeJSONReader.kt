@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.model
+package nz.eloque.foss_wallet.persistence
 
 import org.json.JSONException
 import org.json.JSONObject

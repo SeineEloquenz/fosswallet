@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import nz.eloque.foss_wallet.model.Pass
 
 @Database(entities = [Pass::class], version = 1)
-@TypeConverters(nz.eloque.foss_wallet.model.TypeConverters::class)
+@TypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)
 abstract class WalletDb : RoomDatabase() {
     abstract fun passDao(): PassDao
 

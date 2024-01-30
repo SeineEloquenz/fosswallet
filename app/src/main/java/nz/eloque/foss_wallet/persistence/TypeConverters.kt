@@ -1,10 +1,12 @@
-package nz.eloque.foss_wallet.model
+package nz.eloque.foss_wallet.persistence
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import androidx.room.TypeConverter
-import nz.eloque.foss_wallet.forEach
+import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -40,7 +42,7 @@ class TypeConverters {
     fun toLocations(str: String): MutableList<Location> {
         val json = JSONArray(str)
         val locations = LinkedList<Location>()
-        forEach(json) {
+        json.forEach {
             val location = Location("")
             location.latitude = it.getDouble("latitude")
             location.longitude = it.getDouble("longitude")
@@ -60,7 +62,7 @@ class TypeConverters {
     fun toBarcodes(str: String): Set<BarCode> {
         val json = JSONArray(str)
         val barcodes = HashSet<BarCode>()
-        forEach(json) { barcodes.add(BarCode.fromJson(it)) }
+        json.forEach { barcodes.add(BarCode.fromJson(it)) }
         return barcodes
     }
 
@@ -75,7 +77,7 @@ class TypeConverters {
     fun toFields(str: String): MutableList<PassField> {
         val json = JSONArray(str)
         val fields = LinkedList<PassField>()
-        forEach(json) { fields.add(PassField.fromJson(it)) }
+        json.forEach { fields.add(PassField.fromJson(it)) }
         return fields
     }
 }
