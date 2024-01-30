@@ -3,9 +3,9 @@ package nz.eloque.foss_wallet.ui.wallet
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -58,52 +58,46 @@ fun WalletView(
             }
         }
     }
-    Column(
-        modifier.fillMaxHeight(),
-        verticalArrangement = Arrangement.Bottom
+    LazyColumn(
+        state = state,
+        verticalArrangement = Arrangement
+            .spacedBy(10.dp),
+        modifier = modifier
+            .fillMaxSize()
     ) {
-        LazyColumn(
-            state = state,
-            verticalArrangement = Arrangement
-                .spacedBy(10.dp),
-            modifier = modifier
-                .fillMaxWidth()
-                .weight(9f)
-        ) {
-            items(list.value.passes) { pass ->
-                val currentPass by rememberUpdatedState(pass)
-                val dismissState = rememberDismissState(
-                    positionalThreshold = { 150.dp.toPx() },
-                    confirmValueChange = {
-                        if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                            coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(currentPass) }
-                            true
-                        } else {
-                            false
-                        }
+        items(list.value.passes) { pass ->
+            val currentPass by rememberUpdatedState(pass)
+            val dismissState = rememberDismissState(
+                positionalThreshold = { 150.dp.toPx() },
+                confirmValueChange = {
+                    if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
+                        coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(currentPass) }
+                        true
+                    } else {
+                        false
                     }
-                )
-                SwipeToDismiss(
-                    state = dismissState,
-                    background = { SwipeBackground(dismissState, Icons.Filled.Delete, Icons.Filled.Delete) },
-                    dismissContent = {
-                        PassCard(
-                            onClick = {
-                                navController.navigate("pass/${pass.id}")
-                            },
-                            icon = pass.thumbnail ?: pass.icon,
-                            description = pass.description,
-                            relevantDate = pass.relevantDate
-                        )
-                    }
-                )
-            }
+                }
+            )
+            SwipeToDismiss(
+                state = dismissState,
+                background = { SwipeBackground(dismissState, Icons.Filled.Delete, Icons.Filled.Delete) },
+                dismissContent = {
+                    PassCard(
+                        onClick = {
+                            navController.navigate("pass/${pass.id}")
+                        },
+                        icon = pass.thumbnail ?: pass.icon,
+                        description = pass.description,
+                        relevantDate = pass.relevantDate
+                    )
+                }
+            )
         }
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
         FloatingActionButton(
             onClick = { launcher.launch(arrayOf("*/*")) },
-            modifier = Modifier
-                .align(Alignment.End)
-                .weight(1f)
+            modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd)
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add pass")
         }
