@@ -50,10 +50,12 @@ fun WalletView(
     val coroutineScope = rememberCoroutineScope()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
-        println("selected file URI $res")
-        contentResolver.openInputStream(res!!)?.use { inputStream ->
-            val loaded = PassLoader(context).load(inputStream)
-            coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+        res?.let {
+            println("selected file URI $res")
+            contentResolver.openInputStream(res!!)?.use { inputStream ->
+                val loaded = PassLoader(context).load(inputStream)
+                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+            }
         }
     }
     Column(
