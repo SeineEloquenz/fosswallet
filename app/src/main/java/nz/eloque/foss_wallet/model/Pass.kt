@@ -6,7 +6,6 @@ import android.util.Log
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.time.ZonedDateTime
 import java.util.LinkedList
 
 
@@ -84,7 +83,7 @@ class Pass(
                         barcodeJSON.getString("format")
                     }
 
-                    val barcodeFormat = BarCode.getFormatFromString(barcodeFormatString)
+                    val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
                     val barCode = BarCode(barcodeFormat, barcodeJSON.getString("message"))
                     if (barcodeJSON.has("altText")) {
                         barCode.alternativeText = barcodeJSON.getString("altText")

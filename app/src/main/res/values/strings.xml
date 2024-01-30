@@ -8,4 +8,5 @@
     <string name="wallet">Wallet</string>
     <string name="image">Image</string>
     <string name="pass">Pass</string>
+    <string name="barcode">Barcode</string>
 </resources>

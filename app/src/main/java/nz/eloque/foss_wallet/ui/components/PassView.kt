@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
@@ -99,6 +100,7 @@ fun PassView(
         ) {
             when (tabIndex) {
                 0 -> {
+                    PassImage(pass.barCode?.encodeAsBitmap(250, 250))
                     PassFields(pass.primaryFields)
                     PassFields(pass.secondaryFields)
                     PassFields(pass.auxiliaryFields)
