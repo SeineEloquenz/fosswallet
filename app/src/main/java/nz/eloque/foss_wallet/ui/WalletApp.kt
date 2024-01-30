@@ -68,7 +68,8 @@ fun WalletApp(
                 val passId = backStackEntry.arguments?.getString("passId")!!
                 WalletScaffold(
                     navController = navController,
-                    title = stringResource(R.string.pass)
+                    title = stringResource(R.string.pass),
+                    toolWindow = true
                 ) {
                     PassView(PassStore.get(passId))
                 }
