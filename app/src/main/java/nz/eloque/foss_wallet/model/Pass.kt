@@ -2,15 +2,8 @@ package nz.eloque.foss_wallet.model
 
 import android.graphics.Bitmap
 import android.location.Location
-import android.util.Log
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import nz.eloque.foss_wallet.R
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.util.LinkedList
 
@@ -54,7 +47,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888), setOf())
+            return Pass(0, "Loading", Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), setOf())
         }
     }
 }

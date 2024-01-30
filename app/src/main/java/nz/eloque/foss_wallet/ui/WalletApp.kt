@@ -24,27 +24,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
-import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassViewModel
-import nz.eloque.foss_wallet.persistence.PassDao
-import nz.eloque.foss_wallet.persistence.WalletDb
 import nz.eloque.foss_wallet.ui.components.PassView
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
@@ -77,11 +75,17 @@ fun WalletApp(
                     WalletView(navController, passViewModel)
                 }
             }
-            composable("pass/{passId}") { backStackEntry ->
+            composable(
+                route = "pass/{passId}",
+                arguments = listOf(navArgument("passId") { type = NavType.IntType })
+            ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getInt("passId")!!
+
                 val pass = remember { mutableStateOf(Pass.placeholder())}
                 LaunchedEffect(coroutineScope) {
-                    pass.value = passViewModel.passById(passId)
+                    coroutineScope.launch(Dispatchers.IO) {
+                        pass.value = passViewModel.passById(passId)
+                    }
                 }
 
                 WalletScaffold(

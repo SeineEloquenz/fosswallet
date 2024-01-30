@@ -15,8 +15,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.model.PassLoader
 import nz.eloque.foss_wallet.model.PassViewModel
@@ -39,7 +35,10 @@ fun WalletView(
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver
+
     val state = rememberLazyListState()
+    val list = passViewModel.uiState.collectAsState()
+
     val coroutineScope = rememberCoroutineScope()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
@@ -61,7 +60,7 @@ fun WalletView(
                 .fillMaxWidth()
                 .weight(9f)
         ) {
-            items(passViewModel.uiState.value.passes) { pass ->
+            items(list.value.passes) { pass ->
                 PassCard(
                     onClick = {
                         navController.navigate("pass/${pass.id}")
