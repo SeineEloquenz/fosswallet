@@ -18,13 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.utils.prettyPrint
+import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassCard(
     icon: Bitmap,
     description: String,
-    date: String,
+    relevantDate: Long,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -45,7 +47,7 @@ fun PassCard(
                         .padding(5.dp)
                 )
                 Text(
-                    text = date,
+                    text = Instant.ofEpochSecond(relevantDate).prettyPrint(),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .padding(5.dp)
@@ -67,5 +69,5 @@ fun PassCard(
 @Preview
 @Composable
 fun PassCardPreview() {
-    PassCard(icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), description = "KSC - HSV", date = "12.07.2023")
+    PassCard(icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), description = "KSC - HSV", relevantDate = 1)
 }

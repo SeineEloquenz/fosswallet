@@ -15,6 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.time.ZonedDateTime
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
@@ -112,6 +113,7 @@ class PassLoader(
         ).also { pass ->
             pass.organization = rawPass.passJson.getString("organizationName")
             pass.serialNumber = rawPass.passJson.getString("serialNumber")
+            pass.relevantDate = parseDate(rawPass.passJson)
             pass.logo = rawPass.logo
             pass.strip = rawPass.strip
             pass.footer = rawPass.footer
@@ -133,6 +135,19 @@ class PassLoader(
             collectFields(fieldContainer, "auxiliaryFields", pass.auxiliaryFields)
             collectFields(fieldContainer, "backFields", pass.backFields)
         }
+    }
+
+    private fun parseDate(passJson: JSONObject): Long {
+        val date = if (passJson.has("relevantDate")) {
+            val dateTime = ZonedDateTime.parse(passJson.optString("relevantDate") ?: EPOCH)
+            dateTime.toEpochSecond()
+        } else if(passJson.has("when")) {
+            val dateTime = ZonedDateTime.parse(passJson.getJSONObject("when").optString("dateTime") ?: EPOCH)
+            dateTime.toEpochSecond()
+        } else {
+            0L
+        }
+        return date
     }
 
     private fun parseBarcodes(passJson: JSONObject): Set<BarCode> {
@@ -193,5 +208,6 @@ class PassLoader(
 
     companion object {
         private const val TAG = "PassLoader"
+        private const val EPOCH = "1970-01-01T00:00:00Z"
     }
 }

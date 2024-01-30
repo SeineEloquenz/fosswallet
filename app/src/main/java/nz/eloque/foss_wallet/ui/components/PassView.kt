@@ -30,6 +30,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.utils.prettyPrint
+import java.time.Instant
 
 @Composable
 fun PassView(
@@ -56,7 +58,7 @@ fun PassView(
                     modifier = Modifier
                         .padding(5.dp)
                 )
-                HeaderContent("placeholder")
+                HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
             }
             Image(
                 bitmap = pass.icon.asImageBitmap(),

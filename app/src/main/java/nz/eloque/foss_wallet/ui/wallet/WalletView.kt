@@ -91,7 +91,7 @@ fun WalletView(
                             },
                             icon = pass.icon,
                             description = pass.description,
-                            date = "placeholder"
+                            relevantDate = pass.relevantDate
                         )
                     }
                 )
