@@ -70,7 +70,7 @@ fun WalletView(
             val dismissState = rememberDismissState(
                 positionalThreshold = { 150.dp.toPx() },
                 confirmValueChange = {
-                    if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
+                    if (it != DismissValue.Default) {
                         coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(currentPass) }
                         true
                     } else {
