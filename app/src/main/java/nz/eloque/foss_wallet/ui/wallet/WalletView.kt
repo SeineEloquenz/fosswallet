@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.components.PassCard
 import nz.eloque.foss_wallet.ui.components.SwipeBackground
@@ -65,7 +66,7 @@ fun WalletView(
         modifier = modifier
             .fillMaxSize()
     ) {
-        items(list.value.passes) { pass ->
+        items(list.value.passes, { pass: Pass -> pass.id }) { pass ->
             val currentPass by rememberUpdatedState(pass)
             val dismissState = rememberDismissState(
                 positionalThreshold = { 150.dp.toPx() },
