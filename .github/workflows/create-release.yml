@@ -33,3 +33,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          prerelease: true
