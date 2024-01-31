@@ -35,4 +35,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
