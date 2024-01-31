@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.wallet
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -23,11 +24,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.components.PassCard
 
@@ -46,12 +50,18 @@ fun WalletView(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val toastMessage = stringResource(R.string.invalid_pass_toast)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
         res?.let {
             println("selected file URI $res")
+
             contentResolver.openInputStream(res)?.use { inputStream ->
-                val loaded = PassLoader(context).load(inputStream)
-                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+                try {
+                    val loaded = PassLoader(context).load(inputStream)
+                    coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+                } catch (e: InvalidPassException) {
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -82,7 +92,9 @@ fun WalletView(
     Box(modifier = Modifier.fillMaxSize()) {
         FloatingActionButton(
             onClick = { launcher.launch(arrayOf("*/*")) },
-            modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd)
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd)
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add pass")
         }

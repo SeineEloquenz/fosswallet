@@ -18,4 +18,5 @@
     <string name="back_side">Back</string>
     <string name="date">Date</string>
     <string name="delete">Delete</string>
+    <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
 </resources>

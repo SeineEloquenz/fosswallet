@@ -20,7 +20,6 @@ import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
 
-
 private class RawPass(
     val passJson: JSONObject,
     val icon: Bitmap,
@@ -45,7 +44,7 @@ class PassLoader(
 
             while (zip.nextEntry.also { entry = it } != null) {
                 if (!entry!!.isDirectory) {
-                    println("Reading file: ${entry.name}")
+                    Log.d(TAG, "Found file: ${entry.name}")
                     val buffer = ByteArray(1024)
                     var bytesRead: Int
                     val baos = ByteArrayOutputStream()
