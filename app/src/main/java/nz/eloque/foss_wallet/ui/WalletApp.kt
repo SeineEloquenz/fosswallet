@@ -100,13 +100,22 @@ fun WalletApp(
                         BottomAppBar {
                             NavigationBarItem(
                                 selected = passViewFront.value,
-                                onClick = { passViewFront.value = !passViewFront.value },
+                                onClick = {
+                                    if (!passViewFront.value) {
+                                        passViewFront.value = !passViewFront.value
+                                    }
+                                },
                                 icon = {Icon(imageVector = Icons.Filled.TurnLeft, contentDescription = stringResource(R.string.front_side)) },
                                 label = { Text(stringResource(R.string.front_side)) },
                             )
                             NavigationBarItem(
                                 selected = !passViewFront.value,
-                                onClick = { passViewFront.value = !passViewFront.value },
+                                onClick = {
+                                    passViewFront.value = !passViewFront.value
+                                    if (passViewFront.value) {
+                                        passViewFront.value = !passViewFront.value
+                                    }
+                                },
                                 icon = { Icon(imageVector = Icons.Filled.TurnRight, contentDescription = stringResource(R.string.back_side)) },
                                 label = { Text(stringResource(R.string.back_side)) },
                             )
