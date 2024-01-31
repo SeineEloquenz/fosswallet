@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyPassword = System.getenv("SIGNING_KEY_ALIAS")
+            keyAlias = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
     namespace = "nz.eloque.foss_wallet"
     compileSdk = 34
 

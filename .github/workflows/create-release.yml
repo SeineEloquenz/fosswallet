@@ -5,32 +5,48 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Create Release
+    name: Build Release Apk
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Build
+      - name: Assemble Release
         run: ./gradlew assembleRelease
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.KEYSTORE }}
+        run: |
+          echo $ENCODED_STRING | base64 -di > "${RUNNER_TEMP}"/keystore.jks
+      - name: Upload Apk
+        uses: actions/upload-artifact@v1
+        with:
+          name: apk
+          path: app/build/outputs/apk/release
 
+  release:
+    name: Release Apk
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download apk from build
+        uses: actions/download-artifact@v1
+        with:
+          name: apk
       - name: Create Release
         id: create-release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          files: apk/app-release.apk
           prerelease: true
