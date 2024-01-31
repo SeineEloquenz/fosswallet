@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.TurnLeft
-import androidx.compose.material.icons.filled.TurnRight
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +44,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.components.PassView
+import nz.eloque.foss_wallet.ui.components.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 
@@ -91,35 +90,12 @@ fun WalletApp(
                 }
 
                 val passViewFront = remember { mutableStateOf(true) }
-
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(R.string.pass),
                     toolWindow = true,
                     bottomBar = {
-                        BottomAppBar {
-                            NavigationBarItem(
-                                selected = passViewFront.value,
-                                onClick = {
-                                    if (!passViewFront.value) {
-                                        passViewFront.value = !passViewFront.value
-                                    }
-                                },
-                                icon = {Icon(imageVector = Icons.Filled.TurnLeft, contentDescription = stringResource(R.string.front_side)) },
-                                label = { Text(stringResource(R.string.front_side)) },
-                            )
-                            NavigationBarItem(
-                                selected = !passViewFront.value,
-                                onClick = {
-                                    passViewFront.value = !passViewFront.value
-                                    if (passViewFront.value) {
-                                        passViewFront.value = !passViewFront.value
-                                    }
-                                },
-                                icon = { Icon(imageVector = Icons.Filled.TurnRight, contentDescription = stringResource(R.string.back_side)) },
-                                label = { Text(stringResource(R.string.back_side)) },
-                            )
-                        }
+                        PassViewBottomBar(passViewFront)
                     },
                     actions = {
                         IconButton(onClick = {
