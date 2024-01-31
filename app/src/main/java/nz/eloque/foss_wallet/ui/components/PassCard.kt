@@ -44,7 +44,7 @@ fun PassCard(
             ) {
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                         .weight(5f)
                 )
