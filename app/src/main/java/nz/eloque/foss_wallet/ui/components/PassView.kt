@@ -24,8 +24,6 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
-import nz.eloque.foss_wallet.utils.prettyPrint
-import java.time.Instant
 
 @Composable
 fun PassView(
@@ -57,7 +55,9 @@ fun PassView(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HeaderContent(Instant.ofEpochSecond(pass.relevantDate).prettyPrint())
+                    if (pass.relevantDate != 0L) {
+                        DateView(pass.description, pass.relevantDate)
+                    }
                     pass.locations.firstOrNull()?.let { LocationButton(it) }
                 }
             }

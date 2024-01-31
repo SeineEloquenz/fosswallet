@@ -18,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import nz.eloque.foss_wallet.utils.prettyPrint
-import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,10 +61,7 @@ fun PassCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (relevantDate != 0L) {
-                    Text(
-                        text = Instant.ofEpochSecond(relevantDate).prettyPrint(),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    DateView(description, relevantDate)
                 }
                 location?.let { LocationButton(it) }
             }

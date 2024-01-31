@@ -16,4 +16,5 @@
     <string name="front">Front</string>
     <string name="front_side">Front</string>
     <string name="back_side">Back</string>
+    <string name="date">Date</string>
 </resources>
