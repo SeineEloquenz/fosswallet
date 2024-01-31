@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +53,7 @@ import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
+import nz.eloque.foss_wallet.ui.about.AboutView
 import nz.eloque.foss_wallet.ui.components.PassView
 import nz.eloque.foss_wallet.ui.components.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
@@ -60,6 +62,7 @@ import nz.eloque.foss_wallet.utils.isScrollingUp
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Filled.Wallet, R.string.wallet)
+    data object About : Screen("about", Icons.Filled.Info, R.string.about)
 }
 
 @Composable
@@ -110,6 +113,14 @@ fun WalletApp(
                     }
                 ) {
                     WalletView(navController, passViewModel, listState = listState)
+                }
+            }
+            composable(Screen.About.route) {
+                WalletScaffold(
+                    navController = navController,
+                    title = stringResource(id = R.string.about)
+                ) {
+                    AboutView()
                 }
             }
             composable(
@@ -164,6 +175,7 @@ fun WalletScaffold(
 ) {
     val items = listOf(
         Screen.Wallet,
+        Screen.About
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
