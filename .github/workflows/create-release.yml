@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: apk
-          path: app/build/outputs/apk/release
+          path: app/build/outputs/apk/githubRelease
 
   release:
     name: Release Apk
@@ -52,5 +52,5 @@ jobs:
         id: create-release
         uses: softprops/action-gh-release@v1
         with:
-          files: apk/app-release.apk
+          files: apk/app-githubRelease.apk
           prerelease: true
