@@ -1,76 +1,36 @@
 package nz.eloque.foss_wallet.ui.wallet
 
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.persistence.InvalidPassException
-import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.components.PassCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletView(
     navController: NavController,
     passViewModel: PassViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
 ) {
-    val context = LocalContext.current
-    val contentResolver = context.contentResolver
-
-    val state = rememberLazyListState()
     val list = passViewModel.uiState.collectAsState()
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val toastMessage = stringResource(R.string.invalid_pass_toast)
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
-        res?.let {
-            println("selected file URI $res")
-
-            contentResolver.openInputStream(res)?.use { inputStream ->
-                try {
-                    val loaded = PassLoader(context).load(inputStream)
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
-                } catch (e: InvalidPassException) {
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
         -left.id.compareTo(right.id)
     }) }
     LazyColumn(
-        state = state,
+        state = listState,
         verticalArrangement = Arrangement
             .spacedBy(10.dp),
         modifier = modifier
@@ -88,16 +48,6 @@ fun WalletView(
                 expirationDate = pass.expirationDate,
                 location = pass.locations.firstOrNull()
             )
-        }
-    }
-    Box(modifier = Modifier.fillMaxSize()) {
-        FloatingActionButton(
-            onClick = { launcher.launch(arrayOf("*/*")) },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = "Add pass")
         }
     }
 }

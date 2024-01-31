@@ -19,4 +19,5 @@
     <string name="date">Date</string>
     <string name="delete">Delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
+    <string name="add_pass">Add Pass</string>
 </resources>

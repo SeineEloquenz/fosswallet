@@ -1,15 +1,21 @@
 package nz.eloque.foss_wallet.ui
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
@@ -25,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,10 +50,13 @@ import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.persistence.InvalidPassException
+import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.components.PassView
 import nz.eloque.foss_wallet.ui.components.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
+import nz.eloque.foss_wallet.utils.isScrollingUp
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Filled.Wallet, R.string.wallet)
@@ -59,6 +69,8 @@ fun WalletApp(
 ) {
     val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
 
     Surface(
@@ -69,11 +81,35 @@ fun WalletApp(
             startDestination = Screen.Wallet.route,
         ) {
             composable(Screen.Wallet.route) {
+                val listState = rememberLazyListState()
+                val toastMessage = stringResource(R.string.invalid_pass_toast)
+                val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
+                    res?.let {
+                        println("selected file URI $res")
+
+                        contentResolver.openInputStream(res)?.use { inputStream ->
+                            try {
+                                val loaded = PassLoader(context).load(inputStream)
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+                            } catch (e: InvalidPassException) {
+                                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
                 WalletScaffold(
                     navController = navController,
-                    title = stringResource(id = R.string.wallet)
+                    title = stringResource(id = R.string.wallet),
+                    floatingActionButton = {
+                        ExtendedFloatingActionButton(
+                            text = { Text(stringResource(R.string.add_pass)) },
+                            icon = { Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.add_pass)) },
+                            expanded = listState.isScrollingUp(),
+                            onClick = { launcher.launch(arrayOf("*/*")) }
+                        )
+                    }
                 ) {
-                    WalletView(navController, passViewModel)
+                    WalletView(navController, passViewModel, listState = listState)
                 }
             }
             composable(
@@ -104,8 +140,7 @@ fun WalletApp(
                         }) {
                             Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))
                         }
-                    }
-
+                    },
                 ) {
                     PassView(pass.value, passViewFront.value)
                 }
@@ -123,6 +158,7 @@ fun WalletScaffold(
     toolWindow: Boolean = false,
     showBack: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
@@ -169,7 +205,8 @@ fun WalletScaffold(
             } else {
                 bottomBar.invoke()
             }
-        }
+        },
+        floatingActionButton = floatingActionButton
     ) { innerPadding ->
         Box(modifier = modifier
             .padding(innerPadding)
