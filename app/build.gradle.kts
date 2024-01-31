@@ -6,8 +6,8 @@ plugins {
 
 android {
     signingConfigs {
-        create("release") {
-            storeFile = file("keystore.jks")
+        create("github") {
+            storeFile = file(System.getProperty("user.home") + "/work/_temp/keystore.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyPassword = System.getenv("SIGNING_KEY_ALIAS")
             keyAlias = System.getenv("SIGNING_KEY_PASSWORD")
@@ -38,13 +38,13 @@ android {
     }
 
     buildTypes {
-        release {
+        create("githubRelease") {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs["release"]
+            signingConfig = signingConfigs["github"]
         }
     }
     compileOptions {

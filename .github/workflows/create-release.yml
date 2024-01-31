@@ -20,7 +20,7 @@ jobs:
         env:
           ENCODED_STRING: ${{ secrets.KEYSTORE }}
         run: |
-          echo $ENCODED_STRING | base64 -di > "${RUNNER_TEMP}"/app/keystore.jks
+          echo $ENCODED_STRING | base64 -di > "${RUNNER_TEMP}"/keystore.jks
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,7 +28,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Assemble Release
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleGithubRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
