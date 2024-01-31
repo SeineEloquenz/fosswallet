@@ -1,4 +1,4 @@
-name: Build Release
+name: Build Debug
 
 # Controls when the workflow will run
 on:
