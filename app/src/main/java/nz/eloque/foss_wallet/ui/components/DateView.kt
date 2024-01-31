@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,10 +48,16 @@ fun DateView(
         }
         Column {
             if (start != 0L) {
-                Text(Instant.ofEpochSecond(start).prettyPrint())
+                Text(
+                    text = Instant.ofEpochSecond(start).prettyPrint(),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
             if (end != 0L) {
-                Text(Instant.ofEpochSecond(end).prettyPrint())
+                Text(
+                    text = Instant.ofEpochSecond(end).prettyPrint(),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
