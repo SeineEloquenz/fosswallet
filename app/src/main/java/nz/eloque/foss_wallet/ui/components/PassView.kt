@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,39 +37,38 @@ fun PassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .fillMaxWidth()
+        Column(
+            modifier = Modifier.padding(10.dp)
         ) {
-            Column(
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.End),
                 modifier = Modifier
-                    .weight(5f)
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = pass.description,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
-                        .padding(5.dp)
+                        .weight(5f)
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    DateView(pass.description, pass.relevantDate, pass.expirationDate)
-                    pass.locations.firstOrNull()?.let { LocationButton(it) }
-                }
+                Image(
+                    bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
+                    contentDescription = stringResource(R.string.image),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .weight(2f)
+                )
             }
-            Image(
-                bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
-                contentDescription = stringResource(R.string.image),
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .padding(5.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(2f)
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DateView(pass.description, pass.relevantDate, pass.expirationDate)
+                pass.locations.firstOrNull()?.let { LocationButton(it) }
+            }
         }
+        Divider()
         PassImage(pass.strip)
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
