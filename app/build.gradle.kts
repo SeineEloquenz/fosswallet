@@ -9,8 +9,8 @@ android {
         create("github") {
             storeFile = file(System.getProperty("user.home") + "/work/_temp/keystore.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyPassword = System.getenv("SIGNING_KEY_ALIAS")
-            keyAlias = System.getenv("SIGNING_KEY_PASSWORD")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
         }
     }
     namespace = "nz.eloque.foss_wallet"
