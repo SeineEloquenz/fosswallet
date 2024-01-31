@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.TurnLeft
 import androidx.compose.material.icons.filled.TurnRight
 import androidx.compose.material.icons.filled.Wallet
@@ -109,6 +110,14 @@ fun WalletApp(
                                 icon = { Icon(imageVector = Icons.Filled.TurnRight, contentDescription = stringResource(R.string.back_side)) },
                                 label = { Text(stringResource(R.string.back_side)) },
                             )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                            navController.popBackStack()
+                        }) {
+                            Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))
                         }
                     }
 
