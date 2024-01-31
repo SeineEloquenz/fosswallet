@@ -30,9 +30,9 @@ jobs:
       - name: Assemble Release
         run: ./gradlew assembleGithubRelease
         env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       - name: Upload Apk
         uses: actions/upload-artifact@v1
         with:
