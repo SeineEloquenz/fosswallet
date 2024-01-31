@@ -16,6 +16,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.time.ZonedDateTime
+import java.time.format.DateTimeParseException
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
@@ -117,7 +118,8 @@ class PassLoader(
         ).also { pass ->
             pass.organization = rawPass.passJson.getString("organizationName")
             pass.serialNumber = rawPass.passJson.getString("serialNumber")
-            pass.relevantDate = parseDate(rawPass.passJson)
+            pass.relevantDate = parseRelevantDate(rawPass.passJson)
+            pass.expirationDate = parseExpiration(rawPass.passJson)
             pass.logo = rawPass.logo
             pass.strip = rawPass.strip
             pass.thumbnail = rawPass.thumbnail
@@ -142,17 +144,32 @@ class PassLoader(
         }
     }
 
-    private fun parseDate(passJson: JSONObject): Long {
-        val date = if (passJson.has("relevantDate")) {
-            val dateTime = ZonedDateTime.parse(passJson.optString("relevantDate") ?: EPOCH)
-            dateTime.toEpochSecond()
-        } else if(passJson.has("when")) {
-            val dateTime = ZonedDateTime.parse(passJson.getJSONObject("when").optString("dateTime") ?: EPOCH)
-            dateTime.toEpochSecond()
-        } else {
+    private fun parseRelevantDate(passJson: JSONObject): Long {
+        return try {
+            if (passJson.has("relevantDate")) {
+                ZonedDateTime.parse(passJson.optString("relevantDate") ?: EPOCH).toEpochSecond()
+            } else if(passJson.has("when")) {
+                ZonedDateTime.parse(passJson.getJSONObject("when").optString("dateTime") ?: EPOCH).toEpochSecond()
+            } else {
+                0L
+            }
+        } catch (e: DateTimeParseException) {
+            Log.w(TAG, "Failed parsing relevantDate: $e")
             0L
         }
-        return date
+    }
+
+    private fun parseExpiration(passJson: JSONObject): Long {
+        return try {
+            if (passJson.has("expirationDate")) {
+                ZonedDateTime.parse(passJson.optString("expirationDate") ?: EPOCH).toEpochSecond()
+            } else {
+                0L
+            }
+        } catch(e: DateTimeParseException) {
+            Log.w(TAG, "Failed parsing expirationDate: $e")
+            0L
+        }
     }
 
     private fun parseBarcodes(passJson: JSONObject): Set<BarCode> {

@@ -25,6 +25,7 @@ fun PassCard(
     icon: Bitmap,
     description: String,
     relevantDate: Long,
+    expirationDate: Long,
     location: Location?,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
@@ -60,9 +61,7 @@ fun PassCard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (relevantDate != 0L) {
-                    DateView(description, relevantDate)
-                }
+                DateView(description, relevantDate, expirationDate)
                 location?.let { LocationButton(it) }
             }
         }
@@ -71,6 +70,12 @@ fun PassCard(
 
 @Preview
 @Composable
-fun PassCardPreview() {
-    PassCard(icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888), description = "KSC - HSV", relevantDate = 1, location = null)
+private fun PassCardPreview() {
+    PassCard(
+        icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
+        description = "KSC - HSV",
+        relevantDate = 1000000000,
+        expirationDate = 1001000000,
+        location = Location("")
+    )
 }

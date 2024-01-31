@@ -85,6 +85,7 @@ fun WalletView(
                 icon = pass.thumbnail ?: pass.icon,
                 description = pass.description,
                 relevantDate = pass.relevantDate,
+                expirationDate = pass.expirationDate,
                 location = pass.locations.firstOrNull()
             )
         }

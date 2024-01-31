@@ -33,6 +33,7 @@ data class Pass(
     val barCodes: Set<BarCode>
 ) {
     var relevantDate: Long = 0
+    var expirationDate: Long = 0
     var organization: String? = null
     var type: PassType = PassType.EVENT
     var serialNumber: String? = null

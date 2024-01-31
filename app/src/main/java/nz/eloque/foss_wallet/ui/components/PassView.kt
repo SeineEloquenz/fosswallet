@@ -55,9 +55,7 @@ fun PassView(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (pass.relevantDate != 0L) {
-                        DateView(pass.description, pass.relevantDate)
-                    }
+                    DateView(pass.description, pass.relevantDate, pass.expirationDate)
                     pass.locations.firstOrNull()?.let { LocationButton(it) }
                 }
             }
