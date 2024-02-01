@@ -102,22 +102,17 @@ class PassLoader(
 
 
     private fun fromRaw(rawPass: RawPass): Pass {
-        val description = if (rawPass.passJson.has("description")) {
-            rawPass.passJson.getString("description")
-        } else if (rawPass.passJson.has("what")) {
-            val whatJSON = rawPass.passJson.getJSONObject("what")
-            whatJSON.getString("description")
-        } else {
-            "No description given"
-        }
+        val description = rawPass.passJson.optString("description")
+            ?: rawPass.passJson.optJSONObject("what")?.optString("description")
+            ?: "No description"
 
         return Pass(
             description = description,
             icon = rawPass.icon,
             barCodes = parseBarcodes(rawPass.passJson)
         ).also { pass ->
-            pass.organization = rawPass.passJson.getString("organizationName")
-            pass.serialNumber = rawPass.passJson.getString("serialNumber")
+            pass.organization = rawPass.passJson.optString("organizationName")
+            pass.serialNumber = rawPass.passJson.optString("serialNumber")
             pass.relevantDate = parseRelevantDate(rawPass.passJson)
             pass.expirationDate = parseExpiration(rawPass.passJson)
             pass.logo = rawPass.logo
@@ -192,23 +187,15 @@ class PassLoader(
     }
 
     private fun parseBarCode(barcodeJSON: JSONObject): BarCode? {
-        val barcodeFormatString = if (barcodeJSON.has("type")) {
-            barcodeJSON.getString("type")
-        } else if (barcodeJSON.has("format")) {
-            barcodeJSON.getString("format")
-        } else {
-            null
-        }
+        val barcodeFormatString = barcodeJSON.optString("type") ?: barcodeJSON.optString("format")
         return if (barcodeFormatString == null) {
             Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
-            val barCode = BarCode(barcodeFormat, barcodeJSON.getString("message"))
-            if (barcodeJSON.has("altText")) {
-                barCode.alternativeText = barcodeJSON.getString("altText")
+            BarCode(barcodeFormat, barcodeJSON.getString("message")).also {
+                it.alternativeText = barcodeJSON.optString("altText")
             }
-            barCode
         }
     }
 
