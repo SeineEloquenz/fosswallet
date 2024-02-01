@@ -67,6 +67,9 @@ fun PassView(
                 DateView(pass.description, pass.relevantDate, pass.expirationDate)
                 pass.locations.firstOrNull()?.let { LocationButton(it) }
             }
+            HeaderContent(pass.passIdent)
+            HeaderContent(pass.webServiceUrl)
+            HeaderContent(pass.authToken)
         }
         Divider()
         PassImage(pass.strip)

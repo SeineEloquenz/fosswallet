@@ -37,6 +37,9 @@ data class Pass(
     var organization: String? = null
     var type: PassType = PassType.EVENT
     var serialNumber: String? = null
+    var authToken: String? = null
+    var webServiceUrl: String? = null
+    var passIdent: String? = null
     var logo: Bitmap? = null
     var strip: Bitmap? = null
     var thumbnail: Bitmap? = null

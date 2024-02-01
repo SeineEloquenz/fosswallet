@@ -115,6 +115,9 @@ class PassLoader(
             pass.serialNumber = rawPass.passJson.optString("serialNumber")
             pass.relevantDate = parseRelevantDate(rawPass.passJson)
             pass.expirationDate = parseExpiration(rawPass.passJson)
+            pass.authToken = rawPass.passJson.optString("authToken")
+            pass.webServiceUrl = rawPass.passJson.optString("webServiceUrl")
+            pass.passIdent = rawPass.passJson.optString("passIdent")
             pass.logo = rawPass.logo
             pass.strip = rawPass.strip
             pass.thumbnail = rawPass.thumbnail
