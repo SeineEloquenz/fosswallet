@@ -46,6 +46,9 @@ android {
             )
             signingConfig = signingConfigs["github"]
         }
+        debug {
+            applicationIdSuffix = ".dev"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
