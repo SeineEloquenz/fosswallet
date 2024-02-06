@@ -19,12 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
+import java.io.File
 
 @Composable
 fun PassView(
@@ -32,6 +35,7 @@ fun PassView(
     showFront: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -51,8 +55,12 @@ fun PassView(
                     modifier = Modifier
                         .weight(5f)
                 )
-                Image(
-                    bitmap = (pass.thumbnail ?: pass.icon).asImageBitmap(),
+                AsyncImage(
+                    model = pass.passIdent,
+                    contentDescription = "",
+                )
+                AsyncImage(
+                    model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
                     contentDescription = stringResource(R.string.image),
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
@@ -72,7 +80,7 @@ fun PassView(
             HeaderContent(pass.authToken)
         }
         Divider()
-        PassImage(pass.strip)
+        AsyncPassImage(pass.stripFile(context))
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier
@@ -89,8 +97,8 @@ fun PassView(
                 PassFields(pass.backFields)
             }
         }
-        PassImage(pass.logo)
-        PassImage(pass.footer)
+        AsyncPassImage(pass.logoFile(context))
+        AsyncPassImage(pass.footerFile(context))
     }
 }
 
@@ -115,6 +123,20 @@ fun PassImage(
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun AsyncPassImage(
+    model: File?,
+    modifier: Modifier = Modifier
+) {
+    model?.let {
+        AsyncImage(
+            model = it,
+            contentDescription = stringResource(R.string.image),
+            contentScale = ContentScale.Fit,
         )
     }
 }

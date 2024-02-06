@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.eloque.foss_wallet.model.Pass
@@ -24,6 +25,7 @@ fun WalletView(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
 ) {
+    val context = LocalContext.current
     val list = passViewModel.uiState.collectAsState()
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
@@ -42,7 +44,7 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${pass.id}")
                 },
-                icon = pass.thumbnail ?: pass.icon,
+                iconModel = pass.thumbnailFile(context) ?: pass.iconFile(context),
                 description = pass.description,
                 relevantDate = pass.relevantDate,
                 expirationDate = pass.expirationDate,

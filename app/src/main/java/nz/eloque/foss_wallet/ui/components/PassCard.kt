@@ -1,8 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
-import android.graphics.Bitmap
 import android.location.Location
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassCard(
-    icon: Bitmap,
+    iconModel: File,
     description: String,
     relevantDate: Long,
     expirationDate: Long,
@@ -48,9 +45,8 @@ fun PassCard(
                     modifier = Modifier
                         .weight(5f)
                 )
-                Image(
-                    bitmap = icon.asImageBitmap(),
-                    contentDescription = "logo",
+                AsyncPassImage(
+                    model = iconModel,
                     modifier = Modifier
                         .padding(5.dp)
                         .align(Alignment.CenterVertically)
@@ -66,16 +62,4 @@ fun PassCard(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun PassCardPreview() {
-    PassCard(
-        icon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
-        description = "KSC - HSV",
-        relevantDate = 1000000000,
-        expirationDate = 1001000000,
-        location = Location("")
-    )
 }
