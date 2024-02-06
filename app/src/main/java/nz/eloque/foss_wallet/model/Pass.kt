@@ -39,11 +39,16 @@ data class Pass(
     var relevantDate: Long = 0
     var expirationDate: Long = 0
     var organization: String? = null
+        get() { return if (field == "") null else field } //TODO inspect why Room converts null to ""???
     var type: PassType = PassType.EVENT
     var serialNumber: String? = null
+        get() { return if (field == "") null else field }
     var authToken: String? = null
+        get() { return if (field == "") null else field }
     var webServiceUrl: String? = null
+        get() { return if (field == "") null else field }
     var passIdent: String? = null
+        get() { return if (field == "") null else field }
     var locations: MutableList<Location> = LinkedList()
     var headerFields: MutableList<PassField> = LinkedList()
     var primaryFields: MutableList<PassField> = LinkedList()
