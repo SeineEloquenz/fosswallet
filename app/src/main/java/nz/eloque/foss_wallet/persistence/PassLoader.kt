@@ -14,6 +14,8 @@ import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
@@ -21,19 +23,40 @@ import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
 
-private class RawPass(
-    val passJson: JSONObject,
+class PassBitmaps(
     val icon: Bitmap,
     val logo: Bitmap?,
     val strip: Bitmap?,
     val thumbnail: Bitmap?,
-    val footer: Bitmap?)
+    val footer: Bitmap?
+) {
+
+    fun saveToDisk(context: Context, id: Long) {
+        val directory = File(context.filesDir, "$id")
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+        save(directory, "icon.png", icon)
+        save(directory, "logo.png", logo)
+        save(directory, "strip.png", strip)
+        save(directory, "thumbnail.png", thumbnail)
+        save(directory, "footer.png", footer)
+    }
+
+    private fun save(directory: File, path: String, bitmap: Bitmap?) {
+        bitmap?.let {
+            FileOutputStream(File(directory, path)).use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+        }
+    }
+}
 
 class PassLoader(
     private val context: Context
 ) {
 
-    fun load(inputStream: InputStream): Pass {
+    fun load(inputStream: InputStream): Pair<Pass, PassBitmaps> {
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
         var icon: Bitmap? = null
@@ -83,7 +106,8 @@ class PassLoader(
         }
         //TODO check signature before returning
         if (passJson != null) {
-            return fromRaw(RawPass(passJson!!, icon!!, logo, strip, thumbnail, footer))
+            val bitmaps = PassBitmaps(icon!!, logo, strip, thumbnail, footer)
+            return parse(passJson!!, bitmaps)
         } else {
             throw InvalidPassException()
         }
@@ -101,45 +125,46 @@ class PassLoader(
     }
 
 
-    private fun fromRaw(rawPass: RawPass): Pass {
-        val description = rawPass.passJson.optString("description")
-            ?: rawPass.passJson.optJSONObject("what")?.optString("description")
+    private fun parse(passJson: JSONObject, bitmaps: PassBitmaps): Pair<Pass, PassBitmaps> {
+        val description = passJson.optString("description")
+            ?: passJson.optJSONObject("what")?.optString("description")
             ?: "No description"
 
-        return Pass(
-            description = description,
-            icon = rawPass.icon,
-            barCodes = parseBarcodes(rawPass.passJson)
-        ).also { pass ->
-            pass.organization = rawPass.passJson.optString("organizationName")
-            pass.serialNumber = rawPass.passJson.optString("serialNumber")
-            pass.relevantDate = parseRelevantDate(rawPass.passJson)
-            pass.expirationDate = parseExpiration(rawPass.passJson)
-            pass.authToken = rawPass.passJson.optString("authToken")
-            pass.webServiceUrl = rawPass.passJson.optString("webServiceUrl")
-            pass.passIdent = rawPass.passJson.optString("passIdent")
-            pass.logo = rawPass.logo
-            pass.strip = rawPass.strip
-            pass.thumbnail = rawPass.thumbnail
-            pass.footer = rawPass.footer
-            if (rawPass.passJson.has("locations")) {
-                rawPass.passJson.getJSONArray("locations").forEach { locJson ->
-                    pass.locations.add(Location("").also {
-                        it.latitude = locJson.getDouble("latitude")
-                        it.longitude = locJson.getDouble("longitude")
-                    })
+        return Pair(
+            Pass(
+                description = description,
+                barCodes = parseBarcodes(passJson),
+                hasLogo = bitmaps.logo != null,
+                hasStrip = bitmaps.strip != null,
+                hasThumbnail = bitmaps.thumbnail != null,
+                hasFooter = bitmaps.footer != null,
+            ).also { pass ->
+                pass.organization = passJson.optString("organizationName")
+                pass.serialNumber = passJson.optString("serialNumber")
+                pass.relevantDate = parseRelevantDate(passJson)
+                pass.expirationDate = parseExpiration(passJson)
+                pass.authToken = passJson.optString("authToken")
+                pass.webServiceUrl = passJson.optString("webServiceUrl")
+                pass.passIdent = passJson.optString("passIdent")
+                if (passJson.has("locations")) {
+                    passJson.getJSONArray("locations").forEach { locJson ->
+                        pass.locations.add(Location("").also {
+                            it.latitude = locJson.getDouble("latitude")
+                            it.longitude = locJson.getDouble("longitude")
+                        })
+                    }
                 }
-            }
-            val fieldContainer = rawPass.passJson.getJSONObject(when {
-                rawPass.passJson.has("eventTicket") -> "eventTicket"
-                else -> "generic"
-            })
-            collectFields(fieldContainer, "headerFields", pass.headerFields)
-            collectFields(fieldContainer, "primaryFields", pass.primaryFields)
-            collectFields(fieldContainer, "secondaryFields", pass.secondaryFields)
-            collectFields(fieldContainer, "auxiliaryFields", pass.auxiliaryFields)
-            collectFields(fieldContainer, "backFields", pass.backFields)
-        }
+                val fieldContainer = passJson.getJSONObject(when {
+                    passJson.has("eventTicket") -> "eventTicket"
+                    else -> "generic"
+                })
+                collectFields(fieldContainer, "headerFields", pass.headerFields)
+                collectFields(fieldContainer, "primaryFields", pass.primaryFields)
+                collectFields(fieldContainer, "secondaryFields", pass.secondaryFields)
+                collectFields(fieldContainer, "auxiliaryFields", pass.auxiliaryFields)
+                collectFields(fieldContainer, "backFields", pass.backFields)
+            }, bitmaps
+        )
     }
 
     private fun parseRelevantDate(passJson: JSONObject): Long {

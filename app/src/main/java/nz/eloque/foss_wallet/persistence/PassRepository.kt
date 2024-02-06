@@ -8,6 +8,6 @@ interface PassRepository {
 
     suspend fun byId(id: Int): Pass
 
-    suspend fun insertAll(vararg pass: Pass)
+    suspend fun insert(data: Pair<Pass, PassBitmaps>)
     suspend fun delete(pass: Pass)
 }

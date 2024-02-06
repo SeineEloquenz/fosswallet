@@ -17,7 +17,7 @@ interface PassDao {
     fun byId(id: Int): Pass
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg passes: Pass)
+    fun insert(pass: Pass): Long
 
     @Delete
     fun delete(pass: Pass)

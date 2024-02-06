@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.persistence.PassRepository
 
 data class PassUiState(
@@ -33,8 +34,8 @@ class PassViewModel(
 
     suspend fun passById(id: Int) = passRepository.byId(id)
 
-    suspend fun add(pass: Pass) {
-        passRepository.insertAll(pass)
+    suspend fun add(pass: Pass, bitmaps: PassBitmaps) {
+        passRepository.insert(Pair(pass, bitmaps))
         updatePasses()
     }
 

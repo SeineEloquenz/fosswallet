@@ -92,8 +92,8 @@ fun WalletApp(
 
                         contentResolver.openInputStream(res)?.use { inputStream ->
                             try {
-                                val loaded = PassLoader(context).load(inputStream)
-                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(loaded) }
+                                val (pass, bitmaps) = PassLoader(context).load(inputStream)
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(pass, bitmaps) }
                             } catch (e: InvalidPassException) {
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                             }
