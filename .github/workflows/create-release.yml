@@ -53,4 +53,3 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: apk/app-githubRelease.apk
-          prerelease: true
