@@ -34,9 +34,10 @@ class PassViewModel(
 
     suspend fun passById(id: Int) = passRepository.byId(id)
 
-    suspend fun add(pass: Pass, bitmaps: PassBitmaps) {
-        passRepository.insert(Pair(pass, bitmaps))
+    suspend fun add(pass: Pass, bitmaps: PassBitmaps): Long {
+        val id = passRepository.insert(Pair(pass, bitmaps))
         updatePasses()
+        return id
     }
 
     suspend fun delete(pass: Pass) {

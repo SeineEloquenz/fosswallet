@@ -39,11 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,10 +68,10 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
 @Composable
 fun WalletApp(
     activity: MainActivity,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
-    val navController = rememberNavController()
     val context = LocalContext.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()

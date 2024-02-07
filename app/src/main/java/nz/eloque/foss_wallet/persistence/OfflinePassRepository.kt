@@ -13,10 +13,11 @@ class OfflinePassRepository(
 
     override suspend fun byId(id: Int): Pass = passDao.byId(id)
 
-    override suspend fun insert(data: Pair<Pass, PassBitmaps>) {
+    override suspend fun insert(data: Pair<Pass, PassBitmaps>): Long {
         val (pass, bitmaps) = data
         val id = passDao.insert(pass)
         bitmaps.saveToDisk(context, id)
+        return id
     }
 
     override suspend fun delete(pass: Pass) {
