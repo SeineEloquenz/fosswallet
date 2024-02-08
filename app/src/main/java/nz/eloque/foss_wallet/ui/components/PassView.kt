@@ -92,8 +92,8 @@ fun PassView(
                 PassFields(pass.secondaryFields)
                 PassFields(pass.auxiliaryFields)
             } else {
-                pass.serialNumber?.let { PassField(stringResource(R.string.serial_number), it) }
-                pass.organization?.let { PassField(stringResource(R.string.organization), it) }
+                PassField(stringResource(R.string.serial_number), pass.serialNumber)
+                PassField(stringResource(R.string.organization), pass.organization)
                 PassFields(pass.backFields)
             }
         }

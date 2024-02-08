@@ -30,6 +30,9 @@ data class PassField(val key: String, val label: String, val value: String) {
 data class Pass(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val description: String,
+    val formatVersion: Int,
+    val organization: String,
+    val serialNumber: String,
     val barCodes: Set<BarCode>,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
@@ -38,11 +41,7 @@ data class Pass(
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0
-    var organization: String? = null
-        get() { return if (field == "") null else field } //TODO inspect why Room converts null to ""???
     var type: PassType = PassType.EVENT
-    var serialNumber: String? = null
-        get() { return if (field == "") null else field }
     var authToken: String? = null
         get() { return if (field == "") null else field }
     var webServiceUrl: String? = null
@@ -77,7 +76,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", setOf())
+            return Pass(0, "Loading", 1, "", "", setOf())
         }
     }
 }

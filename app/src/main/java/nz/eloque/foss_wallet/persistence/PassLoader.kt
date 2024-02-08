@@ -126,21 +126,38 @@ class PassLoader(
 
 
     private fun parse(passJson: JSONObject, bitmaps: PassBitmaps): Pair<Pass, PassBitmaps> {
-        val description = passJson.optString("description")
-            ?: passJson.optJSONObject("what")?.optString("description")
-            ?: "No description"
-
+        if (!passJson.has("description")) {
+            Log.w(TAG, "Pass has no description.")
+            throw InvalidPassException()
+        }
+        val description = passJson.getString("description")
+        val passVersion = passJson.optInt("formatVersion")
+        if (passVersion != 1) {
+            Log.w(TAG, "Pass has invalid formatVersion $passVersion")
+            throw InvalidPassException()
+        }
+        if (!passJson.has("organizationName")) {
+            Log.w(TAG, "Pass is missing organizationName.")
+            throw InvalidPassException()
+        }
+        val organizationName = passJson.optString("organizationName")
+        if (!passJson.has("serialNumber")) {
+            Log.w(TAG, "Pass is missing serialNumber.")
+            throw InvalidPassException()
+        }
+        val serialNumber = passJson.optString("serialNumber")
         return Pair(
             Pass(
                 description = description,
+                formatVersion = passVersion,
+                organization = organizationName,
+                serialNumber = serialNumber,
                 barCodes = parseBarcodes(passJson),
                 hasLogo = bitmaps.logo != null,
                 hasStrip = bitmaps.strip != null,
                 hasThumbnail = bitmaps.thumbnail != null,
                 hasFooter = bitmaps.footer != null,
             ).also { pass ->
-                pass.organization = passJson.optString("organizationName")
-                pass.serialNumber = passJson.optString("serialNumber")
                 pass.relevantDate = parseRelevantDate(passJson)
                 pass.expirationDate = parseExpiration(passJson)
                 pass.authToken = passJson.optString("authToken")
