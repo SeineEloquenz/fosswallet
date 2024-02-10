@@ -54,8 +54,8 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
-import nz.eloque.foss_wallet.ui.components.PassView
-import nz.eloque.foss_wallet.ui.components.PassViewBottomBar
+import nz.eloque.foss_wallet.ui.components.pass_view.PassView
+import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 import nz.eloque.foss_wallet.utils.isScrollingUp

@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components
+package nz.eloque.foss_wallet.ui.components.pass_view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TurnLeft

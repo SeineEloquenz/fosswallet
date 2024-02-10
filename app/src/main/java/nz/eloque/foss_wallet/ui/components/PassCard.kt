@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)

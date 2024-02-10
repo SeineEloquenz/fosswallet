@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components
+package nz.eloque.foss_wallet.ui.components.pass_view
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
@@ -27,6 +27,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.ui.components.DateView
+import nz.eloque.foss_wallet.ui.components.LocationButton
 import java.io.File
 
 @Composable
