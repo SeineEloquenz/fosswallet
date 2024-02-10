@@ -58,10 +58,6 @@ fun PassView(
                         .weight(5f)
                 )
                 AsyncImage(
-                    model = pass.passIdent,
-                    contentDescription = "",
-                )
-                AsyncImage(
                     model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
                     contentDescription = stringResource(R.string.image),
                     contentScale = ContentScale.Fit,
