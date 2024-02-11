@@ -160,6 +160,7 @@ class PassLoader(
             ).also { pass ->
                 pass.relevantDate = parseRelevantDate(passJson)
                 pass.expirationDate = parseExpiration(passJson)
+                pass.logoText = passJson.optString("logoText")
                 pass.authToken = passJson.optString("authToken")
                 pass.webServiceUrl = passJson.optString("webServiceUrl")
                 pass.passIdent = passJson.optString("passIdent")
