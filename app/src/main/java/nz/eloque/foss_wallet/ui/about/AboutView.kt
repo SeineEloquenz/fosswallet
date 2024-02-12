@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,9 +63,15 @@ fun AboutView() {
             )
         }
         OutlinedButton(
-            onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet") }
+            onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet") },
+            modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
         ) {
             AboutContent(icon = Icons.Filled.Source, text = stringResource(R.string.source_code))
+        }
+        OutlinedButton(
+            onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE") },
+            modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)) {
+            AboutContent(icon = Icons.Filled.Description, text = stringResource(R.string.license))
         }
     }
 }
