@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.components
 import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Icon
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.utils.prettyPrint
 import java.time.Instant
@@ -31,7 +29,6 @@ fun DateView(
     val context = LocalContext.current
 
     Row(
-        modifier = Modifier.padding(5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = {

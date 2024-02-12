@@ -51,10 +51,12 @@ import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
-import nz.eloque.foss_wallet.ui.components.pass_view.PassView
+import nz.eloque.foss_wallet.ui.components.pass_view.BoardingPassView
+import nz.eloque.foss_wallet.ui.components.pass_view.GenericPassView
 import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
@@ -153,7 +155,12 @@ fun WalletApp(
                         }
                     },
                 ) {
-                    PassView(pass.value, passViewFront.value)
+                    when(pass.value.type) {
+                        PassType.GENERIC -> GenericPassView(pass.value, passViewFront.value)
+                        PassType.EVENT -> GenericPassView(pass.value, passViewFront.value)
+                        PassType.COUPON -> GenericPassView(pass.value, passViewFront.value)
+                        PassType.BOARDING -> BoardingPassView(pass.value, passViewFront.value)
+                    }
                 }
             }
         }

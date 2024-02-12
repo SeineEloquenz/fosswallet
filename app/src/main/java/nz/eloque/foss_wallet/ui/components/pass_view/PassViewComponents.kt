@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,72 +28,44 @@ import nz.eloque.foss_wallet.ui.components.DateView
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import java.io.File
 
+
 @Composable
-fun PassView(
+fun PassTopBar(
     pass: Pass,
-    showFront: Boolean,
-    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.End),
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(10.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.End),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = pass.description,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier
-                        .weight(5f)
-                )
-                AsyncImage(
-                    model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
-                    contentDescription = stringResource(R.string.image),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .weight(2f)
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DateView(pass.description, pass.relevantDate, pass.expirationDate)
-                pass.locations.firstOrNull()?.let { LocationButton(it) }
-            }
-            HeaderContent(pass.passIdent)
-            HeaderContent(pass.webServiceUrl)
-            HeaderContent(pass.authToken)
-        }
-        Divider()
-        AsyncPassImage(pass.stripFile(context))
-        Column(
-            verticalArrangement = Arrangement.spacedBy(25.dp),
+        Text(
+            text = pass.logoText ?: pass.description,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
-                .padding(10.dp)
-        ) {
-            if (showFront) {
-                BarcodesView(pass.barCodes)
-                PassFields(pass.primaryFields)
-                PassFields(pass.secondaryFields)
-                PassFields(pass.auxiliaryFields)
-            } else {
-                PassField(stringResource(R.string.serial_number), pass.serialNumber)
-                PassField(stringResource(R.string.organization), pass.organization)
-                PassFields(pass.backFields)
-            }
-        }
-        AsyncPassImage(pass.logoFile(context))
-        AsyncPassImage(pass.footerFile(context))
+                .weight(5f)
+        )
+        AsyncImage(
+            model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
+            contentDescription = stringResource(R.string.image),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .weight(2f)
+        )
+    }
+}
+
+@Composable
+fun PassInfoBar(
+    pass: Pass,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        DateView(pass.description, pass.relevantDate, pass.expirationDate)
+        pass.locations.firstOrNull()?.let { LocationButton(it) }
     }
 }
 
@@ -135,20 +104,6 @@ fun AsyncPassImage(
             model = it,
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Fit,
-        )
-    }
-}
-
-@Composable
-fun HeaderContent(
-    value: String?,
-    modifier: Modifier = Modifier
-) {
-    value?.let {
-        Text(
-            text = it,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(5.dp)
         )
     }
 }
