@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.components.pass_view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,14 +27,9 @@ fun GenericPassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            modifier = Modifier.padding(10.dp),
-        ) {
-            PassTopBar(pass)
-            PassInfoBar(pass)
-        }
+        PassTopBar(pass)
         Divider()
-        AsyncPassImage(pass.stripFile(context))
+        AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier
@@ -59,7 +55,7 @@ fun GenericPassView(
                 PassFields(pass.backFields)
             }
         }
-        AsyncPassImage(pass.logoFile(context))
-        AsyncPassImage(pass.footerFile(context))
+        AsyncPassImage(model = pass.logoFile(context), modifier = Modifier.fillMaxWidth())
+        AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
     }
 }

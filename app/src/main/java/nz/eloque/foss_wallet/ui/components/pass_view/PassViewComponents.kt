@@ -7,13 +7,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -35,16 +39,27 @@ fun PassTopBar(
 ) {
     val context = LocalContext.current
     Row(
-        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.End),
+        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Text(
-            text = pass.logoText ?: pass.description,
-            style = MaterialTheme.typography.headlineSmall,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
                 .weight(5f)
-        )
+        ) {
+            Text(
+                text = pass.logoText ?: pass.description,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DateView(pass.description, pass.relevantDate, pass.expirationDate)
+                pass.locations.firstOrNull()?.let { LocationButton(it) }
+            }
+        }
         AsyncImage(
             model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
             contentDescription = stringResource(R.string.image),
@@ -52,20 +67,9 @@ fun PassTopBar(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(2f)
+                .width(100.dp)
+                .height(100.dp)
         )
-    }
-}
-
-@Composable
-fun PassInfoBar(
-    pass: Pass,
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        DateView(pass.description, pass.relevantDate, pass.expirationDate)
-        pass.locations.firstOrNull()?.let { LocationButton(it) }
     }
 }
 
@@ -88,7 +92,7 @@ fun PassImage(
             bitmap = it.asImageBitmap(),
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Fit,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
         )
     }
@@ -104,6 +108,10 @@ fun AsyncPassImage(
             model = it,
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Fit,
+            modifier = modifier
+                .width(100.dp)
+                .height(100.dp)
+                .clip(RoundedCornerShape(5.dp))
         )
     }
 }
