@@ -5,4 +5,5 @@ enum class PassType(val jsonKey: String) {
     EVENT("eventTicket"),
     COUPON("coupon"),
     BOARDING("boardingPass"),
+    STORECARD("storeCard"),
 }

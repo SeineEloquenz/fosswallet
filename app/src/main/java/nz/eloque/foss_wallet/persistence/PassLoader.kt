@@ -157,6 +157,7 @@ class PassLoader(
                     passJson.has("eventTicket") -> PassType.EVENT
                     passJson.has("boardingPass") -> PassType.BOARDING
                     passJson.has("coupon") -> PassType.COUPON
+                    passJson.has("storeCard") -> PassType.STORECARD
                     else -> PassType.GENERIC
                 },
                 barCodes = parseBarcodes(passJson),
@@ -179,12 +180,12 @@ class PassLoader(
                         })
                     }
                 }
-                val fieldContainer = passJson.getJSONObject(pass.type.jsonKey)
-                collectFields(fieldContainer, "headerFields", pass.headerFields)
-                collectFields(fieldContainer, "primaryFields", pass.primaryFields)
-                collectFields(fieldContainer, "secondaryFields", pass.secondaryFields)
-                collectFields(fieldContainer, "auxiliaryFields", pass.auxiliaryFields)
-                collectFields(fieldContainer, "backFields", pass.backFields)
+                val fieldContainer = passJson.optJSONObject(pass.type.jsonKey)
+                fieldContainer?.collectFields("headerFields", pass.headerFields)
+                fieldContainer?.collectFields("primaryFields", pass.primaryFields)
+                fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
+                fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
+                fieldContainer?.collectFields("backFields", pass.backFields)
             }, bitmaps
         )
     }
@@ -249,9 +250,9 @@ class PassLoader(
         }
     }
 
-    private fun collectFields(json: JSONObject, name: String, fieldContainer: MutableList<PassField>) {
+    private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {
         try {
-            json.getJSONArray(name).forEach {
+            this.getJSONArray(name).forEach {
                 fieldContainer.add(
                     PassField(
                     it.getString("key"),

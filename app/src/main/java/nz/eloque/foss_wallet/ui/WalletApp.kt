@@ -156,10 +156,11 @@ fun WalletApp(
                     },
                 ) {
                     when(pass.value.type) {
-                        PassType.GENERIC -> GenericPassView(pass.value, passViewFront.value)
+                        PassType.STORECARD -> GenericPassView(pass.value, passViewFront.value)
                         PassType.EVENT -> GenericPassView(pass.value, passViewFront.value)
                         PassType.COUPON -> GenericPassView(pass.value, passViewFront.value)
                         PassType.BOARDING -> BoardingPassView(pass.value, passViewFront.value)
+                        PassType.GENERIC -> GenericPassView(pass.value, passViewFront.value)
                     }
                 }
             }
