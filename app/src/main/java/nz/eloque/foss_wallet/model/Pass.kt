@@ -41,7 +41,7 @@ data class Pass(
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0
-    var type: PassType = PassType.EVENT
+    var type: PassType = PassType.GENERIC
     var logoText: String? = null
         get() { return if (field == "") null else field }
     var authToken: String? = null

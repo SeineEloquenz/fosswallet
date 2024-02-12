@@ -10,6 +10,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
@@ -172,10 +173,13 @@ class PassLoader(
                         })
                     }
                 }
-                val fieldContainer = passJson.getJSONObject(when {
-                    passJson.has("eventTicket") -> "eventTicket"
-                    else -> "generic"
-                })
+                pass.type = when {
+                    passJson.has("eventTicket") -> PassType.EVENT
+                    passJson.has("boardingPass") -> PassType.BOARDING
+                    passJson.has("coupon") -> PassType.COUPON
+                    else -> PassType.GENERIC
+                }
+                val fieldContainer = passJson.getJSONObject(pass.type.jsonKey)
                 collectFields(fieldContainer, "headerFields", pass.headerFields)
                 collectFields(fieldContainer, "primaryFields", pass.primaryFields)
                 collectFields(fieldContainer, "secondaryFields", pass.secondaryFields)
