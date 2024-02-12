@@ -153,6 +153,12 @@ class PassLoader(
                 formatVersion = passVersion,
                 organization = organizationName,
                 serialNumber = serialNumber,
+                type = when {
+                    passJson.has("eventTicket") -> PassType.EVENT
+                    passJson.has("boardingPass") -> PassType.BOARDING
+                    passJson.has("coupon") -> PassType.COUPON
+                    else -> PassType.GENERIC
+                },
                 barCodes = parseBarcodes(passJson),
                 hasLogo = bitmaps.logo != null,
                 hasStrip = bitmaps.strip != null,
@@ -172,12 +178,6 @@ class PassLoader(
                             it.longitude = locJson.getDouble("longitude")
                         })
                     }
-                }
-                pass.type = when {
-                    passJson.has("eventTicket") -> PassType.EVENT
-                    passJson.has("boardingPass") -> PassType.BOARDING
-                    passJson.has("coupon") -> PassType.COUPON
-                    else -> PassType.GENERIC
                 }
                 val fieldContainer = passJson.getJSONObject(pass.type.jsonKey)
                 collectFields(fieldContainer, "headerFields", pass.headerFields)

@@ -33,6 +33,7 @@ data class Pass(
     val formatVersion: Int,
     val organization: String,
     val serialNumber: String,
+    val type: PassType,
     val barCodes: Set<BarCode>,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
@@ -41,7 +42,6 @@ data class Pass(
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0
-    var type: PassType = PassType.GENERIC
     var logoText: String? = null
         get() { return if (field == "") null else field }
     var authToken: String? = null
@@ -78,7 +78,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", setOf())
+            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf())
         }
     }
 }
