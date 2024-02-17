@@ -221,13 +221,12 @@ class PassLoader(
     private fun parseBarcodes(passJson: JSONObject): Set<BarCode> {
         val barcodes: MutableSet<BarCode> = LinkedHashSet()
         try {
-            if (passJson.has("barcode")) {
-                parseBarCode(passJson.getJSONObject("barcode"))?.let { barcodes.add(it) }
-            }
             if (passJson.has("barcodes")) {
                 passJson.getJSONArray("barcodes").forEach { codeJson ->
                     parseBarCode(codeJson)?.let { barcodes.add(it) }
                 }
+            } else if (passJson.has("barcode")) {
+                parseBarCode(passJson.getJSONObject("barcode"))?.let { barcodes.add(it) }
             }
         } catch (e: JSONException) {
             Log.i(TAG, "Error parsing barcode json")
