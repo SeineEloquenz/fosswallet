@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +21,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -67,6 +69,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     data object About : Screen("about", Icons.Filled.Info, R.string.about)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletApp(
     activity: MainActivity,
@@ -147,6 +150,17 @@ fun WalletApp(
                         PassViewBottomBar(passViewFront)
                     },
                     actions = {
+                        if (pass.value.updatable()) {
+                            PlainTooltipBox(tooltip = { Text(stringResource(R.string.update_not_yet_supported)) }) {
+                                IconButton(
+                                    onClick = { TODO() },
+                                    enabled = false,
+                                    modifier = Modifier.tooltipAnchor()
+                                ) {
+                                    Icon(imageVector = Icons.Filled.Sync, contentDescription = stringResource(R.string.update))
+                                }
+                            }
+                        }
                         IconButton(onClick = {
                             coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
                             navController.popBackStack()
