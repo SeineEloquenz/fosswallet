@@ -19,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.PassType
 
 @Composable
 fun BoardingPassView(
@@ -103,4 +106,37 @@ fun DestinationCard(
             modifier = Modifier.padding(5.dp)
         )
     }
+}
+
+@Preview
+@Composable
+private fun BoardingPassPreview() {
+    val pass = Pass(
+        0,
+        "Lufthansa Flight to SAI",
+        1,
+        "Lufthansa",
+        "serial",
+        PassType.BOARDING,
+        HashSet(),
+        false,
+        false,
+        false,
+        false
+    ).also {
+        it.relevantDate = 1800000000L
+        it.primaryFields = mutableListOf(
+            PassField("from", "From", "MUC"),
+            PassField("to", "To", "SAI")
+        )
+        it.auxiliaryFields = mutableListOf(
+            PassField("gate", "Gate", "47"),
+            PassField("seat", "Seat", "36E")
+        )
+        it.secondaryFields = mutableListOf(
+            PassField("name", "Passenger Name", "Max Mustermann"),
+            PassField("class", "Class", "Economy")
+        )
+    }
+    BoardingPassView(pass, true)
 }
