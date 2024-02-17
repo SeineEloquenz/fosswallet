@@ -63,6 +63,12 @@ data class Pass(
     fun thumbnailFile(context: Context): File? = coilImageModel(context, "thumbnail", hasThumbnail)
     fun footerFile(context: Context): File? = coilImageModel(context, "footer", hasFooter)
 
+    fun updatable(): Boolean {
+        return webServiceUrl != null
+                && authToken != null
+                && passIdent != null;
+    }
+
     private fun coilImageModel(context: Context, type: String, exists: Boolean): File? {
         return if (exists) File(context.filesDir, "$id/$type.png") else null
     }
