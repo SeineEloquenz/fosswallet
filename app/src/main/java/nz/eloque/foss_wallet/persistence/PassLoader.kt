@@ -141,12 +141,12 @@ class PassLoader(
             Log.w(TAG, "Pass is missing organizationName.")
             throw InvalidPassException()
         }
-        val organizationName = passJson.optString("organizationName")
+        val organizationName = passJson.getString("organizationName")
         if (!passJson.has("serialNumber")) {
             Log.w(TAG, "Pass is missing serialNumber.")
             throw InvalidPassException()
         }
-        val serialNumber = passJson.optString("serialNumber")
+        val serialNumber = passJson.getString("serialNumber")
         return Pair(
             Pass(
                 description = description,
@@ -168,10 +168,10 @@ class PassLoader(
             ).also { pass ->
                 pass.relevantDate = parseRelevantDate(passJson)
                 pass.expirationDate = parseExpiration(passJson)
-                pass.logoText = passJson.optString("logoText")
-                pass.authToken = passJson.optString("authenticationToken")
-                pass.webServiceUrl = passJson.optString("webServiceURL")
-                pass.passTypeIdentifier = passJson.optString("passTypeIdentifier")
+                pass.logoText = passJson.stringOrNull("logoText")
+                pass.authToken = passJson.stringOrNull("authenticationToken")
+                pass.webServiceUrl = passJson.stringOrNull("webServiceURL")
+                pass.passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier")
                 if (passJson.has("locations")) {
                     passJson.getJSONArray("locations").forEach { locJson ->
                         pass.locations.add(Location("").also {
@@ -193,9 +193,7 @@ class PassLoader(
     private fun parseRelevantDate(passJson: JSONObject): Long {
         return try {
             if (passJson.has("relevantDate")) {
-                ZonedDateTime.parse(passJson.optString("relevantDate") ?: EPOCH).toEpochSecond()
-            } else if(passJson.has("when")) {
-                ZonedDateTime.parse(passJson.getJSONObject("when").optString("dateTime") ?: EPOCH).toEpochSecond()
+                ZonedDateTime.parse(passJson.stringOrNull("relevantDate") ?: EPOCH).toEpochSecond()
             } else {
                 0L
             }
@@ -208,7 +206,7 @@ class PassLoader(
     private fun parseExpiration(passJson: JSONObject): Long {
         return try {
             if (passJson.has("expirationDate")) {
-                ZonedDateTime.parse(passJson.optString("expirationDate") ?: EPOCH).toEpochSecond()
+                ZonedDateTime.parse(passJson.stringOrNull("expirationDate") ?: EPOCH).toEpochSecond()
             } else {
                 0L
             }
@@ -237,14 +235,14 @@ class PassLoader(
     }
 
     private fun parseBarCode(barcodeJSON: JSONObject): BarCode? {
-        val barcodeFormatString = barcodeJSON.optString("type") ?: barcodeJSON.optString("format")
+        val barcodeFormatString = barcodeJSON.stringOrNull("type") ?: barcodeJSON.stringOrNull("format")
         return if (barcodeFormatString == null) {
             Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
             BarCode(barcodeFormat, barcodeJSON.getString("message")).also {
-                it.alternativeText = barcodeJSON.optString("altText")
+                it.alternativeText = barcodeJSON.stringOrNull("altText")
             }
         }
     }
@@ -262,6 +260,14 @@ class PassLoader(
             }
         } catch (e: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")
+        }
+    }
+
+    private fun JSONObject.stringOrNull(key: String): String? {
+        return if (this.has(key)) {
+            this.getString(key)
+        } else {
+            null
         }
     }
 
