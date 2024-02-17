@@ -171,7 +171,7 @@ class PassLoader(
                 pass.logoText = passJson.optString("logoText")
                 pass.authToken = passJson.optString("authenticationToken")
                 pass.webServiceUrl = passJson.optString("webServiceURL")
-                pass.passIdent = passJson.optString("passIdent")
+                pass.passTypeIdentifier = passJson.optString("passTypeIdentifier")
                 if (passJson.has("locations")) {
                     passJson.getJSONArray("locations").forEach { locJson ->
                         pass.locations.add(Location("").also {

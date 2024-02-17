@@ -48,7 +48,7 @@ data class Pass(
         get() { return if (field == "") null else field }
     var webServiceUrl: String? = null
         get() { return if (field == "") null else field }
-    var passIdent: String? = null
+    var passTypeIdentifier: String? = null
         get() { return if (field == "") null else field }
     var locations: MutableList<Location> = LinkedList()
     var headerFields: MutableList<PassField> = LinkedList()
@@ -66,7 +66,7 @@ data class Pass(
     fun updatable(): Boolean {
         return webServiceUrl != null
                 && authToken != null
-                && passIdent != null;
+                && passTypeIdentifier != null
     }
 
     private fun coilImageModel(context: Context, type: String, exists: Boolean): File? {
