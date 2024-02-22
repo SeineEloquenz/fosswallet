@@ -147,7 +147,9 @@ fun WalletApp(
                     title = stringResource(R.string.pass),
                     toolWindow = true,
                     bottomBar = {
-                        PassViewBottomBar(passViewFront)
+                        if (pass.value.backFields.isNotEmpty()) {
+                            PassViewBottomBar(passViewFront)
+                        }
                     },
                     actions = {
                         if (pass.value.updatable()) {
