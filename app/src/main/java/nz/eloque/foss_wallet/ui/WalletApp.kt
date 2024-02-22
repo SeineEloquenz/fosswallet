@@ -67,7 +67,6 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     data object About : Screen("about", Icons.Filled.Info, R.string.about)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletApp(
     activity: MainActivity,
