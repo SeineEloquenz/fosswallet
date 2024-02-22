@@ -23,6 +23,6 @@ fun LocationButton(
             it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
         })
     }) {
-        Icon(imageVector = Icons.Filled.LocationOn, contentDescription = "Location")
+        Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Location")
     }
 }

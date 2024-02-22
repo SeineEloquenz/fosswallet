@@ -44,7 +44,7 @@ fun AboutView() {
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
-                imageVector = Icons.Filled.Wallet,
+                imageVector = Icons.Default.Wallet,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                 contentDescription = stringResource(R.string.wallet),
                 contentScale = ContentScale.FillWidth,
@@ -57,7 +57,7 @@ fun AboutView() {
                 style = MaterialTheme.typography.displaySmall
             )
             AboutContent(
-                icon = Icons.Filled.Construction,
+                icon = Icons.Default.Construction,
                 text = stringResource(R.string.made_with_love),
                 textStyle = MaterialTheme.typography.labelLarge
             )
@@ -66,12 +66,12 @@ fun AboutView() {
             onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet") },
             modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
         ) {
-            AboutContent(icon = Icons.Filled.Source, text = stringResource(R.string.source_code))
+            AboutContent(icon = Icons.Default.Source, text = stringResource(R.string.source_code))
         }
         OutlinedButton(
             onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE") },
             modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)) {
-            AboutContent(icon = Icons.Filled.Description, text = stringResource(R.string.license))
+            AboutContent(icon = Icons.Default.Description, text = stringResource(R.string.license))
         }
     }
 }

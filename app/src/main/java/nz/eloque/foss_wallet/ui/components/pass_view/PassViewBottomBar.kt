@@ -26,7 +26,7 @@ fun PassViewBottomBar(
                     front.value = !front.value
                 }
             },
-            icon = { Icon(imageVector = Icons.Filled.TurnLeft, contentDescription = stringResource(R.string.front_side)) },
+            icon = { Icon(imageVector = Icons.Default.TurnLeft, contentDescription = stringResource(R.string.front_side)) },
             label = { Text(stringResource(R.string.front_side)) },
         )
         NavigationBarItem(
@@ -37,7 +37,7 @@ fun PassViewBottomBar(
                     front.value = !front.value
                 }
             },
-            icon = { Icon(imageVector = Icons.Filled.TurnRight, contentDescription = stringResource(R.string.back_side)) },
+            icon = { Icon(imageVector = Icons.Default.TurnRight, contentDescription = stringResource(R.string.back_side)) },
             label = { Text(stringResource(R.string.back_side)) },
         )
     }

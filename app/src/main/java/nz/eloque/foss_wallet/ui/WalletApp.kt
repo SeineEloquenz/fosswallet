@@ -63,8 +63,8 @@ import nz.eloque.foss_wallet.ui.wallet.WalletView
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    data object Wallet : Screen("wallet", Icons.Filled.Wallet, R.string.wallet)
-    data object About : Screen("about", Icons.Filled.Info, R.string.about)
+    data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
+    data object About : Screen("about", Icons.Default.Info, R.string.about)
 }
 
 @Composable
@@ -108,7 +108,7 @@ fun WalletApp(
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
                             text = { Text(stringResource(R.string.add_pass)) },
-                            icon = { Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.add_pass)) },
+                            icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
                             expanded = listState.isScrollingUp(),
                             onClick = { launcher.launch(arrayOf("*/*")) }
                         )
@@ -153,7 +153,7 @@ fun WalletApp(
                             coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
                             navController.popBackStack()
                         }) {
-                            Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
                         }
                     },
                 ) {
@@ -197,7 +197,7 @@ fun WalletScaffold(
                 navigationIcon = {
                     if (toolWindow && showBack) {
                         IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                            Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                         }
                     }
                 },

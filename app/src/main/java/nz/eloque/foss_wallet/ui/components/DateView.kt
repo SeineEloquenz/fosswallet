@@ -41,7 +41,7 @@ fun DateView(
             }
             context.startActivity(intent)
         }) {
-            Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = stringResource(R.string.date))
+            Icon(imageVector = Icons.Default.CalendarToday, contentDescription = stringResource(R.string.date))
         }
         Column {
             if (start != 0L) {
