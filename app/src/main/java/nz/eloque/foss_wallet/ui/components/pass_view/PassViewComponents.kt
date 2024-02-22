@@ -144,7 +144,8 @@ fun PassField(
         value = value,
         label = { Text(label) },
         readOnly = true,
-        onValueChange = {}
+        onValueChange = {},
+        modifier = modifier
     )
 }
 
@@ -158,7 +159,7 @@ fun PassFields(
         modifier = modifier
     ) {
         fields.forEach {
-            PassField(it.label, it.value)
+            PassField(it.label, it.value, Modifier.fillMaxWidth())
         }
     }
 }
