@@ -129,7 +129,7 @@ private fun BoardingPassPreview() {
         false
     ).also {
         it.relevantDate = 1800000000L
-        it.auxiliaryFields = mutableListOf(
+        it.headerFields = mutableListOf(
             PassField("gate", "Gate", "47"),
             PassField("group", "Group", "3"),
             PassField("seat", "Seat", "36E")

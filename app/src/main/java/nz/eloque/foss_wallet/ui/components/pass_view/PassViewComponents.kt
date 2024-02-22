@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,6 +53,7 @@ fun PassTopBar(
                 text = pass.logoText ?: pass.description,
                 style = MaterialTheme.typography.headlineSmall,
             )
+            HeaderFieldsView(headerFields = pass.headerFields)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically
@@ -70,6 +72,25 @@ fun PassTopBar(
                 .width(100.dp)
                 .height(100.dp)
         )
+    }
+}
+
+@Composable
+fun HeaderFieldsView(
+    headerFields: List<PassField>
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        for (field in headerFields) {
+            OutlinedTextField(
+                value = field.value,
+                label = { Text(field.label) },
+                readOnly = true,
+                onValueChange = {},
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 

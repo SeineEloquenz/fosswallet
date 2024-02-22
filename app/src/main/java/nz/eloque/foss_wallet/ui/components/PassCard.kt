@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
+import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,19 +53,7 @@ fun PassCard(
                         text = description,
                         style = MaterialTheme.typography.headlineSmall,
                     )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    ) {
-                        for (field in headerFields) {
-                            OutlinedTextField(
-                                value = field.value,
-                                label = { Text(field.label) },
-                                readOnly = true,
-                                onValueChange = {},
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
+                    HeaderFieldsView(headerFields = headerFields)
                 }
                 AsyncPassImage(
                     model = iconModel,
