@@ -46,6 +46,7 @@ fun WalletView(
                 },
                 iconModel = pass.thumbnailFile(context) ?: pass.iconFile(context),
                 description = pass.description,
+                headerFields = pass.headerFields,
                 relevantDate = pass.relevantDate,
                 expirationDate = pass.expirationDate,
                 location = pass.locations.firstOrNull()

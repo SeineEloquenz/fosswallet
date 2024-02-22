@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
 import java.io.File
 
@@ -25,6 +27,7 @@ import java.io.File
 fun PassCard(
     iconModel: File,
     description: String,
+    headerFields: List<PassField>,
     relevantDate: Long,
     expirationDate: Long,
     location: Location?,
@@ -43,12 +46,27 @@ fun PassCard(
             Row(
                 horizontalArrangement = Arrangement.Start,
             ) {
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier
-                        .weight(5f)
-                )
+                Column(
+                    modifier = Modifier.weight(5f)
+                ) {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    ) {
+                        for (field in headerFields) {
+                            OutlinedTextField(
+                                value = field.value,
+                                label = { Text(field.label) },
+                                readOnly = true,
+                                onValueChange = {},
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
                 AsyncPassImage(
                     model = iconModel,
                     modifier = Modifier
@@ -76,6 +94,11 @@ private fun PasscardPreview() {
     PassCard(
         iconModel = File(""),
         description = "SV Elversberg",
+        headerFields = listOf(
+            PassField("Gate", "Gate", "37"),
+            PassField("Group", "Group", "3"),
+            PassField("Seat", "Seat", "47")
+        ),
         relevantDate = 1000000000L,
         expirationDate = 0L,
         location = Location("")
