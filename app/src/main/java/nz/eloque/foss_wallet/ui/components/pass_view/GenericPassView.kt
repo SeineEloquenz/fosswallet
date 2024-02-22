@@ -10,10 +10,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 
@@ -52,8 +50,6 @@ fun GenericPassView(
                 }
                 BarcodesView(pass.barCodes)
             } else {
-                PassField(stringResource(R.string.serial_number), pass.serialNumber)
-                PassField(stringResource(R.string.organization), pass.organization)
                 PassFields(pass.backFields)
             }
         }
