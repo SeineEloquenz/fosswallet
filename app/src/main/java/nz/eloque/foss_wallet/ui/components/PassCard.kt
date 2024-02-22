@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
 import java.io.File
@@ -67,4 +68,16 @@ fun PassCard(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun PasscardPreview() {
+    PassCard(
+        iconModel = File(""),
+        description = "SV Elversberg",
+        relevantDate = 1000000000L,
+        expirationDate = 0L,
+        location = Location("")
+    )
 }
