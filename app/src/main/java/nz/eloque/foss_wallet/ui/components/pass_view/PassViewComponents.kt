@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.components.pass_view
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +31,8 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.DateView
 import nz.eloque.foss_wallet.ui.components.LocationButton
+import nz.eloque.foss_wallet.ui.components.Raise
+import nz.eloque.foss_wallet.ui.components.UpdateBrightness
 import java.io.File
 
 
@@ -95,8 +100,16 @@ fun HeaderFieldsView(
 fun BarcodesView(
     barcodes: Set<BarCode>
 ) {
-    barcodes.forEach {
-        PassImage(it.encodeAsBitmap(1000, 1000))
+    val fullscreen = remember { mutableStateOf(false) }
+    barcodes.firstOrNull()?.let {
+        val image = it.encodeAsBitmap(1000, 1000)
+        PassImage(bitmap = image, modifier = Modifier.clickable { fullscreen.value = !fullscreen.value })
+        if (fullscreen.value) {
+            Raise(onDismiss = { fullscreen.value = !fullscreen.value }) {
+                UpdateBrightness()
+                PassImage(image)
+            }
+        }
     }
 }
 
