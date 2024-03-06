@@ -3,8 +3,10 @@ package nz.eloque.foss_wallet.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 
 @Composable
 fun Raise(
@@ -20,6 +22,7 @@ fun Raise(
             decorFitsSystemWindows = true,
         ),
     ) {
+        (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(1f)
         Box(modifier
         ) {
             content()
