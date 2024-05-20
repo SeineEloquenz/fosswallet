@@ -14,19 +14,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Wallet
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,13 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -105,6 +99,16 @@ fun WalletApp(
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(id = R.string.wallet),
+                    actions = {
+                          IconButton(onClick = {
+                              navController.navigate(Screen.About.route)
+                          }) {
+                              Icon(
+                                  imageVector = Icons.Default.Info,
+                                  contentDescription = stringResource(R.string.about)
+                              )
+                          }
+                    },
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
                             text = { Text(stringResource(R.string.add_pass)) },
@@ -120,6 +124,7 @@ fun WalletApp(
             composable(Screen.About.route) {
                 WalletScaffold(
                     navController = navController,
+                    toolWindow = true,
                     title = stringResource(id = R.string.about)
                 ) {
                     AboutView()
@@ -183,13 +188,6 @@ fun WalletScaffold(
     bottomBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    val items = listOf(
-        Screen.Wallet,
-        Screen.About
-    )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
     Scaffold(
         topBar = {
             TopAppBar(
@@ -204,30 +202,7 @@ fun WalletScaffold(
                 actions = actions
             )
         },
-        bottomBar = {
-            if (!toolWindow) {
-                BottomAppBar {
-                    items.forEach { screen ->
-                        NavigationBarItem(
-                            icon = { Icon(screen.icon, contentDescription = screen.route) },
-                            label = { Text(stringResource(screen.resourceId)) },
-                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        )
-                    }
-                }
-            } else {
-                bottomBar.invoke()
-            }
-        },
+        bottomBar = bottomBar,
         floatingActionButton = floatingActionButton
     ) { innerPadding ->
         Box(modifier = modifier
