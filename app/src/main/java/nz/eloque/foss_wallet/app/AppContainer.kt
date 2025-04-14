@@ -3,11 +3,11 @@ package nz.eloque.foss_wallet.app
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import nz.eloque.foss_wallet.persistence.OfflinePassLocalizationRepository
-import nz.eloque.foss_wallet.persistence.OfflinePassRepository
-import nz.eloque.foss_wallet.persistence.PassLocalizationRepository
-import nz.eloque.foss_wallet.persistence.PassRepository
 import nz.eloque.foss_wallet.persistence.WalletDb
+import nz.eloque.foss_wallet.persistence.localization.OfflinePassLocalizationRepository
+import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
+import nz.eloque.foss_wallet.persistence.pass.OfflinePassRepository
+import nz.eloque.foss_wallet.persistence.pass.PassRepository
 
 interface AppContainer {
     val prefs: SharedPreferences

@@ -1,8 +1,9 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.pass
 
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.persistence.PassBitmaps
 
 interface PassRepository {
     fun all(): Flow<List<PassWithLocalization>>

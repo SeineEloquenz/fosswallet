@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.pass
 
 import androidx.room.Dao
 import androidx.room.Delete

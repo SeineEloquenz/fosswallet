@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
+import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
+import nz.eloque.foss_wallet.persistence.pass.PassDao
 
 @Database(entities = [Pass::class, PassLocalization::class], version = 5)
 @TypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)

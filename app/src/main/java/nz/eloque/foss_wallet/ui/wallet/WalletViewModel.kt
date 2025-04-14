@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
-import nz.eloque.foss_wallet.persistence.PassLocalizationRepository
-import nz.eloque.foss_wallet.persistence.PassRepository
+import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
+import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import java.util.Locale
 
 data class PassUiState(

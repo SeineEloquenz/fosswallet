@@ -1,9 +1,10 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.pass
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.persistence.PassBitmaps
 
 class OfflinePassRepository(
     private val context: Context,

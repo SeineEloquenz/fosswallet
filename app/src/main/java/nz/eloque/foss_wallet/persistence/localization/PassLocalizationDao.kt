@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.localization
 
 import androidx.room.Dao
 import androidx.room.Insert

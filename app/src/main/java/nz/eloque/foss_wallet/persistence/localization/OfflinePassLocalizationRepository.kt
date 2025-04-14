@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.localization
 
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.PassLocalization

@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.app.AppViewModelProvider
+import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.WalletApp
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
         contentResolver.openInputStream(this).use {
             it?.let {
                 try {
-                    val (pass, bitmaps, localizations) = PassLoader(this@MainActivity).load(it)
+                    val (pass, bitmaps, localizations) = PassLoader(PassParser(this@MainActivity)).load(it)
                     val id = passViewModel.add(pass, bitmaps, localizations)
                     coroutineScope.launch(Dispatchers.Main) { navController
                         .navigate("pass/$id") }

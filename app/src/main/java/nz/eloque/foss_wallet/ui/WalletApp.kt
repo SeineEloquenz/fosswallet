@@ -46,6 +46,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
@@ -89,7 +90,7 @@ fun WalletApp(
 
                         contentResolver.openInputStream(res)?.use { inputStream ->
                             try {
-                                val (pass, bitmaps, localizations) = PassLoader(context).load(inputStream)
+                                val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
                                 coroutineScope.launch(Dispatchers.IO) { passViewModel.add(pass, bitmaps, localizations) }
                             } catch (e: InvalidPassException) {
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
