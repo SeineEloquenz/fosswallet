@@ -35,7 +35,6 @@ data class Pass(
     val serialNumber: String,
     val type: PassType,
     val barCodes: Set<BarCode>,
-    val localizations: Set<String>,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
@@ -81,7 +80,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf(), setOf())
+            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf())
         }
     }
 }

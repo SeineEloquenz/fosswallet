@@ -55,7 +55,6 @@ class PassParser(val context: Context) {
                     else -> PassType.GENERIC
                 },
                 barCodes = parseBarcodes(passJson),
-                localizations = localizations.map { it.lang }.toSet(),
                 hasLogo = bitmaps.logo != null,
                 hasStrip = bitmaps.strip != null,
                 hasThumbnail = bitmaps.thumbnail != null,
