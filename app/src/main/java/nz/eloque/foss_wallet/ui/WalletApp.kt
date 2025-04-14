@@ -87,13 +87,14 @@ fun WalletApp(
                 val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
                     res?.let {
                         println("selected file URI $res")
-
-                        contentResolver.openInputStream(res)?.use { inputStream ->
-                            try {
-                                val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
-                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(pass, bitmaps, localizations) }
-                            } catch (e: InvalidPassException) {
-                                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                        coroutineScope.launch(Dispatchers.IO) {
+                            contentResolver.openInputStream(res)?.use { inputStream ->
+                                try {
+                                    val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
+                                    passViewModel.add(pass, bitmaps, localizations)
+                                } catch (e: InvalidPassException) {
+                                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
