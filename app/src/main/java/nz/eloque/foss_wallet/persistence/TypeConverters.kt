@@ -1,7 +1,5 @@
 package nz.eloque.foss_wallet.persistence
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Location
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
@@ -9,22 +7,9 @@ import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.util.LinkedList
 
 class TypeConverters {
-
-    @TypeConverter
-    fun toBitmap(bytes: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-    }
-
-    @TypeConverter
-    fun fromBitmap(bitmap: Bitmap): ByteArray {
-        val os = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
-        return os.toByteArray()
-    }
 
     @TypeConverter
     fun fromLocations(locations: MutableList<Location>): String {

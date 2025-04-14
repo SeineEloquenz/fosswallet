@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +28,7 @@ fun GenericPassView(
             .verticalScroll(rememberScrollState())
     ) {
         PassTopBar(pass)
-        Divider()
+        HorizontalDivider()
         AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
@@ -38,15 +38,15 @@ fun GenericPassView(
             if (showFront) {
                 if (pass.primaryFields.isNotEmpty()) {
                     PassFields(pass.primaryFields)
-                    Divider()
+                    HorizontalDivider()
                 }
                 if (pass.auxiliaryFields.isNotEmpty()) {
                     PassFields(pass.auxiliaryFields)
-                    Divider()
+                    HorizontalDivider()
                 }
                 if (pass.secondaryFields.isNotEmpty()) {
                     PassFields(pass.secondaryFields)
-                    Divider()
+                    HorizontalDivider()
                 }
                 BarcodesView(pass.barCodes)
             } else {

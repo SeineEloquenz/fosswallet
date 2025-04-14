@@ -18,5 +18,4 @@ data class PassLocalization(
     val lang: String,
     val label: String,
     val text: String,
-) {
-}
+)

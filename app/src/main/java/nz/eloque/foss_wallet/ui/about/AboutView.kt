@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material.icons.filled.Wallet
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -30,7 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutView() {
     val uriHandler = LocalUriHandler.current
@@ -80,8 +78,8 @@ fun AboutView() {
 fun AboutContent(
     icon: ImageVector,
     text: String,
-    textStyle: TextStyle = MaterialTheme.typography.headlineSmall,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.headlineSmall,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),

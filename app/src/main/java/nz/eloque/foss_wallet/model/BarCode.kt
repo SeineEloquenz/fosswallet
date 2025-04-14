@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.model
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import org.json.JSONObject
@@ -32,7 +33,7 @@ data class BarCode(
                 pixels[offset + x] = if (result[x, y]) Color.BLACK else Color.WHITE
             }
         }
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(w, h)
         bitmap.setPixels(pixels, 0, width, 0, 0, w, h)
         return bitmap
     }

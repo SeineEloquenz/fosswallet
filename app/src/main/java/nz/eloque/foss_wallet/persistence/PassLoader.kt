@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.core.graphics.createBitmap
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.parsing.LocalizationParser
@@ -99,7 +100,7 @@ class PassLoader(
             } while (zip.nextEntry.also { entry = it } != null)
         }
         if (icon == null) {
-            icon = logo ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+            icon = logo ?: createBitmap(100, 100)
         }
         //TODO check signature before returning
         if (passJson != null) {

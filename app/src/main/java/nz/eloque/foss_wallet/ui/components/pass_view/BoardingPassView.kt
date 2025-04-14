@@ -10,7 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,7 +40,7 @@ fun BoardingPassView(
             .verticalScroll(rememberScrollState())
     ) {
         PassTopBar(pass)
-        Divider()
+        HorizontalDivider()
         AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
@@ -51,7 +51,7 @@ fun BoardingPassView(
                 if (pass.primaryFields.size == 1) {
                     val field = pass.primaryFields[0]
                     PassField(field.label, field.value)
-                    Divider()
+                    HorizontalDivider()
                 } else if (pass.primaryFields.size >= 2) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -71,15 +71,15 @@ fun BoardingPassView(
                             modifier = Modifier.weight(2f)
                         )
                     }
-                    Divider()
+                    HorizontalDivider()
                 }
                 if (pass.auxiliaryFields.isNotEmpty()) {
                     PassFields(pass.auxiliaryFields)
-                    Divider()
+                    HorizontalDivider()
                 }
                 if (pass.secondaryFields.isNotEmpty()) {
                     PassFields(pass.secondaryFields)
-                    Divider()
+                    HorizontalDivider()
                 }
                 BarcodesView(pass.barCodes)
             } else {

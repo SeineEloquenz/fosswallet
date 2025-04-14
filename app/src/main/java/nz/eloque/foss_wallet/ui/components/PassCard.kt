@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +21,6 @@ import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
 import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassCard(
     iconModel: File,
@@ -31,8 +29,8 @@ fun PassCard(
     relevantDate: Long,
     expirationDate: Long,
     location: Location?,
-    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     Card(
         onClick = onClick
