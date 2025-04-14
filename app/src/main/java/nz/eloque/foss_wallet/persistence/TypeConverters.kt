@@ -27,6 +27,16 @@ class TypeConverters {
     }
 
     @TypeConverter
+    fun fromLangs(langs: Set<String>): String {
+        return langs.joinToString(",")
+    }
+
+    @TypeConverter
+    fun toLangs(langs: String): Set<String> {
+        return langs.split(",").toSet()
+    }
+
+    @TypeConverter
     fun fromLocations(locations: MutableList<Location>): String {
         val json = JSONArray()
         locations.forEach {

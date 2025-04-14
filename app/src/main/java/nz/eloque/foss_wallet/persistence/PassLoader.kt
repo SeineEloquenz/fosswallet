@@ -10,7 +10,9 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.parsing.LocalizationParser
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
@@ -57,7 +59,8 @@ class PassLoader(
     private val context: Context
 ) {
 
-    fun load(inputStream: InputStream): Pair<Pass, PassBitmaps> {
+    fun load(inputStream: InputStream): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+        val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
         var icon: Bitmap? = null
@@ -97,6 +100,9 @@ class PassLoader(
                         "footer.png", "footer@2x.png" -> {
                             footer = loadImage(baos)
                         }
+                        in Regex("..\\.lproj/pass.strings") -> {
+                            localizations.addAll(parseLocalization(entry.name.substring(0, 2), baos))
+                        }
                     }
                 }
             } while (zip.nextEntry.also { entry = it } != null)
@@ -107,11 +113,13 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon!!, logo, strip, thumbnail, footer)
-            return parse(passJson!!, bitmaps)
+            return parse(passJson!!, bitmaps, localizations)
         } else {
             throw InvalidPassException()
         }
     }
+
+    operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
     private fun loadImage(baos: ByteArrayOutputStream): Bitmap? {
         val array = baos.toByteArray()
@@ -124,8 +132,13 @@ class PassLoader(
         }
     }
 
+    private fun parseLocalization(lang: String, baos: ByteArrayOutputStream): Set<PassLocalization> {
+        val content = baos.toString("UTF-8")
+        return LocalizationParser.parseStrings(lang, content)
+    }
 
-    private fun parse(passJson: JSONObject, bitmaps: PassBitmaps): Pair<Pass, PassBitmaps> {
+
+    private fun parse(passJson: JSONObject, bitmaps: PassBitmaps, localizations: Set<PassLocalization>): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
         if (!passJson.has("description")) {
             Log.w(TAG, "Pass has no description.")
             throw InvalidPassException()
@@ -146,7 +159,7 @@ class PassLoader(
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
-        return Pair(
+        return Triple(
             Pass(
                 description = description,
                 formatVersion = passVersion,
@@ -160,6 +173,7 @@ class PassLoader(
                     else -> PassType.GENERIC
                 },
                 barCodes = parseBarcodes(passJson),
+                localizations = localizations.map { it.lang }.toSet(),
                 hasLogo = bitmaps.logo != null,
                 hasStrip = bitmaps.strip != null,
                 hasThumbnail = bitmaps.thumbnail != null,
@@ -185,7 +199,7 @@ class PassLoader(
                 fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
                 fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
                 fieldContainer?.collectFields("backFields", pass.backFields)
-            }, bitmaps
+            }, bitmaps, localizations
         )
     }
 

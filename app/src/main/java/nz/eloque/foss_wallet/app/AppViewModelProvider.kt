@@ -9,7 +9,7 @@ import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            PassViewModel(walletApplication().container.passRepository)
+            PassViewModel(walletApplication().container.passRepository, walletApplication().container.localizationRepository)
         }
     }
 }

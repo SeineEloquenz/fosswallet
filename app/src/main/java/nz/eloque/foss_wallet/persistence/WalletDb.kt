@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassLocalization
 
-@Database(entities = [Pass::class], version = 4)
+@Database(entities = [Pass::class, PassLocalization::class], version = 5)
 @TypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)
 abstract class WalletDb : RoomDatabase() {
     abstract fun passDao(): PassDao
+    abstract fun localizationDao(): PassLocalizationDao
 
     companion object {
         @Volatile

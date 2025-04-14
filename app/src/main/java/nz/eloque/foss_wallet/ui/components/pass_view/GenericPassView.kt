@@ -69,6 +69,7 @@ private fun GenericPassPreview() {
         "serial",
         PassType.BOARDING,
         HashSet(),
+        HashSet(),
         false,
         false,
         false,

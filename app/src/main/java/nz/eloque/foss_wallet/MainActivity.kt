@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity() {
         contentResolver.openInputStream(this).use {
             it?.let {
                 try {
-                    val (pass, bitmaps) = PassLoader(this@MainActivity).load(it)
-                    val id = passViewModel.add(pass, bitmaps)
+                    val (pass, bitmaps, localizations) = PassLoader(this@MainActivity).load(it)
+                    val id = passViewModel.add(pass, bitmaps, localizations)
                     coroutineScope.launch(Dispatchers.Main) { navController
                         .navigate("pass/$id") }
                 } catch (e: InvalidPassException) {

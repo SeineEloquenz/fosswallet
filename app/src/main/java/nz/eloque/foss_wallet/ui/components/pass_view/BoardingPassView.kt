@@ -123,6 +123,7 @@ private fun BoardingPassPreview() {
         "serial",
         PassType.BOARDING,
         HashSet(),
+        HashSet(),
         false,
         false,
         false,
