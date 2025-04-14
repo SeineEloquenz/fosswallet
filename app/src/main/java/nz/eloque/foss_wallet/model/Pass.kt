@@ -26,15 +26,16 @@ data class PassField(val key: String, val label: String, val value: String) {
     }
 }
 
-@Entity
+@Entity(tableName = "Pass")
 data class Pass(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
-    val description: String,
+    var description: String,
     val formatVersion: Int,
     val organization: String,
     val serialNumber: String,
     val type: PassType,
     val barCodes: Set<BarCode>,
+    val localizations: Set<String>,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
@@ -80,7 +81,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf())
+            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf(), setOf())
         }
     }
 }

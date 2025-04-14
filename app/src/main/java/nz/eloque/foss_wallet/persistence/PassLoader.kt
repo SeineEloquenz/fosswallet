@@ -3,23 +3,16 @@ package nz.eloque.foss_wallet.persistence
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.location.Location
 import android.util.Log
-import android.widget.Toast
-import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassField
-import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.utils.forEach
-import org.json.JSONException
+import nz.eloque.foss_wallet.model.PassLocalization
+import nz.eloque.foss_wallet.parsing.LocalizationParser
+import nz.eloque.foss_wallet.parsing.PassParser
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.time.ZonedDateTime
-import java.time.format.DateTimeParseException
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
@@ -54,10 +47,11 @@ class PassBitmaps(
 }
 
 class PassLoader(
-    private val context: Context
+    private val passParser: PassParser
 ) {
 
-    fun load(inputStream: InputStream): Pair<Pass, PassBitmaps> {
+    fun load(inputStream: InputStream): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+        val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
         var icon: Bitmap? = null
@@ -97,6 +91,9 @@ class PassLoader(
                         "footer.png", "footer@2x.png" -> {
                             footer = loadImage(baos)
                         }
+                        in Regex("..\\.lproj/pass.strings") -> {
+                            localizations.addAll(parseLocalization(entry.name.substring(0, 2), baos))
+                        }
                     }
                 }
             } while (zip.nextEntry.also { entry = it } != null)
@@ -107,11 +104,13 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon!!, logo, strip, thumbnail, footer)
-            return parse(passJson!!, bitmaps)
+            return passParser.parse(passJson!!, bitmaps, localizations)
         } else {
             throw InvalidPassException()
         }
     }
+
+    operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
     private fun loadImage(baos: ByteArrayOutputStream): Bitmap? {
         val array = baos.toByteArray()
@@ -124,154 +123,12 @@ class PassLoader(
         }
     }
 
-
-    private fun parse(passJson: JSONObject, bitmaps: PassBitmaps): Pair<Pass, PassBitmaps> {
-        if (!passJson.has("description")) {
-            Log.w(TAG, "Pass has no description.")
-            throw InvalidPassException()
-        }
-        val description = passJson.getString("description")
-        val passVersion = passJson.optInt("formatVersion")
-        if (passVersion != 1) {
-            Log.w(TAG, "Pass has invalid formatVersion $passVersion")
-            throw InvalidPassException()
-        }
-        if (!passJson.has("organizationName")) {
-            Log.w(TAG, "Pass is missing organizationName.")
-            throw InvalidPassException()
-        }
-        val organizationName = passJson.getString("organizationName")
-        if (!passJson.has("serialNumber")) {
-            Log.w(TAG, "Pass is missing serialNumber.")
-            throw InvalidPassException()
-        }
-        val serialNumber = passJson.getString("serialNumber")
-        return Pair(
-            Pass(
-                description = description,
-                formatVersion = passVersion,
-                organization = organizationName,
-                serialNumber = serialNumber,
-                type = when {
-                    passJson.has("eventTicket") -> PassType.EVENT
-                    passJson.has("boardingPass") -> PassType.BOARDING
-                    passJson.has("coupon") -> PassType.COUPON
-                    passJson.has("storeCard") -> PassType.STORECARD
-                    else -> PassType.GENERIC
-                },
-                barCodes = parseBarcodes(passJson),
-                hasLogo = bitmaps.logo != null,
-                hasStrip = bitmaps.strip != null,
-                hasThumbnail = bitmaps.thumbnail != null,
-                hasFooter = bitmaps.footer != null,
-            ).also { pass ->
-                pass.relevantDate = parseRelevantDate(passJson)
-                pass.expirationDate = parseExpiration(passJson)
-                pass.logoText = passJson.stringOrNull("logoText")
-                pass.authToken = passJson.stringOrNull("authenticationToken")
-                pass.webServiceUrl = passJson.stringOrNull("webServiceURL")
-                pass.passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier")
-                if (passJson.has("locations")) {
-                    passJson.getJSONArray("locations").forEach { locJson ->
-                        pass.locations.add(Location("").also {
-                            it.latitude = locJson.getDouble("latitude")
-                            it.longitude = locJson.getDouble("longitude")
-                        })
-                    }
-                }
-                val fieldContainer = passJson.optJSONObject(pass.type.jsonKey)
-                fieldContainer?.collectFields("headerFields", pass.headerFields)
-                fieldContainer?.collectFields("primaryFields", pass.primaryFields)
-                fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
-                fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
-                fieldContainer?.collectFields("backFields", pass.backFields)
-            }, bitmaps
-        )
-    }
-
-    private fun parseRelevantDate(passJson: JSONObject): Long {
-        return try {
-            if (passJson.has("relevantDate")) {
-                ZonedDateTime.parse(passJson.stringOrNull("relevantDate") ?: EPOCH).toEpochSecond()
-            } else {
-                0L
-            }
-        } catch (e: DateTimeParseException) {
-            Log.w(TAG, "Failed parsing relevantDate: $e")
-            0L
-        }
-    }
-
-    private fun parseExpiration(passJson: JSONObject): Long {
-        return try {
-            if (passJson.has("expirationDate")) {
-                ZonedDateTime.parse(passJson.stringOrNull("expirationDate") ?: EPOCH).toEpochSecond()
-            } else {
-                0L
-            }
-        } catch(e: DateTimeParseException) {
-            Log.w(TAG, "Failed parsing expirationDate: $e")
-            0L
-        }
-    }
-
-    private fun parseBarcodes(passJson: JSONObject): Set<BarCode> {
-        val barcodes: MutableSet<BarCode> = LinkedHashSet()
-        try {
-            if (passJson.has("barcodes")) {
-                passJson.getJSONArray("barcodes").forEach { codeJson ->
-                    parseBarCode(codeJson)?.let { barcodes.add(it) }
-                }
-            } else if (passJson.has("barcode")) {
-                parseBarCode(passJson.getJSONObject("barcode"))?.let { barcodes.add(it) }
-            }
-        } catch (e: JSONException) {
-            Log.i(TAG, "Error parsing barcode json")
-            Log.i(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
-            Log.i(TAG, "Exception: $e")
-        }
-        return barcodes
-    }
-
-    private fun parseBarCode(barcodeJSON: JSONObject): BarCode? {
-        val barcodeFormatString = barcodeJSON.stringOrNull("type") ?: barcodeJSON.stringOrNull("format")
-        return if (barcodeFormatString == null) {
-            Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
-            null
-        } else {
-            val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
-            BarCode(barcodeFormat, barcodeJSON.getString("message")).also {
-                it.alternativeText = barcodeJSON.stringOrNull("altText")
-            }
-        }
-    }
-
-    private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {
-        try {
-            this.getJSONArray(name).forEach {
-                fieldContainer.add(
-                    PassField(
-                    it.getString("key"),
-                    it.getString("label"),
-                    it.getString("value")
-                )
-                )
-            }
-        } catch (e: JSONException) {
-            Log.i(TAG, "Fields $name not existing. Stopping parsing.")
-        }
-    }
-
-    private fun JSONObject.stringOrNull(key: String): String? {
-        return if (this.has(key)) {
-            this.getString(key)
-        } else {
-            null
-        }
+    private fun parseLocalization(lang: String, baos: ByteArrayOutputStream): Set<PassLocalization> {
+        val content = baos.toString("UTF-8")
+        return LocalizationParser.parseStrings(lang, content)
     }
 
     companion object {
         private const val TAG = "PassLoader"
-        private const val EPOCH = "1970-01-01T00:00:00Z"
     }
 }

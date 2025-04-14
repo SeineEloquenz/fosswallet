@@ -46,6 +46,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
@@ -55,6 +56,7 @@ import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
 import nz.eloque.foss_wallet.utils.isScrollingUp
+import java.util.Locale
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
@@ -88,8 +90,8 @@ fun WalletApp(
 
                         contentResolver.openInputStream(res)?.use { inputStream ->
                             try {
-                                val (pass, bitmaps) = PassLoader(context).load(inputStream)
-                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(pass, bitmaps) }
+                                val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.add(pass, bitmaps, localizations) }
                             } catch (e: InvalidPassException) {
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                             }
@@ -139,7 +141,7 @@ fun WalletApp(
                 val pass = remember { mutableStateOf(Pass.placeholder())}
                 LaunchedEffect(coroutineScope) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        pass.value = passViewModel.passById(passId)
+                        pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
                     }
                 }
 
