@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +33,7 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    Card(
+    ElevatedCard(
         onClick = onClick
     ) {
         Column(
@@ -51,7 +52,10 @@ fun PassCard(
                         text = description,
                         style = MaterialTheme.typography.headlineSmall,
                     )
-                    HeaderFieldsView(headerFields = headerFields)
+                    HeaderFieldsView(
+                        headerFields = headerFields,
+                        cardColors = CardDefaults.elevatedCardColors()
+                    )
                 }
                 AsyncPassImage(
                     model = iconModel,

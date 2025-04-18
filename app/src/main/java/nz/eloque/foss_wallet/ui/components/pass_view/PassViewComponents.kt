@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.DateView
 import nz.eloque.foss_wallet.ui.components.LocationButton
+import nz.eloque.foss_wallet.ui.components.PassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
 import java.io.File
@@ -55,7 +57,10 @@ fun PassTopBar(
                 text = pass.logoText ?: pass.description,
                 style = MaterialTheme.typography.headlineSmall,
             )
-            HeaderFieldsView(headerFields = pass.headerFields)
+            HeaderFieldsView(
+                headerFields = pass.headerFields,
+                cardColors = CardDefaults.outlinedCardColors()
+            )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically
@@ -79,17 +84,17 @@ fun PassTopBar(
 
 @Composable
 fun HeaderFieldsView(
+    cardColors: CardColors,
     headerFields: List<PassField>
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         for (field in headerFields) {
-            OutlinedTextField(
-                value = field.value,
-                label = { Text(field.label) },
-                readOnly = true,
-                onValueChange = {},
+            PassLabel(
+                label = field.label,
+                content = field.value,
+                colors = cardColors,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -153,11 +158,9 @@ fun PassField(
     value: String,
     modifier: Modifier = Modifier
 ) {
-    OutlinedTextField(
-        value = value,
-        label = { Text(label) },
-        readOnly = true,
-        onValueChange = {},
+    PassLabel(
+        label = label,
+        content = value,
         modifier = modifier
     )
 }
