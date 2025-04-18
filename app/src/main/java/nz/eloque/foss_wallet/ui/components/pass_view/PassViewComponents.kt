@@ -69,10 +69,8 @@ fun PassTopBar(
                 pass.locations.firstOrNull()?.let { LocationButton(it) }
             }
         }
-        AsyncImage(
+        AsyncPassImage(
             model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
-            contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(2f)
