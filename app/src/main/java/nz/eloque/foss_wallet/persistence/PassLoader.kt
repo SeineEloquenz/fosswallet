@@ -78,19 +78,19 @@ class PassLoader(
                             println("Content:\n$content")
                         }
                         "logo.png", "logo@2x.png" -> {
-                            logo = loadImage(baos)
+                            logo = chooseBetter(logo, loadImage(baos))
                         }
                         "icon.png", "icon@2x.png" -> {
-                            icon = loadImage(baos)
+                            icon = chooseBetter(icon, loadImage(baos))
                         }
                         "strip.png", "strip@2x.png" -> {
-                            strip = loadImage(baos)
+                            strip = chooseBetter(strip, loadImage(baos))
                         }
                         "thumbnail.png", "thumbnail@2x.png" -> {
-                            thumbnail = loadImage(baos)
+                            thumbnail = chooseBetter(thumbnail, loadImage(baos))
                         }
                         "footer.png", "footer@2x.png" -> {
-                            footer = loadImage(baos)
+                            footer = chooseBetter(footer, loadImage(baos))
                         }
                         in Regex("..\\.lproj/pass.strings") -> {
                             localizations.addAll(parseLocalization(entry.name.substring(0, 2), baos))
@@ -127,6 +127,20 @@ class PassLoader(
     private fun parseLocalization(lang: String, baos: ByteArrayOutputStream): Set<PassLocalization> {
         val content = baos.toString("UTF-8")
         return LocalizationParser.parseStrings(lang, content)
+    }
+
+    private fun chooseBetter(left: Bitmap?, right: Bitmap?): Bitmap? {
+        return when {
+            left == null && right == null -> null
+            left == null -> right
+            right == null -> left
+            left.pixels() > right.pixels() -> left
+            else -> right
+        }
+    }
+
+    private fun Bitmap.pixels(): Int {
+        return this.height * this.width
     }
 
     companion object {
