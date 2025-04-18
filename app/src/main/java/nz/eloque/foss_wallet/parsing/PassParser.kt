@@ -10,6 +10,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.utils.forEach
@@ -48,11 +49,15 @@ class PassParser(val context: Context) {
                 organization = organizationName,
                 serialNumber = serialNumber,
                 type = when {
-                    passJson.has("eventTicket") -> PassType.EVENT
-                    passJson.has("boardingPass") -> PassType.BOARDING
-                    passJson.has("coupon") -> PassType.COUPON
-                    passJson.has("storeCard") -> PassType.STORECARD
-                    else -> PassType.GENERIC
+                    passJson.has(PassType.EVENT) -> PassType.Event()
+                    passJson.has(PassType.BOARDING) -> {
+                        val boardingJson = passJson.getJSONObject(PassType.BOARDING)
+                        val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
+                        PassType.Boarding(transitType)
+                    }
+                    passJson.has(PassType.COUPON) -> PassType.Coupon()
+                    passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
+                    else -> PassType.Generic()
                 },
                 barCodes = parseBarcodes(passJson),
                 hasLogo = bitmaps.logo != null,

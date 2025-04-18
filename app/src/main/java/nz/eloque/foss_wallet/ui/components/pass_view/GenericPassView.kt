@@ -67,7 +67,7 @@ private fun GenericPassPreview() {
         1,
         "KSC",
         "serial",
-        PassType.BOARDING,
+        PassType.Generic(),
         HashSet(),
         false,
         false,

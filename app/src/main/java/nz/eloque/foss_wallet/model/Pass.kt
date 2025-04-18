@@ -80,7 +80,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", PassType.GENERIC, setOf())
+            return Pass(0, "Loading", 1, "", "", PassType.Generic(), setOf())
         }
     }
 }

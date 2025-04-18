@@ -4,12 +4,40 @@ import android.location.Location
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.LinkedList
 
 class TypeConverters {
+
+    @TypeConverter
+    fun fromPassType(passType: PassType): String {
+        return when (passType) {
+            is PassType.Boarding -> passType.jsonKey + "," + passType.transitType.toString()
+            is PassType.Coupon -> passType.jsonKey
+            is PassType.Event -> passType.jsonKey
+            is PassType.Generic -> passType.jsonKey
+            is PassType.StoreCard -> passType.jsonKey
+        }
+    }
+
+    @TypeConverter
+    fun toPassType(passType: String): PassType {
+        val split = passType.split(",")
+        return if (split.size > 1) {
+            PassType.Boarding(TransitType.valueOf(split[1]))
+        } else {
+            when (passType) {
+                PassType.EVENT -> PassType.Event()
+                PassType.COUPON -> PassType.Coupon()
+                PassType.STORE_CARD -> PassType.StoreCard()
+                else -> PassType.Generic()
+            }
+        }
+    }
 
     @TypeConverter
     fun fromLocations(locations: MutableList<Location>): String {
