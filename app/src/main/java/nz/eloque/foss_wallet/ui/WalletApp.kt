@@ -41,6 +41,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.app.AppViewModelProvider
@@ -93,7 +94,9 @@ fun WalletApp(
                                     val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
                                     passViewModel.add(pass, bitmaps, localizations)
                                 } catch (e: InvalidPassException) {
-                                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                                    withContext(Dispatchers.Main) {
+                                        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
