@@ -1,0 +1,17 @@
+name: Validate Fastlane Metadata
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Fastlane Supply Metadata
+        uses: ashutoshgngwr/validate-fastlane-supply-metadata@v2.1.0
