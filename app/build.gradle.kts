@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
     id("com.google.devtools.ksp")
+    id("androidx.room")
 }
 
 android {
@@ -57,6 +58,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
