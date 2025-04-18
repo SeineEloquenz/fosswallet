@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
@@ -103,7 +104,9 @@ fun DestinationCard(
     ) {
         Text(
             text = destination,
-            style = MaterialTheme.typography.headlineLarge,
+            style = if (destination.length <= 3) { MaterialTheme.typography.headlineLarge } else { MaterialTheme.typography.headlineSmall },
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(5.dp)
