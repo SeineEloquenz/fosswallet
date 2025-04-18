@@ -168,12 +168,12 @@ fun WalletApp(
                         }
                     },
                 ) {
-                    when(pass.value.type) {
-                        PassType.STORECARD -> GenericPassView(pass.value, passViewFront.value)
-                        PassType.EVENT -> GenericPassView(pass.value, passViewFront.value)
-                        PassType.COUPON -> GenericPassView(pass.value, passViewFront.value)
-                        PassType.BOARDING -> BoardingPassView(pass.value, passViewFront.value)
-                        PassType.GENERIC -> GenericPassView(pass.value, passViewFront.value)
+                    when(val passType = pass.value.type) {
+                        is PassType.StoreCard -> GenericPassView(pass.value, passViewFront.value)
+                        is PassType.Event -> GenericPassView(pass.value, passViewFront.value)
+                        is PassType.Coupon -> GenericPassView(pass.value, passViewFront.value)
+                        is PassType.Boarding -> BoardingPassView(pass.value, passType.transitType, passViewFront.value)
+                        is PassType.Generic -> GenericPassView(pass.value, passViewFront.value)
                     }
                 }
             }
