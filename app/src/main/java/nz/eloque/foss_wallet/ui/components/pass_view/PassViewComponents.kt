@@ -143,11 +143,11 @@ fun AsyncPassImage(
         AsyncImage(
             model = it,
             contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillBounds,
             modifier = modifier
                 .width(100.dp)
                 .height(100.dp)
-                .clip(RoundedCornerShape(5.dp))
+                .clip(RoundedCornerShape(15.dp))
         )
     }
 }
