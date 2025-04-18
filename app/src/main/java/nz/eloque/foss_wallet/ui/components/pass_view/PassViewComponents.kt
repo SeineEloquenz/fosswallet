@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
@@ -56,8 +57,11 @@ fun PassTopBar(
         ) {
             Text(
                 text = pass.logoText ?: pass.description,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 style = MaterialTheme.typography.headlineSmall,
             )
+            Spacer(modifier = Modifier.height(5.dp))
             HeaderFieldsView(
                 headerFields = pass.headerFields,
                 cardColors = CardDefaults.outlinedCardColors()
