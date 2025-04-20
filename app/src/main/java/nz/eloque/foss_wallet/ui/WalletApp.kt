@@ -44,14 +44,10 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
-import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
 import nz.eloque.foss_wallet.ui.components.pass_view.BoardingPassView
 import nz.eloque.foss_wallet.ui.components.pass_view.GenericPassView
@@ -68,11 +64,10 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
 
 @Composable
 fun WalletApp(
-    activity: MainActivity,
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    passViewModel: PassViewModel = viewModel(),
 ) {
-    val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val context = LocalContext.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
@@ -93,9 +88,8 @@ fun WalletApp(
                         coroutineScope.launch(Dispatchers.IO) {
                             contentResolver.openInputStream(res)?.use { inputStream ->
                                 try {
-                                    val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
-                                    passViewModel.add(pass, bitmaps, localizations)
-                                } catch (e: InvalidPassException) {
+                                    passViewModel.load(context, inputStream)
+                                } catch (_: InvalidPassException) {
                                     withContext(Dispatchers.Main) {
                                         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                                     }

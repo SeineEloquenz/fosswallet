@@ -1,13 +1,15 @@
 package nz.eloque.foss_wallet.persistence.pass
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 
-class OfflinePassRepository(
-    private val context: Context,
+class OfflinePassRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val passDao: PassDao
 ) : PassRepository {
 
