@@ -46,7 +46,7 @@ fun PassLabel(
                     )
                 }
                 Text(
-                    text = content,
+                    text = if (content.isNotEmpty()) { content } else { "-" },
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
