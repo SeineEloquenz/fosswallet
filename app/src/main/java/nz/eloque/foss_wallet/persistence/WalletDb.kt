@@ -13,10 +13,11 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
 
 
 @Database(
-    version = 5,
+    version = 6,
     entities = [Pass::class, PassLocalization::class],
     autoMigrations = [
-        AutoMigration (from = 4, to = 5)
+        AutoMigration (from = 4, to = 5),
+        AutoMigration (from = 5, to = 6),
     ],
     exportSchema = true
 )
