@@ -28,7 +28,7 @@ data class PassField(val key: String, val label: String, val value: String) {
 
 @Entity(tableName = "Pass")
 data class Pass(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+    @PrimaryKey val id: Long = 0L,
     var description: String,
     val formatVersion: Int,
     val organization: String,

@@ -18,6 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
+import java.util.Objects
 
 class PassParser(val context: Context) {
 
@@ -44,6 +45,7 @@ class PassParser(val context: Context) {
         val serialNumber = passJson.getString("serialNumber")
         return Triple(
             Pass(
+                id = Objects.hash(serialNumber, organizationName).toLong(),
                 description = description,
                 formatVersion = passVersion,
                 organization = organizationName,
