@@ -10,8 +10,15 @@ import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.LinkedList
+import java.util.UUID
 
 class TypeConverters {
+
+    @TypeConverter
+    fun fromUuid(uuid: UUID): String = uuid.toString()
+
+    @TypeConverter
+    fun toUuid(uuid: String): UUID = UUID.fromString(uuid)
 
     @TypeConverter
     fun fromPassType(passType: PassType): String {

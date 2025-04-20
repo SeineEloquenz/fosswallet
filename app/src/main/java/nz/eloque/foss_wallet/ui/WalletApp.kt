@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -44,6 +46,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
@@ -145,7 +148,7 @@ fun WalletApp(
                 val pass = remember { mutableStateOf(Pass.placeholder())}
                 LaunchedEffect(coroutineScope) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+                        pass.value = passViewModel.passById(passId.toLong()).applyLocalization(Locale.getDefault().language)
                     }
                 }
 
@@ -160,11 +163,26 @@ fun WalletApp(
                         }
                     },
                     actions = {
-                        IconButton(onClick = {
-                            coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
-                            navController.popBackStack()
-                        }) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                        Row {
+                            if (pass.value.updatable()) {
+                                IconButton(onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        val updated = PassbookApi.getUpdated(pass.value)
+                                        updated?.let {
+                                            val id = passViewModel.update(it.first, it.second, it.third)
+                                            pass.value = passViewModel.passById(id).applyLocalization(Locale.getDefault().language)
+                                        }
+                                    }
+                                }) {
+                                    Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update))
+                                }
+                            }
+                            IconButton(onClick = {
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                                navController.popBackStack()
+                            }) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                            }
                         }
                     },
                 ) {

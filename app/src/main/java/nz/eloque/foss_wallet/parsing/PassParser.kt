@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
 import java.util.Objects
 
-class PassParser(val context: Context) {
+class PassParser(val context: Context? = null) {
 
     fun parse(passJson: JSONObject, bitmaps: PassBitmaps, localizations: Set<PassLocalization>): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
         if (!passJson.has("description")) {
@@ -138,7 +138,7 @@ class PassParser(val context: Context) {
     private fun parseBarCode(barcodeJSON: JSONObject): BarCode? {
         val barcodeFormatString = barcodeJSON.stringOrNull("type") ?: barcodeJSON.stringOrNull("format")
         return if (barcodeFormatString == null) {
-            Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
+            context?.let { Toast.makeText(it, it.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show() }
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)

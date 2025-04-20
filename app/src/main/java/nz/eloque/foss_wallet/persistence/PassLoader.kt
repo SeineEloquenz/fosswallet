@@ -104,8 +104,8 @@ class PassLoader(
         }
         //TODO check signature before returning
         if (passJson != null) {
-            val bitmaps = PassBitmaps(icon!!, logo, strip, thumbnail, footer)
-            return passParser.parse(passJson!!, bitmaps, localizations)
+            val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
+            return passParser.parse(passJson, bitmaps, localizations)
         } else {
             throw InvalidPassException()
         }

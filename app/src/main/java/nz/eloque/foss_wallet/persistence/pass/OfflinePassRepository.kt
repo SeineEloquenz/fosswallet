@@ -13,7 +13,7 @@ class OfflinePassRepository(
 
     override fun all(): Flow<List<PassWithLocalization>> = passDao.all()
 
-    override suspend fun byId(id: Int): PassWithLocalization = passDao.byId(id)
+    override suspend fun byId(id: Long): PassWithLocalization = passDao.byId(id)
 
     override suspend fun insert(data: Pair<Pass, PassBitmaps>): Long {
         val (pass, bitmaps) = data

@@ -37,13 +37,17 @@ class PassViewModel(
         }
     }
 
-    suspend fun passById(id: Int) = passRepository.byId(id)
+    suspend fun passById(id: Long) = passRepository.byId(id)
 
     suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
         val id = passRepository.insert(Pair(pass, bitmaps))
         localization.map { it.copy(passId = id) }.forEach { localizationRepository.insert(it) }
         updatePasses()
         return id
+    }
+
+    suspend fun update(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
+        return add(pass, bitmaps, localization)
     }
 
     suspend fun delete(pass: Pass) {
