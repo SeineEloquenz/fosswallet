@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
@@ -46,8 +47,14 @@ class PassViewModel(
         return id
     }
 
-    suspend fun update(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
-        return add(pass, bitmaps, localization)
+    suspend fun update(pass: Pass): Pass? {
+        val updated = PassbookApi.getUpdated(pass)
+        return if (updated != null) {
+            val id = add(updated.first, updated.second, updated.third)
+            passById(id).applyLocalization(Locale.getDefault().language)
+        } else {
+            null
+        }
     }
 
     suspend fun delete(pass: Pass) {

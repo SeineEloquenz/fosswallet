@@ -46,7 +46,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
@@ -167,11 +166,7 @@ fun WalletApp(
                             if (pass.value.updatable()) {
                                 IconButton(onClick = {
                                     coroutineScope.launch(Dispatchers.IO) {
-                                        val updated = PassbookApi.getUpdated(pass.value)
-                                        updated?.let {
-                                            val id = passViewModel.update(it.first, it.second, it.third)
-                                            pass.value = passViewModel.passById(id).applyLocalization(Locale.getDefault().language)
-                                        }
+                                        passViewModel.update(pass.value)?.let { pass.value = it}
                                     }
                                 }) {
                                     Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update))
