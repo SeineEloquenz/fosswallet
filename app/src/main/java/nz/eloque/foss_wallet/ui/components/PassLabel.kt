@@ -37,14 +37,16 @@ fun PassLabel(
                     .padding(12.dp)
                     .fillMaxWidth()
             ) {
+                if (label.isNotEmpty()) {
+                    Text(
+                        text = label,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
                 Text(
-                    text = label,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium,
-                )
-                Text(
-                    text = content,
+                    text = if (content.isNotEmpty()) { content } else { "-" },
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
