@@ -1,8 +1,11 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.location.Location
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
@@ -13,6 +16,17 @@ import java.util.LinkedList
 import java.util.UUID
 
 class TypeConverters {
+
+    @TypeConverter
+    fun fromColor(colors: PassColors): String {
+        return "${colors.background.toArgb()},${colors.foreground.toArgb()},${colors.label.toArgb()}"
+    }
+
+    @TypeConverter
+    fun toColor(colors: String): PassColors {
+        val split = colors.split(",")
+        return PassColors(Color(split[0].toInt()), Color(split[1].toInt()), Color(split[2].toInt()))
+    }
 
     @TypeConverter
     fun fromUuid(uuid: UUID): String = uuid.toString()

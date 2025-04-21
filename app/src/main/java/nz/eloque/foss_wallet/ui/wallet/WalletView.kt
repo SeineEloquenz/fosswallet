@@ -76,7 +76,8 @@ fun WalletView(
                 headerFields = pass.headerFields,
                 relevantDate = pass.relevantDate,
                 expirationDate = pass.expirationDate,
-                location = pass.locations.firstOrNull()
+                location = pass.locations.firstOrNull(),
+                passColors = pass.colors
             )
         }
     }
