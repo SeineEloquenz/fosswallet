@@ -49,8 +49,6 @@ fun BoardingPassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp),
                 modifier = Modifier.padding(10.dp)
             ) {
-                AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
-
                 if (pass.primaryFields.size == 1) {
                     val field = pass.primaryFields[0]
                     PassField(field.label, field.value, cardColors = cardColors)
@@ -84,6 +82,7 @@ fun BoardingPassView(
             modifier = Modifier
                 .padding(10.dp)
         ) {
+            AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
             if (showFront) {
                 if (pass.auxiliaryFields.isNotEmpty()) {
                     PassFields(pass.auxiliaryFields)
