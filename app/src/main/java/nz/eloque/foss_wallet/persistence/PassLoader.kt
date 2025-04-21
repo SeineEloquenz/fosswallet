@@ -77,19 +77,19 @@ class PassLoader(
                             passJson = JSONObject(content)
                             println("Content:\n$content")
                         }
-                        "logo.png", "logo@2x.png" -> {
+                        in Regex("logo@?.*\\.png") -> {
                             logo = chooseBetter(logo, loadImage(baos))
                         }
-                        "icon.png", "icon@2x.png" -> {
+                        in Regex("icon@?.*\\.png") -> {
                             icon = chooseBetter(icon, loadImage(baos))
                         }
-                        "strip.png", "strip@2x.png" -> {
+                        in Regex("strip@?.*\\.png") -> {
                             strip = chooseBetter(strip, loadImage(baos))
                         }
-                        "thumbnail.png", "thumbnail@2x.png" -> {
+                        in Regex("thumbnail@?.*\\.png") -> {
                             thumbnail = chooseBetter(thumbnail, loadImage(baos))
                         }
-                        "footer.png", "footer@2x.png" -> {
+                        in Regex("footer@?.*\\.png") -> {
                             footer = chooseBetter(footer, loadImage(baos))
                         }
                         in Regex("..\\.lproj/pass.strings") -> {
