@@ -33,7 +33,7 @@ fun DateView(
     ) {
         IconButton(onClick = {
             val intent = Intent(Intent.ACTION_EDIT).also {
-                it.setType("vnd.android.cursor.item/event")
+                it.type = "vnd.android.cursor.item/event"
                 it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
                 it.putExtra("allDay", false)
                 it.putExtra("endTime", if (end != 0L) { end } else 1800000) //30 min default
