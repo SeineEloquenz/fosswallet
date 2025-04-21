@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -45,10 +46,12 @@ fun PassLabel(
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
-                Text(
-                    text = if (content.isNotEmpty()) { content } else { "-" },
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                SelectionContainer {
+                    Text(
+                        text = if (content.isNotEmpty()) { content } else { "-" },
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
