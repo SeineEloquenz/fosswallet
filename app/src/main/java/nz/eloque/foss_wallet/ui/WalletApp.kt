@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package nz.eloque.foss_wallet.ui
 
 import android.widget.Toast
@@ -24,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -118,8 +122,8 @@ fun WalletApp(
                             onClick = { launcher.launch(arrayOf("*/*")) }
                         )
                     }
-                ) {
-                    WalletView(navController, passViewModel, listState = listState)
+                ) { scrollBehavior ->
+                    WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior)
                 }
             }
             composable(Screen.About.route) {
@@ -184,8 +188,8 @@ fun WalletApp(
                             }
                         }
                     },
-                ) {
-                    PassView(pass.value, passViewFront.value)
+                ) { scrollBehavior ->
+                    PassView(pass.value, passViewFront.value, scrollBehavior = scrollBehavior)
                 }
             }
         }
@@ -203,8 +207,9 @@ fun WalletScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
+    content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -220,7 +225,8 @@ fun WalletScaffold(
                         }
                     }
                 },
-                actions = actions
+                actions = actions,
+                scrollBehavior = scrollBehavior
             )
         },
         bottomBar = bottomBar,
@@ -229,7 +235,7 @@ fun WalletScaffold(
         Box(modifier = modifier
             .padding(innerPadding)
             .padding(10.dp)) {
-            content.invoke()
+            content.invoke(scrollBehavior)
         }
     }
 }

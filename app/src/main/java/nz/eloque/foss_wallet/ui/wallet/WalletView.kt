@@ -11,7 +11,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,12 +33,14 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.components.PassCard
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletView(
     navController: NavController,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val context = LocalContext.current
     val list = passViewModel.uiState.collectAsState()
@@ -64,6 +70,7 @@ fun WalletView(
             .spacedBy(10.dp),
         modifier = modifier
             .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         val sortedPasses = list.value.passes.sortedWith(comparator)
         items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
