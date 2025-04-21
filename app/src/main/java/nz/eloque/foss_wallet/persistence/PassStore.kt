@@ -30,7 +30,9 @@ class PassStore @Inject constructor(
 
     suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
         val id = insert(pass, bitmaps, localization)
-        scheduleUpdate(pass)
+        if (pass.updatable()) {
+            scheduleUpdate(pass)
+        }
         return id
     }
 
