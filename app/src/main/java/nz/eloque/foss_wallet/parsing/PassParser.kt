@@ -25,7 +25,12 @@ import java.util.Objects
 
 class PassParser(val context: Context? = null) {
 
-    fun parse(passJson: JSONObject, bitmaps: PassBitmaps, localizations: Set<PassLocalization>): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+    fun parse(
+        passJson: JSONObject,
+        bitmaps: PassBitmaps,
+        localizations: Set<PassLocalization>,
+        addedAt: Instant = Instant.now()
+    ): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
         if (!passJson.has("description")) {
             Log.w(TAG, "Pass has no description.")
             throw InvalidPassException()
@@ -70,7 +75,7 @@ class PassParser(val context: Context? = null) {
                 hasStrip = bitmaps.strip != null,
                 hasThumbnail = bitmaps.thumbnail != null,
                 hasFooter = bitmaps.footer != null,
-                addedAt = Instant.now()
+                addedAt = addedAt
             ).also { pass ->
                 pass.relevantDate = parseRelevantDate(passJson)
                 pass.expirationDate = parseExpiration(passJson)

@@ -22,7 +22,7 @@ object PassbookApi {
 
         val response = client.get(requestUrl, authHeader)
         return if (response.isSuccessful) {
-            PassLoader(PassParser()).load(response.body!!.byteStream())
+            PassLoader(PassParser()).load(response.body!!.byteStream(), pass.addedAt)
         } else {
             null
         }

@@ -15,6 +15,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.nio.charset.Charset
+import java.time.Instant
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
@@ -52,7 +53,7 @@ class PassLoader(
     private val passParser: PassParser
 ) {
 
-    fun load(inputStream: InputStream): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+    fun load(inputStream: InputStream, addedAt: Instant = Instant.now()): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
@@ -106,7 +107,7 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
-            return passParser.parse(passJson, bitmaps, localizations)
+            return passParser.parse(passJson, bitmaps, localizations, addedAt = addedAt)
         } else {
             throw InvalidPassException()
         }
