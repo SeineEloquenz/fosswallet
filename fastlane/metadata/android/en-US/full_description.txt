@@ -1,1 +1,3 @@
 FossWallet is a simple Material Design 3 .pkpass Wallet built with Jetpack Compose.
+
+FossWallet supports all kinds of passes, as well as updating passes from vendor servers.
