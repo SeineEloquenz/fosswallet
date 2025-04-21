@@ -56,7 +56,7 @@ fun PassTopBar(
                 .weight(5f)
         ) {
             Text(
-                text = pass.logoText ?: pass.description,
+                text = pass.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.headlineSmall,
