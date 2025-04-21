@@ -44,7 +44,7 @@ fun WalletView(
     val list = passViewModel.uiState.collectAsState()
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
-        left.addedAt.compareTo(right.addedAt)
+        -left.addedAt.compareTo(right.addedAt)
     }) }
 
     if (list.value.passes.isEmpty()) {
