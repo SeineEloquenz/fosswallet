@@ -25,5 +25,6 @@
     <string name="made_with_love" translatable="false">Made with ❤ in Germany</string>
     <string name="to">to</string>
     <string name="license">License</string>
-    <string name="update_not_yet_supported">This Pass is updatable, but FossWallet does not support updating Passes yet.</string>
+    <string name="update_successful">Successfully updated pass</string>
+    <string name="update_failed">Pass update failed</string>
 </resources>

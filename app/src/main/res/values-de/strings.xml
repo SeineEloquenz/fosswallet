@@ -22,5 +22,6 @@
     <string name="source_code">Quellcode</string>
     <string name="to">nach</string>
     <string name="license">Lizenz</string>
-    <string name="update_not_yet_supported">Dieser Pass aktualisiert werden, aber FossWallet unterstützt noch keine Aktualisierung von Pässen</string>
+    <string name="update_successful">Pass wurde erfolgreich aktualisiert</string>
+    <string name="update_failed">Pass konnte nicht aktualisiert werden</string>
 </resources>

@@ -158,8 +158,19 @@ fun WalletApp(
                     actions = {
                         Row {
                             if (pass.value.updatable()) {
+                                val updateSuccessful = stringResource(R.string.update_successful)
+                                val updateFailed = stringResource(R.string.update_failed)
                                 IconButton(onClick = {
                                     coroutineScope.launch(Dispatchers.IO) {
+                                        val result = passViewModel.update(pass.value)
+                                        withContext(Dispatchers.Main) {
+                                            if (result != null) {
+                                                pass.value = result
+                                                Toast.makeText(context, updateSuccessful, Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(context, updateFailed, Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
                                         passViewModel.update(pass.value)?.let { pass.value = it}
                                     }
                                 }) {
