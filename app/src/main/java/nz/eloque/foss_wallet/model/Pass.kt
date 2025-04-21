@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.json.JSONObject
 import java.io.File
+import java.time.Instant
 import java.util.LinkedList
 import java.util.UUID
 
@@ -37,6 +38,8 @@ data class Pass(
     val serialNumber: String,
     val type: PassType,
     val barCodes: Set<BarCode>,
+    @ColumnInfo(defaultValue = "0")
+    val addedAt: Instant,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
@@ -47,7 +50,7 @@ data class Pass(
      */
     @ColumnInfo(defaultValue = "2b767e5b-75fd-4bec-89d7-188e832b2dc3")
     val deviceId: UUID = UUID.randomUUID(),
-    val colors: PassColors? = null
+    val colors: PassColors? = null,
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0
@@ -89,7 +92,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", PassType.Generic(), setOf())
+            return Pass(0, "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
         }
     }
 }

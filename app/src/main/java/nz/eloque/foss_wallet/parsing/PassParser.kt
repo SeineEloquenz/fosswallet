@@ -18,6 +18,7 @@ import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
 import java.util.Objects
@@ -69,6 +70,7 @@ class PassParser(val context: Context? = null) {
                 hasStrip = bitmaps.strip != null,
                 hasThumbnail = bitmaps.thumbnail != null,
                 hasFooter = bitmaps.footer != null,
+                addedAt = Instant.now()
             ).also { pass ->
                 pass.relevantDate = parseRelevantDate(passJson)
                 pass.expirationDate = parseExpiration(passJson)

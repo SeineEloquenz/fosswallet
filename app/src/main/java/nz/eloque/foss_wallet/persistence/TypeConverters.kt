@@ -12,10 +12,21 @@ import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.Instant
 import java.util.LinkedList
 import java.util.UUID
 
 class TypeConverters {
+
+    @TypeConverter
+    fun fromInstant(instant: Instant): Long {
+        return instant.toEpochMilli()
+    }
+
+    @TypeConverter
+    fun toInstant(instant: Long) : Instant {
+        return Instant.ofEpochMilli(instant)
+    }
 
     @TypeConverter
     fun fromColor(colors: PassColors): String {

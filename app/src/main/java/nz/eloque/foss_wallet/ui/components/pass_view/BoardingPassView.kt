@@ -26,6 +26,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import java.time.Instant
 
 @Composable
 fun BoardingPassView(
@@ -126,10 +127,11 @@ private fun BoardingPassPreview() {
         "serial",
         PassType.Boarding(TransitType.AIR),
         HashSet(),
+        Instant.ofEpochMilli(0),
         false,
         false,
         false,
-        false
+        false,
     ).also {
         it.relevantDate = 1800000000L
         it.headerFields = mutableListOf(

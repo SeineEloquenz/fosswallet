@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import java.time.Instant
 
 @Composable
 fun GenericPassView(
@@ -69,6 +70,7 @@ private fun GenericPassPreview() {
         "serial",
         PassType.Generic(),
         HashSet(),
+        Instant.ofEpochMilli(0),
         false,
         false,
         false,
