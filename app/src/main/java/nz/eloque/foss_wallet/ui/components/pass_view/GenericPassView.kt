@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.ui.components.PassCard
 import java.time.Instant
 
 @Composable
@@ -28,8 +29,7 @@ fun GenericPassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        PassTopBar(pass)
-        HorizontalDivider()
+        PassCard(pass)
         AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),

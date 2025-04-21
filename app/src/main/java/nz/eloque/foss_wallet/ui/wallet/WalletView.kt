@@ -68,16 +68,10 @@ fun WalletView(
         val sortedPasses = list.value.passes.sortedWith(comparator)
         items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
             PassCard(
+                pass = pass,
                 onClick = {
                     navController.navigate("pass/${pass.id}")
                 },
-                iconModel = pass.thumbnailFile(context) ?: pass.iconFile(context),
-                description = pass.description,
-                headerFields = pass.headerFields,
-                relevantDate = pass.relevantDate,
-                expirationDate = pass.expirationDate,
-                location = pass.locations.firstOrNull(),
-                passColors = pass.colors
             )
         }
     }

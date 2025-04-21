@@ -6,85 +6,29 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassField
-import nz.eloque.foss_wallet.ui.components.DateView
-import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.PassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
 import java.io.File
 
-
-@Composable
-fun PassTopBar(
-    pass: Pass,
-) {
-    val context = LocalContext.current
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier
-                .weight(5f)
-        ) {
-            Text(
-                text = pass.description,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            HeaderFieldsView(
-                headerFields = pass.headerFields,
-                cardColors = CardDefaults.outlinedCardColors()
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DateView(pass.description, pass.relevantDate, pass.expirationDate)
-                pass.locations.firstOrNull()?.let { LocationButton(it) }
-            }
-        }
-        Spacer(modifier = Modifier.width(5.dp))
-        AsyncPassImage(
-            model = (pass.thumbnailFile(context) ?: pass.iconFile(context)),
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .weight(2f)
-                .width(100.dp)
-                .height(100.dp)
-        )
-    }
-}
 
 @Composable
 fun HeaderFieldsView(

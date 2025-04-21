@@ -19,12 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
@@ -32,15 +34,35 @@ import java.io.File
 
 @Composable
 fun PassCard(
+    pass: Pass,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    PassCard(
+        onClick = onClick,
+        iconModel = pass.thumbnailFile(context) ?: pass.iconFile(context),
+        description = pass.description,
+        headerFields = pass.headerFields,
+        relevantDate = pass.relevantDate,
+        expirationDate = pass.expirationDate,
+        location = pass.locations.firstOrNull(),
+        passColors = pass.colors,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun PassCard(
     iconModel: File,
     description: String,
     headerFields: List<PassField>,
     relevantDate: Long,
     expirationDate: Long,
     location: Location?,
+    passColors: PassColors?,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-    passColors: PassColors?
+    onClick: () -> Unit = {}
 ) {
     val cardColors = passColors?.toCardColors() ?: CardDefaults.elevatedCardColors()
     ElevatedCard(
