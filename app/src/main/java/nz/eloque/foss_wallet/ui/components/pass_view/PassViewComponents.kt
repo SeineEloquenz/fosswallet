@@ -103,7 +103,7 @@ fun AsyncPassImage(
         AsyncImage(
             model = it,
             contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Fit,
             modifier = modifier
                 .width(100.dp)
                 .height(100.dp)
