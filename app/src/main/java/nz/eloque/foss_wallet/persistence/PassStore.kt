@@ -61,7 +61,7 @@ class PassStore @Inject constructor(
     }
 
     private fun scheduleUpdate(pass: Pass) {
-        val workRequest = PeriodicWorkRequestBuilder<UpdateWorker>(15, TimeUnit.MINUTES)
+        val workRequest = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.HOURS)
             .setInputData(Data.Builder().putString("id", pass.id.toString()).build())
             .addTag("update")
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
