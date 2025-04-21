@@ -1,3 +1,5 @@
-FossWallet is a simple Material Design 3 .pkpass Wallet built with Jetpack Compose.
+FossWallet is a simple Material Design 3 Passbook (.pkpass) Wallet built with Jetpack Compose.
 
-FossWallet supports all kinds of passes, as well as updating passes from vendor servers.
+It shows the Barcode and the other data contained in the pass.
+The app supports updating passes from vendor servers for supported passes,
+but can otherwise be used fully offline.
