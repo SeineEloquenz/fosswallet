@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -77,6 +78,7 @@ fun WalletApp(
 
     Surface(
         modifier = modifier
+            .fillMaxSize()
     ) {
         NavHost(
             navController = navController,
@@ -234,7 +236,8 @@ fun WalletScaffold(
     ) { innerPadding ->
         Box(modifier = modifier
             .padding(innerPadding)
-            .padding(10.dp)) {
+            .padding(horizontal = 10.dp)
+        ) {
             content.invoke(scrollBehavior)
         }
     }
