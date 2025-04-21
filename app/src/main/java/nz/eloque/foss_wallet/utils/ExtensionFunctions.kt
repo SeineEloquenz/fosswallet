@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
@@ -26,6 +27,15 @@ fun Instant.prettyPrint(): String {
     val zoneId = ZoneId.systemDefault()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(zoneId)
     return formatter.format(this)
+}
+
+fun Color.darken(factor: Float = 0.3f): Color {
+    return copy(
+        red = red * factor,
+        green = green * factor,
+        blue = blue * factor,
+        alpha = alpha
+    )
 }
 
 @Composable

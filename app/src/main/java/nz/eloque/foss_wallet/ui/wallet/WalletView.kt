@@ -72,7 +72,9 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${pass.id}")
                 },
-            )
+            ) {
+
+            }
         }
     }
 }

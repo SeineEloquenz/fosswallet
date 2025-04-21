@@ -29,27 +29,32 @@ fun GenericPassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass)
-        AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
+        PassCard(pass) { cardColors ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                modifier = Modifier
+                    .padding(10.dp)
+            ) {
+                if (pass.primaryFields.isNotEmpty()) {
+                    PassFields(pass.primaryFields, cardColors = cardColors)
+                }
+                BarcodesView(pass.barCodes)
+            }
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             modifier = Modifier
                 .padding(10.dp)
         ) {
+            AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
             if (showFront) {
-                if (pass.primaryFields.isNotEmpty()) {
-                    PassFields(pass.primaryFields)
-                    HorizontalDivider()
-                }
                 if (pass.auxiliaryFields.isNotEmpty()) {
                     PassFields(pass.auxiliaryFields)
                     HorizontalDivider()
                 }
                 if (pass.secondaryFields.isNotEmpty()) {
                     PassFields(pass.secondaryFields)
-                    HorizontalDivider()
                 }
-                BarcodesView(pass.barCodes)
             } else {
                 PassFields(pass.backFields)
             }

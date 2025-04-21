@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.components.PassCard
+import nz.eloque.foss_wallet.utils.darken
 import java.time.Instant
 
 @Composable
@@ -42,18 +44,16 @@ fun BoardingPassView(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass)
-        AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
-        Column(
-            verticalArrangement = Arrangement.spacedBy(25.dp),
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            if (showFront) {
+        PassCard(pass) { cardColors ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                modifier = Modifier.padding(10.dp)
+            ) {
+                AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
+
                 if (pass.primaryFields.size == 1) {
                     val field = pass.primaryFields[0]
-                    PassField(field.label, field.value)
-                    HorizontalDivider()
+                    PassField(field.label, field.value, cardColors = cardColors)
                 } else if (pass.primaryFields.size >= 2) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -61,7 +61,8 @@ fun BoardingPassView(
                     ) {
                         DestinationCard(
                             destination = pass.primaryFields[0].value,
-                            modifier = Modifier.weight(2f)
+                            modifier = Modifier.weight(2f),
+                            cardColors
                         )
                         Icon(
                             imageVector = transitType.icon,
@@ -70,20 +71,27 @@ fun BoardingPassView(
                         )
                         DestinationCard(
                             destination = pass.primaryFields[1].value,
-                            modifier = Modifier.weight(2f)
+                            modifier = Modifier.weight(2f),
+                            cardColors
                         )
                     }
-                    HorizontalDivider()
                 }
+                BarcodesView(pass.barCodes)
+            }
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(25.dp),
+            modifier = Modifier
+                .padding(10.dp)
+        ) {
+            if (showFront) {
                 if (pass.auxiliaryFields.isNotEmpty()) {
                     PassFields(pass.auxiliaryFields)
                     HorizontalDivider()
                 }
                 if (pass.secondaryFields.isNotEmpty()) {
                     PassFields(pass.secondaryFields)
-                    HorizontalDivider()
                 }
-                BarcodesView(pass.barCodes)
             } else {
                 PassField(stringResource(R.string.serial_number), pass.serialNumber)
                 PassField(stringResource(R.string.organization), pass.organization)
@@ -98,9 +106,11 @@ fun BoardingPassView(
 @Composable
 fun DestinationCard(
     destination: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColors: CardColors
 ) {
-    Card(
+    ElevatedCard(
+        colors = cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f)),
         modifier = modifier
     ) {
         Text(

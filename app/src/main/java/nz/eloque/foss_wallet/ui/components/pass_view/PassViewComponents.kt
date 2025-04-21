@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +57,18 @@ fun BarcodesView(
     val fullscreen = remember { mutableStateOf(false) }
     barcodes.firstOrNull()?.let {
         val image = it.encodeAsBitmap(1000, 1000)
-        PassImage(bitmap = image, modifier = Modifier.clickable { fullscreen.value = !fullscreen.value })
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            PassImage(
+                bitmap = image,
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp)
+                    .clickable { fullscreen.value = !fullscreen.value }
+            )
+        }
         if (fullscreen.value) {
             Raise(onDismiss = { fullscreen.value = !fullscreen.value }) {
                 UpdateBrightness()
@@ -104,26 +116,29 @@ fun AsyncPassImage(
 fun PassField(
     label: String,
     value: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColors: CardColors = CardDefaults.outlinedCardColors()
 ) {
     PassLabel(
         label = label,
         content = value,
-        modifier = modifier
+        modifier = modifier,
+        cardColors
     )
 }
 
 @Composable
 fun PassFields(
     fields: List<PassField>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColors: CardColors = CardDefaults.outlinedCardColors()
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         modifier = modifier
     ) {
         fields.forEach {
-            PassField(it.label, it.value, Modifier.fillMaxWidth())
+            PassField(it.label, it.value, Modifier.fillMaxWidth(), cardColors)
         }
     }
 }

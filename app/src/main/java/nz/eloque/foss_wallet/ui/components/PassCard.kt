@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,8 @@ import java.io.File
 fun PassCard(
     pass: Pass,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    content: @Composable ((cardColors: CardColors) -> Unit)
 ) {
     val context = LocalContext.current
     PassCard(
@@ -48,7 +50,8 @@ fun PassCard(
         expirationDate = pass.expirationDate,
         location = pass.locations.firstOrNull(),
         passColors = pass.colors,
-        modifier = modifier
+        modifier = modifier,
+        content = content
     )
 }
 
@@ -62,7 +65,8 @@ private fun PassCard(
     location: Location?,
     passColors: PassColors?,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    content: @Composable ((cardColors: CardColors) -> Unit)
 ) {
     val cardColors = passColors?.toCardColors() ?: CardDefaults.elevatedCardColors()
     ElevatedCard(
@@ -119,6 +123,7 @@ private fun PassCard(
                 DateView(description, relevantDate, expirationDate)
                 location?.let { LocationButton(it) }
             }
+            content.invoke(cardColors)
         }
     }
 }
@@ -138,5 +143,7 @@ private fun PasscardPreview() {
         expirationDate = 0L,
         location = Location(""),
         passColors = PassColors(Color.Red, Color.White, Color.White)
-    )
+    ) {
+
+    }
 }
