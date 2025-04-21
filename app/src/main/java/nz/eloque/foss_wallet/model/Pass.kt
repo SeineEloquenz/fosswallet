@@ -2,11 +2,13 @@ package nz.eloque.foss_wallet.model
 
 import android.content.Context
 import android.location.Location
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.json.JSONObject
 import java.io.File
 import java.util.LinkedList
+import java.util.UUID
 
 
 @Entity
@@ -39,6 +41,12 @@ data class Pass(
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
     val hasFooter: Boolean = false,
+    /**
+     * Device UUID used for updating passes.
+     * We use a unique UUID per pass so devices can not be linked across servers from the UUID
+     */
+    @ColumnInfo(defaultValue = "2b767e5b-75fd-4bec-89d7-188e832b2dc3")
+    val deviceId: UUID = UUID.randomUUID()
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0

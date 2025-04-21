@@ -3,7 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
     id("androidx.room")
+    id("kotlin-kapt")
 }
 
 android {
@@ -89,9 +91,11 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.8.9")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     val roomVersion = "2.7.0"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -104,4 +108,20 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     implementation("com.google.zxing:core:3.5.3")
+
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.56.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.56.1")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+
+    //http requests
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    val workVersion = "2.10.0"
+    implementation("androidx.hilt:hilt-work:1.2.0")
+
+    // (Java only)
+    implementation("androidx.work:work-runtime:$workVersion")
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
 }

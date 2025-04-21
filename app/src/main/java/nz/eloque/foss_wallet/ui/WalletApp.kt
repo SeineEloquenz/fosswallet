@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -42,14 +44,10 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
-import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.about.AboutView
 import nz.eloque.foss_wallet.ui.components.pass_view.BoardingPassView
 import nz.eloque.foss_wallet.ui.components.pass_view.GenericPassView
@@ -66,11 +64,10 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
 
 @Composable
 fun WalletApp(
-    activity: MainActivity,
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    passViewModel: PassViewModel = viewModel(),
 ) {
-    val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val context = LocalContext.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
@@ -91,9 +88,8 @@ fun WalletApp(
                         coroutineScope.launch(Dispatchers.IO) {
                             contentResolver.openInputStream(res)?.use { inputStream ->
                                 try {
-                                    val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
-                                    passViewModel.add(pass, bitmaps, localizations)
-                                } catch (e: InvalidPassException) {
+                                    passViewModel.load(context, inputStream)
+                                } catch (_: InvalidPassException) {
                                     withContext(Dispatchers.Main) {
                                         Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                                     }
@@ -145,7 +141,7 @@ fun WalletApp(
                 val pass = remember { mutableStateOf(Pass.placeholder())}
                 LaunchedEffect(coroutineScope) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+                        pass.value = passViewModel.passById(passId.toLong()).applyLocalization(Locale.getDefault().language)
                     }
                 }
 
@@ -160,11 +156,33 @@ fun WalletApp(
                         }
                     },
                     actions = {
-                        IconButton(onClick = {
-                            coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
-                            navController.popBackStack()
-                        }) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                        Row {
+                            if (pass.value.updatable()) {
+                                val updateSuccessful = stringResource(R.string.update_successful)
+                                val updateFailed = stringResource(R.string.update_failed)
+                                IconButton(onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        val result = passViewModel.update(pass.value)
+                                        withContext(Dispatchers.Main) {
+                                            if (result != null) {
+                                                pass.value = result
+                                                Toast.makeText(context, updateSuccessful, Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(context, updateFailed, Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        passViewModel.update(pass.value)?.let { pass.value = it}
+                                    }
+                                }) {
+                                    Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update))
+                                }
+                            }
+                            IconButton(onClick = {
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                                navController.popBackStack()
+                            }) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                            }
                         }
                     },
                 ) {

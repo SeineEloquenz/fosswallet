@@ -1,9 +1,10 @@
 package nz.eloque.foss_wallet.persistence.localization
 
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.PassLocalization
 
-class OfflinePassLocalizationRepository(
+class OfflinePassLocalizationRepository @Inject constructor(
     private val localizationDao: PassLocalizationDao
 ) : PassLocalizationRepository {
 

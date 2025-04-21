@@ -8,15 +8,15 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.app.AppViewModelProvider
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
@@ -24,8 +24,10 @@ import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val passViewModel: PassViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
-            val passViewModel: PassViewModel = viewModel(factory = AppViewModelProvider.Factory)
             LaunchedEffect(dataUri) {
                 coroutineScope.launch(Dispatchers.IO) {
                     dataUri?.handleIntent(passViewModel, coroutineScope, navController)
@@ -48,7 +49,6 @@ class MainActivity : ComponentActivity() {
             }
             WalletTheme {
                 WalletApp(
-                    this,
                     navController,
                 )
             }
