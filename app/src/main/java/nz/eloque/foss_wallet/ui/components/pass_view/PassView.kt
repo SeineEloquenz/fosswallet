@@ -18,7 +18,7 @@ import nz.eloque.foss_wallet.ui.components.PassCard
 import java.time.Instant
 
 @Composable
-fun GenericPassView(
+fun PassView(
     pass: Pass,
     showFront: Boolean,
     modifier: Modifier = Modifier
@@ -32,12 +32,8 @@ fun GenericPassView(
         PassCard(pass) { cardColors ->
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp),
-                modifier = Modifier
-                    .padding(10.dp)
+                modifier = Modifier.padding(10.dp)
             ) {
-                if (pass.primaryFields.isNotEmpty()) {
-                    PassFields(pass.primaryFields, cardColors = cardColors)
-                }
                 BarcodesView(pass.barCodes)
             }
         }
@@ -66,7 +62,7 @@ fun GenericPassView(
 
 @Preview
 @Composable
-private fun GenericPassPreview() {
+private fun PassPreview() {
     val pass = Pass(
         0,
         "KSC - SV Elversberg",
@@ -99,5 +95,5 @@ private fun GenericPassPreview() {
             nz.eloque.foss_wallet.model.PassField("data2", "data2", "Shorter Value"),
         )
     }
-    GenericPassView(pass, true)
+    PassView(pass, true)
 }

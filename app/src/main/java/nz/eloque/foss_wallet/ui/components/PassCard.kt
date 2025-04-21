@@ -1,10 +1,8 @@
 package nz.eloque.foss_wallet.ui.components
 
-import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassColors
-import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.ui.components.card_primary.BoardingPrimary
+import nz.eloque.foss_wallet.ui.components.card_primary.GenericPrimary
 import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
-import java.io.File
 
 @Composable
 fun PassCard(
@@ -41,34 +38,7 @@ fun PassCard(
     content: @Composable ((cardColors: CardColors) -> Unit)
 ) {
     val context = LocalContext.current
-    PassCard(
-        onClick = onClick,
-        iconModel = pass.thumbnailFile(context) ?: pass.iconFile(context),
-        description = pass.description,
-        headerFields = pass.headerFields,
-        relevantDate = pass.relevantDate,
-        expirationDate = pass.expirationDate,
-        location = pass.locations.firstOrNull(),
-        passColors = pass.colors,
-        modifier = modifier,
-        content = content
-    )
-}
-
-@Composable
-private fun PassCard(
-    iconModel: File,
-    description: String,
-    headerFields: List<PassField>,
-    relevantDate: Long,
-    expirationDate: Long,
-    location: Location?,
-    passColors: PassColors?,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-    content: @Composable ((cardColors: CardColors) -> Unit)
-) {
-    val cardColors = passColors?.toCardColors() ?: CardDefaults.elevatedCardColors()
+    val cardColors = pass.colors?.toCardColors() ?: CardDefaults.elevatedCardColors()
     ElevatedCard(
         onClick = onClick,
         colors = cardColors,
@@ -76,16 +46,18 @@ private fun PassCard(
             .fillMaxWidth()
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier
-                .padding(12.dp)
                 .fillMaxWidth()
         ) {
             Row(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Column(
-                    modifier = Modifier.weight(5f)
+                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                    modifier = Modifier
+                        .weight(5f)
+                        .padding(12.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -93,7 +65,7 @@ private fun PassCard(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         AsyncImage(
-                            model = iconModel,
+                            model = pass.thumbnailFile(context) ?: pass.iconFile(context),
                             contentDescription = stringResource(R.string.image),
                             modifier = Modifier
                                 .padding(5.dp)
@@ -102,26 +74,29 @@ private fun PassCard(
                                 .clip(RoundedCornerShape(6.dp))
                         )
                         Text(
-                            text = description,
+                            text = pass.logoText ?: "",
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                             style = MaterialTheme.typography.headlineMedium,
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
                     HeaderFieldsView(
-                        headerFields = headerFields,
+                        headerFields = pass.headerFields,
                         cardColors = cardColors
                     )
+                    when (pass.type) {
+                        is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType, cardColors)
+                        else -> GenericPrimary(pass, cardColors)
+                    }
                 }
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                DateView(description, relevantDate, expirationDate)
-                location?.let { LocationButton(it) }
+                DateView(pass.description, pass.relevantDate, pass.expirationDate)
+                pass.locations.firstOrNull()?.let { LocationButton(it) }
             }
             content.invoke(cardColors)
         }
@@ -132,17 +107,7 @@ private fun PassCard(
 @Composable
 private fun PasscardPreview() {
     PassCard(
-        iconModel = File(""),
-        description = "SV Elversberg",
-        headerFields = listOf(
-            PassField("Gate", "Gate", "37"),
-            PassField("Group", "Group", "3"),
-            PassField("Seat", "Seat", "47")
-        ),
-        relevantDate = 1000000000L,
-        expirationDate = 0L,
-        location = Location(""),
-        passColors = PassColors(Color.Red, Color.White, Color.White)
+        pass = Pass.placeholder(),
     ) {
 
     }

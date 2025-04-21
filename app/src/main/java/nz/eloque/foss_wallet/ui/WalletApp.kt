@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -46,11 +47,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.ui.about.AboutView
-import nz.eloque.foss_wallet.ui.components.pass_view.BoardingPassView
-import nz.eloque.foss_wallet.ui.components.pass_view.GenericPassView
+import nz.eloque.foss_wallet.ui.components.pass_view.PassView
 import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.wallet.WalletView
@@ -148,7 +147,7 @@ fun WalletApp(
                 val passViewFront = remember { mutableStateOf(true) }
                 WalletScaffold(
                     navController = navController,
-                    title = stringResource(R.string.pass),
+                    title = pass.value.description,
                     toolWindow = true,
                     bottomBar = {
                         if (pass.value.backFields.isNotEmpty()) {
@@ -186,13 +185,7 @@ fun WalletApp(
                         }
                     },
                 ) {
-                    when(val passType = pass.value.type) {
-                        is PassType.StoreCard -> GenericPassView(pass.value, passViewFront.value)
-                        is PassType.Event -> GenericPassView(pass.value, passViewFront.value)
-                        is PassType.Coupon -> GenericPassView(pass.value, passViewFront.value)
-                        is PassType.Boarding -> BoardingPassView(pass.value, passType.transitType, passViewFront.value)
-                        is PassType.Generic -> GenericPassView(pass.value, passViewFront.value)
-                    }
+                    PassView(pass.value, passViewFront.value)
                 }
             }
         }
@@ -215,7 +208,11 @@ fun WalletScaffold(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { Text(
+                    title,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                ) },
                 navigationIcon = {
                     if (toolWindow && showBack) {
                         IconButton(onClick = { navController.popBackStack() }) {
