@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.nio.charset.Charset
 import java.util.zip.ZipInputStream
 
 class InvalidPassException : Exception()
@@ -125,8 +126,18 @@ class PassLoader(
     }
 
     private fun parseLocalization(lang: String, baos: ByteArrayOutputStream): Set<PassLocalization> {
-        val content = baos.toString("UTF-8")
+        val bytes = baos.toByteArray()
+        val content = bytes.toString(detectEncoding(bytes))
         return LocalizationParser.parseStrings(lang, content)
+    }
+
+    fun detectEncoding(bytes: ByteArray): Charset {
+        return when {
+            bytes.startsWith(byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())) -> Charset.forName("UTF-8")
+            bytes.startsWith(byteArrayOf(0xFF.toByte(), 0xFE.toByte())) -> Charset.forName("UTF-16LE")
+            bytes.startsWith(byteArrayOf(0xFE.toByte(), 0xFF.toByte())) -> Charset.forName("UTF-16BE")
+            else -> Charset.forName("UTF-8") // fallback (could be wrong, but UTF-8 is common)
+        }
     }
 
     private fun chooseBetter(left: Bitmap?, right: Bitmap?): Bitmap? {
@@ -141,6 +152,11 @@ class PassLoader(
 
     private fun Bitmap.pixels(): Int {
         return this.height * this.width
+    }
+
+    private fun ByteArray.startsWith(prefix: ByteArray): Boolean {
+        if (this.size < prefix.size) return false
+        return prefix.indices.all { this[it] == prefix[it] }
     }
 
     companion object {
