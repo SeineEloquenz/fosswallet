@@ -46,7 +46,8 @@ data class Pass(
      * We use a unique UUID per pass so devices can not be linked across servers from the UUID
      */
     @ColumnInfo(defaultValue = "2b767e5b-75fd-4bec-89d7-188e832b2dc3")
-    val deviceId: UUID = UUID.randomUUID()
+    val deviceId: UUID = UUID.randomUUID(),
+    val colors: PassColors? = null
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0

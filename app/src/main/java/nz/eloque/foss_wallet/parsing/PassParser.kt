@@ -4,9 +4,11 @@ import android.content.Context
 import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassType
@@ -61,6 +63,7 @@ class PassParser(val context: Context? = null) {
                     passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
                     else -> PassType.Generic()
                 },
+                colors = parsePassColors(passJson),
                 barCodes = parseBarcodes(passJson),
                 hasLogo = bitmaps.logo != null,
                 hasStrip = bitmaps.strip != null,
@@ -146,6 +149,26 @@ class PassParser(val context: Context? = null) {
                 it.alternativeText = barcodeJSON.stringOrNull("altText")
             }
         }
+    }
+
+    private fun parsePassColors(passJson: JSONObject): PassColors? {
+        val background = parseColor("backgroundColor", passJson)
+        val foreground = parseColor("foregroundColor", passJson)
+        val label = parseColor("labelColor", passJson)
+        return if (background != null && foreground != null && label != null) {
+            PassColors(background, foreground, label)
+        } else null
+    }
+
+    private fun parseColor(key: String, passJson: JSONObject): Color? {
+        return if (passJson.has(key)) {
+            val representation = passJson.getString(key).filterNot { it.isWhitespace() }
+            val regexResult = "rgb\\((\\d+),(\\d+),(\\d+)\\)".toRegex().find((representation))
+            if (regexResult != null) {
+                val (red, green, blue) = regexResult.destructured
+                return Color(red.toInt(), green.toInt(), blue.toInt(), 255)
+            } else null
+        } else null
     }
 
     private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {

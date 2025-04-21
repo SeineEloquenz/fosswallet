@@ -18,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
 import java.io.File
@@ -38,9 +40,14 @@ fun PassCard(
     location: Location?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    passColors: PassColors?
 ) {
+    val cardColors = passColors?.toCardColors() ?: CardDefaults.elevatedCardColors()
     ElevatedCard(
-        onClick = onClick
+        onClick = onClick,
+        colors = cardColors,
+        modifier = modifier
+            .fillMaxWidth()
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp),
@@ -79,7 +86,7 @@ fun PassCard(
                     Spacer(modifier = Modifier.height(5.dp))
                     HeaderFieldsView(
                         headerFields = headerFields,
-                        cardColors = CardDefaults.elevatedCardColors()
+                        cardColors = cardColors
                     )
                 }
             }
@@ -107,6 +114,7 @@ private fun PasscardPreview() {
         ),
         relevantDate = 1000000000L,
         expirationDate = 0L,
-        location = Location("")
+        location = Location(""),
+        passColors = PassColors(Color.Red, Color.White, Color.White)
     )
 }
