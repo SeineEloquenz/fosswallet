@@ -5,7 +5,6 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("androidx.room")
-    id("kotlin-kapt")
 }
 
 android {
@@ -17,7 +16,7 @@ android {
     }
 
     signingConfigs {
-        create("github") {
+        create("release") {
             storeFile = file(System.getProperty("user.home") + "/work/_temp/keystore.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
@@ -55,7 +54,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs["github"]
+            signingConfig = signingConfigs["release"]
         }
         debug {
             applicationIdSuffix = ".dev"
