@@ -123,7 +123,7 @@ fun WalletApp(
                             expanded = listState.isScrollingUp(),
                             onClick = { launcher.launch(arrayOf("*/*")) }
                         )
-                    }
+                    },
                 ) { scrollBehavior ->
                     WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior)
                 }

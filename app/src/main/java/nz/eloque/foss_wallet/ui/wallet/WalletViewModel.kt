@@ -23,6 +23,7 @@ import java.io.InputStream
 import java.util.Locale
 
 data class PassUiState(
+    val query: String = "",
     val passes: List<Pass> = ArrayList()
 )
 
@@ -56,6 +57,12 @@ class PassViewModel @Inject constructor(
     }
 
     suspend fun passById(id: Long): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
+
+    fun filter(query: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query).first().map { it.applyLocalization(Locale.getDefault().language) })
+        }
+    }
 
     suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long = passStore.add(pass, bitmaps, localization).apply { updatePasses() }
 

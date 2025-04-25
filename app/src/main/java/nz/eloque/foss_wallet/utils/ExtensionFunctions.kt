@@ -38,6 +38,10 @@ fun Color.darken(factor: Float = 0.3f): Color {
     )
 }
 
+infix fun <T : CharSequence> T.inIgnoreCase(charSequence: T?): Boolean {
+    return charSequence?.contains(this, ignoreCase = true) == true
+}
+
 @Composable
 fun LazyListState.isScrollingUp(): Boolean {
     var previousIndex by remember(this) {

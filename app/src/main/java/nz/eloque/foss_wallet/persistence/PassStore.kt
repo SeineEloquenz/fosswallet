@@ -28,6 +28,8 @@ class PassStore @Inject constructor(
 
     suspend fun passById(id: Long) = passRepository.byId(id)
 
+    suspend fun filtered(query: String) = passRepository.filtered(query)
+
     suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
         val id = insert(pass, bitmaps, localization)
         if (pass.updatable()) {
