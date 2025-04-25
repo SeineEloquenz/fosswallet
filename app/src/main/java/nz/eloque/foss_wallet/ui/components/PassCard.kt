@@ -34,72 +34,101 @@ import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
 fun PassCard(
     pass: Pass,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
+    content: @Composable ((cardColors: CardColors) -> Unit)
+) {
+    val cardColors = pass.colors?.toCardColors() ?: CardDefaults.elevatedCardColors()
+    if (onClick == null) {
+        ElevatedCard(
+            colors = cardColors,
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            PassCardContents(
+                pass = pass,
+                cardColors = cardColors,
+                content = content
+            )
+        }
+    } else {
+        ElevatedCard(
+            onClick = onClick,
+            colors = cardColors,
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            PassCardContents(
+                pass = pass,
+                cardColors = cardColors,
+                content = content
+            )
+        }
+    }
+}
+
+@Composable
+private fun PassCardContents(
+    pass: Pass,
+    cardColors: CardColors,
+    modifier: Modifier = Modifier,
     content: @Composable ((cardColors: CardColors) -> Unit)
 ) {
     val context = LocalContext.current
-    val cardColors = pass.colors?.toCardColors() ?: CardDefaults.elevatedCardColors()
-    ElevatedCard(
-        onClick = onClick,
-        colors = cardColors,
-        modifier = modifier
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier
             .fillMaxWidth()
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-            modifier = Modifier
-                .fillMaxWidth()
+        Row(
+            horizontalArrangement = Arrangement.Start
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Start
+            Column(
+                verticalArrangement = Arrangement.spacedBy(18.dp),
+                modifier = Modifier
+                    .weight(5f)
+                    .padding(12.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                    modifier = Modifier
-                        .weight(5f)
-                        .padding(12.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        AsyncImage(
-                            model = pass.thumbnailFile(context) ?: pass.iconFile(context),
-                            contentDescription = stringResource(R.string.image),
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .width(30.dp)
-                                .height(30.dp)
-                                .clip(RoundedCornerShape(6.dp))
-                        )
-                        Text(
-                            text = pass.logoText ?: "",
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                    HeaderFieldsView(
-                        headerFields = pass.headerFields,
-                        cardColors = cardColors
+                    AsyncImage(
+                        model = pass.thumbnailFile(context) ?: pass.iconFile(context),
+                        contentDescription = stringResource(R.string.image),
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .width(30.dp)
+                            .height(30.dp)
+                            .clip(RoundedCornerShape(6.dp))
                     )
-                    when (pass.type) {
-                        is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType, cardColors)
-                        else -> GenericPrimary(pass, cardColors)
-                    }
+                    Text(
+                        text = pass.logoText ?: "",
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                HeaderFieldsView(
+                    headerFields = pass.headerFields,
+                    cardColors = cardColors
+                )
+                when (pass.type) {
+                    is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType, cardColors)
+                    else -> GenericPrimary(pass, cardColors)
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DateView(pass.description, pass.relevantDate, pass.expirationDate)
-                pass.locations.firstOrNull()?.let { LocationButton(it) }
-            }
-            content.invoke(cardColors)
         }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DateView(pass.description, pass.relevantDate, pass.expirationDate)
+            pass.locations.firstOrNull()?.let { LocationButton(it) }
+        }
+        content.invoke(cardColors)
     }
 }
 
