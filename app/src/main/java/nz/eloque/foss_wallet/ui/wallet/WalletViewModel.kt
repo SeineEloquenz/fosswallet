@@ -15,9 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassWithLocalization
-import nz.eloque.foss_wallet.persistence.PassBitmaps
+import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassStore
 import java.io.InputStream
 import java.util.Locale
@@ -64,7 +63,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long = passStore.add(pass, bitmaps, localization).apply { updatePasses() }
+    suspend fun add(loadResult: PassLoadResult): Long = passStore.add(loadResult).apply { updatePasses() }
 
     suspend fun update(pass: Pass): Pass? = passStore.update(pass).apply { updatePasses() }
 
