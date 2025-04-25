@@ -100,6 +100,11 @@ data class Pass(
         return if (exists) File(context.filesDir, "$id/$type.png") else null
     }
 
+    fun originalPassFile(context: Context): File? {
+        val file = File(context.filesDir, "$id/${OriginalPass.FILE_PATH}")
+        return if (file.exists()) file else null
+    }
+
     fun deleteFiles(context: Context) {
         iconFile(context).delete()
         logoFile(context)?.delete()
