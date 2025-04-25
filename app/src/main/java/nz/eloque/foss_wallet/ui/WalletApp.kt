@@ -54,6 +54,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.ui.about.AboutView
+import nz.eloque.foss_wallet.ui.components.pass_view.PassShareButton
 import nz.eloque.foss_wallet.ui.components.pass_view.PassView
 import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
@@ -181,6 +182,10 @@ fun WalletApp(
                                 }) {
                                     Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update))
                                 }
+                            }
+                            val passFile = pass.value.originalPassFile(context)
+                            if (passFile != null) {
+                                PassShareButton(passFile)
                             }
                             IconButton(onClick = {
                                 coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
