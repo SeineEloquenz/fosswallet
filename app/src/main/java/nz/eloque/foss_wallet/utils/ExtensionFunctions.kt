@@ -12,7 +12,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     var i = 0
@@ -24,9 +26,9 @@ fun JSONArray.forEach(action: (JSONObject) -> Unit) {
 }
 
 fun Instant.prettyPrint(): String {
-    val zoneId = ZoneId.systemDefault()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(zoneId)
-    return formatter.format(this)
+    val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
+    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+    return zonedTime.format(dateFormatter)
 }
 
 fun Color.darken(factor: Float = 0.3f): Color {
