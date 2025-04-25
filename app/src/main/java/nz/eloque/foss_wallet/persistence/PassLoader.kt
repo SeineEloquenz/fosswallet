@@ -5,11 +5,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.core.graphics.createBitmap
+import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.parsing.LocalizationParser
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.utils.toByteArray
 import org.json.JSONObject
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -17,6 +20,13 @@ import java.io.InputStream
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.zip.ZipInputStream
+
+data class PassLoadResult(
+    val pass: Pass,
+    val bitmaps: PassBitmaps,
+    val localizations: Set<PassLocalization>,
+    val originalPass: OriginalPass
+)
 
 class InvalidPassException : Exception()
 
@@ -53,7 +63,8 @@ class PassLoader(
     private val passParser: PassParser
 ) {
 
-    fun load(inputStream: InputStream, addedAt: Instant = Instant.now()): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+    fun load(inputStream: InputStream, addedAt: Instant = Instant.now()): PassLoadResult {
+        val bytes = inputStream.toByteArray()
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
         var logo: Bitmap? = null
@@ -61,7 +72,7 @@ class PassLoader(
         var strip: Bitmap? = null
         var thumbnail: Bitmap? = null
         var footer: Bitmap? = null
-        ZipInputStream(inputStream).use { zip ->
+        ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             var entry = zip.nextEntry
             do {
                 if (!entry.isDirectory) {
@@ -107,7 +118,8 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
-            return passParser.parse(passJson, bitmaps, localizations, addedAt = addedAt)
+            val pass = passParser.parse(passJson, bitmaps, addedAt = addedAt)
+            return PassLoadResult(pass, bitmaps, localizations, OriginalPass(bytes))
         } else {
             throw InvalidPassException()
         }

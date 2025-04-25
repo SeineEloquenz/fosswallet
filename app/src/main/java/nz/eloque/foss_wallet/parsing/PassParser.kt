@@ -10,7 +10,6 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassField
-import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.persistence.InvalidPassException
@@ -28,9 +27,8 @@ class PassParser(val context: Context? = null) {
     fun parse(
         passJson: JSONObject,
         bitmaps: PassBitmaps,
-        localizations: Set<PassLocalization>,
         addedAt: Instant = Instant.now()
-    ): Triple<Pass, PassBitmaps, Set<PassLocalization>> {
+    ): Pass {
         if (!passJson.has("description")) {
             Log.w(TAG, "Pass has no description.")
             throw InvalidPassException()
@@ -51,54 +49,53 @@ class PassParser(val context: Context? = null) {
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
-        return Triple(
-            Pass(
-                id = Objects.hash(serialNumber, organizationName).toLong(),
-                description = description,
-                formatVersion = passVersion,
-                organization = organizationName,
-                serialNumber = serialNumber,
-                type = when {
-                    passJson.has(PassType.EVENT) -> PassType.Event()
-                    passJson.has(PassType.BOARDING) -> {
-                        val boardingJson = passJson.getJSONObject(PassType.BOARDING)
-                        val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
-                        PassType.Boarding(transitType)
-                    }
-                    passJson.has(PassType.COUPON) -> PassType.Coupon()
-                    passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
-                    else -> PassType.Generic()
-                },
-                colors = parsePassColors(passJson),
-                barCodes = parseBarcodes(passJson),
-                hasLogo = bitmaps.logo != null,
-                hasStrip = bitmaps.strip != null,
-                hasThumbnail = bitmaps.thumbnail != null,
-                hasFooter = bitmaps.footer != null,
-                addedAt = addedAt
-            ).also { pass ->
-                pass.relevantDate = parseRelevantDate(passJson)
-                pass.expirationDate = parseExpiration(passJson)
-                pass.logoText = passJson.stringOrNull("logoText")
-                pass.authToken = passJson.stringOrNull("authenticationToken")
-                pass.webServiceUrl = passJson.stringOrNull("webServiceURL")
-                pass.passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier")
-                if (passJson.has("locations")) {
-                    passJson.getJSONArray("locations").forEach { locJson ->
-                        pass.locations.add(Location("").also {
-                            it.latitude = locJson.getDouble("latitude")
-                            it.longitude = locJson.getDouble("longitude")
-                        })
-                    }
+
+        return Pass(
+            id = Objects.hash(serialNumber, organizationName).toLong(),
+            description = description,
+            formatVersion = passVersion,
+            organization = organizationName,
+            serialNumber = serialNumber,
+            type = when {
+                passJson.has(PassType.EVENT) -> PassType.Event()
+                passJson.has(PassType.BOARDING) -> {
+                    val boardingJson = passJson.getJSONObject(PassType.BOARDING)
+                    val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
+                    PassType.Boarding(transitType)
                 }
-                val fieldContainer = passJson.optJSONObject(pass.type.jsonKey)
-                fieldContainer?.collectFields("headerFields", pass.headerFields)
-                fieldContainer?.collectFields("primaryFields", pass.primaryFields)
-                fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
-                fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
-                fieldContainer?.collectFields("backFields", pass.backFields)
-            }, bitmaps, localizations
-        )
+                passJson.has(PassType.COUPON) -> PassType.Coupon()
+                passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
+                else -> PassType.Generic()
+            },
+            colors = parsePassColors(passJson),
+            barCodes = parseBarcodes(passJson),
+            hasLogo = bitmaps.logo != null,
+            hasStrip = bitmaps.strip != null,
+            hasThumbnail = bitmaps.thumbnail != null,
+            hasFooter = bitmaps.footer != null,
+            addedAt = addedAt
+        ).also { pass ->
+            pass.relevantDate = parseRelevantDate(passJson)
+            pass.expirationDate = parseExpiration(passJson)
+            pass.logoText = passJson.stringOrNull("logoText")
+            pass.authToken = passJson.stringOrNull("authenticationToken")
+            pass.webServiceUrl = passJson.stringOrNull("webServiceURL")
+            pass.passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier")
+            if (passJson.has("locations")) {
+                passJson.getJSONArray("locations").forEach { locJson ->
+                    pass.locations.add(Location("").also {
+                        it.latitude = locJson.getDouble("latitude")
+                        it.longitude = locJson.getDouble("longitude")
+                    })
+                }
+            }
+            val fieldContainer = passJson.optJSONObject(pass.type.jsonKey)
+            fieldContainer?.collectFields("headerFields", pass.headerFields)
+            fieldContainer?.collectFields("primaryFields", pass.primaryFields)
+            fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
+            fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
+            fieldContainer?.collectFields("backFields", pass.backFields)
+        }
     }
 
     private fun parseRelevantDate(passJson: JSONObject): Long {

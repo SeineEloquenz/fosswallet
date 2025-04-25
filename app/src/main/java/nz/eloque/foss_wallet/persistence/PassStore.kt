@@ -10,7 +10,6 @@ import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateWorker
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
@@ -30,10 +29,10 @@ class PassStore @Inject constructor(
 
     suspend fun filtered(query: String) = passRepository.filtered(query)
 
-    suspend fun add(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
-        val id = insert(pass, bitmaps, localization)
-        if (pass.updatable()) {
-            scheduleUpdate(pass)
+    suspend fun add(loadResult: PassLoadResult): Long {
+        val id = insert(loadResult)
+        if (loadResult.pass.updatable()) {
+            scheduleUpdate(loadResult.pass)
         }
         return id
     }
@@ -41,7 +40,7 @@ class PassStore @Inject constructor(
     suspend fun update(pass: Pass): Pass? {
         val updated = PassbookApi.getUpdated(pass)
         return if (updated != null) {
-            val id = insert(updated.first, updated.second, updated.third)
+            val id = insert(updated)
             passById(id).applyLocalization(Locale.getDefault().language)
         } else {
             null
@@ -54,13 +53,13 @@ class PassStore @Inject constructor(
     }
 
     suspend fun load(context: Context, inputStream: InputStream) {
-        val (pass, bitmaps, localizations) = PassLoader(PassParser(context)).load(inputStream)
-        add(pass, bitmaps, localizations)
+        val loaded = PassLoader(PassParser(context)).load(inputStream)
+        add(loaded)
     }
 
-    private suspend fun insert(pass: Pass, bitmaps: PassBitmaps, localization: Set<PassLocalization>): Long {
-        val id = passRepository.insert(Pair(pass, bitmaps))
-        localization.map { it.copy(passId = id) }.forEach { localizationRepository.insert(it) }
+    private suspend fun insert(loadResult: PassLoadResult): Long {
+        val id = passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
+        loadResult.localizations.map { it.copy(passId = id) }.forEach { localizationRepository.insert(it) }
         return id
     }
 

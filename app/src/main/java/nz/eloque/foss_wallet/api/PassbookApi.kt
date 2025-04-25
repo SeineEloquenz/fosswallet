@@ -1,9 +1,8 @@
 package nz.eloque.foss_wallet.api
 
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.parsing.PassParser
-import nz.eloque.foss_wallet.persistence.PassBitmaps
+import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassLoader
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,7 +13,7 @@ object PassbookApi {
 
     private const val API_VERSION = "v1"
 
-    suspend fun getUpdated(pass: Pass): Triple<Pass, PassBitmaps, Set<PassLocalization>>? {
+    suspend fun getUpdated(pass: Pass): PassLoadResult? {
         val requestUrl = "${pass.webServiceUrl}/${API_VERSION}/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
         val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
 
