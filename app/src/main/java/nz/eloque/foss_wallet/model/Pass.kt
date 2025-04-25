@@ -5,6 +5,7 @@ import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import nz.eloque.foss_wallet.utils.inIgnoreCase
 import org.json.JSONObject
 import java.io.File
 import java.time.Instant
@@ -20,6 +21,10 @@ data class PassField(val key: String, val label: String, val value: String) {
             it.put("label", label)
             it.put("value", value)
         }
+    }
+
+    fun contains(query: String): Boolean {
+        return query inIgnoreCase this.label || query inIgnoreCase this.value
     }
 
     companion object {
@@ -71,6 +76,20 @@ data class Pass(
     fun thumbnailFile(context: Context): File? = coilImageModel(context, "thumbnail", hasThumbnail)
     fun footerFile(context: Context): File? = coilImageModel(context, "footer", hasFooter)
 
+    fun contains(query: String): Boolean {
+        return when {
+            query inIgnoreCase description -> true
+            query inIgnoreCase type.jsonKey -> true
+            query inIgnoreCase logoText -> true
+            headerFields.any { it.contains(query) } -> true
+            primaryFields.any { it.contains(query) } -> true
+            secondaryFields.any { it.contains(query) } -> true
+            auxiliaryFields.any { it.contains(query) } -> true
+            backFields.any { it.contains(query) } -> true
+            else -> false
+        }
+    }
+
     fun updatable(): Boolean {
         return webServiceUrl != null
                 && authToken != null
@@ -94,5 +113,9 @@ data class Pass(
         fun placeholder(): Pass {
             return Pass(0, "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
         }
+    }
+
+    fun MutableList<PassField>.contains(query: String): Boolean {
+        return this.any { query in it.label || query in it.value }
     }
 }
