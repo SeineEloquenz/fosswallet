@@ -25,8 +25,12 @@ data class OriginalPass(
         if (!directory.exists()) {
             directory.mkdirs()
         }
-        FileOutputStream(File(directory, "originalPass")).use {
+        FileOutputStream(File(directory, FILE_PATH)).use {
             it.write(bytes)
         }
+    }
+
+    companion object {
+        const val FILE_PATH = "original.pkpass"
     }
 }
