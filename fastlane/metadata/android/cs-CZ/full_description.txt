@@ -1,0 +1,5 @@
+FossWallet je jednoduchá Material Design 3 peněženka pro soubory Passbook (.pkpass) postavená na Jetpack Compose.
+
+Zobrazuje čárový kód a další data obsažená v lístku.
+Aplikace podporuje aktualizaci ze serverů vydavatelů u podporovaných lístků,
+může ale jinak fungovat kompletně offline.

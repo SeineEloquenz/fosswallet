@@ -1,0 +1,1 @@
+FossWallet je MDY peněženka pro soubory Apple Passbook (.pkpass)
