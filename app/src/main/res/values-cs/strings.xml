@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name" translatable="false">FossWallet</string>
+    <string name="settings">Nastavení</string>
+    <string name="update">Aktualizovat</string>
+    <string name="back">Zpět</string>
+    <string name="permission_rationale">Bez oprávnění nemůže aplikace správně fungovat</string>
+    <string name="request_permissions">Požádat o oprávnění</string>
+    <string name="wallet" translatable="false">Wallet</string>
+    <string name="image">Obrázek</string>
+    <string name="pass">Lístek</string>
+    <string name="barcode">Čárový kód</string>
+    <string name="serial_number">Sériové číslo</string>
+    <string name="organization">Organizace</string>
+    <string name="no_barcode_format_given">Nebyl nastaven formát čárového kódu! Přepínám na QR kód. Tento kód nemusí být správně naskenován</string>
+    <string name="flip">Otočit</string>
+    <string name="front_side">Přední strana</string>
+    <string name="back_side">Zadní strana</string>
+    <string name="date">Datum</string>
+    <string name="delete">Odstranit</string>
+    <string name="invalid_pass_toast">Nepodařilo se načíst lístek. Jste si jistí, že se jedná o platný soubor .pkpass?</string>
+    <string name="add_pass">Přidat lístek</string>
+    <string name="about">O aplikaci</string>
+    <string name="fosswallet" translatable="false">FossWallet</string>
+    <string name="source_code">Zdrojový kód</string>
+    <string name="made_with_love" translatable="false">Vytvořeno s ❤ v Německu</string>
+    <string name="to">do</string>
+    <string name="license">Licence</string>
+    <string name="update_successful">Lístek úspěšně aktualizován</string>
+    <string name="update_failed">Nepodařilo se aktualizovat lístek</string>
+    <string name="share">Sdílet lístek</string>
+</resources>
