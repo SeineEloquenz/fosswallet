@@ -14,7 +14,7 @@ data class PassWithLocalization(
 ) {
 
     fun applyLocalization(locale: String): Pass {
-        val mapping = localizations.filter { it.lang == locale }.associateBy { it.label }
+        val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
         return pass.apply {
             description = mapping[description]?.text ?: description
             replaceFields(mapping, headerFields)
@@ -27,5 +27,9 @@ data class PassWithLocalization(
 
     private fun replaceFields(mapping: Map<String, PassLocalization>, fields: MutableList<PassField>) {
         fields.replaceAll { it.copy(label = mapping[it.label]?.text ?: it.label) }
+    }
+
+    private fun localeMapping(locale: String): Map<String, PassLocalization> {
+        return localizations.filter { it.lang == locale }.associateBy { it.label }
     }
 }
