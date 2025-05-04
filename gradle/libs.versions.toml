@@ -1,7 +1,7 @@
 [versions]
 accompanistPermissions = "0.34.0"
 activityCompose = "1.10.1"
-androidGradlePlugin = "8.9.1"
+androidGradlePlugin = "8.9.2"
 coil = "2.7.0"
 composeBom = "2025.04.01"
 core = "3.5.3"
@@ -17,8 +17,8 @@ material = "1.12.0"
 navigationCompose = "2.8.9"
 okhttp = "4.12.0"
 preferenceKtx = "1.2.1"
-room = "2.7.0"
-work = "2.10.0"
+room = "2.7.1"
+work = "2.10.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
