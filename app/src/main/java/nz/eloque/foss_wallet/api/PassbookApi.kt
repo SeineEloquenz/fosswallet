@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.api
 
+import android.util.Log
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.PassLoadResult
@@ -7,10 +8,12 @@ import nz.eloque.foss_wallet.persistence.PassLoader
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import okio.IOException
 
 @Suppress("RedundantSuspendModifier")
 object PassbookApi {
 
+    private const val TAG = "PassbookApi"
     private const val API_VERSION = "v1"
 
     suspend fun getUpdated(pass: Pass): PassLoadResult? {
@@ -19,7 +22,12 @@ object PassbookApi {
 
         val client = OkHttpClient.Builder().build()
 
-        val response = client.get(requestUrl, authHeader)
+        val response = try {
+            client.get(requestUrl, authHeader)
+        } catch (e: IOException) {
+            Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
+            return null
+        }
         return if (response.isSuccessful) {
             PassLoader(PassParser()).load(response.body!!.byteStream(), pass.addedAt)
         } else {
