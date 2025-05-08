@@ -1,0 +1,1 @@
+* Fix app crashing when manually updating a pass without network connection
