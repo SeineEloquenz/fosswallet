@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name" translatable="false">FossWallet</string>
+    <string name="settings">Axustes</string>
+    <string name="update">Actualizar</string>
+    <string name="back">Volver</string>
+    <string name="permission_rationale">Sen permiso(s), Wallet non funciona correctamente</string>
+    <string name="request_permissions">Solicitar permiso</string>
+    <string name="wallet" translatable="false">Wallet</string>
+    <string name="image">Imaxe</string>
+    <string name="pass">Pass</string>
+    <string name="barcode">Código de barras</string>
+    <string name="serial_number">Número de serie</string>
+    <string name="organization">Organización</string>
+    <string name="no_barcode_format_given">Non se indica o formato do código de barras! Código QR por defecto. Podería non escanearse correctamente.</string>
+    <string name="flip">Virar</string>
+    <string name="front_side">Anverso</string>
+    <string name="back_side">Reverso</string>
+    <string name="date">Data</string>
+    <string name="delete">Eliminar</string>
+    <string name="invalid_pass_toast">Non se puido cargar o Pass. É un ficheiro .pkpass correcto?</string>
+    <string name="add_pass">Engadir Pass</string>
+    <string name="about">Sobre</string>
+    <string name="fosswallet" translatable="false">FossWallet</string>
+    <string name="source_code">Código fonte</string>
+    <string name="made_with_love" translatable="false">Feito con ❤ in Alemaña</string>
+    <string name="to">a</string>
+    <string name="license">Licenza</string>
+    <string name="update_successful">Pass actualizado correctamente</string>
+    <string name="update_failed">Fallou a actualización do Pass</string>
+    <string name="share">Compartir Pass</string>
+</resources>
