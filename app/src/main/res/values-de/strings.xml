@@ -20,8 +20,10 @@
     <string name="add_pass">Pass hinzufügen</string>
     <string name="about">Über</string>
     <string name="source_code">Quellcode</string>
+    <string name="made_with_love">Mit ❤ gemacht in Deutschland</string>
     <string name="to">nach</string>
     <string name="license">Lizenz</string>
     <string name="update_successful">Pass wurde erfolgreich aktualisiert</string>
     <string name="update_failed">Pass konnte nicht aktualisiert werden</string>
+    <string name="share">Pass teilen</string>
 </resources>

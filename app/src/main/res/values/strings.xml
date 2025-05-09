@@ -22,7 +22,7 @@
     <string name="about">About</string>
     <string name="fosswallet" translatable="false">FossWallet</string>
     <string name="source_code">Source Code</string>
-    <string name="made_with_love" translatable="false">Made with ❤ in Germany</string>
+    <string name="made_with_love">Made with ❤ in Germany</string>
     <string name="to">to</string>
     <string name="license">License</string>
     <string name="update_successful">Successfully updated pass</string>

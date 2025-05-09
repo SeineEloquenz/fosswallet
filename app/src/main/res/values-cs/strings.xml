@@ -1,11 +1,9 @@
 <resources>
-    <string name="app_name" translatable="false">FossWallet</string>
     <string name="settings">Nastavení</string>
     <string name="update">Aktualizovat</string>
     <string name="back">Zpět</string>
     <string name="permission_rationale">Bez oprávnění nemůže aplikace správně fungovat</string>
     <string name="request_permissions">Požádat o oprávnění</string>
-    <string name="wallet" translatable="false">Wallet</string>
     <string name="image">Obrázek</string>
     <string name="pass">Lístek</string>
     <string name="barcode">Čárový kód</string>
@@ -20,7 +18,6 @@
     <string name="invalid_pass_toast">Nepodařilo se načíst lístek. Jste si jistí, že se jedná o platný soubor .pkpass?</string>
     <string name="add_pass">Přidat lístek</string>
     <string name="about">O aplikaci</string>
-    <string name="fosswallet" translatable="false">FossWallet</string>
     <string name="source_code">Zdrojový kód</string>
     <string name="made_with_love" translatable="false">Vytvořeno s ❤ v Německu</string>
     <string name="to">do</string>
