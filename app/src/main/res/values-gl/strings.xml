@@ -19,7 +19,7 @@
     <string name="add_pass">Engadir Pass</string>
     <string name="about">Sobre</string>
     <string name="source_code">Código fonte</string>
-    <string name="made_with_love" translatable="false">Feito con ❤ in Alemaña</string>
+    <string name="made_with_love">Feito con ❤ in Alemaña</string>
     <string name="to">a</string>
     <string name="license">Licenza</string>
     <string name="update_successful">Pass actualizado correctamente</string>
