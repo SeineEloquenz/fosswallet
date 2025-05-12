@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -29,10 +30,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.PassCard
+import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +47,7 @@ fun WalletView(
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val list = passViewModel.uiState.collectAsState()
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
@@ -82,13 +87,19 @@ fun WalletView(
         }
         val sortedPasses = list.value.passes.sortedWith(comparator)
         items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
-            PassCard(
-                pass = pass,
-                onClick = {
-                    navController.navigate("pass/${pass.id}")
-                },
+            SwipeToDismiss(
+                allowLeftSwipe = false,
+                onLeftSwipe = {},
+                onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) } }
             ) {
+                PassCard(
+                    pass = pass,
+                    onClick = {
+                        navController.navigate("pass/${pass.id}")
+                    },
+                ) {
 
+                }
             }
         }
     }
