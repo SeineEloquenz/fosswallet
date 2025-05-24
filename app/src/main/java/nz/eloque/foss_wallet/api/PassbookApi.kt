@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.api
 import android.util.Log
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassLoader
 import okhttp3.OkHttpClient
@@ -29,7 +30,11 @@ object PassbookApi {
             return null
         }
         return if (response.isSuccessful) {
-            PassLoader(PassParser()).load(response.body!!.byteStream(), pass.addedAt)
+            try {
+                PassLoader(PassParser()).load(response.body!!.byteStream(), pass.addedAt)
+            } catch (_: InvalidPassException) {
+                null
+            }
         } else {
             null
         }
