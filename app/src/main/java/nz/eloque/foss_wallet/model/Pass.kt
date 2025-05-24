@@ -36,7 +36,7 @@ data class PassField(val key: String, val label: String, val value: String) {
 
 @Entity(tableName = "Pass")
 data class Pass(
-    @PrimaryKey val id: Long = 0L,
+    @PrimaryKey val id: String,
     var description: String,
     val formatVersion: Int,
     val organization: String,
@@ -111,12 +111,12 @@ data class Pass(
         stripFile(context)?.delete()
         thumbnailFile(context)?.delete()
         footerFile(context)?.delete()
-        File(context.filesDir, "$id").delete()
+        File(context.filesDir, id).delete()
     }
 
     companion object {
         fun placeholder(): Pass {
-            return Pass(0, "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
+            return Pass("", "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
         }
     }
 

@@ -51,7 +51,7 @@ class PassParser(val context: Context? = null) {
         val serialNumber = passJson.getString("serialNumber")
 
         return Pass(
-            id = Objects.hash(serialNumber, organizationName).toLong(),
+            id = Objects.hash(serialNumber, organizationName).toString(),
             description = description,
             formatVersion = passVersion,
             organization = organizationName,
@@ -186,7 +186,7 @@ class PassParser(val context: Context? = null) {
                     )
                 )
             }
-        } catch (e: JSONException) {
+        } catch (_: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")
         }
     }

@@ -20,8 +20,8 @@ data class OriginalPass(
         return bytes.contentHashCode()
     }
 
-    fun saveToDisk(context: Context, passId: Long) {
-        val directory = File(context.filesDir, "$passId")
+    fun saveToDisk(context: Context, passId: String) {
+        val directory = File(context.filesDir, passId)
         if (!directory.exists()) {
             directory.mkdirs()
         }

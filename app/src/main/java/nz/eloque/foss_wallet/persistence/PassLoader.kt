@@ -41,8 +41,8 @@ class PassBitmaps(
     val footer: Bitmap?
 ) {
 
-    fun saveToDisk(context: Context, id: Long) {
-        val directory = File(context.filesDir, "$id")
+    fun saveToDisk(context: Context, id: String) {
+        val directory = File(context.filesDir, id)
         if (!directory.exists()) {
             directory.mkdirs()
         }

@@ -25,11 +25,11 @@ class PassStore @Inject constructor(
 
     fun allPasses() = passRepository.all()
 
-    suspend fun passById(id: Long) = passRepository.byId(id)
+    suspend fun passById(id: String) = passRepository.byId(id)
 
     suspend fun filtered(query: String) = passRepository.filtered(query)
 
-    suspend fun add(loadResult: PassLoadResult): Long {
+    suspend fun add(loadResult: PassLoadResult): String {
         val id = insert(loadResult)
         if (loadResult.pass.updatable()) {
             scheduleUpdate(loadResult.pass)
@@ -57,7 +57,7 @@ class PassStore @Inject constructor(
         add(loaded)
     }
 
-    private suspend fun insert(loadResult: PassLoadResult): Long {
+    private suspend fun insert(loadResult: PassLoadResult): String {
         val id = passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
         loadResult.localizations.map { it.copy(passId = id) }.forEach { localizationRepository.insert(it) }
         return id
