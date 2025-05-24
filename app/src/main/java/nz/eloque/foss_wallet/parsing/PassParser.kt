@@ -14,13 +14,13 @@ import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassBitmaps
+import nz.eloque.foss_wallet.utils.Hash
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
-import java.util.Objects
 
 class PassParser(val context: Context? = null) {
 
@@ -51,7 +51,7 @@ class PassParser(val context: Context? = null) {
         val serialNumber = passJson.getString("serialNumber")
 
         return Pass(
-            id = Objects.hash(serialNumber, organizationName).toLong(),
+            id = Hash.sha256(passJson.toString()),
             description = description,
             formatVersion = passVersion,
             organization = organizationName,
@@ -186,7 +186,7 @@ class PassParser(val context: Context? = null) {
                     )
                 )
             }
-        } catch (e: JSONException) {
+        } catch (_: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")
         }
     }

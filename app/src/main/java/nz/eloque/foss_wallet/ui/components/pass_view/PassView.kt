@@ -72,7 +72,7 @@ fun PassView(
 @Composable
 private fun PassPreview() {
     val pass = Pass(
-        0,
+        "",
         "KSC - SV Elversberg",
         1,
         "KSC",

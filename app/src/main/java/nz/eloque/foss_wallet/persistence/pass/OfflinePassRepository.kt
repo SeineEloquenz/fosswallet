@@ -25,10 +25,11 @@ class OfflinePassRepository @Inject constructor(
             result.map { it.filter { it.pass.contains(query) } } }
     }
 
-    override suspend fun byId(id: Long): PassWithLocalization = passDao.byId(id)
+    override suspend fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
-    override suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass): Long {
-        val id = passDao.insert(pass)
+    override suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass): String {
+        val id = pass.id
+        passDao.insert(pass)
         bitmaps.saveToDisk(context, id)
         originalPass.saveToDisk(context, id)
         return id

@@ -14,7 +14,7 @@ import androidx.room.ForeignKey
     )]
 )
 data class PassLocalization(
-    val passId: Long,
+    val passId: String,
     val lang: String,
     val label: String,
     val text: String,

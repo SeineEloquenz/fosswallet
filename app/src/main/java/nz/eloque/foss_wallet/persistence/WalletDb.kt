@@ -9,11 +9,12 @@ import androidx.room.TypeConverters
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
+import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 
 
 @Database(
-    version = 9,
+    version = 10,
     entities = [Pass::class, PassLocalization::class],
     autoMigrations = [
         AutoMigration (from = 4, to = 5),
@@ -36,6 +37,7 @@ abstract class WalletDb : RoomDatabase() {
         fun getDb(context: Context): WalletDb {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, WalletDb::class.java, "wallet_db")
+                    .addMigrations(M_9_10)
                     .build()
                     .also { Instance = it }
             }

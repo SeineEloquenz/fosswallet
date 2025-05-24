@@ -140,14 +140,14 @@ fun WalletApp(
             }
             composable(
                 route = "pass/{passId}",
-                arguments = listOf(navArgument("passId") { type = NavType.IntType })
+                arguments = listOf(navArgument("passId") { type = NavType.StringType })
             ) { backStackEntry ->
-                val passId = backStackEntry.arguments?.getInt("passId")!!
+                val passId = backStackEntry.arguments?.getString("passId")!!
 
                 val pass = remember { mutableStateOf(Pass.placeholder())}
                 LaunchedEffect(coroutineScope) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        pass.value = passViewModel.passById(passId.toLong()).applyLocalization(Locale.getDefault().language)
+                        pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
                     }
                 }
 

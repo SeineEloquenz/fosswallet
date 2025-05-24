@@ -55,7 +55,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun passById(id: Long): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
+    suspend fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
 
     fun filter(query: String) {
         viewModelScope.launch {
@@ -63,7 +63,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun add(loadResult: PassLoadResult): Long = passStore.add(loadResult).apply { updatePasses() }
+    suspend fun add(loadResult: PassLoadResult): String = passStore.add(loadResult).apply { updatePasses() }
 
     suspend fun update(pass: Pass): Pass? = passStore.update(pass).apply { updatePasses() }
 

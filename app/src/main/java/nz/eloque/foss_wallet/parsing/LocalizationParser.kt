@@ -15,7 +15,7 @@ object LocalizationParser {
             val label = match.groupValues[1]
             val rawValue = match.groupValues[2]
             val text = unescapeString(rawValue)
-            result.add(PassLocalization(0, lang, label, text))
+            result.add(PassLocalization("", lang, label, text))
         }
 
         return result

@@ -18,10 +18,10 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun byId(id: Long): PassWithLocalization
+    fun byId(id: String): PassWithLocalization
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(pass: Pass): Long
+    fun insert(pass: Pass)
 
     @Delete
     fun delete(pass: Pass)
