@@ -28,7 +28,10 @@ data class PassLoadResult(
     val originalPass: OriginalPass
 )
 
-class InvalidPassException : Exception()
+class InvalidPassException : Exception {
+    constructor() : super ()
+    constructor(e: Exception) : super(e)
+}
 
 class PassBitmaps(
     val icon: Bitmap,
@@ -64,6 +67,14 @@ class PassLoader(
 ) {
 
     fun load(inputStream: InputStream, addedAt: Instant = Instant.now()): PassLoadResult {
+        try {
+            return loadPass(inputStream, addedAt)
+        } catch (e: Exception) {
+            throw InvalidPassException(e)
+        }
+    }
+
+    private fun loadPass(inputStream: InputStream, addedAt: Instant): PassLoadResult {
         val bytes = inputStream.toByteArray()
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
