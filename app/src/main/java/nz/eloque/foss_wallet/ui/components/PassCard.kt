@@ -12,14 +12,12 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -103,9 +101,8 @@ private fun PassCardContents(
                             .height(30.dp)
                             .clip(RoundedCornerShape(6.dp))
                     )
-                    Text(
+                    AbbreviatingText(
                         text = pass.logoText ?: "",
-                        overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.weight(1f)

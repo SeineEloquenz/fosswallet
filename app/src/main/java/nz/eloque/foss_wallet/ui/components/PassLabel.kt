@@ -20,7 +20,6 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -52,9 +51,8 @@ fun PassLabel(
                     .fillMaxWidth()
             ) {
                 if (label.isNotEmpty()) {
-                    Text(
+                    AbbreviatingText(
                         text = label,
-                        overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.labelMedium,
                     )

@@ -38,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -54,6 +53,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.ui.about.AboutView
+import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.pass_view.PassShareButton
 import nz.eloque.foss_wallet.ui.components.pass_view.PassView
 import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
@@ -220,10 +220,9 @@ fun WalletScaffold(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(
+                title = { AbbreviatingText(
                     title,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    maxLines = 1,
                 ) },
                 navigationIcon = {
                     if (toolWindow && showBack) {
