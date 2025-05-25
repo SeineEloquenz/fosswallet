@@ -15,10 +15,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
+private val linkStyle = TextLinkStyles(
+    style = SpanStyle(
+        textDecoration = TextDecoration.Underline,
+        fontStyle = FontStyle.Italic,
+    )
+)
 
 @Composable
 fun PassLabel(
@@ -51,7 +62,7 @@ fun PassLabel(
                 SelectionContainer {
                     Text(
                         text = if (content.isNotEmpty()) {
-                            AnnotatedString.fromHtml(content) } else { AnnotatedString("-") },
+                            AnnotatedString.fromHtml(content, linkStyle) } else { AnnotatedString("-") },
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -88,6 +99,22 @@ private fun LongPassLabelPreview() {
              wa d
              wa dwa
              
+             Lorem Ipsum
+        """.trimIndent()
+    )
+}
+
+@Preview
+@Composable
+private fun HtmlPassLabelPreview() {
+    PassLabel(
+        label = "Information",
+        content = """
+            <p>
+            This is a paragraph
+            </p>
+            This should <b> bold. </b>
+            <a href="https://example.com">This is a link</a>
              Lorem Ipsum
         """.trimIndent()
     )
