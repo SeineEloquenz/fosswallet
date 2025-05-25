@@ -14,6 +14,8 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,7 +50,8 @@ fun PassLabel(
                 }
                 SelectionContainer {
                     Text(
-                        text = if (content.isNotEmpty()) { content } else { "-" },
+                        text = if (content.isNotEmpty()) {
+                            AnnotatedString.fromHtml(content) } else { AnnotatedString("-") },
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
