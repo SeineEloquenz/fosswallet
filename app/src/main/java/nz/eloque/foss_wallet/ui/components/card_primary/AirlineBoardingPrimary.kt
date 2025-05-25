@@ -21,12 +21,13 @@ import nz.eloque.foss_wallet.ui.components.pass_view.PassField
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
-fun BoardingPrimary(
+fun AirlineBoardingPrimary(
     pass: Pass,
-    transitType: TransitType,
     cardColors: CardColors,
     modifier: Modifier = Modifier
 ) {
+    val transitType = TransitType.AIR
+
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
         PassField(field.label, field.value, cardColors = cardColors)
@@ -55,7 +56,7 @@ fun BoardingPrimary(
 }
 
 @Composable
-fun DestinationCard(
+private fun DestinationCard(
     destination: String,
     modifier: Modifier = Modifier,
     cardColors: CardColors
