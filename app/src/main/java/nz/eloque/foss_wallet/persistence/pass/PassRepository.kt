@@ -11,9 +11,9 @@ interface PassRepository {
 
     suspend fun filtered(query: String) : Flow<List<PassWithLocalization>>
 
-    suspend fun byId(id: Long): PassWithLocalization
+    suspend fun byId(id: String): PassWithLocalization
 
-    suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass): Long
+    suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass): String
 
     suspend fun delete(pass: Pass)
 }

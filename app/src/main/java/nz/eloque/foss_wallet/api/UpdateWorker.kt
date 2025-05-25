@@ -17,7 +17,7 @@ class UpdateWorker @AssistedInject constructor(
     : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
-        val pass = passStore.passById(inputData.getString("id")!!.toLong())
+        val pass = passStore.passById(inputData.getString("id")!!)
         val result = passStore.update(pass.pass)
         return if (result != null) {
             Result.success()
