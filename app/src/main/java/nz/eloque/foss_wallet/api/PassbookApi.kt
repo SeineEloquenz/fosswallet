@@ -31,7 +31,7 @@ object PassbookApi {
         }
         return if (response.isSuccessful) {
             try {
-                PassLoader(PassParser()).load(response.body!!.byteStream(), pass.addedAt)
+                PassLoader(PassParser()).load(response.body!!.byteStream(), pass.id, pass.addedAt)
             } catch (_: InvalidPassException) {
                 null
             }

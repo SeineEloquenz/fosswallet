@@ -66,15 +66,15 @@ class PassLoader(
     private val passParser: PassParser
 ) {
 
-    fun load(inputStream: InputStream, addedAt: Instant = Instant.now()): PassLoadResult {
+    fun load(inputStream: InputStream, resultingId: String? = null, addedAt: Instant = Instant.now()): PassLoadResult {
         try {
-            return loadPass(inputStream, addedAt)
+            return loadPass(inputStream, resultingId, addedAt)
         } catch (e: Exception) {
             throw InvalidPassException(e)
         }
     }
 
-    private fun loadPass(inputStream: InputStream, addedAt: Instant): PassLoadResult {
+    private fun loadPass(inputStream: InputStream, resultingId: String? = null, addedAt: Instant): PassLoadResult {
         val bytes = inputStream.toByteArray()
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
@@ -129,7 +129,7 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
-            val pass = passParser.parse(passJson, bitmaps, addedAt = addedAt)
+            var pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt)
             return PassLoadResult(pass, bitmaps, localizations, OriginalPass(bytes))
         } else {
             throw InvalidPassException()

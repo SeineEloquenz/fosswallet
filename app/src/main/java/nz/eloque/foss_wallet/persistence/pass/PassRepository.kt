@@ -13,7 +13,7 @@ interface PassRepository {
 
     suspend fun byId(id: String): PassWithLocalization
 
-    suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass): String
+    suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass)
 
     suspend fun delete(pass: Pass)
 }

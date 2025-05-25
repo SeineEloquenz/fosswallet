@@ -26,6 +26,7 @@ class PassParser(val context: Context? = null) {
 
     fun parse(
         passJson: JSONObject,
+        overridingId: String? = null,
         bitmaps: PassBitmaps,
         addedAt: Instant = Instant.now()
     ): Pass {
@@ -51,7 +52,7 @@ class PassParser(val context: Context? = null) {
         val serialNumber = passJson.getString("serialNumber")
 
         return Pass(
-            id = Hash.sha256(passJson.toString()),
+            id = overridingId ?: Hash.sha256(passJson.toString()),
             description = description,
             formatVersion = passVersion,
             organization = organizationName,

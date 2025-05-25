@@ -29,19 +29,18 @@ class PassStore @Inject constructor(
 
     suspend fun filtered(query: String) = passRepository.filtered(query)
 
-    suspend fun add(loadResult: PassLoadResult): String {
-        val id = insert(loadResult)
+    suspend fun add(loadResult: PassLoadResult) {
+        insert(loadResult)
         if (loadResult.pass.updatable()) {
             scheduleUpdate(loadResult.pass)
         }
-        return id
     }
 
     suspend fun update(pass: Pass): Pass? {
         val updated = PassbookApi.getUpdated(pass)
         return if (updated != null) {
-            val id = insert(updated)
-            passById(id).applyLocalization(Locale.getDefault().language)
+            insert(updated)
+            passById(updated.pass.id).applyLocalization(Locale.getDefault().language)
         } else {
             null
         }
@@ -57,10 +56,9 @@ class PassStore @Inject constructor(
         add(loaded)
     }
 
-    private suspend fun insert(loadResult: PassLoadResult): String {
-        val id = passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
-        loadResult.localizations.map { it.copy(passId = id) }.forEach { localizationRepository.insert(it) }
-        return id
+    private suspend fun insert(loadResult: PassLoadResult) {
+        passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
+        loadResult.localizations.map { it.copy(passId = loadResult.pass.id) }.forEach { localizationRepository.insert(it) }
     }
 
     private fun scheduleUpdate(pass: Pass) {

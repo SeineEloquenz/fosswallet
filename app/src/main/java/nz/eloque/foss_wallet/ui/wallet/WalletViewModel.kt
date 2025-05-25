@@ -63,7 +63,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun add(loadResult: PassLoadResult): String = passStore.add(loadResult).apply { updatePasses() }
+    suspend fun add(loadResult: PassLoadResult) = passStore.add(loadResult).apply { updatePasses() }
 
     suspend fun update(pass: Pass): Pass? = passStore.update(pass).apply { updatePasses() }
 
