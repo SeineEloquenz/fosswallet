@@ -24,7 +24,9 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.ui.components.card_primary.BoardingPrimary
+import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.ui.components.card_primary.AirlineBoardingPrimary
+import nz.eloque.foss_wallet.ui.components.card_primary.GenericBoardingPrimary
 import nz.eloque.foss_wallet.ui.components.card_primary.GenericPrimary
 import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
 
@@ -113,7 +115,10 @@ private fun PassCardContents(
                     cardColors = cardColors
                 )
                 when (pass.type) {
-                    is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType, cardColors)
+                    is PassType.Boarding -> when (pass.type.transitType) {
+                        TransitType.AIR -> AirlineBoardingPrimary(pass, cardColors)
+                        else -> GenericBoardingPrimary(pass, pass.type.transitType, cardColors)
+                    }
                     else -> GenericPrimary(pass, cardColors)
                 }
             }
