@@ -27,9 +27,9 @@ fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     }
 }
 
-fun Instant.prettyPrint(): String {
+fun Instant.prettyPrint(style: FormatStyle = FormatStyle.SHORT): String {
     val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(style)
     return zonedTime.format(dateFormatter)
 }
 
