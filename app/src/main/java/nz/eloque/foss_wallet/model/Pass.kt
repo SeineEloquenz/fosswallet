@@ -99,6 +99,6 @@ data class Pass(
     }
 
     fun MutableList<PassField>.contains(query: String): Boolean {
-        return this.any { query in it.label || query in it.value }
+        return this.any { query in it.label || it.content.contains(query) }
     }
 }

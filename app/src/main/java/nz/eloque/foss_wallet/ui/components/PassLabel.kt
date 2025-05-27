@@ -22,6 +22,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.model.field.PassContent
 
 private val linkStyle = TextLinkStyles(
     style = SpanStyle(
@@ -33,7 +34,7 @@ private val linkStyle = TextLinkStyles(
 @Composable
 fun PassLabel(
     label: String,
-    content: String,
+    content: PassContent,
     modifier: Modifier = Modifier,
     colors: CardColors = CardDefaults.outlinedCardColors(),
 ) {
@@ -58,9 +59,10 @@ fun PassLabel(
                     )
                 }
                 SelectionContainer {
+                    val contentString = content.prettyPrint()
                     Text(
-                        text = if (content.isNotEmpty()) {
-                            AnnotatedString.fromHtml(content, linkStyle) } else { AnnotatedString("-") },
+                        text = if (contentString.isNotEmpty()) {
+                            AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -74,7 +76,7 @@ fun PassLabel(
 private fun PassLabelPreview() {
     PassLabel(
         label = "GRP",
-        content = "34"
+        content = PassContent.Plain("34")
     )
 }
 
@@ -83,7 +85,7 @@ private fun PassLabelPreview() {
 private fun LongPassLabelPreview() {
     PassLabel(
         label = "Information",
-        content = """
+        content = PassContent.Plain("""
             This is a long text.
             
             Possibly multiple lines
@@ -98,7 +100,7 @@ private fun LongPassLabelPreview() {
              wa dwa
              
              Lorem Ipsum
-        """.trimIndent()
+        """.trimIndent())
     )
 }
 
@@ -107,13 +109,13 @@ private fun LongPassLabelPreview() {
 private fun HtmlPassLabelPreview() {
     PassLabel(
         label = "Information",
-        content = """
+        content = PassContent.Plain("""
             <p>
             This is a paragraph
             </p>
             This should <b> bold. </b>
             <a href="https://example.com">This is a link</a>
              Lorem Ipsum
-        """.trimIndent()
+        """.trimIndent())
     )
 }

@@ -9,23 +9,23 @@ import org.json.JSONObject
 data class PassField(
     val key: String,
     val label: String,
-    val value: String,
+    val content: PassContent,
 ) {
     fun toJson(): JSONObject {
         return JSONObject().also {
             it.put("key", key)
             it.put("label", label)
-            it.put("value", value)
+            it.put("value", content.serialize())
         }
     }
 
     fun contains(query: String): Boolean {
-        return query inIgnoreCase this.label || query inIgnoreCase this.value
+        return query inIgnoreCase this.label || this.content.contains(query)
     }
 
     companion object {
         fun fromJson(json: JSONObject): PassField {
-            return PassField(json.getString("key"), json.getString("label"), json.getString("value"))
+            return PassField(json.getString("key"), json.getString("label"), PassContent.deserialize(json.getString("value")))
         }
     }
 }
