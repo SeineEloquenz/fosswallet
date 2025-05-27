@@ -87,20 +87,20 @@ private fun PassPreview() {
     ).also {
         it.relevantDate = 1800000000L
         it.headerFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("block", "Block", "S1"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "47"),
+            nz.eloque.foss_wallet.model.field.PassField("block", "Block", "S1"),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", "47"),
         )
         it.primaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("name", "Name", "Max Mustermann"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "47"),
+            nz.eloque.foss_wallet.model.field.PassField("name", "Name", "Max Mustermann"),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", "47"),
         )
         it.auxiliaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("block", "Block", "S1 | Gegengerade"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "36E"),
+            nz.eloque.foss_wallet.model.field.PassField("block", "Block", "S1 | Gegengerade"),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", "36E"),
         )
         it.secondaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("data1", "data1", "Longer Value here i guess"),
-            nz.eloque.foss_wallet.model.PassField("data2", "data2", "Shorter Value"),
+            nz.eloque.foss_wallet.model.field.PassField("data1", "data1", "Longer Value here i guess"),
+            nz.eloque.foss_wallet.model.field.PassField("data2", "data2", "Shorter Value"),
         )
     }
     PassView(pass, true)

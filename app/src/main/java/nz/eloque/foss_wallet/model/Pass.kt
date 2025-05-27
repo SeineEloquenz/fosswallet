@@ -5,34 +5,12 @@ import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
-import org.json.JSONObject
 import java.io.File
 import java.time.Instant
 import java.util.LinkedList
 import java.util.UUID
-
-
-@Entity
-data class PassField(val key: String, val label: String, val value: String) {
-    fun toJson(): JSONObject {
-        return JSONObject().also {
-            it.put("key", key)
-            it.put("label", label)
-            it.put("value", value)
-        }
-    }
-
-    fun contains(query: String): Boolean {
-        return query inIgnoreCase this.label || query inIgnoreCase this.value
-    }
-
-    companion object {
-        fun fromJson(json: JSONObject): PassField {
-            return PassField(json.getString("key"), json.getString("label"), json.getString("value"))
-        }
-    }
-}
 
 @Entity(tableName = "Pass")
 data class Pass(

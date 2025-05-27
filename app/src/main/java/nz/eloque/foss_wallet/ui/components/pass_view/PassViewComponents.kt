@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.PassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
