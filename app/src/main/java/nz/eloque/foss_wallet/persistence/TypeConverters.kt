@@ -6,9 +6,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassColors
-import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONArray
 import org.json.JSONObject

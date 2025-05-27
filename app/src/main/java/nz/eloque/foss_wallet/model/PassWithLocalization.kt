@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import nz.eloque.foss_wallet.model.field.PassField
 
 data class PassWithLocalization(
     @Embedded

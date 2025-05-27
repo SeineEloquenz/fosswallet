@@ -9,9 +9,10 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
-import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.Content
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
@@ -21,6 +22,7 @@ import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
+import java.time.format.FormatStyle
 
 class PassParser(val context: Context? = null) {
 
@@ -179,16 +181,32 @@ class PassParser(val context: Context? = null) {
     private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {
         try {
             this.getJSONArray(name).forEach {
-                fieldContainer.add(
-                    PassField(
-                        it.getString("key"),
-                        it.getString("label"),
-                        it.getString("value")
-                    )
-                )
+                val key = it.getString("key")
+                val label = it.getString("label")
+                val value = it.getString("value")
+
+                val content = when {
+                    it.has("currency") -> Content.Currency(value, it.getString("currency"))
+                    it.has("dateStyle") && it.getString("dateStyle") != "PKDateStyleNone" -> Content.Date(value, it.getString("dateStyle").toFormatStyle())
+                    it.has("timeStyle") && it.getString("timeStyle") != "PKDateStyleNone" -> Content.Time(value, it.getString("timeStyle").toFormatStyle())
+                    else -> Content.Plain(value)
+                }
+
+                val passField = PassField(key, label, content)
+                fieldContainer.add(passField)
             }
         } catch (_: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")
+        }
+    }
+
+    private fun String.toFormatStyle(): FormatStyle {
+        return when (this) {
+            "PKDateStyleShort" -> FormatStyle.SHORT
+            "PKDateStyleMedium" -> FormatStyle.MEDIUM
+            "PKDateStyleLong" -> FormatStyle.LONG
+            "PKDateStyleFull" -> FormatStyle.FULL
+            else -> FormatStyle.FULL
         }
     }
 
