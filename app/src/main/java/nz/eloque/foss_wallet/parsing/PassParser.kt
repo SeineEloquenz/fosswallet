@@ -9,9 +9,9 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
-import nz.eloque.foss_wallet.model.PassField
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
@@ -179,13 +179,8 @@ class PassParser(val context: Context? = null) {
     private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {
         try {
             this.getJSONArray(name).forEach {
-                fieldContainer.add(
-                    PassField(
-                        it.getString("key"),
-                        it.getString("label"),
-                        it.getString("value")
-                    )
-                )
+                val passField = FieldParser.parse(it)
+                fieldContainer.add(passField)
             }
         } catch (_: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")

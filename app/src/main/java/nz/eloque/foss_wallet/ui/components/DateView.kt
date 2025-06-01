@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.utils.prettyPrint
+import nz.eloque.foss_wallet.utils.prettyDateTime
 import java.time.Instant
 
 @Composable
@@ -46,13 +46,13 @@ fun DateView(
         Column {
             if (start != 0L) {
                 Text(
-                    text = Instant.ofEpochSecond(start).prettyPrint(),
+                    text = Instant.ofEpochSecond(start).prettyDateTime(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
             if (end != 0L) {
                 Text(
-                    text = Instant.ofEpochSecond(end).prettyPrint(),
+                    text = Instant.ofEpochSecond(end).prettyDateTime(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

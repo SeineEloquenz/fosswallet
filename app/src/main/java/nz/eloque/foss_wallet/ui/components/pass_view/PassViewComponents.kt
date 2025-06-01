@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.PassField
+import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.PassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
@@ -42,7 +43,7 @@ fun HeaderFieldsView(
         for (field in headerFields) {
             PassLabel(
                 label = field.label,
-                content = field.value,
+                content = field.content,
                 colors = cardColors,
                 modifier = Modifier.weight(1f)
             )
@@ -115,7 +116,7 @@ fun AsyncPassImage(
 @Composable
 fun PassField(
     label: String,
-    value: String,
+    value: PassContent,
     modifier: Modifier = Modifier,
     cardColors: CardColors = CardDefaults.outlinedCardColors()
 ) {
@@ -138,7 +139,7 @@ fun PassFields(
         modifier = modifier
     ) {
         fields.forEach {
-            PassField(it.label, it.value, Modifier.fillMaxWidth(), cardColors)
+            PassField(it.label, it.content, Modifier.fillMaxWidth(), cardColors)
         }
     }
 }

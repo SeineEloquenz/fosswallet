@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.ui.components.PassCard
 import java.time.Instant
 
@@ -87,20 +88,20 @@ private fun PassPreview() {
     ).also {
         it.relevantDate = 1800000000L
         it.headerFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("block", "Block", "S1"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "47"),
+            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1")),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.primaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("name", "Name", "Max Mustermann"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "47"),
+            nz.eloque.foss_wallet.model.field.PassField("name", "Name", PassContent.Plain("Max Mustermann")),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.auxiliaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("block", "Block", "S1 | Gegengerade"),
-            nz.eloque.foss_wallet.model.PassField("seat", "Seat", "36E"),
+            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
+            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("36E")),
         )
         it.secondaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.PassField("data1", "data1", "Longer Value here i guess"),
-            nz.eloque.foss_wallet.model.PassField("data2", "data2", "Shorter Value"),
+            nz.eloque.foss_wallet.model.field.PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
+            nz.eloque.foss_wallet.model.field.PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         )
     }
     PassView(pass, true)

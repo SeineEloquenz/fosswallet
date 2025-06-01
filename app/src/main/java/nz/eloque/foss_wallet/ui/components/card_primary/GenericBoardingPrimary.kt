@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.ui.components.pass_view.PassField
 import nz.eloque.foss_wallet.utils.darken
 
@@ -25,7 +26,7 @@ fun GenericBoardingPrimary(
 ) {
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        PassField(field.label, field.value, cardColors = cardColors)
+        PassField(field.label, field.content, cardColors = cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -33,7 +34,7 @@ fun GenericBoardingPrimary(
         ) {
             DestinationCard(
                 label = pass.primaryFields[0].label,
-                destination = pass.primaryFields[0].value,
+                destination = pass.primaryFields[0].content,
                 modifier = Modifier.weight(2f),
                 cardColors
             )
@@ -44,7 +45,7 @@ fun GenericBoardingPrimary(
             )
             DestinationCard(
                 label = pass.primaryFields[1].label,
-                destination = pass.primaryFields[1].value,
+                destination = pass.primaryFields[1].content,
                 modifier = Modifier.weight(2f),
                 cardColors
             )
@@ -55,7 +56,7 @@ fun GenericBoardingPrimary(
 @Composable
 private fun DestinationCard(
     label: String,
-    destination: String,
+    destination: PassContent,
     modifier: Modifier = Modifier,
     cardColors: CardColors
 ) {

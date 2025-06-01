@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.pass_view.PassField
 import nz.eloque.foss_wallet.utils.darken
@@ -30,14 +31,14 @@ fun AirlineBoardingPrimary(
 
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        PassField(field.label, field.value, cardColors = cardColors)
+        PassField(field.label, field.content, cardColors = cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             DestinationCard(
-                destination = pass.primaryFields[0].value,
+                destination = pass.primaryFields[0].content,
                 modifier = Modifier.weight(2f),
                 cardColors
             )
@@ -47,7 +48,7 @@ fun AirlineBoardingPrimary(
                 modifier = Modifier.weight(1f)
             )
             DestinationCard(
-                destination = pass.primaryFields[1].value,
+                destination = pass.primaryFields[1].content,
                 modifier = Modifier.weight(2f),
                 cardColors
             )
@@ -57,7 +58,7 @@ fun AirlineBoardingPrimary(
 
 @Composable
 private fun DestinationCard(
-    destination: String,
+    destination: PassContent,
     modifier: Modifier = Modifier,
     cardColors: CardColors
 ) {
@@ -66,8 +67,8 @@ private fun DestinationCard(
         modifier = modifier
     ) {
         AbbreviatingText(
-            text = destination,
-            style = if (destination.length <= 3) { MaterialTheme.typography.headlineLarge } else { MaterialTheme.typography.headlineSmall },
+            text = destination.prettyPrint(),
+            style = if (destination.prettyPrint().length <= 3) { MaterialTheme.typography.headlineLarge } else { MaterialTheme.typography.headlineSmall },
             maxLines = 1,
             textAlign = TextAlign.Center,
             modifier = Modifier
