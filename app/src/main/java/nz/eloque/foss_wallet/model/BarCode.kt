@@ -34,7 +34,7 @@ data class BarCode(
             }
         }
         val bitmap = createBitmap(w, h)
-        bitmap.setPixels(pixels, 0, width, 0, 0, w, h)
+        bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
         return bitmap
     }
 
