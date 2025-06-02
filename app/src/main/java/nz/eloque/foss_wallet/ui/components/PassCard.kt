@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,7 +36,8 @@ fun PassCard(
     pass: Pass,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    content: @Composable ((cardColors: CardColors) -> Unit)
+    selected: Boolean = false,
+    content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
     val cardColors = pass.colors?.toCardColors() ?: CardDefaults.elevatedCardColors()
     if (onClick == null) {
@@ -43,6 +45,7 @@ fun PassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
+                .alpha(if (selected) 0.75f else 1.0f)
         ) {
             PassCardContents(
                 pass = pass,
@@ -56,6 +59,7 @@ fun PassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
+                .alpha(if (selected) 0.75f else 1.0f)
         ) {
             PassCardContents(
                 pass = pass,

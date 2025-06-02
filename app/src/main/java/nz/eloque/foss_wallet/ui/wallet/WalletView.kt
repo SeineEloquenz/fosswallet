@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -46,6 +47,7 @@ fun WalletView(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    passesToGroup: SnapshotStateSet<Pass>,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val list = passViewModel.uiState.collectAsState()
@@ -88,8 +90,7 @@ fun WalletView(
         val sortedPasses = list.value.passes.sortedWith(comparator)
         items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
             SwipeToDismiss(
-                allowLeftSwipe = false,
-                onLeftSwipe = {},
+                onLeftSwipe = { if (passesToGroup.contains(pass)) passesToGroup.remove(pass) else passesToGroup.add(pass) },
                 onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) } }
             ) {
                 PassCard(
@@ -97,6 +98,7 @@ fun WalletView(
                     onClick = {
                         navController.navigate("pass/${pass.id}")
                     },
+                    selected = passesToGroup.contains(pass)
                 ) {
 
                 }

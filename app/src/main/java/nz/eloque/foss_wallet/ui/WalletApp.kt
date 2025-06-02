@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Merge
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -104,18 +106,31 @@ fun WalletApp(
                         }
                     }
                 }
+                val passesToGroup = remember { mutableStateSetOf<Pass>() }
+
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(id = R.string.wallet),
                     actions = {
-                          IconButton(onClick = {
-                              navController.navigate(Screen.About.route)
-                          }) {
-                              Icon(
-                                  imageVector = Icons.Default.Info,
-                                  contentDescription = stringResource(R.string.about)
-                              )
-                          }
+                        if (passesToGroup.size >= 2) {
+                            IconButton(onClick = {
+                                coroutineScope.launch(Dispatchers.IO) { passViewModel.group(passesToGroup.toSet()) }
+                                passesToGroup.clear()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Merge,
+                                    contentDescription = stringResource(R.string.group)
+                                )
+                            }
+                        }
+                        IconButton(onClick = {
+                            navController.navigate(Screen.About.route)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = stringResource(R.string.about)
+                            )
+                        }
                     },
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
@@ -126,7 +141,7 @@ fun WalletApp(
                         )
                     },
                 ) { scrollBehavior ->
-                    WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior)
+                    WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, passesToGroup = passesToGroup)
                 }
             }
             composable(Screen.About.route) {

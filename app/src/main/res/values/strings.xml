@@ -30,4 +30,5 @@
     <string name="share">Share Pass</string>
     <string name="pass_updates_channel">Pass Updates</string>
     <string name="pass_updated">Pass updated</string>
+    <string name="group">Group passes</string>
 </resources>

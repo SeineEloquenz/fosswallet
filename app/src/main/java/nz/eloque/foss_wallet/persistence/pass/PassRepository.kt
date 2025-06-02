@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.persistence.pass
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 
@@ -13,7 +14,11 @@ interface PassRepository {
 
     suspend fun byId(id: String): PassWithLocalization
 
+    suspend fun associate(pass: Pass, group: PassGroup)
+
     suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass)
+
+    suspend fun insert(group: PassGroup): PassGroup
 
     suspend fun delete(pass: Pass)
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
@@ -12,7 +13,17 @@ import java.time.Instant
 import java.util.LinkedList
 import java.util.UUID
 
-@Entity(tableName = "Pass")
+@Entity(
+    tableName = "Pass",
+    foreignKeys = [
+        ForeignKey(
+            entity = PassGroup::class,
+            parentColumns = ["id"],
+            childColumns = ["groupId"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ]
+)
 data class Pass(
     @PrimaryKey val id: String,
     var description: String,
@@ -34,6 +45,7 @@ data class Pass(
     @ColumnInfo(defaultValue = "2b767e5b-75fd-4bec-89d7-188e832b2dc3")
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
+    val groupId: Long? = null,
 ) {
     var relevantDate: Long = 0
     var expirationDate: Long = 0

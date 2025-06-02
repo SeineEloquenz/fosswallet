@@ -60,7 +60,10 @@ fun SwipeToDismiss(
 
     when (swipeState.currentValue) {
         SwipeToDismissBoxValue.EndToStart -> {
-            onLeftSwipe()
+            LaunchedEffect(swipeState) {
+                onLeftSwipe()
+                swipeState.snapTo(SwipeToDismissBoxValue.Settled)
+            }
         }
 
         SwipeToDismissBoxValue.StartToEnd -> {

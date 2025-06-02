@@ -10,6 +10,7 @@ import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateWorker
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
@@ -48,6 +49,12 @@ class PassStore @Inject constructor(
         } else {
             null
         }
+    }
+
+    suspend fun group(passes: Set<Pass>): PassGroup {
+        val group = passRepository.insert(PassGroup())
+        passes.forEach { passRepository.associate(it, group) }
+        return group
     }
 
     suspend fun delete(pass: Pass) {
