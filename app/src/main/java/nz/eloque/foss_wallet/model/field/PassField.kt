@@ -4,19 +4,26 @@ import androidx.room.Entity
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import org.json.JSONObject
 
+private val CHANGE_MESSAGE_FORMAT = "%@".toRegex()
 
 @Entity
 data class PassField(
     val key: String,
     val label: String,
     val content: PassContent,
+    private val changeMessage: String? = null,
 ) {
     fun toJson(): JSONObject {
-        return JSONObject().also {
-            it.put("key", key)
-            it.put("label", label)
-            it.put("value", content.serialize())
+        return JSONObject().also { json ->
+            json.put("key", key)
+            json.put("label", label)
+            json.put("value", content.serialize())
+            changeMessage?.let { json.put("changeMessage", it) }
         }
+    }
+
+    fun changeMessage(): String? {
+        return changeMessage?.replace(CHANGE_MESSAGE_FORMAT, content.prettyPrint())
     }
 
     fun contains(query: String): Boolean {
@@ -25,7 +32,12 @@ data class PassField(
 
     companion object {
         fun fromJson(json: JSONObject): PassField {
-            return PassField(json.getString("key"), json.getString("label"), PassContent.deserialize(json.getString("value")))
+            return PassField(
+                json.getString("key"),
+                json.getString("label"),
+                PassContent.deserialize(json.getString("value")),
+                if (json.has("changeMessage")) json.getString("changeMessage") else null
+            )
         }
     }
 }
