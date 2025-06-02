@@ -1,7 +1,9 @@
 package nz.eloque.foss_wallet
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
     private val passViewModel: PassViewModel by viewModels()
 
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,6 +50,12 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(dataUri) {
                 coroutineScope.launch(Dispatchers.IO) {
                     dataUri?.handleIntent(passViewModel, coroutineScope, navController)
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val permissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+                LaunchedEffect("Permissions") {
+                    coroutineScope.launch(Dispatchers.IO) { permissionState.launchPermissionRequest() }
                 }
             }
             WalletTheme {

@@ -10,6 +10,7 @@ import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateWorker
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
@@ -18,6 +19,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class PassStore @Inject constructor(
+    private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
     private val workManager: WorkManager
@@ -40,6 +42,8 @@ class PassStore @Inject constructor(
         val updated = PassbookApi.getUpdated(pass)
         return if (updated != null) {
             insert(updated)
+            notificationService.createNotificationChannel()
+            updated.pass.updatedFields(pass).forEach { notificationService.post(it.changeMessage()) }
             passById(updated.pass.id).applyLocalization(Locale.getDefault().language)
         } else {
             null

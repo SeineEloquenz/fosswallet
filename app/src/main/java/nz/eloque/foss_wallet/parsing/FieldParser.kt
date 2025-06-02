@@ -11,6 +11,7 @@ object FieldParser {
         val key = field.getString("key")
         val label = field.getString("label")
         val value = field.getString("value")
+        val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 
         val content = when {
             field.has("currencyCode") -> PassContent.Currency(value, field.getString("currencyCode"))
@@ -20,7 +21,7 @@ object FieldParser {
             else -> PassContent.Plain(value)
         }
 
-        return PassField(key, label, content)
+        return PassField(key, label, content, changeMessage)
     }
 
     private fun String.toFormatStyle(): FormatStyle {
