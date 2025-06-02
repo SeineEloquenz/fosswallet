@@ -26,4 +26,6 @@
     <string name="update_successful">Pass wurde erfolgreich aktualisiert</string>
     <string name="update_failed">Pass konnte nicht aktualisiert werden</string>
     <string name="share">Pass teilen</string>
+    <string name="pass_updates_channel">Pass Aktualisierungen</string>
+    <string name="pass_updated">Pass aktualisiert</string>
 </resources>

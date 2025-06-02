@@ -68,6 +68,17 @@ data class Pass(
         }
     }
 
+    fun allFields(): List<PassField> = headerFields + primaryFields + secondaryFields + auxiliaryFields + backFields
+
+    fun updatedFields(oldPass: Pass): List<PassField> {
+        val myFields = this.allFields()
+        val updatedFields = oldPass.allFields().associateBy { it.key }
+
+        return myFields
+            .filter { it.hasChangeMessage() }
+            .filter { it.content != updatedFields[it.key]?.content }
+    }
+
     fun updatable(): Boolean {
         return webServiceUrl != null
                 && authToken != null

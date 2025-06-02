@@ -22,6 +22,10 @@ data class PassField(
         }
     }
 
+    fun hasChangeMessage(): Boolean {
+        return changeMessage != null
+    }
+
     fun changeMessage(): String? {
         return changeMessage?.replace(CHANGE_MESSAGE_FORMAT, content.prettyPrint())
     }
