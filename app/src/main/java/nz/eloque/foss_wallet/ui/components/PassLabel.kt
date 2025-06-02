@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -32,7 +33,22 @@ private val linkStyle = TextLinkStyles(
 )
 
 @Composable
-fun PassLabel(
+fun ElevatedPassLabel(
+    label: String,
+    content: PassContent,
+    modifier: Modifier = Modifier,
+    colors: CardColors = CardDefaults.outlinedCardColors(),
+) {
+    ElevatedCard(
+        colors = colors,
+        modifier = modifier,
+    ) {
+        PassLabelContents(label, content)
+    }
+}
+
+@Composable
+fun OutlinedPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
@@ -42,30 +58,38 @@ fun PassLabel(
         colors = colors,
         modifier = modifier,
     ) {
-        Box(
-            Modifier.fillMaxSize()
+        PassLabelContents(label, content)
+    }
+}
+
+@Composable
+private fun PassLabelContents(
+    label: String,
+    content: PassContent,
+) {
+    Box(
+        Modifier.fillMaxSize()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                modifier = Modifier
-                    .padding(12.dp)
-                    .fillMaxWidth()
-            ) {
-                if (label.isNotEmpty()) {
-                    AbbreviatingText(
-                        text = label,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                }
-                SelectionContainer {
-                    val contentString = content.prettyPrint()
-                    Text(
-                        text = if (contentString.isNotEmpty()) {
-                            AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+            if (label.isNotEmpty()) {
+                AbbreviatingText(
+                    text = label,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+            SelectionContainer {
+                val contentString = content.prettyPrint()
+                Text(
+                    text = if (contentString.isNotEmpty()) {
+                        AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
     }
@@ -74,7 +98,7 @@ fun PassLabel(
 @Preview
 @Composable
 private fun PassLabelPreview() {
-    PassLabel(
+    OutlinedPassLabel(
         label = "GRP",
         content = PassContent.Plain("34")
     )
@@ -83,7 +107,7 @@ private fun PassLabelPreview() {
 @Preview
 @Composable
 private fun LongPassLabelPreview() {
-    PassLabel(
+    OutlinedPassLabel(
         label = "Information",
         content = PassContent.Plain("""
             This is a long text.
@@ -107,7 +131,7 @@ private fun LongPassLabelPreview() {
 @Preview
 @Composable
 private fun HtmlPassLabelPreview() {
-    PassLabel(
+    OutlinedPassLabel(
         label = "Information",
         content = PassContent.Plain("""
             <p>

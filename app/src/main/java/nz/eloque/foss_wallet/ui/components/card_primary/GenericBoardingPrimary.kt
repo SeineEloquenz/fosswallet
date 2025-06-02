@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.components.card_primary
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +13,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
-import nz.eloque.foss_wallet.ui.components.pass_view.PassField
+import nz.eloque.foss_wallet.ui.components.ElevatedPassLabel
+import nz.eloque.foss_wallet.ui.components.OutlinedPassLabel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
@@ -26,7 +26,7 @@ fun GenericBoardingPrimary(
 ) {
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        PassField(field.label, field.content, cardColors = cardColors)
+        OutlinedPassLabel(field.label, field.content, colors = cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -60,10 +60,10 @@ private fun DestinationCard(
     modifier: Modifier = Modifier,
     cardColors: CardColors
 ) {
-    ElevatedCard(
-        colors = cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f)),
-        modifier = modifier
-    ) {
-        PassField(label, destination)
-    }
+    ElevatedPassLabel(
+        label,
+        destination,
+        modifier,
+        cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f))
+    )
 }

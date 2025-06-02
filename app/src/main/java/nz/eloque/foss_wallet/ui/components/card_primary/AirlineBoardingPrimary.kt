@@ -18,7 +18,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.pass_view.PassField
+import nz.eloque.foss_wallet.ui.components.OutlinedPassLabel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
@@ -31,7 +31,7 @@ fun AirlineBoardingPrimary(
 
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        PassField(field.label, field.content, cardColors = cardColors)
+        OutlinedPassLabel(field.label, field.content, colors = cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
