@@ -37,15 +37,16 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     selected: Boolean = false,
+    colors: CardColors = CardDefaults.elevatedCardColors(),
     content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
-    val cardColors = pass.colors?.toCardColors() ?: CardDefaults.elevatedCardColors()
+    val cardColors = pass.colors?.toCardColors() ?: colors
     if (onClick == null) {
         ElevatedCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .alpha(if (selected) 0.75f else 1.0f)
+                .alpha(if (selected) 0.75f else 1.0f),
         ) {
             PassCardContents(
                 pass = pass,

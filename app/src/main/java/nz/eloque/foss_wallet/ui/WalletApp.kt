@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Merge
 import androidx.compose.material.icons.filled.Sync
@@ -114,8 +115,10 @@ fun WalletApp(
                     actions = {
                         if (passesToGroup.size >= 2) {
                             IconButton(onClick = {
-                                coroutineScope.launch(Dispatchers.IO) { passViewModel.group(passesToGroup.toSet()) }
-                                passesToGroup.clear()
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    passViewModel.group(passesToGroup.toSet())
+                                    passesToGroup.clear()
+                                }
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Merge,
@@ -178,6 +181,14 @@ fun WalletApp(
                     },
                     actions = {
                         Row {
+                            val groupId = pass.value.groupId
+                            if (groupId != null) {
+                                IconButton(onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) { passViewModel.deleteGroup(groupId) }
+                                }) {
+                                    Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
+                                }
+                            }
                             if (pass.value.updatable()) {
                                 val updateSuccessful = stringResource(R.string.update_successful)
                                 val updateFailed = stringResource(R.string.update_failed)

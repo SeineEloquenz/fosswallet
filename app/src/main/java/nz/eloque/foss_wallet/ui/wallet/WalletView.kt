@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.components.FilterBar
+import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.PassCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 
@@ -87,9 +89,21 @@ fun WalletView(
                     .padding(start = 6.dp, end = 6.dp, bottom = 6.dp)
             )
         }
-        val sortedPasses = list.value.passes.sortedWith(comparator)
-        items(sortedPasses, { pass: Pass -> pass.id }) { pass ->
+        val sortedPasses = list.value.passes.sortedWith(comparator).groupBy { it.groupId }.toList()
+        val groups = sortedPasses.filter { it.first != null }
+        val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
+        items(groups) { (groupId, passes) ->
+            GroupCard(
+                groupId!!,
+                passes,
+                onClick = {
+                    navController.navigate("pass/${it.id}")
+                }
+            )
+        }
+        items(ungrouped) { pass ->
             SwipeToDismiss(
+                leftSwipeIcon = Icons.Default.Folder,
                 onLeftSwipe = { if (passesToGroup.contains(pass)) passesToGroup.remove(pass) else passesToGroup.add(pass) },
                 onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) } }
             ) {

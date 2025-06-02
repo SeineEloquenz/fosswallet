@@ -21,4 +21,5 @@ interface PassRepository {
     suspend fun insert(group: PassGroup): PassGroup
 
     suspend fun delete(pass: Pass)
+    suspend fun deleteGroup(groupId: Long)
 }

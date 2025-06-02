@@ -88,4 +88,6 @@ class PassStore @Inject constructor(
     private fun cancelUpdate(pass: Pass) {
         workManager.cancelUniqueWork(pass.id.toString())
     }
+
+    suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
 }

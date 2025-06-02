@@ -46,4 +46,6 @@ class OfflinePassRepository @Inject constructor(
         pass.deleteFiles(context)
         passDao.delete(pass)
     }
+
+    override suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
 }
