@@ -14,8 +14,9 @@ object FieldParser {
 
         val content = when {
             field.has("currencyCode") -> PassContent.Currency(value, field.getString("currencyCode"))
-            field.has("dateStyle") && field.getString("dateStyle") != "PKDateStyleNone" -> PassContent.Date(value, field.getString("dateStyle").toFormatStyle())
-            field.has("timeStyle") && field.getString("timeStyle") != "PKDateStyleNone" -> PassContent.Time(value, field.getString("timeStyle").toFormatStyle())
+            field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(value, chooseBetter(field.getDateStyle(), field.getTimeStyle()))
+            field.hasDateStyle() -> PassContent.Date(value, field.getDateStyle())
+            field.hasTimeStyle() -> PassContent.Time(value, field.getTimeStyle())
             else -> PassContent.Plain(value)
         }
 
@@ -30,5 +31,18 @@ object FieldParser {
             "PKDateStyleFull" -> FormatStyle.FULL
             else -> FormatStyle.FULL
         }
+    }
+
+    private fun JSONObject.hasDateStyle() = hasStyle("dateStyle")
+    private fun JSONObject.hasTimeStyle() = hasStyle("timeStyle")
+    private fun JSONObject.getDateStyle() = getString("dateStyle").toFormatStyle()
+    private fun JSONObject.getTimeStyle() = getString("timeStyle").toFormatStyle()
+
+    private fun JSONObject.hasStyle(key: String): Boolean {
+        return this.has(key) && this.getString(key) != "PKDateStyleNone"
+    }
+
+    private fun chooseBetter(left: FormatStyle, right: FormatStyle): FormatStyle {
+        return if (left.ordinal >= right.ordinal) left else right
     }
 }
