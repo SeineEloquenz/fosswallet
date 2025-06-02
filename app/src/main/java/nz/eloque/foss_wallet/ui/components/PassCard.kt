@@ -77,7 +77,7 @@ private fun PassCardContents(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Row(

@@ -18,7 +18,9 @@ fun PassViewBottomBar(
     front: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    BottomAppBar {
+    BottomAppBar(
+        modifier = modifier,
+    ) {
         NavigationBarItem(
             selected = front.value,
             onClick = {

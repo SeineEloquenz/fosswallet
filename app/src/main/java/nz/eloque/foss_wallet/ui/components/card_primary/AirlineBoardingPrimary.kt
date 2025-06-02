@@ -31,11 +31,12 @@ fun AirlineBoardingPrimary(
 
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        OutlinedPassLabel(field.label, field.content, colors = cardColors)
+        OutlinedPassLabel(field.label, field.content, modifier, cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = modifier,
         ) {
             DestinationCard(
                 destination = pass.primaryFields[0].content,

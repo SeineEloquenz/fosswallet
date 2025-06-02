@@ -18,11 +18,14 @@ fun LocationButton(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    IconButton(onClick = {
-        context.startActivity(Intent(Intent.ACTION_VIEW).also {
-            it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
-        })
-    }) {
+    IconButton(
+        onClick = {
+            context.startActivity(Intent(Intent.ACTION_VIEW).also {
+                it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
+            })
+        },
+        modifier = modifier,
+    ) {
         Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Location")
     }
 }

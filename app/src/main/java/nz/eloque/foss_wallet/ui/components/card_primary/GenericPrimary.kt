@@ -13,6 +13,6 @@ fun GenericPrimary(
     modifier: Modifier = Modifier
 ) {
     if (pass.primaryFields.isNotEmpty()) {
-        PassFields(pass.primaryFields, cardColors = cardColors)
+        PassFields(pass.primaryFields, modifier, cardColors)
     }
 }

@@ -29,7 +29,8 @@ fun DateView(
     val context = LocalContext.current
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
         IconButton(onClick = {
             val intent = Intent(Intent.ACTION_EDIT).also {

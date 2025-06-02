@@ -84,6 +84,7 @@ fun AboutContent(
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
     ) {
         Icon(
             imageVector = icon,
