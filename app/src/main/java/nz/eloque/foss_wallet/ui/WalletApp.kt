@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
@@ -182,14 +181,6 @@ fun WalletApp(
                     },
                     actions = {
                         Row {
-                            val groupId = pass.value.groupId
-                            if (groupId != null) {
-                                IconButton(onClick = {
-                                    coroutineScope.launch(Dispatchers.IO) { passViewModel.deleteGroup(groupId) }
-                                }) {
-                                    Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
-                                }
-                            }
                             if (pass.value.updatable()) {
                                 val updateSuccessful = stringResource(R.string.update_successful)
                                 val updateFailed = stringResource(R.string.update_failed)

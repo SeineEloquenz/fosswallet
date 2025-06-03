@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -93,13 +94,19 @@ fun WalletView(
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
         items(groups) { (groupId, passes) ->
-            GroupCard(
-                groupId!!,
-                passes,
-                onClick = {
-                    navController.navigate("pass/${it.id}")
-                }
-            )
+            SwipeToDismiss(
+                leftSwipeIcon = Icons.Default.FolderDelete,
+                onLeftSwipe = { coroutineScope.launch(Dispatchers.IO) { groupId?.let { passViewModel.deleteGroup(it) } } },
+                onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passes.forEach { passViewModel.delete(it) } } }
+            ) {
+                GroupCard(
+                    groupId!!,
+                    passes,
+                    onClick = {
+                        navController.navigate("pass/${it.id}")
+                    }
+                )
+            }
         }
         items(ungrouped) { pass ->
             SwipeToDismiss(
