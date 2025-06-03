@@ -15,6 +15,8 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -94,19 +96,19 @@ fun WalletView(
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
         items(groups) { (groupId, passes) ->
-            SwipeToDismiss(
-                leftSwipeIcon = Icons.Default.FolderDelete,
-                onLeftSwipe = { coroutineScope.launch(Dispatchers.IO) { groupId?.let { passViewModel.deleteGroup(it) } } },
-                onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passes.forEach { passViewModel.delete(it) } } }
-            ) {
-                GroupCard(
-                    groupId!!,
-                    passes,
-                    onClick = {
-                        navController.navigate("pass/${it.id}")
+            GroupCard(
+                groupId!!,
+                passes,
+                onClick = {
+                    navController.navigate("pass/${it.id}")
+                },
+                actions = {
+                    IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
+                    ) {
+                        Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
                     }
-                )
-            }
+                }
+            )
         }
         items(ungrouped) { pass ->
             SwipeToDismiss(

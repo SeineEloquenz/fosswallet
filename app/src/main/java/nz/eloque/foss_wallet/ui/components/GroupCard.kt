@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -34,6 +35,7 @@ fun GroupCard(
     passes: List<Pass>,
     modifier: Modifier = Modifier,
     onClick: ((Pass) -> Unit)? = null,
+    actions: @Composable (() -> Unit)? = null,
 ) {
     ElevatedCard {
         Column(
@@ -59,10 +61,18 @@ fun GroupCard(
                 ) {
                 }
             }
-            SelectionIndicator(
-                -1,
-                passes.size,
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            ) {
+                SelectionIndicator(-1, passes.size, Modifier.align(Alignment.Center))
+                Row(
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    actions?.invoke()
+                }
+            }
         }
     }
 }
@@ -76,7 +86,7 @@ private fun SelectionIndicator(
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth().padding(bottom = 8.dp)
+        modifier = modifier
     ) {
         repeat(itemCount) { index ->
             val isSelected = index == selectedItem
