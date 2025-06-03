@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 
@@ -27,6 +28,8 @@ class OfflinePassRepository @Inject constructor(
 
     override suspend fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
+    override suspend fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
+
     override suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass) {
         val id = pass.id
         passDao.insert(pass)
@@ -34,8 +37,15 @@ class OfflinePassRepository @Inject constructor(
         originalPass.saveToDisk(context, id)
     }
 
+    override suspend fun insert(group: PassGroup): PassGroup {
+        val id = passDao.insert(group)
+        return group.copy(id)
+    }
+
     override suspend fun delete(pass: Pass) {
         pass.deleteFiles(context)
         passDao.delete(pass)
     }
+
+    override suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
 }

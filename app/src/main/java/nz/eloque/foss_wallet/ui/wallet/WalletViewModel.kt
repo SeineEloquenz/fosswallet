@@ -57,6 +57,10 @@ class PassViewModel @Inject constructor(
 
     suspend fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
 
+    suspend fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
+
+    suspend fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
+
     fun filter(query: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query).first().map { it.applyLocalization(Locale.getDefault().language) })

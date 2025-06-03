@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
@@ -32,6 +33,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -104,29 +106,45 @@ fun WalletApp(
                         }
                     }
                 }
+                val passesToGroup = remember { mutableStateSetOf<Pass>() }
+
                 WalletScaffold(
                     navController = navController,
                     title = stringResource(id = R.string.wallet),
                     actions = {
-                          IconButton(onClick = {
-                              navController.navigate(Screen.About.route)
-                          }) {
-                              Icon(
-                                  imageVector = Icons.Default.Info,
-                                  contentDescription = stringResource(R.string.about)
-                              )
-                          }
+                        IconButton(onClick = {
+                            navController.navigate(Screen.About.route)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = stringResource(R.string.about)
+                            )
+                        }
                     },
                     floatingActionButton = {
-                        ExtendedFloatingActionButton(
-                            text = { Text(stringResource(R.string.add_pass)) },
-                            icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
-                            expanded = listState.isScrollingUp(),
-                            onClick = { launcher.launch(arrayOf("*/*")) }
-                        )
+                        if (passesToGroup.isNotEmpty()) {
+                            ExtendedFloatingActionButton(
+                                text = { Text(stringResource(R.string.group)) },
+                                icon = { Icon(imageVector = Icons.Default.Folder, contentDescription = stringResource(R.string.group)) },
+                                expanded = listState.isScrollingUp(),
+                                onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        passViewModel.group(passesToGroup.toSet())
+                                        passesToGroup.clear()
+                                    }
+                                },
+                            )
+                        } else {
+                            ExtendedFloatingActionButton(
+                                text = { Text(stringResource(R.string.add_pass)) },
+                                icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
+                                expanded = listState.isScrollingUp(),
+                                onClick = { launcher.launch(arrayOf("*/*")) }
+                            )
+                        }
                     },
                 ) { scrollBehavior ->
-                    WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior)
+                    WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, passesToGroup = passesToGroup)
                 }
             }
             composable(Screen.About.route) {

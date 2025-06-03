@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.migrations.M_9_10
@@ -14,8 +15,8 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
 
 
 @Database(
-    version = 11,
-    entities = [Pass::class, PassLocalization::class],
+    version = 12,
+    entities = [Pass::class, PassLocalization::class, PassGroup::class],
     autoMigrations = [
         AutoMigration (from = 4, to = 5),
         AutoMigration (from = 5, to = 6),
@@ -23,6 +24,7 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
         AutoMigration (from = 7, to = 8),
         AutoMigration (from = 8, to = 9),
         AutoMigration (from = 10, to = 11),
+        AutoMigration (from = 11, to = 12),
     ],
     exportSchema = true
 )
