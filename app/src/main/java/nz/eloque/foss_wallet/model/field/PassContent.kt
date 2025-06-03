@@ -51,7 +51,7 @@ sealed class PassContent(val id: Int) {
         const val DATE_TIME = 4
 
         fun deserialize(content: String): PassContent {
-            return if (content.length > 2 && content[0].isDigit() && content[1] == '|') {
+            return if (content.length >= 2 && content[0].isDigit() && content[1] == '|') {
                 val id = content[0].digitToInt()
                 val content = content.substring(2)
                 return when(id) {
