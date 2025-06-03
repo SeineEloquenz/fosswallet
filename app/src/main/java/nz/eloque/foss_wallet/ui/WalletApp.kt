@@ -16,9 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Merge
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -113,19 +113,6 @@ fun WalletApp(
                     navController = navController,
                     title = stringResource(id = R.string.wallet),
                     actions = {
-                        if (passesToGroup.size >= 2) {
-                            IconButton(onClick = {
-                                coroutineScope.launch(Dispatchers.IO) {
-                                    passViewModel.group(passesToGroup.toSet())
-                                    passesToGroup.clear()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Merge,
-                                    contentDescription = stringResource(R.string.group)
-                                )
-                            }
-                        }
                         IconButton(onClick = {
                             navController.navigate(Screen.About.route)
                         }) {
@@ -136,12 +123,26 @@ fun WalletApp(
                         }
                     },
                     floatingActionButton = {
-                        ExtendedFloatingActionButton(
-                            text = { Text(stringResource(R.string.add_pass)) },
-                            icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
-                            expanded = listState.isScrollingUp(),
-                            onClick = { launcher.launch(arrayOf("*/*")) }
-                        )
+                        if (passesToGroup.isNotEmpty()) {
+                            ExtendedFloatingActionButton(
+                                text = { Text(stringResource(R.string.group)) },
+                                icon = { Icon(imageVector = Icons.Default.Folder, contentDescription = stringResource(R.string.group)) },
+                                expanded = listState.isScrollingUp(),
+                                onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        passViewModel.group(passesToGroup.toSet())
+                                        passesToGroup.clear()
+                                    }
+                                },
+                            )
+                        } else {
+                            ExtendedFloatingActionButton(
+                                text = { Text(stringResource(R.string.add_pass)) },
+                                icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
+                                expanded = listState.isScrollingUp(),
+                                onClick = { launcher.launch(arrayOf("*/*")) }
+                            )
+                        }
                     },
                 ) { scrollBehavior ->
                     WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, passesToGroup = passesToGroup)
