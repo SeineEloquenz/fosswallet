@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,10 +14,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,12 +43,13 @@ fun PassCard(
     content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
     val cardColors = pass.colors?.toCardColors() ?: colors
+    val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     if (onClick == null) {
         ElevatedCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .alpha(if (selected) 0.75f else 1.0f),
+                .scale(scale)
         ) {
             PassCardContents(
                 pass = pass,
@@ -60,7 +63,7 @@ fun PassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .alpha(if (selected) 0.75f else 1.0f)
+                .scale(scale)
         ) {
             PassCardContents(
                 pass = pass,
