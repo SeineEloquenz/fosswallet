@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -24,6 +25,7 @@ fun FilterBar(
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
     var query by rememberSaveable { mutableStateOf("") }
     SearchBar(
         windowInsets = WindowInsets(0.dp),
@@ -36,7 +38,9 @@ fun FilterBar(
                     query = it
                     onSearch.invoke(it)
                 },
-                onSearch = {},
+                onSearch = {
+                    focusManager.clearFocus()
+                },
                 onExpandedChange = {},
                 expanded = false,
                 modifier = Modifier.fillMaxHeight(),
