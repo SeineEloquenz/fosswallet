@@ -16,6 +16,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun SwipeToDismiss(
@@ -28,6 +30,7 @@ fun SwipeToDismiss(
     rightSwipeIcon: ImageVector = Icons.Default.Delete,
     content: @Composable () -> Unit
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val swipeState = rememberSwipeToDismissBoxState()
 
     val (icon, alignment) = when (swipeState.dismissDirection) {
@@ -63,6 +66,7 @@ fun SwipeToDismiss(
             LaunchedEffect(swipeState) {
                 onLeftSwipe()
                 swipeState.snapTo(SwipeToDismissBoxValue.Settled)
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
             }
         }
 
@@ -70,6 +74,7 @@ fun SwipeToDismiss(
             LaunchedEffect(swipeState) {
                 onRightSwipe()
                 swipeState.snapTo(SwipeToDismissBoxValue.Settled)
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
             }
         }
 
