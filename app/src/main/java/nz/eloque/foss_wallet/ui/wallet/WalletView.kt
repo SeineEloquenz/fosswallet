@@ -11,8 +11,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderDelete
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +52,7 @@ fun WalletView(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-    passesToGroup: SnapshotStateSet<Pass>,
+    selectedPasses: SnapshotStateSet<Pass>,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val list = passViewModel.uiState.collectAsState()
@@ -112,16 +112,17 @@ fun WalletView(
         }
         items(ungrouped) { pass ->
             SwipeToDismiss(
-                leftSwipeIcon = Icons.Default.Folder,
-                onLeftSwipe = { if (passesToGroup.contains(pass)) passesToGroup.remove(pass) else passesToGroup.add(pass) },
-                onRightSwipe = { coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) } }
+                leftSwipeIcon = Icons.Default.SelectAll,
+                allowRightSwipe = false,
+                onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
+                onRightSwipe = { }
             ) {
                 PassCard(
                     pass = pass,
                     onClick = {
                         navController.navigate("pass/${pass.id}")
                     },
-                    selected = passesToGroup.contains(pass)
+                    selected = selectedPasses.contains(pass)
                 ) {
 
                 }
