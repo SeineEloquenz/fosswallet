@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.BuildConfig
 import nz.eloque.foss_wallet.R
 
 @Composable
@@ -71,6 +73,17 @@ fun AboutView() {
             modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)) {
             AboutContent(icon = Icons.Default.Description, text = stringResource(R.string.license))
         }
+    }
+    Box(
+        modifier = Modifier.fillMaxSize().padding(bottom = 24.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Text(
+            text = "v${BuildConfig.VERSION_NAME}-${BuildConfig.BUILD_TYPE}-${BuildConfig.VERSION_CODE}",
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelSmall
+        )
     }
 }
 
