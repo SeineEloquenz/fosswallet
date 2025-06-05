@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.screens.AboutScreen
+import nz.eloque.foss_wallet.ui.screens.GroupScreen
 import nz.eloque.foss_wallet.ui.screens.PassScreen
 import nz.eloque.foss_wallet.ui.screens.WalletScreen
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
@@ -55,6 +56,14 @@ fun WalletApp(
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
                 PassScreen(passId, navController, passViewModel)
+            }
+            composable(
+                route = "group/{groupId},{initial}",
+                arguments = listOf(navArgument("groupId") { type = NavType.LongType }, navArgument("initial") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getLong("groupId")!!
+                val initial = backStackEntry.arguments?.getInt("initial")!!
+                GroupScreen(groupId, initial, navController, passViewModel)
             }
         }
     }

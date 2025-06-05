@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.persistence.pass
 
 import kotlinx.coroutines.flow.Flow
+import nz.eloque.foss_wallet.model.GroupWithPasses
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
@@ -13,6 +14,8 @@ interface PassRepository {
     suspend fun filtered(query: String) : Flow<List<PassWithLocalization>>
 
     suspend fun byId(id: String): PassWithLocalization
+
+    suspend fun groupById(id: Long): GroupWithPasses
 
     suspend fun associate(pass: Pass, group: PassGroup)
 

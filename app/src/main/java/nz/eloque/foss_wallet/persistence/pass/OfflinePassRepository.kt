@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.model.GroupWithPasses
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
@@ -27,6 +28,8 @@ class OfflinePassRepository @Inject constructor(
     }
 
     override suspend fun byId(id: String): PassWithLocalization = passDao.byId(id)
+
+    override suspend fun groupById(id: Long): GroupWithPasses = passDao.groupById(id)
 
     override suspend fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 

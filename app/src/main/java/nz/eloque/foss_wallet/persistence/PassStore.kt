@@ -30,6 +30,8 @@ class PassStore @Inject constructor(
 
     suspend fun passById(id: String) = passRepository.byId(id)
 
+    suspend fun groupById(id: Long) = passRepository.groupById(id)
+
     suspend fun filtered(query: String) = passRepository.filtered(query)
 
     suspend fun add(loadResult: PassLoadResult) {

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import nz.eloque.foss_wallet.model.GroupWithPasses
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassWithLocalization
@@ -20,6 +21,10 @@ interface PassDao {
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
     fun byId(id: String): PassWithLocalization
+
+    @Transaction
+    @Query("SELECT * FROM passgroup WHERE id=:id")
+    fun groupById(id: Long): GroupWithPasses
 
     @Transaction
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
