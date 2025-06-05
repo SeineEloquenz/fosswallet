@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package nz.eloque.foss_wallet.ui.components
 
 import androidx.compose.foundation.background
@@ -11,15 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.carousel.CarouselDefaults
-import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
-import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,21 +32,17 @@ fun GroupCard(
     onClick: ((Pass) -> Unit)? = null,
     actions: @Composable (() -> Unit)? = null,
 ) {
-    ElevatedCard {
+    ElevatedCard(
+        modifier = modifier,
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier.padding(10.dp)
         ) {
-            val carouselState = rememberCarouselState(0) { passes.size }
-            HorizontalUncontainedCarousel(
-                state = carouselState,
-                itemSpacing = 25.dp,
-                itemWidth = 500.dp,
-                flingBehavior = CarouselDefaults.singleAdvanceFlingBehavior(carouselState),
-                modifier = modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 16.dp, bottom = 16.dp),
+            val pagerState = rememberPagerState(0) { passes.size }
+            HorizontalPager(
+                state = pagerState,
+                pageSpacing = 28.dp,
             ) { index ->
                 val item = passes[index]
                 PassCard(
@@ -66,7 +57,7 @@ fun GroupCard(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                SelectionIndicator(-1, passes.size, Modifier.align(Alignment.Center))
+                SelectionIndicator(pagerState.currentPage, passes.size, Modifier.align(Alignment.Center))
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
