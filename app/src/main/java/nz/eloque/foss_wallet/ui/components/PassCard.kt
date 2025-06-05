@@ -31,7 +31,7 @@ import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.components.card_primary.AirlineBoardingPrimary
 import nz.eloque.foss_wallet.ui.components.card_primary.GenericBoardingPrimary
 import nz.eloque.foss_wallet.ui.components.card_primary.GenericPrimary
-import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
+import nz.eloque.foss_wallet.ui.pass_view.HeaderFieldsView
 
 @Composable
 fun PassCard(

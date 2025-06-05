@@ -4,7 +4,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.ui.components.pass_view.PassFields
+import nz.eloque.foss_wallet.ui.pass_view.PassFields
 
 @Composable
 fun GenericPrimary(
