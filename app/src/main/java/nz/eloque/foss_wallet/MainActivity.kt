@@ -37,10 +37,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataUri = if (intent != null && intent.action == Intent.ACTION_VIEW) {
-            intent.data
-        } else {
-            null
+        val dataUri = when {
+            Intent.ACTION_VIEW == intent.action -> intent.data
+            Intent.ACTION_SEND == intent.action -> {
+                val count = intent.clipData?.itemCount?.minus(1)?.coerceAtLeast(0)
+                count?.let { intent.clipData?.getItemAt(it)?.uri }
+            }
+            else -> null
         }
 
         enableEdgeToEdge()
@@ -71,7 +74,8 @@ class MainActivity : ComponentActivity() {
             it?.let {
                 try {
                     val loadResult = PassLoader(PassParser(this@MainActivity)).load(it)
-                    val id = passViewModel.add(loadResult)
+                    passViewModel.add(loadResult)
+                    val id: String = loadResult.pass.id
                     coroutineScope.launch(Dispatchers.Main) { navController
                         .navigate("pass/$id") }
                 } catch (e: InvalidPassException) {

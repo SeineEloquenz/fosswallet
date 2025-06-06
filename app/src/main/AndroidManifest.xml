@@ -33,6 +33,12 @@
                 <data android:scheme="file"/>
                 <data android:mimeType="application/vnd.apple.pkpass"/>
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/vnd.espass-espass" />
+            </intent-filter>
         </activity>
 
         <provider
