@@ -38,6 +38,11 @@ jobs:
         with:
           name: apk
           path: app/build/outputs/apk/release
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab
+          path: app/build/outputs/bundle/release
 
   release:
     name: Release Apk
@@ -54,3 +59,24 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: apk/app-release.apk
+
+  release-play:
+  name: Release App on Google Play
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Download aab from build
+      uses: actions/download-artifact@v4
+      with:
+        name: aab
+        path: aab
+    - name: Publish on Play
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+        packageName: nz.eloque.foss_wallet
+        releaseFiles: aab/*.aab
+        track: production
+        status: completed
+        userFraction: 1
+        whatsNewDirectory: fastlane/metadata/android/en_US/changelogs/
