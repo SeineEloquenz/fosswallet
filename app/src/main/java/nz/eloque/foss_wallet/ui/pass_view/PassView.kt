@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.pass_view
+package nz.eloque.foss_wallet.ui.pass_view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.PassCard
 import java.time.Instant
 
@@ -88,20 +89,20 @@ private fun PassPreview() {
     ).also {
         it.relevantDate = 1800000000L
         it.headerFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
+            PassField("block", "Block", PassContent.Plain("S1")),
+            PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.primaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("name", "Name", PassContent.Plain("Max Mustermann")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
+            PassField("name", "Name", PassContent.Plain("Max Mustermann")),
+            PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.auxiliaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("36E")),
+            PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
+            PassField("seat", "Seat", PassContent.Plain("36E")),
         )
         it.secondaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
-            nz.eloque.foss_wallet.model.field.PassField("data2", "data2", PassContent.Plain("Shorter Value")),
+            PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
+            PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         )
     }
     PassView(pass, true)

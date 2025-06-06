@@ -29,7 +29,7 @@ fun GroupCard(
     groupId: Long,
     passes: List<Pass>,
     modifier: Modifier = Modifier,
-    onClick: ((Pass) -> Unit)? = null,
+    onClick: ((Int) -> Unit)? = null,
     actions: @Composable (() -> Unit)? = null,
 ) {
     ElevatedCard(
@@ -48,7 +48,7 @@ fun GroupCard(
                 PassCard(
                     pass = item,
                     colors = CardDefaults.elevatedCardColors().copy(containerColor = CardDefaults.elevatedCardColors().containerColor.darken(1.25f)),
-                    onClick = { onClick?.invoke(item) },
+                    onClick = { onClick?.invoke(pagerState.currentPage) },
                 ) {
                 }
             }

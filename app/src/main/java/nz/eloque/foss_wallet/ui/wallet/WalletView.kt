@@ -100,7 +100,7 @@ fun WalletView(
                 groupId!!,
                 passes,
                 onClick = {
-                    navController.navigate("pass/${it.id}")
+                    navController.navigate("group/$groupId,$it")
                 },
                 actions = {
                     IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }

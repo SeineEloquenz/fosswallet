@@ -17,4 +17,10 @@ data class GroupWithPasses(
         entityColumn = "groupId"
     )
     val passes: List<Pass>
-)
+) {
+    companion object {
+        fun placeholder(): GroupWithPasses {
+            return GroupWithPasses(PassGroup(0), listOf())
+        }
+    }
+}

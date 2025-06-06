@@ -22,9 +22,9 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.components.pass_view.PassShareButton
-import nz.eloque.foss_wallet.ui.components.pass_view.PassView
-import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
+import nz.eloque.foss_wallet.ui.pass_view.PassShareButton
+import nz.eloque.foss_wallet.ui.pass_view.PassView
+import nz.eloque.foss_wallet.ui.pass_view.PassViewBottomBar
 import nz.eloque.foss_wallet.ui.wallet.PassViewModel
 import java.util.Locale
 
