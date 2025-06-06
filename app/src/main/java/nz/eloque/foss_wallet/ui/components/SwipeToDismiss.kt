@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -53,7 +54,7 @@ fun SwipeToDismiss(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier.minimumInteractiveComponentSize(),
+                    modifier = Modifier.minimumInteractiveComponentSize().alpha(0.5f),
                 )
             }
         }
