@@ -150,9 +150,7 @@ class PassParser(val context: Context? = null) {
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
-            BarCode(barcodeFormat, barcodeJSON.getString("message")).also {
-                it.alternativeText = barcodeJSON.stringOrNull("altText")
-            }
+            BarCode(barcodeFormat, barcodeJSON.getString("message"), barcodeJSON.stringOrNull("altText"))
         }
     }
 
