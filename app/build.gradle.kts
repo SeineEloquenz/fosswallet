@@ -39,7 +39,7 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 35
-        versionCode = 43
+        versionCode = 44
         versionName = "0.14.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
