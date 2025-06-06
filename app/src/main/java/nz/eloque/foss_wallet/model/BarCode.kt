@@ -10,17 +10,17 @@ import java.util.Locale
 
 data class BarCode(
     private val format: BarcodeFormat,
-    private val message: String
+    private val message: String,
+    val altText: String?,
 ) {
 
     fun toJson(): JSONObject {
         return JSONObject().also {
             it.put("format", format.toString())
             it.put("message", message)
+            it.put("altText", altText)
         }
     }
-
-    var alternativeText: String? = null
 
     fun encodeAsBitmap(width: Int, height: Int): Bitmap {
         val result = MultiFormatWriter().encode(message, format, width, height, null)
@@ -44,20 +44,20 @@ data class BarCode(
         other as BarCode
         if (format != other.format) return false
         if (message != other.message) return false
-        return alternativeText == other.alternativeText
+        return altText == other.altText
     }
 
     override fun hashCode(): Int {
         var result = format.hashCode()
         result = 31 * result + message.hashCode()
-        result = 31 * result + (alternativeText?.hashCode() ?: 0)
+        result = 31 * result + (altText?.hashCode() ?: 0)
         return result
     }
 
     companion object {
 
         fun fromJson(json: JSONObject): BarCode {
-            return BarCode(formatFromString(json.getString("format")), json.getString("message"))
+            return BarCode(formatFromString(json.getString("format")), json.getString("message"), if (json.has("altText")) { json.getString("altText") } else { null })
         }
 
         fun formatFromString(format: String): BarcodeFormat {
