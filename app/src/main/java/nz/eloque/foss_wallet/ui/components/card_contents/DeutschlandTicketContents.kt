@@ -41,6 +41,7 @@ fun DeutschlandTicketContent(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = modifier
             .fillMaxWidth()
+            .padding(12.dp)
     ) {
         Row {
             AsyncImage(
