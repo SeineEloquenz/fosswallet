@@ -5,6 +5,7 @@ import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
@@ -22,7 +23,8 @@ import java.util.UUID
             childColumns = ["groupId"],
             onDelete = ForeignKey.SET_NULL
         )
-    ]
+    ],
+    indices = [Index(value = ["groupId"])]
 )
 data class Pass(
     @PrimaryKey val id: String,
