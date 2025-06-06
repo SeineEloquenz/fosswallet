@@ -1,44 +1,41 @@
-package nz.eloque.foss_wallet.ui.components.card_primary
+package nz.eloque.foss_wallet.ui.components.card.primary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.OutlinedPassLabel
+import nz.eloque.foss_wallet.ui.components.card.ElevatedPassLabel
+import nz.eloque.foss_wallet.ui.components.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
-fun AirlineBoardingPrimary(
+fun GenericBoardingPrimary(
     pass: Pass,
+    transitType: TransitType,
     cardColors: CardColors,
     modifier: Modifier = Modifier
 ) {
-    val transitType = TransitType.AIR
-
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        OutlinedPassLabel(field.label, field.content, modifier, cardColors)
+        OutlinedPassLabel(field.label, field.content, modifier, null, cardColors)
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = modifier,
+            modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             DestinationCard(
+                label = pass.primaryFields[0].label,
                 destination = pass.primaryFields[0].content,
                 modifier = Modifier.weight(2f),
                 cardColors
@@ -49,6 +46,7 @@ fun AirlineBoardingPrimary(
                 modifier = Modifier.weight(1f)
             )
             DestinationCard(
+                label = pass.primaryFields[1].label,
                 destination = pass.primaryFields[1].content,
                 modifier = Modifier.weight(2f),
                 cardColors
@@ -59,22 +57,16 @@ fun AirlineBoardingPrimary(
 
 @Composable
 private fun DestinationCard(
+    label: String,
     destination: PassContent,
     modifier: Modifier = Modifier,
     cardColors: CardColors
 ) {
-    ElevatedCard(
-        colors = cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f)),
-        modifier = modifier
-    ) {
-        AbbreviatingText(
-            text = destination.prettyPrint(),
-            style = if (destination.prettyPrint().length <= 3) { MaterialTheme.typography.headlineLarge } else { MaterialTheme.typography.headlineSmall },
-            maxLines = 1,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(5.dp)
-                .align(Alignment.CenterHorizontally),
-        )
-    }
+    ElevatedPassLabel(
+        label,
+        destination,
+        modifier,
+        null,
+        cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f))
+    )
 }

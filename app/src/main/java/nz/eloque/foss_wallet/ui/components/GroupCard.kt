@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.ui.components.card.PassCard
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
@@ -47,7 +48,11 @@ fun GroupCard(
                 val item = passes[index]
                 PassCard(
                     pass = item,
-                    colors = CardDefaults.elevatedCardColors().copy(containerColor = CardDefaults.elevatedCardColors().containerColor.darken(1.25f)),
+                    colors = CardDefaults.elevatedCardColors().copy(
+                        containerColor = CardDefaults.elevatedCardColors().containerColor.darken(
+                            1.25f
+                        )
+                    ),
                     onClick = { onClick?.invoke(item) },
                 ) {
                 }

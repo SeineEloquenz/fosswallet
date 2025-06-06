@@ -30,29 +30,22 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.components.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
+import nz.eloque.foss_wallet.ui.components.card.OutlinedPassLabel
+import nz.eloque.foss_wallet.ui.components.card.PlainPassLabel
 import java.io.File
 
 
 @Composable
 fun HeaderFieldsView(
-    cardColors: CardColors,
     headerFields: List<PassField>
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-    ) {
-        for (field in headerFields) {
-            OutlinedPassLabel(
-                label = field.label,
-                content = field.content,
-                colors = cardColors,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
+    headerFields.forEach { PlainPassLabel(
+        label = it.label,
+        content = it.content,
+        labelTextAlign = TextAlign.Right,
+    ) }
 }
 
 @Composable
@@ -73,8 +66,8 @@ fun BarcodesView(
                 PassImage(
                     bitmap = image,
                     modifier = Modifier
-                        .width(150.dp)
                         .heightIn(max = 150.dp)
+                        .fillMaxWidth()
                         .clickable { fullscreen.value = !fullscreen.value }
                 )
                 it.altText?.let { Text(
@@ -130,6 +123,21 @@ fun AsyncPassImage(
 
 @Composable
 fun PassFields(
+    fields: List<PassField>
+) {
+    Row(
+        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        fields.dropLast(1).forEach {
+            PlainPassLabel(it.label, it.content, Modifier, null)
+        }
+        fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.End) }
+    }
+}
+
+@Composable
+fun BackFields(
     fields: List<PassField>,
     modifier: Modifier = Modifier,
     cardColors: CardColors = CardDefaults.outlinedCardColors()
@@ -139,7 +147,7 @@ fun PassFields(
         modifier = modifier
     ) {
         fields.forEach {
-            OutlinedPassLabel(it.label, it.content, Modifier.fillMaxWidth(), cardColors)
+            OutlinedPassLabel(it.label, it.content, Modifier.fillMaxWidth(), null, cardColors)
         }
     }
 }
