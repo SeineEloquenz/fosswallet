@@ -30,7 +30,7 @@ fun PassShareButton(
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 setDataAndType(uri, "application/vnd.apple.pkpass")
-                Intent.setFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
             val shareIntent = Intent.createChooser(sendIntent, "Share pass")
             context.startActivity(shareIntent)
