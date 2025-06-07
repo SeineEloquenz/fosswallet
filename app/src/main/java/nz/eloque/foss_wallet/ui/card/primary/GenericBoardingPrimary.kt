@@ -27,7 +27,12 @@ fun GenericBoardingPrimary(
 ) {
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        OutlinedPassLabel(field.label, field.content, modifier, null, cardColors)
+        OutlinedPassLabel(
+            label = field.label,
+            content = field.content,
+            modifier = modifier,
+            colors = cardColors
+        )
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -63,10 +68,9 @@ private fun DestinationCard(
     cardColors: CardColors
 ) {
     ElevatedPassLabel(
-        label,
-        destination,
-        modifier,
-        null,
-        cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f))
+        label = label,
+        content = destination,
+        modifier = modifier,
+        colors = cardColors.copy(containerColor = cardColors.containerColor.darken(0.75f))
     )
 }

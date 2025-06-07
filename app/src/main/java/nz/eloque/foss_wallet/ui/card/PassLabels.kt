@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -32,6 +33,11 @@ private val linkStyle = TextLinkStyles(
         fontStyle = FontStyle.Italic,
     )
 )
+
+enum class LabelAlign(val textAlign: TextAlign, val horizontal: Alignment.Horizontal) {
+    LEFT(TextAlign.Left, Alignment.Start),
+    RIGHT(TextAlign.Right, Alignment.End),
+}
 
 @Composable
 fun MainLabel(
@@ -68,14 +74,14 @@ fun ElevatedPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign? = null,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
     colors: CardColors = CardDefaults.outlinedCardColors(),
 ) {
     ElevatedCard(
         colors = colors,
         modifier = modifier,
     ) {
-        PassLabelContents(label, content, Modifier, textAlign)
+        PassLabelContents(label, content, Modifier, labelAlign)
     }
 }
 
@@ -84,14 +90,14 @@ fun OutlinedPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign? = null,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
     colors: CardColors = CardDefaults.outlinedCardColors(),
 ) {
     OutlinedCard(
         colors = colors,
         modifier = modifier,
     ) {
-        PassLabelContents(label, content, Modifier, textAlign)
+        PassLabelContents(label, content, Modifier, labelAlign)
     }
 }
 
@@ -100,9 +106,9 @@ fun PlainPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
-    labelTextAlign: TextAlign? = null,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
 ) {
-    PassLabelContents(label, content, modifier, labelTextAlign)
+    PassLabelContents(label, content, modifier, labelAlign)
 }
 
 @Composable
@@ -110,12 +116,13 @@ private fun PassLabelContents(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign? = null,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
 ) {
     Box(
         modifier
     ) {
         Column(
+            horizontalAlignment = labelAlign.horizontal,
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
                 .padding(12.dp)
@@ -124,7 +131,7 @@ private fun PassLabelContents(
                 AbbreviatingText(
                     text = label,
                     maxLines = 1,
-                    textAlign = textAlign,
+                    textAlign = labelAlign.textAlign,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
@@ -134,7 +141,7 @@ private fun PassLabelContents(
                     text = if (contentString.isNotEmpty()) {
                         AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = textAlign
+                    textAlign = labelAlign.textAlign,
                 )
             }
         }

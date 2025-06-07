@@ -30,6 +30,7 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.ui.card.LabelAlign
 import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.card.PlainPassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
@@ -44,7 +45,7 @@ fun HeaderFieldsView(
     headerFields.forEach { PlainPassLabel(
         label = it.label,
         content = it.content,
-        labelTextAlign = TextAlign.Right,
+        labelAlign = LabelAlign.RIGHT,
     ) }
 }
 
@@ -122,21 +123,6 @@ fun AsyncPassImage(
 }
 
 @Composable
-fun PassFields(
-    fields: List<PassField>
-) {
-    Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        fields.dropLast(1).forEach {
-            PlainPassLabel(it.label, it.content, Modifier, null)
-        }
-        fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.End) }
-    }
-}
-
-@Composable
 fun BackFields(
     fields: List<PassField>,
     modifier: Modifier = Modifier,
@@ -147,7 +133,12 @@ fun BackFields(
         modifier = modifier
     ) {
         fields.forEach {
-            OutlinedPassLabel(it.label, it.content, Modifier.fillMaxWidth(), null, cardColors)
+            OutlinedPassLabel(
+                label = it.label,
+                content = it.content,
+                modifier = Modifier.fillMaxWidth(),
+                colors = cardColors
+            )
         }
     }
 }

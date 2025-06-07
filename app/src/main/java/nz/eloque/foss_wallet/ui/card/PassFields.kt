@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
@@ -79,7 +78,7 @@ fun SecondaryFields(
             modifier = Modifier.fillMaxWidth()
         ) {
             fields.dropLast(1).forEach { PlainPassLabel(it.label, it.content) }
-            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, LabelAlign.RIGHT) }
         }
     }
 }
@@ -94,7 +93,7 @@ fun AuxiliaryFields(
             modifier = Modifier.fillMaxWidth()
         ) {
             fields.firstOrNull()?.let { PlainPassLabel(it.label, it.content) }
-            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, LabelAlign.RIGHT) }
         }
     }
 }
