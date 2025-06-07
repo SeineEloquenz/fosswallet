@@ -58,12 +58,14 @@ fun HeaderRow(
 fun SecondaryFields(
     fields: List<PassField>
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        fields.dropLast(1).forEach { PlainPassLabel(it.label, it.content) }
-        fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+    if (fields.isNotEmpty()) {
+        Row(
+            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            fields.dropLast(1).forEach { PlainPassLabel(it.label, it.content) }
+            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+        }
     }
 }
 
@@ -71,11 +73,13 @@ fun SecondaryFields(
 fun AuxiliaryFields(
     fields: List<PassField>
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        fields.firstOrNull()?.let { PlainPassLabel(it.label, it.content) }
-        fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+    if (fields.isNotEmpty()) {
+        Row(
+            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            fields.firstOrNull()?.let { PlainPassLabel(it.label, it.content) }
+            fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, TextAlign.Right) }
+        }
     }
 }

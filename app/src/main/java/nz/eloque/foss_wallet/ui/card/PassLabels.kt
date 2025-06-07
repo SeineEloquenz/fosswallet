@@ -36,32 +36,29 @@ private val linkStyle = TextLinkStyles(
 @Composable
 fun MainLabel(
     label: String,
-    content: PassContent,
-    modifier: Modifier = Modifier
+    content: PassContent
 ) {
-    Box(
-        modifier,
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth()
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth()
-        ) {
+        if (label.isNotEmpty()) {
             AbbreviatingText(
                 text = label,
                 maxLines = 1,
                 style = MaterialTheme.typography.headlineSmall,
             )
-            SelectionContainer {
-                val contentString = content.prettyPrint()
-                Text(
-                    text = contentString,
-                    minLines = 2,
-                    maxLines = 2,
-                    style = MaterialTheme.typography.headlineLarge
-                )
-            }
+        }
+        SelectionContainer {
+            val contentString = content.prettyPrint()
+            Text(
+                text = contentString,
+                minLines = 2,
+                maxLines = 2,
+                style = MaterialTheme.typography.headlineLarge
+            )
         }
     }
 }
