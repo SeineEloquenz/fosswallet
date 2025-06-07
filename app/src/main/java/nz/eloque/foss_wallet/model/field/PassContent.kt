@@ -12,11 +12,13 @@ sealed class PassContent(val id: Int) {
     class Plain(val text: String) : PassContent(PLAIN) {
         override fun contains(query: String) = query inIgnoreCase text
         override fun prettyPrint(): String = text
+        override fun isNotEmpty(): Boolean = text.isNotEmpty()
     }
 
     class Currency(val amount: String, val currency: String) : PassContent(CURRENCY) {
         override fun contains(query: String) = query inIgnoreCase amount || query inIgnoreCase currency
         override fun prettyPrint(): String = amount + toCurrency(currency)
+        override fun isNotEmpty(): Boolean = amount.isNotEmpty()
 
         private fun toCurrency(currencyCode: String): String? {
             return try {
@@ -30,16 +32,19 @@ sealed class PassContent(val id: Int) {
     data class Date(val date: String, val format: FormatStyle) : PassContent(DATE) {
         override fun contains(query: String) = query inIgnoreCase date
         override fun prettyPrint(): String  = Instant.parse(date).prettyDate(format)
+        override fun isNotEmpty(): Boolean = date.isNotEmpty()
     }
 
     data class Time(val time: String, val format: FormatStyle) : PassContent(TIME) {
         override fun contains(query: String) = query inIgnoreCase time
         override fun prettyPrint(): String  = Instant.parse(time).prettyTime(format)
+        override fun isNotEmpty(): Boolean = time.isNotEmpty()
     }
 
     data class DateTime(val dateTime: String, val format: FormatStyle) : PassContent(DATE_TIME) {
         override fun contains(query: String) = query inIgnoreCase dateTime
         override fun prettyPrint(): String  = Instant.parse(dateTime).prettyDateTime(format)
+        override fun isNotEmpty(): Boolean = dateTime.isNotEmpty()
     }
 
 
@@ -79,4 +84,5 @@ sealed class PassContent(val id: Int) {
 
     abstract fun contains(query: String): Boolean
     abstract fun prettyPrint(): String
+    abstract fun isNotEmpty(): Boolean
 }

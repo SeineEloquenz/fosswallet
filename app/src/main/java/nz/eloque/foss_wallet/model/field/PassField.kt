@@ -45,3 +45,7 @@ data class PassField(
         }
     }
 }
+
+fun PassField?.isNotEmpty(): Boolean {
+    return this != null && this.content.isNotEmpty()
+}

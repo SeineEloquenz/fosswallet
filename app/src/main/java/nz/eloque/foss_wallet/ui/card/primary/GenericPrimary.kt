@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.field.isNotEmpty
 import nz.eloque.foss_wallet.ui.card.MainLabel
 
 
@@ -22,24 +23,29 @@ import nz.eloque.foss_wallet.ui.card.MainLabel
 fun GenericPrimary(pass: Pass) {
     val context = LocalContext.current
 
+    val primaryField = pass.primaryFields.firstOrNull()
+    val thumbnailFile = pass.thumbnailFile(context)
     Row {
-        val thumbnailFile = pass.thumbnailFile(context)
-        Row(
-            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(if (thumbnailFile != null) {0.6f} else {1.0f})
-        ) {
-            pass.primaryFields.firstOrNull()?.let {
-                MainLabel(it.label, it.content)
+        if (primaryField.isNotEmpty()) {
+            Row(
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(if (thumbnailFile != null) {0.6f} else {1.0f})
+            ) {
+                pass.primaryFields.firstOrNull()?.let {
+                    MainLabel(it.label, it.content)
+                }
             }
         }
-        AsyncImage(
-            model = thumbnailFile,
-            contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .padding(5.dp)
-                .width(120.dp)
-                .height(150.dp)
-        )
+        if (thumbnailFile != null) {
+            AsyncImage(
+                model = thumbnailFile,
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .padding(5.dp)
+                    .width(120.dp)
+                    .height(150.dp)
+            )
+        }
     }
 }
