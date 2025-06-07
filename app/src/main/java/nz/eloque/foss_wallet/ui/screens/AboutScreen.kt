@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.about.AboutView
+import nz.eloque.foss_wallet.ui.view.about.AboutView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

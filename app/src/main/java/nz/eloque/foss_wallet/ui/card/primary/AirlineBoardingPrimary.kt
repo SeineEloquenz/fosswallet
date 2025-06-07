@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.card_primary
+package nz.eloque.foss_wallet.ui.card.primary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,8 +17,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.OutlinedPassLabel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
@@ -31,12 +31,17 @@ fun AirlineBoardingPrimary(
 
     if (pass.primaryFields.size == 1) {
         val field = pass.primaryFields[0]
-        OutlinedPassLabel(field.label, field.content, modifier, cardColors)
+        OutlinedPassLabel(
+            label = field.label,
+            content = field.content,
+            modifier = modifier,
+            colors = cardColors
+        )
     } else if (pass.primaryFields.size >= 2) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = modifier,
+            modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             DestinationCard(
                 destination = pass.primaryFields[0].content,

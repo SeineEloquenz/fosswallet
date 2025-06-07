@@ -22,10 +22,9 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.components.pass_view.PassShareButton
-import nz.eloque.foss_wallet.ui.components.pass_view.PassView
-import nz.eloque.foss_wallet.ui.components.pass_view.PassViewBottomBar
-import nz.eloque.foss_wallet.ui.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.view.pass.PassShareButton
+import nz.eloque.foss_wallet.ui.view.pass.PassView
+import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,16 +43,10 @@ fun PassScreen(
         }
     }
 
-    val passViewFront = remember { mutableStateOf(true) }
     WalletScaffold(
         navController = navController,
         title = pass.value.description,
         toolWindow = true,
-        bottomBar = {
-            if (pass.value.backFields.isNotEmpty()) {
-                PassViewBottomBar(passViewFront)
-            }
-        },
         actions = {
             Row {
                 if (pass.value.updatable()) {
@@ -89,6 +82,6 @@ fun PassScreen(
             }
         },
     ) { scrollBehavior ->
-        PassView(pass.value, passViewFront.value, scrollBehavior = scrollBehavior)
+        PassView(pass.value, scrollBehavior = scrollBehavior)
     }
 }

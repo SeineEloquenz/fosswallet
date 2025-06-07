@@ -1,9 +1,8 @@
-package nz.eloque.foss_wallet.ui.components
+package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -14,16 +13,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 
 private val linkStyle = TextLinkStyles(
     style = SpanStyle(
@@ -32,18 +34,54 @@ private val linkStyle = TextLinkStyles(
     )
 )
 
+enum class LabelAlign(val textAlign: TextAlign, val horizontal: Alignment.Horizontal) {
+    LEFT(TextAlign.Left, Alignment.Start),
+    RIGHT(TextAlign.Right, Alignment.End),
+}
+
+@Composable
+fun MainLabel(
+    label: String,
+    content: PassContent
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth()
+    ) {
+        if (label.isNotEmpty()) {
+            AbbreviatingText(
+                text = label,
+                maxLines = 1,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+        }
+        SelectionContainer {
+            val contentString = content.prettyPrint()
+            Text(
+                text = contentString,
+                minLines = 2,
+                maxLines = 2,
+                style = MaterialTheme.typography.headlineLarge
+            )
+        }
+    }
+}
+
 @Composable
 fun ElevatedPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
     colors: CardColors = CardDefaults.outlinedCardColors(),
 ) {
     ElevatedCard(
         colors = colors,
         modifier = modifier,
     ) {
-        PassLabelContents(label, content)
+        PassLabelContents(label, content, Modifier, labelAlign)
     }
 }
 
@@ -52,34 +90,48 @@ fun OutlinedPassLabel(
     label: String,
     content: PassContent,
     modifier: Modifier = Modifier,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
     colors: CardColors = CardDefaults.outlinedCardColors(),
 ) {
     OutlinedCard(
         colors = colors,
         modifier = modifier,
     ) {
-        PassLabelContents(label, content)
+        PassLabelContents(label, content, Modifier, labelAlign)
     }
+}
+
+@Composable
+fun PlainPassLabel(
+    label: String,
+    content: PassContent,
+    modifier: Modifier = Modifier,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
+) {
+    PassLabelContents(label, content, modifier, labelAlign)
 }
 
 @Composable
 private fun PassLabelContents(
     label: String,
     content: PassContent,
+    modifier: Modifier = Modifier,
+    labelAlign: LabelAlign = LabelAlign.LEFT,
 ) {
     Box(
-        Modifier.fillMaxSize()
+        modifier
     ) {
         Column(
+            horizontalAlignment = labelAlign.horizontal,
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
                 .padding(12.dp)
-                .fillMaxWidth()
         ) {
             if (label.isNotEmpty()) {
                 AbbreviatingText(
                     text = label,
                     maxLines = 1,
+                    textAlign = labelAlign.textAlign,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
@@ -88,7 +140,8 @@ private fun PassLabelContents(
                 Text(
                     text = if (contentString.isNotEmpty()) {
                         AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = labelAlign.textAlign,
                 )
             }
         }

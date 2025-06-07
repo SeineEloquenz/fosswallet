@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.about
+package nz.eloque.foss_wallet.ui.view.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.pass_view
+package nz.eloque.foss_wallet.ui.view.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -19,14 +18,14 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassContent
-import nz.eloque.foss_wallet.ui.components.PassCard
+import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.ui.card.PassCard
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassView(
     pass: Pass,
-    showFront: Boolean,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
@@ -42,6 +41,7 @@ fun PassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp),
                 modifier = Modifier.padding(10.dp)
             ) {
+                AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
                 BarcodesView(pass.barCodes)
             }
         }
@@ -50,21 +50,8 @@ fun PassView(
             modifier = Modifier
                 .padding(10.dp)
         ) {
-            AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
-            if (showFront) {
-                if (pass.auxiliaryFields.isNotEmpty()) {
-                    PassFields(pass.auxiliaryFields)
-                    HorizontalDivider()
-                }
-                if (pass.secondaryFields.isNotEmpty()) {
-                    PassFields(pass.secondaryFields)
-                }
-            } else {
-                PassFields(pass.backFields)
-            }
+            BackFields(pass.backFields)
         }
-        AsyncPassImage(model = pass.logoFile(context), modifier = Modifier.fillMaxWidth())
-        AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
     }
 }
 
@@ -88,21 +75,21 @@ private fun PassPreview() {
     ).also {
         it.relevantDate = 1800000000L
         it.headerFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
+            PassField("block", "Block", PassContent.Plain("S1")),
+            PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.primaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("name", "Name", PassContent.Plain("Max Mustermann")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("47")),
+            PassField("name", "Name", PassContent.Plain("Max Mustermann")),
+            PassField("seat", "Seat", PassContent.Plain("47")),
         )
         it.auxiliaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
-            nz.eloque.foss_wallet.model.field.PassField("seat", "Seat", PassContent.Plain("36E")),
+            PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
+            PassField("seat", "Seat", PassContent.Plain("36E")),
         )
         it.secondaryFields = mutableListOf(
-            nz.eloque.foss_wallet.model.field.PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
-            nz.eloque.foss_wallet.model.field.PassField("data2", "data2", PassContent.Plain("Shorter Value")),
+            PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
+            PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         )
     }
-    PassView(pass, true)
+    PassView(pass)
 }
