@@ -38,8 +38,7 @@ fun PassView(
     ) {
         PassCard(pass) { cardColors ->
             Column(
-                verticalArrangement = Arrangement.spacedBy(25.dp),
-                modifier = Modifier.padding(10.dp)
+                verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
                 BarcodesView(pass.barCodes)
