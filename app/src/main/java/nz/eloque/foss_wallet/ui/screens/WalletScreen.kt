@@ -35,8 +35,8 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.wallet.PassViewModel
-import nz.eloque.foss_wallet.ui.wallet.WalletView
+import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.view.wallet.WalletView
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -22,7 +22,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.screens.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.PassScreen
 import nz.eloque.foss_wallet.ui.screens.WalletScreen
-import nz.eloque.foss_wallet.ui.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)

@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.wallet
+package nz.eloque.foss_wallet.ui.view.wallet
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -39,10 +39,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
-import nz.eloque.foss_wallet.ui.components.card.PassCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

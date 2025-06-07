@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.card
+package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +13,12 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.ui.card.primary.AirlineBoardingPrimary
+import nz.eloque.foss_wallet.ui.card.primary.GenericBoardingPrimary
+import nz.eloque.foss_wallet.ui.card.primary.GenericPrimary
 import nz.eloque.foss_wallet.ui.components.DateView
 import nz.eloque.foss_wallet.ui.components.LocationButton
-import nz.eloque.foss_wallet.ui.components.card.primary.AirlineBoardingPrimary
-import nz.eloque.foss_wallet.ui.components.card.primary.GenericBoardingPrimary
-import nz.eloque.foss_wallet.ui.components.card.primary.GenericPrimary
-import nz.eloque.foss_wallet.ui.components.pass_view.AsyncPassImage
+import nz.eloque.foss_wallet.ui.view.pass.AsyncPassImage
 
 
 @Composable

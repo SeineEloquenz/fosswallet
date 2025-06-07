@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.card
+package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,7 +19,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.pass_view.HeaderFieldsView
+import nz.eloque.foss_wallet.ui.view.pass.HeaderFieldsView
 
 @Composable
 fun HeaderRow(

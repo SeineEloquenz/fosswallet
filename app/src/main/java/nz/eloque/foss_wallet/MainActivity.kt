@@ -26,7 +26,7 @@ import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
-import nz.eloque.foss_wallet.ui.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

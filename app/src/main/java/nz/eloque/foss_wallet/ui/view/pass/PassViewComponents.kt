@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.pass_view
+package nz.eloque.foss_wallet.ui.view.pass
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
@@ -30,10 +30,10 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
+import nz.eloque.foss_wallet.ui.card.PlainPassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.UpdateBrightness
-import nz.eloque.foss_wallet.ui.components.card.OutlinedPassLabel
-import nz.eloque.foss_wallet.ui.components.card.PlainPassLabel
 import java.io.File
 
 

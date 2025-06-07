@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.card.primary
+package nz.eloque.foss_wallet.ui.card.primary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,8 +17,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable

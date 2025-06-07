@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.card.primary
+package nz.eloque.foss_wallet.ui.card.primary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.ui.components.card.MainLabel
+import nz.eloque.foss_wallet.ui.card.MainLabel
 
 
 @Composable

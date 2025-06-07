@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.ui.components.card.PassCard
+import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable

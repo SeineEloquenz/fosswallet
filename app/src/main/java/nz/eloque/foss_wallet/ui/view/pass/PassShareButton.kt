@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components.pass_view
+package nz.eloque.foss_wallet.ui.view.pass
 
 import android.content.Context
 import android.content.Intent
@@ -30,7 +30,7 @@ fun PassShareButton(
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 setDataAndType(uri, "application/vnd.apple.pkpass")
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                Intent.setFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
             val shareIntent = Intent.createChooser(sendIntent, "Share pass")
             context.startActivity(shareIntent)
