@@ -66,8 +66,8 @@ fun PassContent(
             else -> GenericPrimary(pass)
         }
         AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
-        SecondaryFields(pass.secondaryFields)
-        AuxiliaryFields(pass.auxiliaryFields)
+        FieldsRow(pass.secondaryFields)
+        FieldsRow(pass.auxiliaryFields)
 
         content.invoke(cardColors)
 
