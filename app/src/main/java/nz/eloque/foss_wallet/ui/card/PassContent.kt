@@ -2,11 +2,9 @@ package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -16,8 +14,6 @@ import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.card.primary.AirlineBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericPrimary
-import nz.eloque.foss_wallet.ui.components.DateView
-import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.view.pass.AsyncPassImage
 
 
@@ -42,13 +38,7 @@ fun ShortPassContent(
             else -> GenericPrimary(pass)
         }
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            DateView(pass.description, pass.relevantDate, pass.expirationDate)
-            pass.locations.firstOrNull()?.let { LocationButton(it) }
-        }
+        DateLocationRow(pass)
     }
 }
 
@@ -81,12 +71,6 @@ fun PassContent(
 
         content.invoke(cardColors)
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            DateView(pass.description, pass.relevantDate, pass.expirationDate)
-            pass.locations.firstOrNull()?.let { LocationButton(it) }
-        }
+        DateLocationRow(pass)
     }
 }

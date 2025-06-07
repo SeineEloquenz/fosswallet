@@ -19,6 +19,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
+import nz.eloque.foss_wallet.ui.components.DateView
+import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.view.pass.HeaderFieldsView
 
 @Composable
@@ -51,6 +53,19 @@ fun HeaderRow(
         HeaderFieldsView(
             headerFields = pass.headerFields
         )
+    }
+}
+
+@Composable
+fun DateLocationRow(
+    pass: Pass
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        DateView(pass.description, pass.relevantDate, pass.expirationDate)
+        pass.locations.firstOrNull()?.let { LocationButton(it) }
     }
 }
 
