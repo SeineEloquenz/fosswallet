@@ -22,6 +22,37 @@ import nz.eloque.foss_wallet.ui.view.pass.AsyncPassImage
 
 
 @Composable
+fun ShortPassContent(
+    pass: Pass,
+    cardColors: CardColors,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        HeaderRow(pass)
+        when (pass.type) {
+            is PassType.Boarding ->
+                when (pass.type.transitType) {
+                    TransitType.AIR -> AirlineBoardingPrimary(pass, cardColors)
+                    else -> GenericBoardingPrimary(pass, pass.type.transitType, cardColors)
+                }
+            else -> GenericPrimary(pass)
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DateView(pass.description, pass.relevantDate, pass.expirationDate)
+            pass.locations.firstOrNull()?.let { LocationButton(it) }
+        }
+    }
+}
+
+@Composable
 fun PassContent(
     pass: Pass,
     cardColors: CardColors,

@@ -39,7 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
@@ -117,15 +117,13 @@ fun WalletView(
                 onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
                 onRightSwipe = { }
             ) {
-                PassCard(
+                ShortPassCard(
                     pass = pass,
                     onClick = {
                         navController.navigate("pass/${pass.id}")
                     },
                     selected = selectedPasses.contains(pass)
-                ) {
-
-                }
+                )
             }
         }
     }
