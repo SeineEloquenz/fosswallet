@@ -1,5 +1,3 @@
-[![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-yellow.svg)](https://www.buymeacoffee.com/SeineEloquenz)
-
 # FossWallet
 FossWallet is a free and open source (foss) .pkpass application.
 Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid)-App,
