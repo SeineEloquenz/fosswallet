@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -74,10 +73,10 @@ fun WalletScreen(
         title = stringResource(id = R.string.wallet),
         actions = {
             IconButton(onClick = {
-                navController.navigate(Screen.About.route)
+                navController.navigate(Screen.Settings.route)
             }) {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    imageVector = Screen.Settings.icon,
                     contentDescription = stringResource(R.string.about)
                 )
             }

@@ -10,6 +10,8 @@ import nz.eloque.foss_wallet.persistence.PassBitmaps
 interface PassRepository {
     fun all(): Flow<List<PassWithLocalization>>
 
+    suspend fun updatable(): List<Pass>
+
     suspend fun filtered(query: String) : Flow<List<PassWithLocalization>>
 
     suspend fun byId(id: String): PassWithLocalization

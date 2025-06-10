@@ -33,4 +33,6 @@
     <string name="group">Group passes</string>
     <string name="ungroup">Ungroup passes</string>
     <string name="passes">Passes</string>
+    <string name="sync_interval">Pass Update Interval (min)</string>
+    <string name="enable_sync">Pass Updates</string>
 </resources>

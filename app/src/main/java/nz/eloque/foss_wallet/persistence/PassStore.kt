@@ -1,14 +1,9 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
-import androidx.work.BackoffPolicy
-import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
-import nz.eloque.foss_wallet.api.UpdateWorker
+import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.notifications.NotificationService
@@ -17,13 +12,12 @@ import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import java.io.InputStream
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 class PassStore @Inject constructor(
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
-    private val workManager: WorkManager
+    private val updateScheduler: UpdateScheduler,
 ) {
 
     fun allPasses() = passRepository.all()
@@ -35,7 +29,7 @@ class PassStore @Inject constructor(
     suspend fun add(loadResult: PassLoadResult) {
         insert(loadResult)
         if (loadResult.pass.updatable()) {
-            scheduleUpdate(loadResult.pass)
+            updateScheduler.scheduleUpdate(loadResult.pass)
         }
     }
 
@@ -59,7 +53,7 @@ class PassStore @Inject constructor(
 
     suspend fun delete(pass: Pass) {
         passRepository.delete(pass)
-        cancelUpdate(pass)
+        updateScheduler.cancelUpdate(pass)
     }
 
     suspend fun load(context: Context, inputStream: InputStream) {
@@ -70,23 +64,6 @@ class PassStore @Inject constructor(
     private suspend fun insert(loadResult: PassLoadResult) {
         passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
         loadResult.localizations.map { it.copy(passId = loadResult.pass.id) }.forEach { localizationRepository.insert(it) }
-    }
-
-    private fun scheduleUpdate(pass: Pass) {
-        val workRequest = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.HOURS)
-            .setInputData(Data.Builder().putString("id", pass.id.toString()).build())
-            .addTag("update")
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
-            .build()
-        workManager.enqueueUniquePeriodicWork(
-            pass.id.toString(),
-            ExistingPeriodicWorkPolicy.REPLACE,
-            workRequest
-        )
-    }
-
-    private fun cancelUpdate(pass: Pass) {
-        workManager.cancelUniqueWork(pass.id.toString())
     }
 
     suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)

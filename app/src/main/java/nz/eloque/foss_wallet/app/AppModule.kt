@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.app
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -48,5 +50,10 @@ object AppModule {
     @Provides
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)!!
     }
 }

@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -21,12 +22,15 @@ import androidx.navigation.navArgument
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.screens.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.PassScreen
+import nz.eloque.foss_wallet.ui.screens.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.WalletScreen
+import nz.eloque.foss_wallet.ui.view.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
     data object About : Screen("about", Icons.Default.Info, R.string.about)
+    data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
 }
 
 @Composable
@@ -34,6 +38,7 @@ fun WalletApp(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     passViewModel: PassViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel(),
 ) {
     Surface(
         modifier = modifier
@@ -48,6 +53,9 @@ fun WalletApp(
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(navController, settingsViewModel)
             }
             composable(
                 route = "pass/{passId}",

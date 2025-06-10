@@ -18,6 +18,8 @@ class OfflinePassRepository @Inject constructor(
 
     override fun all(): Flow<List<PassWithLocalization>> = passDao.all()
 
+    override suspend fun updatable(): List<Pass> = passDao.updatable()
+
     override suspend fun filtered(query: String): Flow<List<PassWithLocalization>> {
         return if (query.isEmpty()) {
             all()
