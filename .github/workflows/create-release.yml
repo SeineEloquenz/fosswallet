@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     name: Build Release Apk
     runs-on: ubuntu-latest
     steps:
@@ -41,9 +41,39 @@ jobs:
           name: apk
           path: app/build/outputs/apk/release
 
+  build-bundle:
+    name: Build Release Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.KEYSTORE }}
+        run: |
+          echo $ENCODED_STRING | base64 -di > "${RUNNER_TEMP}"/keystore.jks
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Bundle Release
+        run: ./gradlew bundleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab
+          path: app/build/outputs/bundle/release
+
   release:
     name: Release Apk
-    needs: build
+    needs: build-apk
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
@@ -56,3 +86,24 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: apk/app-release.apk
+
+  release-play:
+    name: Release App on Google Play
+    needs: build-bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download aab from build
+        uses: actions/download-artifact@v4
+        with:
+          name: aab
+          path: aab
+      - name: Publish on Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+          packageName: nz.eloque.foss_wallet
+          releaseFiles: aab/*.aab
+          track: production
+          status: completed
+          userFraction: 1
+          whatsNewDirectory: fastlane/metadata/android/en_US/changelogs/
