@@ -35,4 +35,5 @@
     <string name="passes">Passes</string>
     <string name="sync_interval">Pass Update Interval (min)</string>
     <string name="enable_sync">Pass Updates</string>
+    <string name="enable">Enable</string>
 </resources>
