@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,13 +34,19 @@ fun HeaderRow(
         modifier = Modifier.fillMaxWidth()
             .padding(12.dp)
     ) {
-        AsyncImage(
-            model = pass.logoFile(context),
-            contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier.padding(5.dp)
+        if (pass.hasLogo)
+            AsyncImage(
+                model = pass.logoFile(context),
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier.padding(5.dp)
+                    .height(28.dp)
+            )
+        else
+            Box(
+                modifier = Modifier.padding(5.dp)
                 .height(28.dp)
-        )
+            )
         pass.logoText?.let {
             AbbreviatingText(
                 text = pass.logoText!!,
