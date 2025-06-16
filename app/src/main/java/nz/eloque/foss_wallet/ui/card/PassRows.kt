@@ -21,6 +21,7 @@ import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.DateView
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.view.pass.HeaderFieldsView
+import java.io.File
 
 @Composable
 fun HeaderRow(
@@ -33,25 +34,42 @@ fun HeaderRow(
         modifier = Modifier.fillMaxWidth()
             .padding(12.dp)
     ) {
-        AsyncImage(
-            model = pass.logoFile(context),
+        LogoView(
+            pass.logoFile(context),
+            pass.logoText,
+            Modifier.weight(1f)
+        )
+
+        HeaderFieldsView(
+            headerFields = pass.headerFields
+        )
+    }
+}
+
+@Composable
+private fun LogoView(
+    logoFile: File?,
+    logoText: String?,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+    ) {
+        logoFile?.let { AsyncImage(
+            model = it,
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.FillHeight,
             modifier = Modifier.padding(5.dp)
                 .height(28.dp)
-        )
-        pass.logoText?.let {
+        ) }
+        logoText?.let {
             AbbreviatingText(
-                text = pass.logoText!!,
+                text = it,
                 maxLines = 1,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.weight(1f)
             )
         }
-
-        HeaderFieldsView(
-            headerFields = pass.headerFields
-        )
     }
 }
 

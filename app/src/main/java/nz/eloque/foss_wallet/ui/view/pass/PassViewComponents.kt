@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -40,11 +41,15 @@ import java.io.File
 fun HeaderFieldsView(
     headerFields: List<PassField>
 ) {
-    headerFields.forEach { PlainPassLabel(
-        label = it.label,
-        content = it.content,
-        labelAlign = LabelAlign.RIGHT,
-    ) }
+    Row(
+        modifier = Modifier.wrapContentWidth(Alignment.End)
+    ) {
+        headerFields.forEach { PlainPassLabel(
+            label = it.label,
+            content = it.content,
+            labelAlign = LabelAlign.RIGHT,
+        ) }
+    }
 }
 
 @Composable
