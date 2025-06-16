@@ -23,6 +23,7 @@ fun ShortPassContent(
     cardColors: CardColors,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = modifier
@@ -37,6 +38,8 @@ fun ShortPassContent(
                 }
             else -> GenericPrimary(pass)
         }
+        if (pass.primaryFields.isEmpty() && pass.hasStrip)
+            AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
 
         DateLocationRow(pass)
     }
