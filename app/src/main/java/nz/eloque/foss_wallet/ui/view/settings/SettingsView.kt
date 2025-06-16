@@ -48,7 +48,7 @@ fun SettingsView(
                 label = { Text(stringResource(R.string.sync_interval)) },
                 initialValue = settings.value.syncInterval.inWholeMinutes.toString(),
                 imageVector = Icons.Default.Save,
-                inputValidator = { isInt(it) },
+                inputValidator = { isNaturalNumber(it) },
                 onSubmit = {
                     coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setSyncInterval(Integer.parseInt(it).toDuration(
                         DurationUnit.MINUTES)) }
@@ -79,10 +79,10 @@ fun SettingsSection(
     }
 }
 
-private fun isInt(value: String): Boolean {
+private fun isNaturalNumber(value: String): Boolean {
     return try {
-        Integer.parseInt(value)
-        true
+        val representation = Integer.parseInt(value)
+        representation > 0
     } catch (_: NumberFormatException) {
         false
     }
