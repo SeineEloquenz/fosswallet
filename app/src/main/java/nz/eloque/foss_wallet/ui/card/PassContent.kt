@@ -38,8 +38,9 @@ fun ShortPassContent(
                 }
             else -> GenericPrimary(pass)
         }
-        if (pass.primaryFields.isEmpty() && pass.hasStrip)
+        if (pass.primaryFields.isEmpty() && pass.hasStrip) {
             AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
+        }
 
         DateLocationRow(pass)
     }
