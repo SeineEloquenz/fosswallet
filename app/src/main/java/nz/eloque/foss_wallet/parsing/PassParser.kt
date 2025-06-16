@@ -18,6 +18,7 @@ import nz.eloque.foss_wallet.utils.Hash
 import nz.eloque.foss_wallet.utils.forEach
 import org.json.JSONException
 import org.json.JSONObject
+import java.nio.charset.Charset
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
@@ -150,7 +151,12 @@ class PassParser(val context: Context? = null) {
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
-            BarCode(barcodeFormat, barcodeJSON.getString("message"), barcodeJSON.stringOrNull("altText"))
+            BarCode(
+                barcodeFormat,
+                barcodeJSON.getString("message"),
+                Charset.forName(barcodeJSON.optString("messageEncoding", BarCode.FALLBACK_CHARSET.toString())),
+                barcodeJSON.stringOrNull("altText")
+            )
         }
     }
 
