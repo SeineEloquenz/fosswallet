@@ -4,13 +4,16 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import org.json.JSONObject
+import java.nio.charset.Charset
 import java.util.Locale
 
 data class BarCode(
     private val format: BarcodeFormat,
     private val message: String,
+    private val encoding: Charset,
     val altText: String?,
 ) {
 
@@ -18,12 +21,14 @@ data class BarCode(
         return JSONObject().also {
             it.put("format", format.toString())
             it.put("message", message)
+            it.put("messageEncoding", encoding)
             it.put("altText", altText)
         }
     }
 
     fun encodeAsBitmap(width: Int, height: Int): Bitmap {
-        val result = MultiFormatWriter().encode(message, format, width, height, null)
+        val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, Charsets.UTF_8))
+        val result = MultiFormatWriter().encode(message, format, width, height, encodeHints)
         val w = result.width
         val h = result.height
         val pixels = IntArray(w * h)
@@ -56,8 +61,15 @@ data class BarCode(
 
     companion object {
 
+        val FALLBACK_CHARSET = Charsets.UTF_8
+
         fun fromJson(json: JSONObject): BarCode {
-            return BarCode(formatFromString(json.getString("format")), json.getString("message"), if (json.has("altText")) { json.getString("altText") } else { null })
+            return BarCode(
+                formatFromString(json.getString("format")),
+                json.getString("message"),
+                Charset.forName(json.optString("messageEncoding", FALLBACK_CHARSET.toString())),
+                if (json.has("altText")) { json.getString("altText") } else { null }
+            )
         }
 
         fun formatFromString(format: String): BarcodeFormat {
