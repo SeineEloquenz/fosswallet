@@ -28,4 +28,7 @@
     <string name="share">Pass teilen</string>
     <string name="pass_updates_channel">Pass Aktualisierungen</string>
     <string name="pass_updated">Pass aktualisiert</string>
+    <string name="group">Pässe gruppieren</string>
+    <string name="ungroup">Pässe entgruppieren</string>
+    <string name="passes">Pässe</string>
 </resources>
