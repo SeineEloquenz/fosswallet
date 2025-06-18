@@ -1,0 +1,4 @@
+FossWallet è un portabiglietti semplice (.pkpass) scritto con Material Design 3 e programmato con Jetpack Compose.
+
+Mostra il codice e altri dati contenuti nel biglietto.
+L'app permette l'aggiornamento dei biglietti dai server del venditore per i biglietti supportati ma può essere anche usata completamente offline.

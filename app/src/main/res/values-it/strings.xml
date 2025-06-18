@@ -1,0 +1,35 @@
+<resources>
+    <string name="settings">Impostazioni</string>
+    <string name="update">Aggiorna</string>
+    <string name="back">Indietro</string>
+    <string name="permission_rationale">Senza i permessi, l\'app non funziona correttamente</string>
+    <string name="request_permissions">Concedi i permessi</string>
+    <string name="image">Immagine</string>
+    <string name="pass">Biglietto</string>
+    <string name="barcode">Codice a barre</string>
+    <string name="serial_number">Numero seriale</string>
+    <string name="organization">Organizzazione</string>
+    <string name="no_barcode_format_given">Non c\'è alcun formato di codice a barre! In automatico verrà definito come codice QR. Questo codice potrebbe non essere scansionato correttamente</string>
+    <string name="flip">Gira</string>
+    <string name="front_side">Fronte</string>
+    <string name="back_side">Retro</string>
+    <string name="date">Data</string>
+    <string name="delete">Elimina</string>
+    <string name="invalid_pass_toast">Il biglietto non può essere caricato. Sei sicuro che sia un file .pkpass valido?</string>
+    <string name="add_pass">Aggiungi biglietto</string>
+    <string name="about">Informazioni</string>
+    <string name="source_code">Codice sorgente</string>
+    <string name="to">a</string>
+    <string name="license">Licenza</string>
+    <string name="update_successful">Biglietto aggiornato correttamente</string>
+    <string name="update_failed">Aggiornamento del biglietto fallito</string>
+    <string name="share">Condividi biglietto</string>
+    <string name="pass_updates_channel">Aggiornamenti del biglietto</string>
+    <string name="pass_updated">Biglietto aggiornato</string>
+    <string name="group">Metti biglietto in un gruppo</string>
+    <string name="ungroup">Togli biglietto dal gruppo</string>
+    <string name="passes">Biglietti</string>
+    <string name="sync_interval">Intervallo di tempo di aggiornamento dei biglietti (minuti)</string>
+    <string name="enable_sync">Aggiornamento dei biglietti</string>
+    <string name="enable">Attiva</string>
+</resources>
