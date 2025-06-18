@@ -37,4 +37,6 @@
     <string name="enable_sync">Pass Updates</string>
     <string name="enable">Enable</string>
     <string name="search">Search</string>
+    <string name="add_shortcut">Add shortcut</string>
+    <string name="shortcut_exists">Shortcut already exists!</string>
 </resources>

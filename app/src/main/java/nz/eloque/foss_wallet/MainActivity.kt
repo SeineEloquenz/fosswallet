@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
+import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
@@ -51,8 +52,10 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(dataUri) {
-                coroutineScope.launch(Dispatchers.IO) {
-                    dataUri?.handleIntent(passViewModel, coroutineScope, navController)
+                if (Shortcut.SCHEME != dataUri?.scheme) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        dataUri?.handleIntent(passViewModel, coroutineScope, navController)
+                    }
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

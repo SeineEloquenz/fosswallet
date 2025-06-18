@@ -19,7 +19,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.screens.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.PassScreen
 import nz.eloque.foss_wallet.ui.screens.SettingsScreen
@@ -59,6 +61,9 @@ fun WalletApp(
             }
             composable(
                 route = "pass/{passId}",
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "${Shortcut.BASE_URI}/{passId}"
+                }),
                 arguments = listOf(navArgument("passId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!

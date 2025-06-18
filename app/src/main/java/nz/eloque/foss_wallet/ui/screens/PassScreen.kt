@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.view.pass.PassShareButton
@@ -73,6 +75,11 @@ fun PassScreen(
                     val passFile = pass.value.originalPassFile(context)
                     if (passFile != null) {
                         PassShareButton(passFile)
+                    }
+                    IconButton(onClick = {
+                        Shortcut.create(context, pass.value, pass.value.description)
+                    }) {
+                        Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                     }
                 }
             },
