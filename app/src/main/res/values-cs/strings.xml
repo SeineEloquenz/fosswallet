@@ -19,7 +19,7 @@
     <string name="add_pass">Přidat lístek</string>
     <string name="about">O aplikaci</string>
     <string name="source_code">Zdrojový kód</string>
-    <string name="made_with_love" translatable="false">Vytvořeno s ❤ v Německu</string>
+    <string name="made_with_love">Vytvořeno s ❤ v Německu</string>
     <string name="to">do</string>
     <string name="license">Licence</string>
     <string name="update_successful">Lístek úspěšně aktualizován</string>
