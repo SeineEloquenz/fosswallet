@@ -31,4 +31,5 @@
     <string name="group">Pässe gruppieren</string>
     <string name="ungroup">Pässe entgruppieren</string>
     <string name="passes">Pässe</string>
+    <string name="search">Suchen</string>
 </resources>
