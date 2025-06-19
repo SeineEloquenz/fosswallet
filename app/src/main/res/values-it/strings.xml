@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Impostazioni</string>
     <string name="update">Aggiorna</string>
@@ -33,4 +34,7 @@
     <string name="enable_sync">Aggiornamento dei biglietti</string>
     <string name="enable">Attiva</string>
     <string name="search">Cerca</string>
+    <string name="add_shortcut">Aggiungi scorciatoia</string>
+    <string name="shortcut_exists">Già esiste la scorciatoia!</string>
+    <string name="made_with_love">Fatto con ❤ in Germania</string>
 </resources>
