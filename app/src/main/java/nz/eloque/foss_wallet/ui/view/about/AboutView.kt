@@ -51,7 +51,7 @@ fun AboutView() {
                 modifier = Modifier.fillMaxWidth(0.5f)
             )
             Text(
-                text = stringResource(R.string.fosswallet),
+                text = stringResource(R.string.app_name),
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displaySmall
