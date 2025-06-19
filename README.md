@@ -4,6 +4,11 @@ Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid)-App
 I tried to recreate the necessary functionality in Material Design 3 and with modern
 technologies.
 
+## Translations
+FossWallet can be translated via [Weblate](https://hosted.weblate.org/projects/fosswallet/app/).
+
+[![Translation status](https://hosted.weblate.org/widget/fosswallet/app/multi-auto.svg)](https://hosted.weblate.org/engage/fosswallet/)
+
 ## Getting FossWallet
 You can download FossWallet from GitHub-Releases, my [personal F-Droid Repo](https://github.com/SeineEloquenz/fdroid) or the official [F-Droid repo](https://f-droid.org/).
 GitHub releases and the different F-Droid repos use the same signing keys so you can
