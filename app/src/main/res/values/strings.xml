@@ -20,7 +20,6 @@
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add Pass</string>
     <string name="about">About</string>
-    <string name="fosswallet" translatable="false">FossWallet</string>
     <string name="source_code">Source Code</string>
     <string name="made_with_love">Made with ❤ in Germany</string>
     <string name="to">to</string>
