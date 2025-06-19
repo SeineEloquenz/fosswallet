@@ -72,6 +72,9 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
