@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateScheduler
@@ -10,10 +11,12 @@ import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
+import nz.eloque.foss_wallet.shortcut.Shortcut
 import java.io.InputStream
 import java.util.Locale
 
 class PassStore @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
@@ -54,6 +57,7 @@ class PassStore @Inject constructor(
     suspend fun delete(pass: Pass) {
         passRepository.delete(pass)
         updateScheduler.cancelUpdate(pass)
+        Shortcut.remove(context, pass)
     }
 
     suspend fun load(context: Context, inputStream: InputStream) {
