@@ -75,6 +75,9 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -82,8 +85,11 @@ dependencies {
     implementation(libs.androidx.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
+    testImplementation(libs.json)
+    testImplementation(libs.mockito)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.mockito)
 
     // Compose
     implementation(libs.androidx.activity.compose)

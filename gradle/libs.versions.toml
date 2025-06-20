@@ -11,10 +11,12 @@ hiltNavigationCompose = "1.2.0"
 jetbrainsKotlinAndroid = "2.1.21"
 junit = "4.13.2"
 junitVersion = "1.2.1"
+json = "20250517"
 ksp = "2.1.21-2.0.2"
 ktx = "1.16.0"
 material = "1.12.0"
 material3 = "1.4.0-alpha16"
+mockito = "5.18.0"
 navigationCompose = "2.9.0"
 okhttp = "4.12.0"
 preferenceKtx = "1.2.1"
@@ -53,8 +55,10 @@ zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { module = "junit:junit", version.ref = "junit" }
+json = { module = "org.json:json", version.ref = "json" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

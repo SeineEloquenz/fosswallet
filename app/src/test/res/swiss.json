@@ -1,0 +1,110 @@
+{
+  "description": "description",
+  "formatVersion": 1,
+  "organizationName": "SWISS",
+  "passTypeIdentifier": "pass.15below.boardingpass",
+  "serialNumber": "b6017da2-1134-433c-a241-eb13ce110bc1",
+  "teamIdentifier": "92Z5KAR32S",
+  "expirationDate": "2023-02-22T16:53:41+01:00",
+  "groupingIdentifier": "29MarMUSTERMANNMAX",
+  "backgroundColor": "rgb(255,255,255)",
+  "foregroundColor": "rgb(0,0,0)",
+  "labelColor": "rgb(0,0,0)",
+  "logoText": "",
+  "barcodes": [
+    {
+      "format": "PKBarcodeFormatAztec",
+      "message": "M1MUSTERMANN/MAX    EXMEAYS ZRHSEZWK 0078 088Y043D0060 3272>0 W    50 LX                        N*30600000K09         ",
+      "messageEncoding": "iso-8859-1",
+      "altText": "Sec. no. 060 WK77"
+    }
+  ],
+  "locations": [
+    {
+      "latitude": 47.4542,
+      "longitude": 8.558,
+      "relevantText": "relevantText"
+    }
+  ],
+  "maxDistance": 1000,
+  "boardingPass": {
+    "transitType": "PKTransitTypeAir",
+    "auxiliaryFields": [
+      {
+        "key": "flightHeading",
+        "value": "WK77",
+        "label": "flightHeading"
+      },
+      {
+        "key": "dateHeading",
+        "value": "22 Feb 2023",
+        "label": "dateHeading"
+      },
+      {
+        "key": "boardingHeading",
+        "value": "20:40",
+        "label": "boardingHeading"
+      },
+      {
+        "key": "classHeading",
+        "value": "Economy",
+        "label": "classHeading"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "backFieldKey",
+        "value": "backField"
+      }
+    ],
+    "headerFields": [
+      {
+        "key": "boardingPriorityHeading",
+        "value": "",
+        "label": "boardingPriorityHeading"
+      },
+      {
+        "key": "seatHeading",
+        "value": "42A",
+        "label": "seatHeading"
+      },
+      {
+        "key": "gateHeading",
+        "value": "C/D",
+        "label": "gateHeading"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "departsHeading",
+        "value": "NYC",
+        "label": "departsHeading"
+      },
+      {
+        "key": "destinationHeading",
+        "value": "LAX",
+        "label": "destinationHeading"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "passengerHeading",
+        "value": "MUSTERMANN/MAX",
+        "label": "passengerHeading"
+      },
+      {
+        "key": "stateHeading",
+        "value": "",
+        "label": "stateHeading"
+      },
+      {
+        "key": "docs",
+        "value": "",
+        "changeMessage": "docs",
+        "label": "docs"
+      }
+    ]
+  },
+  "authenticationToken": "8a1f546d87ce998878bd1ea86a90308c107bac0b",
+  "webServiceURL": "https://passkit.swiss.com"
+}
