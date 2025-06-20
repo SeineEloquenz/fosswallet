@@ -5,6 +5,15 @@ Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid)-App
 I tried to recreate the necessary functionality in Material Design 3 and with modern
 technologies.
 
+Features (non-exhaustive):
+* Store and share Passes (.pkpass)
+* Displays Pass information and barcodes
+* Manual Pass Updates
+* Optional automatic Pass updates (pull based, with notifications)
+* Home-Screen shortcuts
+* Passes display over lockscreen
+* Per App language support
+
 ## Installation
 
 [<img src="https://github.com/machiav3lli/oandbackupx/blob/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png"
