@@ -1,0 +1,2 @@
+* Aggiunta la traduzione in ceco. Si ringrazia Fjuro!
+* Usa la localizzazione in inglese se la lingua predefinita di sistema non è contenuta nel biglietto

@@ -1,0 +1,4 @@
+* Aggiunto il widget per filtrare la lista dei biglietti
+* Migliorata la formattazione delle date
+* Si possono salvare i file dei biglietti originali nello spazio dell'app e permettere la ri-esportazione dei file
+* Sistemata la cliccabilità dei biglietti nella modalità visione del biglietto
