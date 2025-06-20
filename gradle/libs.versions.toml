@@ -14,6 +14,7 @@ junitVersion = "1.2.1"
 ksp = "2.1.21-2.0.2"
 ktx = "1.16.0"
 material = "1.12.0"
+material3 = "1.4.0-alpha16"
 navigationCompose = "2.9.0"
 okhttp = "4.12.0"
 preferenceKtx = "1.2.1"
@@ -31,7 +32,7 @@ androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNa
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
-androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
