@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Seadistused</string>
+    <string name="organization">Organisatsioon</string>
+    <string name="delete">Kustuta</string>
+    <string name="update">Uuenda</string>
+    <string name="back">Tagasi</string>
+    <string name="image">Pilt</string>
+    <string name="barcode">Triipkood</string>
+    <string name="serial_number">Seerianumber</string>
+    <string name="flip">Pööra ümber</string>
+    <string name="front_side">Esikülg</string>
+    <string name="back_side">Tagakülg</string>
+    <string name="date">Kuupäev</string>
+    <string name="about">Rakenduse teave</string>
+    <string name="source_code">Lähtekood</string>
+    <string name="license">Litsents</string>
+    <string name="search">Otsi</string>
+    <string name="add_shortcut">Lisa otselink</string>
+    <string name="shortcut_exists">Otselink on juba olemas!</string>
+    <string name="request_permissions">Küsi õigusi</string>
+    <string name="enable">Võta kasutusele</string>
+</resources>
