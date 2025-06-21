@@ -13,13 +13,13 @@ sealed class PassContent(val id: Int) {
     class Plain(val text: String) : PassContent(PLAIN) {
         override fun contains(query: String) = query inIgnoreCase text
         override fun prettyPrint(): String = text
-        override fun isNotEmpty(): Boolean = text.isNotEmpty()
+        override fun isEmpty(): Boolean = text.isEmpty()
     }
 
     class Currency(val amount: String, val currency: String) : PassContent(CURRENCY) {
         override fun contains(query: String) = query inIgnoreCase amount || query inIgnoreCase currency
         override fun prettyPrint(): String = amount + toCurrency(currency)
-        override fun isNotEmpty(): Boolean = amount.isNotEmpty()
+        override fun isEmpty(): Boolean = amount.isEmpty()
 
         private fun toCurrency(currencyCode: String): String? {
             return try {
@@ -33,19 +33,19 @@ sealed class PassContent(val id: Int) {
     data class Date(val date: Instant, val format: FormatStyle) : PassContent(DATE) {
         override fun contains(query: String) = query inIgnoreCase date.prettyDate(format)
         override fun prettyPrint(): String  = date.prettyDate(format)
-        override fun isNotEmpty(): Boolean = true
+        override fun isEmpty(): Boolean = false
     }
 
     data class Time(val time: Instant, val format: FormatStyle) : PassContent(TIME) {
         override fun contains(query: String) = query inIgnoreCase time.prettyTime(format)
         override fun prettyPrint(): String  = time.prettyTime(format)
-        override fun isNotEmpty(): Boolean = true
+        override fun isEmpty(): Boolean = false
     }
 
     data class DateTime(val dateTime: Instant, val format: FormatStyle) : PassContent(DATE_TIME) {
         override fun contains(query: String) = query inIgnoreCase dateTime.prettyDateTime(format)
         override fun prettyPrint(): String  = dateTime.prettyDateTime(format)
-        override fun isNotEmpty(): Boolean = true
+        override fun isEmpty(): Boolean = false
     }
 
 
@@ -85,5 +85,6 @@ sealed class PassContent(val id: Int) {
 
     abstract fun contains(query: String): Boolean
     abstract fun prettyPrint(): String
-    abstract fun isNotEmpty(): Boolean
+    abstract fun isEmpty(): Boolean
+    fun isNotEmpty() = !isEmpty()
 }

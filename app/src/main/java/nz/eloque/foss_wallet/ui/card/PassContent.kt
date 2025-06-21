@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.card.primary.AirlineBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericPrimary
@@ -38,12 +39,16 @@ fun ShortPassContent(
                 }
             else -> GenericPrimary(pass)
         }
-        if (pass.primaryFields.isEmpty() && pass.hasStrip) {
+        if (pass.primaryFields.empty() && pass.hasStrip) {
             AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
         }
 
         DateLocationRow(pass)
     }
+}
+
+private fun List<PassField>.empty(): Boolean {
+    return this.isEmpty() || this.all { it.content.isEmpty() }
 }
 
 @Composable
