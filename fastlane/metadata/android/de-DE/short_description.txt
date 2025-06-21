@@ -1,0 +1,1 @@
+Passverwaltung von "Apple Passbook (.pkpass)"-Dateien
