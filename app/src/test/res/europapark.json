@@ -1,0 +1,71 @@
+{
+  "logoText": "",
+  "description": "Ticket shop",
+  "backgroundColor": "rgb(26,44,86)",
+  "foregroundColor": "rgb(255,255,255)",
+  "labelColor": "rgb(255,255,255)",
+  "formatVersion": 1,
+  "organizationName": "Ticket shop",
+  "passTypeIdentifier": "pass.epapp.wallet",
+  "teamIdentifier": "S5UN2R8SDL",
+  "serialNumber": "3c20d442-1aad-12ff-c263-b23df42e213e",
+  "relevantDate": "2024-09-25T07:00:00+02:00",
+  "groupingIdentifier": "7c411106-7aff-1cef-937c-a2f2e324113e",
+  "eventTicket": {
+    "headerFields": [
+      {
+        "key": "ticket",
+        "label": "",
+        "value": "Ticket"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "name",
+        "label": "",
+        "value": ""
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "event",
+        "label": "Event",
+        "value": "1-Day Admission Ticket  Europa-Park"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "tarif",
+        "label": "Tarif",
+        "value": "Adults (12+)"
+      },
+      {
+        "key": "date",
+        "label": "Date",
+        "value": "25.09.24 "
+      }
+    ],
+    "backFields": [
+      {
+        "key": "booking",
+        "label": "Booking",
+        "value": "5411138"
+      },
+      {
+        "key": "code",
+        "label": "Code",
+        "value": "EP-FMAN-KJDC-81QC"
+      },
+      {
+        "key": "info",
+        "label": "Info",
+        "value": "Only valid on the selected arrival date (see ticket). If the ticket isn't used on the booked date, it will become invalid. Exchanging for a different date is not possible. The ticket must be kept until the time you are leaving Europa-Park. The ticket is registered and will become invalid after you entered Europa-Park. Repeated use is not possible.  Selling the ticket on for payments is not permitted. No cash will be given in exchange for the ticket. The current Park Rules apply during your visit europapark.de\/park-rules. Film and photo shootings may take place in the park. If you don't want to be captured on camera, please avoid these areas. \r\n\r\nEd Euromaus wishes you a lot of fun at Europa-Park!"
+      }
+    ]
+  },
+  "barcode": {
+    "format": "PKBarcodeFormatQR",
+    "message": "EP-FMAN-KJDC-81QC",
+    "messageEncoding": "utf-8"
+  }
+}

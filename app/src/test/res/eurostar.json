@@ -1,0 +1,105 @@
+{
+  "description": "EUROSTAR BOARDING PASS",
+  "organizationName": "Eurostar International Limited",
+  "passTypeIdentifier": "pass.com.eurostar",
+  "serialNumber": "00000000-0000-0000-0000-000000000000",
+  "teamIdentifier": "00XXXX0000",
+  "barcode": {
+    "format": "PKBarcodeFormatPDF417",
+    "message": "eXXXXXXXXX000000000000000000XXXXX  00000000000000XXXXXXXXXX00000 00000000000000    X0XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "messageEncoding": "iso-8859-1",
+    "altText": "XXXXXX"
+  },
+  "backgroundColor": "rgb(255, 235, 51)",
+  "foregroundColor": "rgb(6, 24, 11)",
+  "groupingIdentifier": "XXXXXX",
+  "labelColor": "rgb(119, 119, 119)",
+  "webServiceURL": "https://passbook.prod.eurostar.com",
+  "authenticationToken": "00000000-0000-0000-0000-000000000000",
+  "ignoresTimeZone": false,
+  "relevantDate": "2023-03-27T12:31:00Z",
+  "associatedStoreIdentifiers": [
+    111111111
+  ],
+  "expirationDate": "2023-03-28T12:31:00Z",
+  "formatVersion": 1,
+  "boardingPass": {
+    "headerFields": [
+      {
+        "key": "BoardingTimeHeader",
+        "label": "DATE",
+        "value": "2025-05-03T22:11:00.000+01:00",
+        "textAlignment": "PKTextAlignmentLeft",
+        "dateStyle": "PKDateStyleNone",
+        "timeStyle": "PKDateStyleShort",
+        "ignoresTimeZone": true,
+        "isRelative": false
+      },
+      {
+        "key": "Date",
+        "value": "27/03",
+        "label": "DATE",
+        "changeMessage": "The journey date is modified %@"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "BoardingTime",
+        "value": "13:31",
+        "label": "LON",
+        "changeMessage": "The train time is modified %@"
+      },
+      {
+        "key": "Arrivaltime",
+        "value": "16:47",
+        "label": "PAR",
+        "changeMessage": "The arrival time is modified %@"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "Booking",
+        "value": "XXXXXX",
+        "label": "BOOKING",
+        "changeMessage": "The booking number is modified %@"
+      },
+      {
+        "key": "Train",
+        "value": "0000",
+        "label": "TRAIN",
+        "changeMessage": "The train number is modified %@"
+      },
+      {
+        "key": "Coach",
+        "value": "0",
+        "label": "COACH",
+        "changeMessage": "The coach has been changed %@"
+      },
+      {
+        "key": "Seat",
+        "value": "00",
+        "label": "SEAT",
+        "changeMessage": "The seat has been changed %@"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "Terms",
+        "value": "TERMS",
+        "dataDetectorTypes": [
+          "PKDataDetectorTypePhoneNumber"
+        ]
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "Passenger",
+        "value": "XXXXXXX XXXXXXXXX",
+        "label": "PASSENGER",
+        "changeMessage": "The passenger name is modified %@",
+        "textAlignment": "PKTextAlignmentLeft"
+      }
+    ],
+    "transitType": "PKTransitTypeGeneric"
+  }
+}

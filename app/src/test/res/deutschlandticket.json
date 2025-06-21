@@ -1,0 +1,74 @@
+{
+  "semantics": {},
+  "passTypeIdentifier": "pass.amcongmbh.mobileticket",
+  "formatVersion": 1,
+  "serialNumber": "25-70013",
+  "description": "Deutschlandticket",
+  "organizationName": "Regensburger Verkehrsverbund GmbH",
+  "teamIdentifier": "3N6RK55N54",
+  "sharingProhibited": true,
+  "userInfo": {},
+  "foregroundColor": "rgb(0,0,0)",
+  "backgroundColor": "rgb(255,255,255)",
+  "labelColor": "rgb(0,0,0)",
+  "barcodes": [
+    {
+      "format": "PKBarcodeFormatAztec",
+      "message": "#UT015143AM00F0-\u0002\u00140-åé¶º¤$Q_Áú@JÅÎEuÂB\u0002\u0015\u0000Ý*·ðÿEô§éÖ9\u000b\u0085W±\u0000\u0000\u00000435x\u000b÷put1040056541V@\u0002Þ¾n®an¡Fæ\u0006&F\u0006F¦\u0006FÆ&\u0006.®.®¡ñ!>@MÆÆ¦AÎ!F\u0006\u0006¦@la`hl\fä\u0018Xº%f\u0014e'\u0016¤\u00025\u0002ª³\u0004\n\u001a9å\u0017¥gd\u0002\u0019p!sü¢Ô¼ª|\u0003Cf 3\fÍ]RKK3r\u0012óRJ2³SK¦tL\u0006*\u0004òL\u0019c\u0010ZT§§i`\fä\u001a\u001a\u0014A\\k\u0006\u00160\u0005\t\u00005è\u0019DÌ\u0011\"\u0006V 7MF¨1\u0003X DÁjÌÌ`\"F`\u001cclî^S®P«\u0000¶A\u000fd±BRf1k\u0006æ\u001a\u001aí0\u0006é7v\r\r\u0002òæ\u0019Bl0´Ð13\u000fwóq\u0000yÀÌ¬H\u0085µÉ¯)ÃÕ×Ö¢ÑwïÌw[ONiÝÚ©Ðâ=[J7ãJÖ\u0002®Î\u0003ìÐc\u0004*Ïç\u0013\u001cJ\u000e¬\u001bx\u001a\\vn\\t­×m¥E\u0002K\u0003\u000bJÐ3\u0006\u0016¦\u000b,\r\rJ\u001d§^½xvìÂCwN¼¸tìÚ©\u0017,|Óro80_ëÍÆÃy¡MãÀÉ³Ç\u001d<\u0018\u001a\u0019À{\u0006\u0000·@ÕEmÓ\r\f\f\u0000÷mG",
+      "messageEncoding": "ISO-8859-1",
+      "altText": "Nur mit Lichtbildausweis gültig"
+    }
+  ],
+  "generic": {
+    "headerFields": [
+      {
+        "key": "ticket-id",
+        "label": "Ticket-ID",
+        "value": "25-70013"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "ticket-name",
+        "label": "Ticket",
+        "value": "Deutschlandticket"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "valid-month",
+        "label": "Monat",
+        "value": "Mai 2025"
+      },
+      {
+        "key": "valid-date-from",
+        "label": "Gültig ab",
+        "dateStyle": "PKDateStyleShort",
+        "timeStyle": "PKDateStyleNone",
+        "value": "2025-05-01T00:00:00+02:00"
+      },
+      {
+        "key": "valid-date-to",
+        "label": "Gültig bis",
+        "dateStyle": "PKDateStyleShort",
+        "timeStyle": "PKDateStyleShort",
+        "value": "2025-06-01T03:00:00+02:00"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "passenger-name",
+        "label": "Name",
+        "value": "Mario Rossi"
+      },
+      {
+        "key": "birth-date",
+        "label": "Geburtsdatum",
+        "dateStyle": "PKDateStyleMedium",
+        "timeStyle": "PKDateStyleNone",
+        "value": "2000-01-01T02:00:00+02:00"
+      }
+    ],
+    "backFields": []
+  }
+}

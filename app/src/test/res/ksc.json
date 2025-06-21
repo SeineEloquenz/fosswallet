@@ -1,0 +1,94 @@
+{
+  "eventTicket": {
+    "secondaryFields": [
+      {
+        "key": "secondaryOneValue",
+        "value": "Max Mustermann",
+        "label": "Name"
+      },
+      {
+        "key": "secondaryThreeValue",
+        "value": "Vollzahler"
+      },
+      {
+        "key": "secondaryFourValue",
+        "value": " "
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "auxiliaryOneValue",
+        "value": "S4 I Gegengerade ",
+        "label": "Rang"
+      },
+      {
+        "key": "auxiliaryTwoValue",
+        "value": "-",
+        "label": "Reihe"
+      },
+      {
+        "key": "auxiliaryThreeValue",
+        "value": "-",
+        "label": "Sitz"
+      },
+      {
+        "key": "auxiliaryFourValue",
+        "value": "Vollzahler",
+        "label": "Erm\u00e4\u00dfigung"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "backOneValue",
+        "value": "KSC-ID: 524864\r\nAuftrags-Nr.: 320142\r\nPreis: 16,50 EUR (inkl. MwSt. & Geb\u00fchren)\r\n",
+        "label": "Ticket-Informationen:"
+      },
+      {
+        "key": "backTwoValue",
+        "value": "Die Eintrittskarte gilt am angegebenen Spieltag als Fahrkarte f\u00fcr eine Hin- und R\u00fcckfahrt zum BBBank Wildpark im Verbundgebiet des KVV (www.kvv.de) in allen Bussen und Bahnen. Es gelten die Tarifbestimmungen und Bef\u00f6rderungsbedingungen des KVV. ",
+        "label": "Kombiticket:"
+      },
+      {
+        "key": "backThreeValue",
+        "value": "Es gelten die ATGB der Karlsruher Sport-Club M\u00fchlburg-Ph\u00f6nix GmbH & Co. KGaA (Ausrichter) und die Stadionordnung des BBBank Wildparks in der jeweils g\u00fcltigen Fassung f\u00fcr die ausrichtende Karlsruher Sport-Club M\u00fchlburg-Ph\u00f6nix GmbH & Co. KGaA und den Veranstalter KSC Betriebsgesellschaft Stadion mbH (\u0084BGS\u0093). Das Ticket ist personalisiert und gilt nur f\u00fcr eine Person. Die \u00dcbertragung des Besuchsrechts ist nur gem\u00e4\u00df Ziff. 10.3 der ATGB m\u00f6glich (www.ksc.de/atgb). Die gewerbliche oder kommerzielle Weitergabe der Karte (mit Aufschlag) ist verboten. Bei Zuwiderhandlung, Manipulation oder Besch\u00e4digung kann der Zutritt verweigert werden. Erm\u00e4\u00dfigte Tickets gelten nur in Verbindung mit einem offiziellen Erm\u00e4\u00dfigungsnachweis. Dieser ist auf Anfrage dem Sicherheitspersonal vorzuzeigen. Bei Verlust oder Diebstahl besteht kein Anspruch auf\r\nErsatz. Eine Ticketr\u00fcckgabe ist ausgeschlossen. Keine Haftung f\u00fcr Sach- und Personensch\u00e4den. Kein Zutritt zum Heimbereich in G\u00e4stefanbekleidung. \r\nVeranstalter ist die KSC Betriebsgesellschaft Stadion mbH (\u0084BGS\u0093).\r\n",
+        "label": "Allgemeine Informationen: "
+      },
+      {
+        "key": "backFourValue",
+        "value": "Karlsruher Sport-Club M\u00fchlburg-Ph\u00f6nix GmbH & Co. KGaA\r\n(als Ausrichter und direkter Vertragspartner)\r\nAdenauerring 17\r\n76131 Karlsruhe\r\nwww.ksc.de\r\n\r\nDas KSC-Ticketing ist erreichbar von montags bis freitags in der Zeit von 09.00-17.00 Uhr unter:\r\ntickets@ksc.de l 0721-9643450",
+        "label": "Kontakt:"
+      }
+    ]
+  },
+  "serialNumber": "10a23920d07211e258976dda5763217566325ba57ba6",
+  "description": "Karlsruher SC - SC Preu\u00dfen M\u00fcnster",
+  "formatVersion": 1,
+  "locations": [
+    {
+      "latitude": 49.0200279,
+      "longitude": 8.4108417
+    }
+  ],
+  "relevantDate": "2024-11-10T13:30:00+01:00",
+  "barcode": {
+    "format": "PKBarcodeFormatQR",
+    "message": "7283967128793619",
+    "messageEncoding": "iso-8859-1"
+  },
+  "barcodes": [
+    {
+      "format": "PKBarcodeFormatQR",
+      "message": "78934798326817",
+      "messageEncoding": "iso-8859-1"
+    }
+  ],
+  "backgroundColor": "rgb(0, 75, 147)",
+  "foregroundColor": "rgb(255, 255, 255)",
+  "labelColor": "rgb(255, 255, 255)",
+  "logoText": "SC Preu\u00dfen M\u00fcnster",
+  "authenticationToken": "",
+  "passTypeIdentifier": "pass.SAP.EventTicketing",
+  "teamIdentifier": "2XMNB3L8C3",
+  "organizationName": "Karlsruher SC - SC Preu\u00dfen M\u00fcnster",
+  "sharingProhibited": false
+}

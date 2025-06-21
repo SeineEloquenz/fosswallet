@@ -10,7 +10,14 @@ import org.mockito.Mockito
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-val passes: List<String> = listOf("swiss", "ticketpay")
+val passes: List<String> = listOf(
+    "deutschlandticket",
+    "europapark",
+    "eurostar",
+    "ksc",
+    "swiss",
+    "ticketpay"
+)
 
 @RunWith(Parameterized::class)
 class PassParserTest(private val passName: String) {
@@ -19,7 +26,7 @@ class PassParserTest(private val passName: String) {
     private val bitmaps = Mockito.mock(PassBitmaps::class.java)
 
     @Test
-    fun testParser() {
+    fun testPass() {
         val jsonString = loadJson(passName)
         Assert.assertNotNull(jsonString)
         val json = JSONObject(loadJson(passName)!!)
@@ -33,7 +40,7 @@ class PassParserTest(private val passName: String) {
     companion object {
 
         @JvmStatic
-        @Parameterized.Parameters
+        @Parameterized.Parameters(name = "{0}")
         fun data(): List<Array<String>> {
             return passes.map { pass -> Array<String>(1) { pass } }
         }
