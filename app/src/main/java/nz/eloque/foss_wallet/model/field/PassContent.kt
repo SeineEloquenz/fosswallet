@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.model.field
 
+import nz.eloque.foss_wallet.parsing.InstantParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.prettyDate
 import nz.eloque.foss_wallet.utils.prettyDateTime
@@ -29,22 +30,22 @@ sealed class PassContent(val id: Int) {
         }
     }
 
-    data class Date(val date: String, val format: FormatStyle) : PassContent(DATE) {
-        override fun contains(query: String) = query inIgnoreCase date
-        override fun prettyPrint(): String  = Instant.parse(date).prettyDate(format)
-        override fun isNotEmpty(): Boolean = date.isNotEmpty()
+    data class Date(val date: Instant, val format: FormatStyle) : PassContent(DATE) {
+        override fun contains(query: String) = query inIgnoreCase date.prettyDate(format)
+        override fun prettyPrint(): String  = date.prettyDate(format)
+        override fun isNotEmpty(): Boolean = true
     }
 
-    data class Time(val time: String, val format: FormatStyle) : PassContent(TIME) {
-        override fun contains(query: String) = query inIgnoreCase time
-        override fun prettyPrint(): String  = Instant.parse(time).prettyTime(format)
-        override fun isNotEmpty(): Boolean = time.isNotEmpty()
+    data class Time(val time: Instant, val format: FormatStyle) : PassContent(TIME) {
+        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format)
+        override fun prettyPrint(): String  = time.prettyTime(format)
+        override fun isNotEmpty(): Boolean = true
     }
 
-    data class DateTime(val dateTime: String, val format: FormatStyle) : PassContent(DATE_TIME) {
-        override fun contains(query: String) = query inIgnoreCase dateTime
-        override fun prettyPrint(): String  = Instant.parse(dateTime).prettyDateTime(format)
-        override fun isNotEmpty(): Boolean = dateTime.isNotEmpty()
+    data class DateTime(val dateTime: Instant, val format: FormatStyle) : PassContent(DATE_TIME) {
+        override fun contains(query: String) = query inIgnoreCase dateTime.prettyDateTime(format)
+        override fun prettyPrint(): String  = dateTime.prettyDateTime(format)
+        override fun isNotEmpty(): Boolean = true
     }
 
 
@@ -61,9 +62,9 @@ sealed class PassContent(val id: Int) {
                 val content = content.substring(2)
                 return when(id) {
                     CURRENCY -> content.split("|").let { Currency(it[0], it[1]) }
-                    DATE -> content.split("|").let { Date(it[0], FormatStyle.valueOf(it[1])) }
-                    TIME -> content.split("|").let { Time(it[0], FormatStyle.valueOf(it[1])) }
-                    DATE_TIME -> content.split("|").let { DateTime(it[0], FormatStyle.valueOf(it[1])) }
+                    DATE -> content.split("|").let { Date(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
+                    TIME -> content.split("|").let { Time(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
+                    DATE_TIME -> content.split("|").let { DateTime(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
                     else -> Plain(content)
                 }
             } else {

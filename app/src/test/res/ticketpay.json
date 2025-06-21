@@ -1,0 +1,149 @@
+{
+  "description": "Eintritt Freitag",
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.com.ticketpay.wallet",
+  "teamIdentifier": "REDACTED",
+  "organizationName": "TicketPAY Europe GmbH",
+  "serialNumber": "REDACTED",
+  "voided": false,
+  "labelColor": "rgb(255, 255, 255)",
+  "foregroundColor": "rgb(255, 255, 255)",
+  "authenticationToken": "REDACTED",
+  "webServiceURL": "https://my.ticketpay.de/passkit/",
+  "eventTicket": {
+    "headerFields": [
+      {
+        "textAlignment": "PKTextAlignmentRight",
+        "dateStyle": "PKDateStyleMedium",
+        "timeStyle": "PKDateStyleShort",
+        "key": "header-front",
+        "label": "Aula 1",
+        "value": "2025-07-04T17:30Z"
+      }
+    ],
+    "primaryFields": [
+      {
+        "textAlignment": "PKTextAlignmentLeft",
+        "key": "event-name-front",
+        "label": "NAME DER VERANSTALTUNG:",
+        "value": "REDACTED"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "textAlignment": "PKTextAlignmentLeft",
+        "key": "ticket-name-front",
+        "label": "Tickettyp:",
+        "value": "Eintritt Freitag"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "textAlignment": "PKTextAlignmentLeft",
+        "key": "ticket_owner-front",
+        "label": "Besteller:",
+        "value": "REDACTED"
+      },
+      {
+        "textAlignment": "PKTextAlignmentLeft",
+        "key": "order-id-front",
+        "label": "Bestellnummer:",
+        "value": "REDACTED"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "ticket-name-back",
+        "label": "Tickettyp:",
+        "value": "Eintritt Freitag"
+      },
+      {
+        "key": "order-id-back",
+        "label": "Bestellnummer:",
+        "value": "REDACTED"
+      },
+      {
+        "key": "event-name-back",
+        "label": "Name der Veranstaltung:",
+        "value": "REDACTED"
+      },
+      {
+        "key": "location-back",
+        "label": "Veranstaltungsort:",
+        "value": "REDACTED"
+      },
+      {
+        "key": "organizer-back",
+        "label": "Veranstalter:",
+        "value": "REDACTED"
+      },
+      {
+        "dateStyle": "PKDateStyleMedium",
+        "timeStyle": "PKDateStyleShort",
+        "key": "start-time-back",
+        "label": "Gültig ab:",
+        "value": "2025-07-04T17:30Z"
+      },
+      {
+        "dateStyle": "PKDateStyleMedium",
+        "timeStyle": "PKDateStyleShort",
+        "key": "end-time-back",
+        "label": "Gültig bis:",
+        "value": "2025-07-04T20:00Z"
+      },
+      {
+        "key": "customer-name-back",
+        "label": "Besteller:",
+        "value": "REDACTED"
+      },
+      {
+        "dateStyle": "PKDateStyleMedium",
+        "timeStyle": "PKDateStyleShort",
+        "key": "shop-order-date",
+        "label": "Bestelldatum:",
+        "value": "2025-06-14T19:34Z"
+      },
+      {
+        "key": "customer-email-back",
+        "label": "E-Mail:",
+        "value": "REDACTED"
+      },
+      {
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ],
+        "key": "terms-back",
+        "label": "AGB für Teilnehmer",
+        "value": "https://manage.ticketpay.de/documents/agb/tpeu_customer_de.pdf"
+      },
+      {
+        "dataDetectorTypes": [
+          "PKDataDetectorTypeLink"
+        ],
+        "key": "datasecurity-back",
+        "label": "Datenschutzerklärung",
+        "value": "https://manage.ticketpay.de/documents/agb/tpeu_privacy_de.pdf"
+      }
+    ]
+  },
+  "barcode": {
+    "altText": "REDACTED",
+    "format": "PKBarcodeFormatQR",
+    "message": "REDACTED",
+    "messageEncoding": "utf-8"
+  },
+  "barcodes": [
+    {
+      "altText": "REDACTED",
+      "format": "PKBarcodeFormatQR",
+      "message": "REDACTED",
+      "messageEncoding": "utf-8"
+    },
+    {
+      "altText": "REDACTED",
+      "format": "PKBarcodeFormatCode128",
+      "message": "REDACTED",
+      "messageEncoding": "utf-8"
+    }
+  ]
+}

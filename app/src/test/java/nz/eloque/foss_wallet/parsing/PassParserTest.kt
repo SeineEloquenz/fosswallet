@@ -10,7 +10,7 @@ import org.mockito.Mockito
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-val passes: List<String> = listOf("swiss")
+val passes: List<String> = listOf("swiss", "ticketpay")
 
 @RunWith(Parameterized::class)
 class PassParserTest(private val passName: String) {
