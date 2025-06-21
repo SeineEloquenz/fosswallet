@@ -15,9 +15,9 @@ object FieldParser {
 
         val content = when {
             field.has("currencyCode") -> PassContent.Currency(value, field.getString("currencyCode"))
-            field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(value, chooseBetter(field.getDateStyle(), field.getTimeStyle()))
-            field.hasDateStyle() -> PassContent.Date(value, field.getDateStyle())
-            field.hasTimeStyle() -> PassContent.Time(value, field.getTimeStyle())
+            field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(InstantParser.parse(value), chooseBetter(field.getDateStyle(), field.getTimeStyle()))
+            field.hasDateStyle() -> PassContent.Date(InstantParser.parse(value), field.getDateStyle())
+            field.hasTimeStyle() -> PassContent.Time(InstantParser.parse(value), field.getTimeStyle())
             else -> PassContent.Plain(value)
         }
 
