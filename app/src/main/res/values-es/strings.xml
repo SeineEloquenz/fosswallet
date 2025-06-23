@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Ajustes</string>
     <string name="update">Actualizar</string>
@@ -25,4 +26,15 @@
     <string name="update_successful">Pass actualizado correctamente</string>
     <string name="update_failed">Fallo al actualizar el Pass</string>
     <string name="share">Compartir Pass</string>
+    <string name="pass_updates_channel">Actualizaciones de pases</string>
+    <string name="pass_updated">Pase actualizado</string>
+    <string name="group">Agrupar pases</string>
+    <string name="ungroup">Desagrupar pases</string>
+    <string name="passes">Pases</string>
+    <string name="sync_interval">Intervalo de actualización de pases (min)</string>
+    <string name="enable_sync">Actualizaciones de pases</string>
+    <string name="enable">Activar</string>
+    <string name="search">Buscar</string>
+    <string name="add_shortcut">Añadir atajo</string>
+    <string name="shortcut_exists">¡El acceso directo ya existe!</string>
 </resources>
