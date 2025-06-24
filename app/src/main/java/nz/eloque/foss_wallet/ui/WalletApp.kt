@@ -3,6 +3,8 @@
 package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -49,6 +51,10 @@ fun WalletApp(
         NavHost(
             navController = navController,
             startDestination = Screen.Wallet.route,
+            enterTransition = { slideIntoContainer(SlideDirection.Start, tween()) },
+            exitTransition = { slideOutOfContainer(SlideDirection.Start, tween()) },
+            popEnterTransition = { slideIntoContainer(SlideDirection.End, tween()) },
+            popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
                 WalletScreen(navController, passViewModel)
