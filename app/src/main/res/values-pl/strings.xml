@@ -1,3 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="license">Licencja</string>
+    <string name="settings">Ustawienia</string>
+    <string name="back">Wstecz</string>
+    <string name="update">Aktualizacja</string>
+    <string name="request_permissions">Zarządaj uprawnienia</string>
+    <string name="serial_number">Numer seryjny</string>
+    <string name="organization">Organizacja</string>
+    <string name="flip">Odwróć</string>
+    <string name="front_side">Przód</string>
+    <string name="back_side">Tył</string>
+    <string name="delete">Usuń</string>
+    <string name="add_pass">Dodaj Pass</string>
+    <string name="about">O programie</string>
+    <string name="source_code">Kod źródłowy</string>
+    <string name="made_with_love">Utworzono z ❤ w Niemczech</string>
+    <string name="update_successful">Pomyślnie zaktualizowano pass</string>
+    <string name="update_failed">Błąd aktualizacji pass</string>
+    <string name="share">Udostępnij pass</string>
+    <string name="pass_updates_channel">Aktualizacje pass</string>
+    <string name="pass_updated">Pass zaktualizowany</string>
+    <string name="group">Grupuj passy</string>
+    <string name="ungroup">Rozgrupuj passy</string>
+    <string name="passes">Passy</string>
+    <string name="sync_interval">Okres aktualizacji (w min.)</string>
+    <string name="enable_sync">Aktualizacje passów</string>
+    <string name="enable">Włącz</string>
+    <string name="search">Szukaj</string>
+    <string name="add_shortcut">Dodaj skrót</string>
+    <string name="shortcut_exists">Skrót już istnieje!</string>
+    <string name="permission_rationale">Bez tego uprawnienia, Wallet nie będzie działał poprawnie</string>
+    <string name="image">Obraz</string>
+    <string name="barcode">Kod kreskowy</string>
+    <string name="invalid_pass_toast">Nie można załadować pliku. Czy na pewno jest to prawidłowy .pkpass?</string>
+    <string name="no_barcode_format_given">Brak podanego formatu kodu kreskowego! Ustawiono QR-Code. Ten kod może nie zostać zeskanowany poprawnie</string>
+    <string name="date">Data</string>
+    <string name="to">do</string>
 </resources>
