@@ -38,4 +38,5 @@
     <string name="search">Search</string>
     <string name="add_shortcut">Add shortcut</string>
     <string name="shortcut_exists">Shortcut already exists!</string>
+    <string name="privacy">Privacy</string>
 </resources>
