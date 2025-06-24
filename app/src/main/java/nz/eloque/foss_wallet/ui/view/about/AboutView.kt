@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.Icon
@@ -33,7 +34,6 @@ import nz.eloque.foss_wallet.R
 
 @Composable
 fun AboutView() {
-    val uriHandler = LocalUriHandler.current
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(30.dp),
@@ -62,17 +62,21 @@ fun AboutView() {
                 textStyle = MaterialTheme.typography.labelLarge
             )
         }
-        OutlinedButton(
-            onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet") },
-            modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
-        ) {
-            AboutContent(icon = Icons.Default.Source, text = stringResource(R.string.source_code))
-        }
-        OutlinedButton(
-            onClick = { uriHandler.openUri("https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE") },
-            modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)) {
-            AboutContent(icon = Icons.Default.Description, text = stringResource(R.string.license))
-        }
+        UriButton(
+            icon = Icons.Default.Source,
+            text = stringResource(R.string.source_code),
+            uri = "https://github.com/SeineEloquenz/fosswallet"
+        )
+        UriButton(
+            icon = Icons.Default.Description,
+            text = stringResource(R.string.license),
+            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE"
+        )
+        UriButton(
+            icon = Icons.Default.PrivacyTip,
+            text = stringResource(R.string.privacy),
+            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/PRIVACY.md"
+        )
     }
     Box(
         modifier = Modifier.fillMaxSize().padding(bottom = 24.dp),
@@ -84,6 +88,21 @@ fun AboutView() {
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelSmall
         )
+    }
+}
+
+@Composable
+private fun UriButton(
+    icon: ImageVector,
+    text: String,
+    uri: String,
+) {
+    val uriHandler = LocalUriHandler.current
+    OutlinedButton(
+        onClick = { uriHandler.openUri(uri) },
+        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
+    ) {
+        AboutContent(icon = icon, text = text)
     }
 }
 
