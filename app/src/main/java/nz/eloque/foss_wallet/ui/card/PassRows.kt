@@ -98,8 +98,8 @@ fun FieldsRow(
             when (fields.size) {
                 1 -> PlainPassLabel(fields[0].label, fields[0].content)
                 in 1 .. Int.MAX_VALUE -> {
-                    fields.dropLast(1).forEach { PlainPassLabel(it.label, it.content) }
-                    fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier, LabelAlign.RIGHT) }
+                    fields.dropLast(1).forEach { PlainPassLabel(it.label, it.content, Modifier.weight(1f)) }
+                    fields.lastOrNull()?.let { PlainPassLabel(it.label, it.content, Modifier.weight(1f), LabelAlign.RIGHT) }
                 }
             }
         }
