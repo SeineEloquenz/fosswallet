@@ -37,4 +37,5 @@
     <string name="enable_sync">Dokumendi uuendused</string>
     <string name="add_pass">Lisa dokument</string>
     <string name="pass_updated">Dokument on uuendatud</string>
+    <string name="privacy">Privaatsus</string>
 </resources>
