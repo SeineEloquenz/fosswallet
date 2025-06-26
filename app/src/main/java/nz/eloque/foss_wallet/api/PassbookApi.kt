@@ -4,12 +4,12 @@ import android.util.Log
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
-import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassLoader
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
+import java.net.SocketTimeoutException
 
 @Suppress("RedundantSuspendModifier")
 object PassbookApi {
@@ -17,7 +17,7 @@ object PassbookApi {
     private const val TAG = "PassbookApi"
     private const val API_VERSION = "v1"
 
-    suspend fun getUpdated(pass: Pass): PassLoadResult? {
+    suspend fun getUpdated(pass: Pass): UpdateResult {
         val requestUrl = "${pass.webServiceUrl}/${API_VERSION}/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
         val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
 
@@ -25,18 +25,22 @@ object PassbookApi {
 
         val response = try {
             client.get(requestUrl, authHeader)
-        } catch (e: IOException) {
+        } catch (e: SocketTimeoutException) {
+            Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
+            return UpdateResult.Failed(FailureReason.Timeout)
+        }
+        catch (e: IOException) {
             Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
-            return null
+            return UpdateResult.Failed(FailureReason.Exception(e))
         }
         return if (response.isSuccessful) {
             try {
-                PassLoader(PassParser()).load(response.body!!.byteStream(), pass.id, pass.addedAt)
-            } catch (_: InvalidPassException) {
-                null
+                UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(response.body!!.byteStream(), pass.id, pass.addedAt)))
+            } catch (e: InvalidPassException) {
+                return UpdateResult.Failed(FailureReason.Exception(e))
             }
         } else {
-            null
+            return UpdateResult.Failed(FailureReason.Status(response.code))
         }
     }
 

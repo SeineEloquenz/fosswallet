@@ -38,4 +38,9 @@
     <string name="add_shortcut">Shortcut hinzufügen</string>
     <string name="shortcut_exists">Es existiert bereits ein Shortcut!</string>
     <string name="privacy">Privatsphäre</string>
+    <string name="details">Details</string>
+    <string name="timeout">Es ist eine Zeitüberschreitung bei der Verbindung aufgetreten</string>
+    <string name="exception">Es ist ein Fehler bei der Verbindung zum Server aufgetreten</string>
+    <string name="status_code">Der Server hat mit Status %1$s geantwortet</string>
+    <string name="copy">Kopieren</string>
 </resources>

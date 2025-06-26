@@ -4,6 +4,8 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.api.PassbookApi
+import nz.eloque.foss_wallet.api.UpdateContent
+import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
@@ -36,15 +38,15 @@ class PassStore @Inject constructor(
         }
     }
 
-    suspend fun update(pass: Pass): Pass? {
+    suspend fun update(pass: Pass): UpdateResult {
         val updated = PassbookApi.getUpdated(pass)
-        return if (updated != null) {
-            insert(updated)
+        return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
+            insert(updated.content.result)
             notificationService.createNotificationChannel()
-            updated.pass.updatedFields(pass).forEach { notificationService.post(it.changeMessage()) }
-            passById(updated.pass.id).applyLocalization(Locale.getDefault().language)
+            updated.content.result.pass.updatedFields(pass).forEach { notificationService.post(it.changeMessage()) }
+            UpdateResult.Success(UpdateContent.Pass(passById(updated.content.result.pass.id).applyLocalization(Locale.getDefault().language)))
         } else {
-            null
+            updated
         }
     }
 

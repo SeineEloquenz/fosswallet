@@ -27,6 +27,7 @@ import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.screens.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.PassScreen
 import nz.eloque.foss_wallet.ui.screens.SettingsScreen
+import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.WalletScreen
 import nz.eloque.foss_wallet.ui.view.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
@@ -74,6 +75,17 @@ fun WalletApp(
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
                 PassScreen(passId, navController, passViewModel)
+            }
+            composable(
+                route = "updateFailure/{reason}/{rationale}",
+                arguments = listOf(
+                    navArgument("reason") { type = NavType.StringType },
+                    navArgument("rationale") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val reason = backStackEntry.arguments?.getString("reason")!!
+                val rationale = backStackEntry.arguments?.getString("rationale")!!
+                UpdateFailureScreen(reason, rationale, navController)
             }
         }
     }

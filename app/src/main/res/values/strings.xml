@@ -39,4 +39,9 @@
     <string name="add_shortcut">Add shortcut</string>
     <string name="shortcut_exists">Shortcut already exists!</string>
     <string name="privacy">Privacy</string>
+    <string name="details">Details</string>
+    <string name="timeout">A timeout occurred while calling the update server</string>
+    <string name="exception">An Exception occurred while calling the update server</string>
+    <string name="copy">Copy</string>
+    <string name="status_code">The server replied with status %1$s</string>
 </resources>
