@@ -12,6 +12,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -89,4 +91,10 @@ fun LazyListState.isScrollingUp(): Boolean {
             }
         }
     }.value
+}
+fun Throwable.asString(): String {
+    val sw = StringWriter()
+    val pw = PrintWriter(sw)
+    this.printStackTrace(pw)
+    return sw.toString()
 }
