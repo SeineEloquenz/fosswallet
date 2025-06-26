@@ -38,4 +38,9 @@
     <string name="shortcut_exists">Già esiste la scorciatoia!</string>
     <string name="made_with_love">Fatto con ❤ in Germania</string>
     <string name="privacy">Privacy</string>
+    <string name="details">Dettagli</string>
+    <string name="copy">Copia</string>
+    <string name="status_code">Il server ha risposto con lo stato %1$s</string>
+    <string name="timeout">Si è verificato un timeout durante la chiamata al server dell\'aggiornamento</string>
+    <string name="exception">Si è verificata un\'eccezione durante la chiamata al server dell\'aggiornamento</string>
 </resources>

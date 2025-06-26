@@ -38,4 +38,9 @@
     <string name="add_pass">Lisa dokument</string>
     <string name="pass_updated">Dokument on uuendatud</string>
     <string name="privacy">Privaatsus</string>
+    <string name="timeout">Päring uuenduste serverisse aegus</string>
+    <string name="copy">Kopeeri</string>
+    <string name="exception">Päringul uuenduste serverisse tekkis viga</string>
+    <string name="status_code">Serveripäringu vastuseks on olek %1$s</string>
+    <string name="details">Üksikasjad</string>
 </resources>

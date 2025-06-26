@@ -10,7 +10,7 @@
     <string name="barcode">Barcode</string>
     <string name="serial_number">Seriennummer</string>
     <string name="organization">Organisation</string>
-    <string name="no_barcode_format_given">Kein Barcode format gefunden! Rendere Barcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden</string>
+    <string name="no_barcode_format_given">Kein Barcode-Format gefunden! Rendere Barcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden</string>
     <string name="flip">Umdrehen</string>
     <string name="front_side">Vorderseite</string>
     <string name="back_side">Rückseite</string>
@@ -32,9 +32,9 @@
     <string name="ungroup">Pässe entgruppieren</string>
     <string name="passes">Pässe</string>
     <string name="search">Suchen</string>
-    <string name="sync_interval">Pass Update Intervall (min)</string>
+    <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
     <string name="enable">Aktivieren</string>
-    <string name="enable_sync">Pass Updates</string>
+    <string name="enable_sync">Pass-Aktualisierungen</string>
     <string name="add_shortcut">Shortcut hinzufügen</string>
     <string name="shortcut_exists">Es existiert bereits ein Shortcut!</string>
     <string name="privacy">Privatsphäre</string>
