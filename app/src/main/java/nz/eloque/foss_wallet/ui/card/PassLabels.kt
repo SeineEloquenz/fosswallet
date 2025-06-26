@@ -136,7 +136,7 @@ private fun PassLabelContents(
                 )
             }
             SelectionContainer {
-                val contentString = content.prettyPrint()
+                val contentString = content.prettyPrint().sanitize()
                 Text(
                     text = if (contentString.isNotEmpty()) {
                         AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
@@ -146,6 +146,10 @@ private fun PassLabelContents(
             }
         }
     }
+}
+
+private fun String.sanitize(): String {
+    return this.replace("\r", "").replace("\n", "<br>")
 }
 
 @Preview
@@ -186,13 +190,6 @@ private fun LongPassLabelPreview() {
 private fun HtmlPassLabelPreview() {
     OutlinedPassLabel(
         label = "Information",
-        content = PassContent.Plain("""
-            <p>
-            This is a paragraph
-            </p>
-            This should <b> bold. </b>
-            <a href="https://example.com">This is a link</a>
-             Lorem Ipsum
-        """.trimIndent())
+        content = PassContent.Plain("Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n".trimIndent())
     )
 }
