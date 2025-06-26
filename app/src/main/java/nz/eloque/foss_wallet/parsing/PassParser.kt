@@ -16,6 +16,7 @@ import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
 import nz.eloque.foss_wallet.utils.forEach
+import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.Charset
@@ -51,6 +52,28 @@ class PassParser(val context: Context? = null) {
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
+        val type = when {
+            passJson.has(PassType.EVENT) -> PassType.Event()
+            passJson.has(PassType.BOARDING) -> {
+                val boardingJson = passJson.getJSONObject(PassType.BOARDING)
+                val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
+                PassType.Boarding(transitType)
+            }
+            passJson.has(PassType.COUPON) -> PassType.Coupon()
+            passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
+            else -> PassType.Generic()
+        }
+
+        val locations = if (passJson.has("locations")) {
+            passJson.getJSONArray("locations").map { locJson ->
+                Location("").also {
+                    it.latitude = locJson.getDouble("latitude")
+                    it.longitude = locJson.getDouble("longitude")
+                }
+            }
+        } else listOf()
+
+        val fieldContainer = passJson.optJSONObject(type.jsonKey)
 
         return Pass(
             id = overridingId ?: Hash.sha256(passJson.toString()),
@@ -58,46 +81,27 @@ class PassParser(val context: Context? = null) {
             formatVersion = passVersion,
             organization = organizationName,
             serialNumber = serialNumber,
-            type = when {
-                passJson.has(PassType.EVENT) -> PassType.Event()
-                passJson.has(PassType.BOARDING) -> {
-                    val boardingJson = passJson.getJSONObject(PassType.BOARDING)
-                    val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
-                    PassType.Boarding(transitType)
-                }
-                passJson.has(PassType.COUPON) -> PassType.Coupon()
-                passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
-                else -> PassType.Generic()
-            },
+            type = type,
             colors = parsePassColors(passJson),
             barCodes = parseBarcodes(passJson),
             hasLogo = bitmaps.logo != null,
             hasStrip = bitmaps.strip != null,
             hasThumbnail = bitmaps.thumbnail != null,
             hasFooter = bitmaps.footer != null,
-            addedAt = addedAt
-        ).also { pass ->
-            pass.relevantDate = parseRelevantDate(passJson)
-            pass.expirationDate = parseExpiration(passJson)
-            pass.logoText = passJson.stringOrNull("logoText")
-            pass.authToken = passJson.stringOrNull("authenticationToken")
-            pass.webServiceUrl = passJson.stringOrNull("webServiceURL")
-            pass.passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier")
-            if (passJson.has("locations")) {
-                passJson.getJSONArray("locations").forEach { locJson ->
-                    pass.locations.add(Location("").also {
-                        it.latitude = locJson.getDouble("latitude")
-                        it.longitude = locJson.getDouble("longitude")
-                    })
-                }
-            }
-            val fieldContainer = passJson.optJSONObject(pass.type.jsonKey)
-            fieldContainer?.collectFields("headerFields", pass.headerFields)
-            fieldContainer?.collectFields("primaryFields", pass.primaryFields)
-            fieldContainer?.collectFields("secondaryFields", pass.secondaryFields)
-            fieldContainer?.collectFields("auxiliaryFields", pass.auxiliaryFields)
-            fieldContainer?.collectFields("backFields", pass.backFields)
-        }
+            addedAt = addedAt,
+            relevantDate = parseRelevantDate(passJson),
+            expirationDate = parseExpiration(passJson),
+            logoText = passJson.stringOrNull("logoText"),
+            authToken = passJson.stringOrNull("authenticationToken"),
+            webServiceUrl = passJson.stringOrNull("webServiceURL"),
+            passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier"),
+            locations = locations,
+            headerFields = fieldContainer?.collectFields("headerFields")?:listOf(),
+            primaryFields = fieldContainer?.collectFields("primaryFields")?:listOf(),
+            secondaryFields = fieldContainer?.collectFields("secondaryFields")?:listOf(),
+            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields")?:listOf(),
+            backFields = fieldContainer?.collectFields("backFields")?:listOf()
+        )
     }
 
     private fun parseRelevantDate(passJson: JSONObject): Long {
@@ -180,14 +184,12 @@ class PassParser(val context: Context? = null) {
         } else null
     }
 
-    private fun JSONObject.collectFields(name: String, fieldContainer: MutableList<PassField>) {
-        try {
-            this.getJSONArray(name).forEach {
-                val passField = FieldParser.parse(it)
-                fieldContainer.add(passField)
-            }
+    private fun JSONObject.collectFields(name: String): List<PassField>? {
+        return try {
+            this.getJSONArray(name).map { FieldParser.parse(it) }
         } catch (_: JSONException) {
             Log.i(TAG, "Fields $name not existing. Stopping parsing.")
+            null
         }
     }
 

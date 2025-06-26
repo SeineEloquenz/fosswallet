@@ -9,11 +9,10 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.utils.forEach
+import nz.eloque.foss_wallet.utils.map
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
-import java.util.LinkedList
 import java.util.UUID
 
 class TypeConverters {
@@ -72,7 +71,7 @@ class TypeConverters {
     }
 
     @TypeConverter
-    fun fromLocations(locations: MutableList<Location>): String {
+    fun fromLocations(locations: List<Location>): String {
         val json = JSONArray()
         locations.forEach {
             val locJson = JSONObject()
@@ -84,16 +83,13 @@ class TypeConverters {
     }
 
     @TypeConverter
-    fun toLocations(str: String): MutableList<Location> {
-        val json = JSONArray(str)
-        val locations = LinkedList<Location>()
-        json.forEach {
+    fun toLocations(str: String): List<Location> {
+        return JSONArray(str).map {
             val location = Location("")
             location.latitude = it.getDouble("latitude")
             location.longitude = it.getDouble("longitude")
-            locations.add(location)
+            location
         }
-        return locations
     }
 
     @TypeConverter
@@ -105,24 +101,18 @@ class TypeConverters {
 
     @TypeConverter
     fun toBarcodes(str: String): Set<BarCode> {
-        val json = JSONArray(str)
-        val barcodes = HashSet<BarCode>()
-        json.forEach { barcodes.add(BarCode.fromJson(it)) }
-        return barcodes
+        return JSONArray(str).map { BarCode.fromJson(it) }.toSet()
     }
 
     @TypeConverter
-    fun fromFields(fields: MutableList<PassField>): String {
+    fun fromFields(fields: List<PassField>): String {
         val json = JSONArray()
         fields.forEach { json.put(it.toJson()) }
         return json.toString()
     }
 
     @TypeConverter
-    fun toFields(str: String): MutableList<PassField> {
-        val json = JSONArray(str)
-        val fields = LinkedList<PassField>()
-        json.forEach { fields.add(PassField.fromJson(it)) }
-        return fields
+    fun toFields(str: String): List<PassField> {
+        return JSONArray(str).map { PassField.fromJson(it) }
     }
 }
