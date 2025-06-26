@@ -36,4 +36,5 @@
     <string name="no_barcode_format_given">Brak podanego formatu kodu kreskowego! Ustawiono QR-Code. Ten kod może nie zostać zeskanowany poprawnie</string>
     <string name="date">Data</string>
     <string name="to">do</string>
+    <string name="privacy">Prywatność</string>
 </resources>
