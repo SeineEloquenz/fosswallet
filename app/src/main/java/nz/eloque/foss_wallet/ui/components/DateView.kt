@@ -28,34 +28,36 @@ fun DateView(
 ) {
     val context = LocalContext.current
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        IconButton(onClick = {
-            val intent = Intent(Intent.ACTION_EDIT).also {
-                it.type = "vnd.android.cursor.item/event"
-                it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
-                it.putExtra("allDay", false)
-                it.putExtra("endTime", if (end != 0L) { end } else 1800000) //30 min default
-                it.putExtra("title", title)
+    if (start != 0L || end != 0L) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+        ) {
+            IconButton(onClick = {
+                val intent = Intent(Intent.ACTION_EDIT).also {
+                    it.type = "vnd.android.cursor.item/event"
+                    it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
+                    it.putExtra("allDay", false)
+                    it.putExtra("endTime", if (end != 0L) { end } else 1800000) //30 min default
+                    it.putExtra("title", title)
+                }
+                context.startActivity(intent)
+            }) {
+                Icon(imageVector = Icons.Default.CalendarToday, contentDescription = stringResource(R.string.date))
             }
-            context.startActivity(intent)
-        }) {
-            Icon(imageVector = Icons.Default.CalendarToday, contentDescription = stringResource(R.string.date))
-        }
-        Column {
-            if (start != 0L) {
-                Text(
-                    text = Instant.ofEpochSecond(start).prettyDateTime(),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            if (end != 0L) {
-                Text(
-                    text = Instant.ofEpochSecond(end).prettyDateTime(),
-                    style = MaterialTheme.typography.bodySmall
-                )
+            Column {
+                if (start != 0L) {
+                    Text(
+                        text = Instant.ofEpochSecond(start).prettyDateTime(),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                if (end != 0L) {
+                    Text(
+                        text = Instant.ofEpochSecond(end).prettyDateTime(),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
