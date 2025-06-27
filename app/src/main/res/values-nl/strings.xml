@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Terug</string>
+    <string name="date">Datum</string>
+    <string name="flip">Flip</string>
+    <string name="front_side">Voorkant</string>
+    <string name="back_side">Achterkant</string>
+    <string name="license">Licentie</string>
+    <string name="search">Zoek</string>
+    <string name="privacy">Privacy</string>
+    <string name="organization">Organisatie</string>
+    <string name="made_with_love">Gemaakt met ❤️ in Duitsland</string>
+    <string name="settings">Instellingen</string>
+    <string name="source_code">Broncode</string>
+</resources>

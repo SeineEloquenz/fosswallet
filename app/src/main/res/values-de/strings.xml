@@ -16,7 +16,7 @@
     <string name="back_side">Rückseite</string>
     <string name="date">Datum</string>
     <string name="delete">Entfernen</string>
-    <string name="invalid_pass_toast">Pass konnte nicht geladen werden. Sicher dass es sich um eine valide .pkpass Datei handelt?</string>
+    <string name="invalid_pass_toast">Pass konnte nicht geladen werden. Sicher, dass es sich um eine valide .pkpass-Datei handelt?</string>
     <string name="add_pass">Pass hinzufügen</string>
     <string name="about">Über</string>
     <string name="source_code">Quellcode</string>
@@ -26,7 +26,7 @@
     <string name="update_successful">Pass wurde erfolgreich aktualisiert</string>
     <string name="update_failed">Pass konnte nicht aktualisiert werden</string>
     <string name="share">Pass teilen</string>
-    <string name="pass_updates_channel">Pass Aktualisierungen</string>
+    <string name="pass_updates_channel">Pass-Aktualisierungen</string>
     <string name="pass_updated">Pass aktualisiert</string>
     <string name="group">Pässe gruppieren</string>
     <string name="ungroup">Pässe entgruppieren</string>
