@@ -19,6 +19,14 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.LinkedList
+
+
+fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
+    val list: MutableList<T> = LinkedList()
+    this.forEach { list.add(action.invoke(it)) }
+    return list
+}
 
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     var i = 0

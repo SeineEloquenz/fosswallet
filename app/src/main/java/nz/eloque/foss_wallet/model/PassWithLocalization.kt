@@ -16,18 +16,18 @@ data class PassWithLocalization(
 
     fun applyLocalization(locale: String): Pass {
         val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
-        return pass.apply {
-            description = mapping[description]?.text ?: description
-            replaceFields(mapping, headerFields)
-            replaceFields(mapping, primaryFields)
-            replaceFields(mapping, secondaryFields)
-            replaceFields(mapping, auxiliaryFields)
-            replaceFields(mapping, backFields)
-        }
+        return pass.copy(
+            description = mapping[pass.description]?.text ?: pass.description,
+            headerFields = pass.headerFields.applyLocalization(mapping),
+            primaryFields = pass.primaryFields.applyLocalization(mapping),
+            secondaryFields = pass.secondaryFields.applyLocalization(mapping),
+            auxiliaryFields = pass.auxiliaryFields.applyLocalization(mapping),
+            backFields = pass.backFields.applyLocalization(mapping),
+        )
     }
 
-    private fun replaceFields(mapping: Map<String, PassLocalization>, fields: MutableList<PassField>) {
-        fields.replaceAll { it.copy(label = mapping[it.label]?.text ?: it.label) }
+    private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> {
+        return this.map { it.copy(label = mapping[it.label]?.text ?: it.label) }
     }
 
     private fun localeMapping(locale: String): Map<String, PassLocalization> {

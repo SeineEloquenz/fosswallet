@@ -70,25 +70,24 @@ private fun PassPreview() {
         false,
         false,
         false,
-        false
-    ).also {
-        it.relevantDate = 1800000000L
-        it.headerFields = mutableListOf(
+        false,
+        relevantDate = 1800000000L,
+        headerFields = mutableListOf(
             PassField("block", "Block", PassContent.Plain("S1")),
             PassField("seat", "Seat", PassContent.Plain("47")),
-        )
-        it.primaryFields = mutableListOf(
+        ),
+        primaryFields = mutableListOf(
             PassField("name", "Name", PassContent.Plain("Max Mustermann")),
             PassField("seat", "Seat", PassContent.Plain("47")),
-        )
-        it.auxiliaryFields = mutableListOf(
+        ),
+        auxiliaryFields = mutableListOf(
             PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
             PassField("seat", "Seat", PassContent.Plain("36E")),
-        )
-        it.secondaryFields = mutableListOf(
+        ),
+        secondaryFields = mutableListOf(
             PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
             PassField("data2", "data2", PassContent.Plain("Shorter Value")),
-        )
-    }
+        ),
+    )
     PassView(pass)
 }

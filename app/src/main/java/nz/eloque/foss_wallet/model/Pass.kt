@@ -28,7 +28,7 @@ import java.util.UUID
 )
 data class Pass(
     @PrimaryKey val id: String,
-    var description: String,
+    val description: String,
     val formatVersion: Int,
     val organization: String,
     val serialNumber: String,
@@ -48,20 +48,19 @@ data class Pass(
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
     val groupId: Long? = null,
+    val relevantDate: Long = 0,
+    val expirationDate: Long = 0,
+    val logoText: String? = null,
+    val authToken: String? = null,
+    val webServiceUrl: String? = null,
+    val passTypeIdentifier: String? = null,
+    val locations: List<Location> = LinkedList(),
+    val headerFields: List<PassField> = LinkedList(),
+    val primaryFields: List<PassField> = LinkedList(),
+    val secondaryFields: List<PassField> = LinkedList(),
+    val auxiliaryFields: List<PassField> = LinkedList(),
+    val backFields: List<PassField> = LinkedList(),
 ) {
-    var relevantDate: Long = 0
-    var expirationDate: Long = 0
-    var logoText: String? = null
-    var authToken: String? = null
-    var webServiceUrl: String? = null
-    var passTypeIdentifier: String? = null
-    var locations: MutableList<Location> = LinkedList()
-    var headerFields: MutableList<PassField> = LinkedList()
-    var primaryFields: MutableList<PassField> = LinkedList()
-    var secondaryFields: MutableList<PassField> = LinkedList()
-    var auxiliaryFields: MutableList<PassField> = LinkedList()
-    var backFields: MutableList<PassField> = LinkedList()
-
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)
     fun stripFile(context: Context): File? = coilImageModel(context, "strip", hasStrip)
