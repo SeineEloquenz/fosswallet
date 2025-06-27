@@ -44,4 +44,6 @@
     <string name="exception">An Exception occurred while calling the update server</string>
     <string name="copy">Copy</string>
     <string name="status_code">The server replied with status %1$s</string>
+    <string name="status_forbidden">The server did not allow access to the pass. Maybe this pass is already expired?</string>
+    <string name="status_not_updated">Your Pass is already up-to-date</string>
 </resources>

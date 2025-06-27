@@ -40,7 +40,11 @@ object PassbookApi {
                 return UpdateResult.Failed(FailureReason.Exception(e))
             }
         } else {
-            return UpdateResult.Failed(FailureReason.Status(response.code))
+            return when (response.code) {
+                304 -> UpdateResult.NotUpdated
+                403 -> UpdateResult.Failed(FailureReason.Forbidden)
+                else -> UpdateResult.Failed(FailureReason.Status(response.code))
+            }
         }
     }
 

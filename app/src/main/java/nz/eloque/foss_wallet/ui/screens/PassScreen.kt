@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
@@ -60,28 +61,35 @@ fun PassScreen(
             actions = {
                 Row {
                     if (pass.value.updatable()) {
+                        val uriHandler = LocalUriHandler.current
                         IconButton(onClick = {
                             coroutineScope.launch(Dispatchers.IO) {
                                 val result = passViewModel.update(pass.value)
-                                if (result is UpdateResult.Success && result.content is UpdateContent.Pass) {
-                                    pass.value = result.content.pass
-                                    snackbarHostState.showSnackbar(
-                                        message = context.getString(R.string.update_successful),
-                                        actionLabel = context.getString(R.string.details),
-                                        duration = SnackbarDuration.Short
-                                    )
-                                } else {
-                                    val failureReason = (result as UpdateResult.Failed).reason
-                                    val snackResult = snackbarHostState.showSnackbar(
-                                        message = when (failureReason) {
-                                            is FailureReason.Status -> context.getString(failureReason.messageId, failureReason.status)
-                                            else -> context.getString(failureReason.messageId)
-                                        },
-                                        actionLabel = if (failureReason.detailed) context.getString(R.string.details) else null,
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (snackResult == SnackbarResult.ActionPerformed && failureReason is FailureReason.Exception) {
-                                        coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${failureReason.exception.message}/${failureReason.exception.asString()}") }
+                                when (result) {
+                                    is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
+                                        pass.value = result.content.pass
+                                        snackbarHostState.showSnackbar(
+                                            message = context.getString(R.string.update_successful),
+                                            actionLabel = context.getString(R.string.details),
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                    is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+                                    is UpdateResult.Failed -> {
+                                        val snackResult = snackbarHostState.showSnackbar(
+                                            message = when (result.reason) {
+                                                is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
+                                                else -> context.getString(result.reason.messageId)
+                                            },
+                                            actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
+                                            when (result.reason) {
+                                                is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
+                                                is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
+                                            }
+                                        }
                                     }
                                 }
                             }
