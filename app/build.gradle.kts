@@ -7,6 +7,12 @@ plugins {
     alias(libs.plugins.hilt.android)
 }
 
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xwhen-guards")
+    }
+}
+
 android {
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
