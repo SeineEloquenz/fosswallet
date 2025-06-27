@@ -1,0 +1,4 @@
+* Add dutch translation
+* Improve information on why pass updates fail
+* Update translations
+* Fix crash when viewing details of a failed pass update
