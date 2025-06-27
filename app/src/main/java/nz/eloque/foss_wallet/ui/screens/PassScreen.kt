@@ -81,7 +81,7 @@ fun PassScreen(
                                         duration = SnackbarDuration.Short
                                     )
                                     if (snackResult == SnackbarResult.ActionPerformed && failureReason is FailureReason.Exception) {
-                                        navController.navigate("updateFailure/${failureReason.exception.message}/${failureReason.exception.asString()}")
+                                        coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${failureReason.exception.message}/${failureReason.exception.asString()}") }
                                     }
                                 }
                             }
