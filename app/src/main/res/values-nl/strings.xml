@@ -12,4 +12,7 @@
     <string name="made_with_love">Gemaakt met ❤️ in Duitsland</string>
     <string name="settings">Instellingen</string>
     <string name="source_code">Broncode</string>
+    <string name="delete">Verwijder</string>
+    <string name="update">Bijwerk</string>
+    <string name="copy">Kopiëre</string>
 </resources>

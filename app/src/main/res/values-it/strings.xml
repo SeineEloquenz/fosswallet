@@ -43,4 +43,6 @@
     <string name="status_code">Il server ha risposto con lo stato %1$s</string>
     <string name="timeout">Si è verificato un timeout durante la chiamata al server dell\'aggiornamento</string>
     <string name="exception">Si è verificata un\'eccezione durante la chiamata al server dell\'aggiornamento</string>
+    <string name="status_forbidden">Il server non ha permesso l\'accesso al biglietto. Forse il biglietto è già scaduto?</string>
+    <string name="status_not_updated">Il tuo biglietto è già aggiornato</string>
 </resources>

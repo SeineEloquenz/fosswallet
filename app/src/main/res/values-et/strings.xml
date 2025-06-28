@@ -43,4 +43,6 @@
     <string name="exception">Päringul uuenduste serverisse tekkis viga</string>
     <string name="status_code">Serveripäringu vastuseks on olek %1$s</string>
     <string name="details">Üksikasjad</string>
+    <string name="status_forbidden">Server ei lubanud sellel dokumendil andmeid uuendada. Võib-olla on dokument juba aegunud?</string>
+    <string name="status_not_updated">See dokument sisaldab uuendatud andmeid</string>
 </resources>
