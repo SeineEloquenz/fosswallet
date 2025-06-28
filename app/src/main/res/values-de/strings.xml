@@ -45,4 +45,5 @@
     <string name="copy">Kopieren</string>
     <string name="status_forbidden">Der Server hat den Zugriff auf den Pass verwehrt. Ist der Pass vielleicht schon abgelaufen?</string>
     <string name="status_not_updated">Der Pass ist bereits aktuell</string>
+    <string name="open_wallet">Öffne FossWallet</string>
 </resources>
