@@ -1,8 +1,8 @@
 package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -34,9 +34,9 @@ private val linkStyle = TextLinkStyles(
     )
 )
 
-enum class LabelAlign(val textAlign: TextAlign, val horizontal: Alignment.Horizontal) {
-    LEFT(TextAlign.Left, Alignment.Start),
-    RIGHT(TextAlign.Right, Alignment.End),
+enum class LabelAlign(val textAlign: TextAlign, val horizontalAlignment: Alignment.Horizontal, val horizontalArrangement: Arrangement.Horizontal) {
+    LEFT(TextAlign.Left, Alignment.Start, Arrangement.Start),
+    RIGHT(TextAlign.Right, Alignment.End, Arrangement.End),
 }
 
 @Composable
@@ -118,11 +118,12 @@ private fun PassLabelContents(
     modifier: Modifier = Modifier,
     labelAlign: LabelAlign = LabelAlign.LEFT,
 ) {
-    Box(
-        modifier
+    Row(
+        horizontalArrangement = labelAlign.horizontalArrangement,
+        modifier = modifier
     ) {
         Column(
-            horizontalAlignment = labelAlign.horizontal,
+            horizontalAlignment = labelAlign.horizontalAlignment,
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
                 .padding(12.dp)
