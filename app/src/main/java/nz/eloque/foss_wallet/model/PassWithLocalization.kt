@@ -4,6 +4,8 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import nz.eloque.foss_wallet.model.field.PassField
 
+private const val CHANGE_MESSAGE_FORMAT = "%@"
+
 data class PassWithLocalization(
     @Embedded
     val pass: Pass,
@@ -27,7 +29,11 @@ data class PassWithLocalization(
     }
 
     private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> {
-        return this.map { it.copy(label = mapping[it.label]?.text ?: it.label) }
+        return this.map { field ->
+            val localizedLabel = mapping[field.label]?.text ?: field.label
+            val localizedChangeMessage = (mapping[field.changeMessage]?.text ?: field.changeMessage) ?.replace(CHANGE_MESSAGE_FORMAT, field.content.prettyPrint())
+            field.copy(label = localizedLabel, changeMessage = localizedChangeMessage)
+        }
     }
 
     private fun localeMapping(locale: String): Map<String, PassLocalization> {

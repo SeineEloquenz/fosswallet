@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.core.graphics.createBitmap
 import nz.eloque.foss_wallet.model.OriginalPass
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassLocalization
+import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.parsing.LocalizationParser
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.utils.toByteArray
@@ -22,9 +22,8 @@ import java.time.Instant
 import java.util.zip.ZipInputStream
 
 data class PassLoadResult(
-    val pass: Pass,
+    val pass: PassWithLocalization,
     val bitmaps: PassBitmaps,
-    val localizations: Set<PassLocalization>,
     val originalPass: OriginalPass
 )
 
@@ -129,8 +128,8 @@ class PassLoader(
         //TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
-            var pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt)
-            return PassLoadResult(pass, bitmaps, localizations, OriginalPass(bytes))
+            val pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt)
+            return PassLoadResult(PassWithLocalization(pass, localizations.toList()), bitmaps, OriginalPass(bytes))
         } else {
             throw InvalidPassException()
         }
