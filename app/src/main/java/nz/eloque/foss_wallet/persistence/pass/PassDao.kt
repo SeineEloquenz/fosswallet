@@ -17,7 +17,6 @@ interface PassDao {
     @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithLocalization>>
 
-    @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
     fun updatable(): List<Pass>
 
@@ -25,9 +24,11 @@ interface PassDao {
     @Query("SELECT * FROM pass WHERE id=:id")
     fun byId(id: String): PassWithLocalization
 
-    @Transaction
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
     fun associate(passId: String, groupId: Long)
+
+    @Query("UPDATE pass SET groupId = NULL WHERE id = :passId")
+    fun dessociate(passId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pass: Pass)
@@ -47,4 +48,19 @@ interface PassDao {
             associate(pass.id, groupId)
         }
     }
+
+    @Transaction
+    fun dessociate(pass: Pass, groupId: Long) {
+        dessociate(pass.id)
+        deleteEmptyGroup(groupId)
+    }
+
+    @Query("""
+        DELETE FROM PassGroup
+        WHERE id = :groupId 
+        AND (
+          SELECT COUNT(*) FROM Pass WHERE Pass.groupId = :groupId
+        ) = 1
+    """)
+    fun deleteEmptyGroup(groupId: Long)
 }

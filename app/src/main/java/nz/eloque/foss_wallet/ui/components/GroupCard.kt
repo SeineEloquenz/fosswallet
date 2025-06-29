@@ -12,27 +12,42 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FolderDelete
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable
 fun GroupCard(
     groupId: Long,
     passes: List<Pass>,
+    selectedPasses: MutableSet<Pass>,
+    passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
     onClick: ((Pass) -> Unit)? = null,
-    actions: @Composable (() -> Unit)? = null,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     ElevatedCard(
         modifier = modifier,
     ) {
@@ -65,7 +80,24 @@ fun GroupCard(
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    actions?.invoke()
+                    if (selectedPasses.isNotEmpty()) {
+                        IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let {
+                            passViewModel.associate(groupId, selectedPasses)
+                            selectedPasses.clear()
+                        } } }) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
+                        }
+                    }
+                    IconButton(onClick = {
+                        val selectedPass = passes[pagerState.currentPage]
+                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dessociate(selectedPass, groupId) } }
+                    }) {
+                        Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
+                    }
+                    IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
+                    ) {
+                        Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
+                    }
                 }
             }
         }

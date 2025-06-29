@@ -76,4 +76,5 @@ class PassViewModel @Inject constructor(
 
     fun load(context: Context, inputStream: InputStream) = passStore.load(context, inputStream).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
+    fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
 }
