@@ -10,13 +10,13 @@ import java.time.format.FormatStyle
 
 sealed class PassContent(val id: Int) {
 
-    class Plain(val text: String) : PassContent(PLAIN) {
+    data class Plain(val text: String) : PassContent(PLAIN) {
         override fun contains(query: String) = query inIgnoreCase text
         override fun prettyPrint(): String = text
         override fun isEmpty(): Boolean = text.isEmpty()
     }
 
-    class Currency(val amount: String, val currency: String) : PassContent(CURRENCY) {
+    data class Currency(val amount: String, val currency: String) : PassContent(CURRENCY) {
         override fun contains(query: String) = query inIgnoreCase amount || query inIgnoreCase currency
         override fun prettyPrint(): String = amount + toCurrency(currency)
         override fun isEmpty(): Boolean = amount.isEmpty()
