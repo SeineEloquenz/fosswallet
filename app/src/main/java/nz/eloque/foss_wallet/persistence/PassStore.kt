@@ -33,8 +33,8 @@ class PassStore @Inject constructor(
 
     suspend fun add(loadResult: PassLoadResult) {
         insert(loadResult)
-        if (loadResult.pass.updatable()) {
-            updateScheduler.scheduleUpdate(loadResult.pass)
+        if (loadResult.pass.pass.updatable()) {
+            updateScheduler.scheduleUpdate(loadResult.pass.pass)
         }
     }
 
@@ -43,8 +43,9 @@ class PassStore @Inject constructor(
         return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
             insert(updated.content.result)
             notificationService.createNotificationChannel()
-            updated.content.result.pass.updatedFields(pass).forEach { notificationService.post(it.changeMessage()) }
-            UpdateResult.Success(UpdateContent.Pass(passById(updated.content.result.pass.id).applyLocalization(Locale.getDefault().language)))
+            val localizedPass = updated.content.result.pass.applyLocalization(Locale.getDefault().language)
+            localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
+            UpdateResult.Success(UpdateContent.Pass(localizedPass))
         } else {
             updated
         }
@@ -68,8 +69,9 @@ class PassStore @Inject constructor(
     }
 
     private suspend fun insert(loadResult: PassLoadResult) {
-        passRepository.insert(loadResult.pass, loadResult.bitmaps, loadResult.originalPass)
-        loadResult.localizations.map { it.copy(passId = loadResult.pass.id) }.forEach { localizationRepository.insert(it) }
+        val passWithLocalization = loadResult.pass
+        passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
+        passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
     }
 
     suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
