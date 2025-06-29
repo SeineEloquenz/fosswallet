@@ -10,10 +10,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import nz.eloque.foss_wallet.persistence.WalletDb
-import nz.eloque.foss_wallet.persistence.localization.OfflinePassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
-import nz.eloque.foss_wallet.persistence.pass.OfflinePassRepository
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 
@@ -24,12 +22,12 @@ object AppModule {
 
     @Provides
     fun provideLocalizationRepository(localizationDao: PassLocalizationDao): PassLocalizationRepository {
-        return OfflinePassLocalizationRepository(localizationDao)
+        return PassLocalizationRepository(localizationDao)
     }
 
     @Provides
     fun providePassRepository(@ApplicationContext context: Context, passDao: PassDao): PassRepository {
-        return OfflinePassRepository(context, passDao)
+        return PassRepository(context, passDao)
     }
 
     @Provides

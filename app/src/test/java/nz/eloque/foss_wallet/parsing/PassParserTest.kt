@@ -34,7 +34,7 @@ class PassParserTest(private val passName: String) {
     }
 
     private fun loadJson(passName: String): String? {
-        val file = File("src/test/res/$passName.json");
+        val file = File("src/test/res/$passName.json")
         return file.inputStream().bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
     }
     companion object {
