@@ -50,4 +50,5 @@ class OfflinePassRepository @Inject constructor(
     }
 
     override suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
+    override fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
 }

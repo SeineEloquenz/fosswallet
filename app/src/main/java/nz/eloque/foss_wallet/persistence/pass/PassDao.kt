@@ -40,4 +40,11 @@ interface PassDao {
 
     @Delete
     fun delete(group: PassGroup)
+
+    @Transaction
+    fun associate(groupId: Long, passes: Set<Pass>) {
+        for (pass in passes) {
+            associate(pass.id, groupId)
+        }
+    }
 }

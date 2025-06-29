@@ -75,4 +75,5 @@ class PassStore @Inject constructor(
     }
 
     suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
+    fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
 }

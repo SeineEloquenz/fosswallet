@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
@@ -103,6 +104,14 @@ fun WalletView(
                     navController.navigate("pass/${it.id}")
                 },
                 actions = {
+                    if (selectedPasses.isNotEmpty()) {
+                        IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let {
+                            passViewModel.associate(groupId, selectedPasses)
+                            selectedPasses.clear()
+                        } } }) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
+                        }
+                    }
                     IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
                     ) {
                         Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
