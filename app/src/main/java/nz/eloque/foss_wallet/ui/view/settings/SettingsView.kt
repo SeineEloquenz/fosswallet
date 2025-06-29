@@ -2,9 +2,7 @@ package nz.eloque.foss_wallet.ui.view.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -21,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.persistence.BarcodePosition
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -33,7 +32,8 @@ fun SettingsView(
     val settings = settingsViewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SettingsSection(
             heading = stringResource(R.string.enable_sync),
@@ -57,6 +57,15 @@ fun SettingsView(
                 clearOnSubmit = false,
             )
         }
+        SettingsSection(
+            heading = stringResource(R.string.barcode_position),
+        ) {
+            SettingsSwitch(
+                name = R.string.barcode_top_center,
+                switchState = settings.value.barcodePosition == BarcodePosition.Center,
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } }
+            )
+        }
     }
 }
 
@@ -68,7 +77,6 @@ fun SettingsSection(
     Text(
         text = heading
     )
-    Spacer(modifier = Modifier.height(8.dp))
     ElevatedCard {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),

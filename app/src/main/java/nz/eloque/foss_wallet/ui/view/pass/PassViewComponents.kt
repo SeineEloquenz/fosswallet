@@ -6,9 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.CardColors
@@ -29,6 +31,7 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.LabelAlign
 import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.card.PlainPassLabel
@@ -54,7 +57,8 @@ fun HeaderFieldsView(
 
 @Composable
 fun BarcodesView(
-    barcodes: Set<BarCode>
+    barcodes: Set<BarCode>,
+    barcodePosition: BarcodePosition,
 ) {
     val fullscreen = remember { mutableStateOf(false) }
     barcodes.firstOrNull()?.let {
@@ -72,7 +76,8 @@ fun BarcodesView(
                     modifier = Modifier
                         .heightIn(max = 150.dp)
                         .fillMaxWidth()
-                        .clickable { fullscreen.value = !fullscreen.value }
+                        .clickable { fullscreen.value = !fullscreen.value },
+                    barcodePosition = barcodePosition
                 )
                 it.altText?.let { Text(
                     text = it,
@@ -85,25 +90,35 @@ fun BarcodesView(
         if (fullscreen.value) {
             Raise(onDismiss = { fullscreen.value = !fullscreen.value }) {
                 UpdateBrightness()
-                PassImage(image)
+                PassImage(
+                    bitmap = image,
+                    barcodePosition = barcodePosition,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
 }
 
 @Composable
-fun PassImage(
+private fun PassImage(
     bitmap: Bitmap?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    barcodePosition: BarcodePosition
 ) {
     bitmap?.let {
-        Image(
-            bitmap = it.asImageBitmap(),
-            contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.Fit,
-            modifier = modifier
-                .fillMaxWidth()
-        )
+        Column(
+            verticalArrangement = barcodePosition.arrangement,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = modifier
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 

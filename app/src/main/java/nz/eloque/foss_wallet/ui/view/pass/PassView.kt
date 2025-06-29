@@ -19,6 +19,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
 import java.time.Instant
 
@@ -26,6 +27,7 @@ import java.time.Instant
 @Composable
 fun PassView(
     pass: Pass,
+    barcodePosition: BarcodePosition,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
@@ -41,7 +43,7 @@ fun PassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
-                BarcodesView(pass.barCodes)
+                BarcodesView(pass.barCodes, barcodePosition)
             }
         }
         Column(
@@ -89,5 +91,5 @@ private fun PassPreview() {
             PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         ),
     )
-    PassView(pass)
+    PassView(pass, BarcodePosition.Center)
 }

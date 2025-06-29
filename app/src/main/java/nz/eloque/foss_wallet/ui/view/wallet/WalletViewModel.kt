@@ -17,8 +17,10 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassStore
+import nz.eloque.foss_wallet.persistence.SettingsStore
 import java.io.InputStream
 import java.util.Locale
 
@@ -31,6 +33,7 @@ data class PassUiState(
 class PassViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
+    private val settingsStore: SettingsStore,
     private val workManager: WorkManager
 ) : AndroidViewModel(application) {
 
@@ -77,4 +80,6 @@ class PassViewModel @Inject constructor(
     fun load(context: Context, inputStream: InputStream) = passStore.load(context, inputStream).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
     fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
+
+    fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 }
