@@ -42,7 +42,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun enableSync(enabled: Boolean) {
+    fun enableSync(enabled: Boolean) {
         settingsStore.enableSync(enabled)
         if (enabled) {
             updateScheduler.enableSync()
@@ -51,7 +51,7 @@ class SettingsViewModel @Inject constructor(
         }
         update()
     }
-    suspend fun setSyncInterval(duration: Duration) {
+    fun setSyncInterval(duration: Duration) {
         settingsStore.setSyncInterval(duration)
         updateScheduler.updateSyncInterval()
         update()

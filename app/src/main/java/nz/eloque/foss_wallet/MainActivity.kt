@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope, navController: NavHostController) {
+    private fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope, navController: NavHostController) {
         contentResolver.openInputStream(this).use {
             it?.let {
                 try {

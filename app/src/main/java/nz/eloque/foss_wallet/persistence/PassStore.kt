@@ -27,11 +27,11 @@ class PassStore @Inject constructor(
 
     fun allPasses() = passRepository.all()
 
-    suspend fun passById(id: String) = passRepository.byId(id)
+    fun passById(id: String) = passRepository.byId(id)
 
-    suspend fun filtered(query: String) = passRepository.filtered(query)
+    fun filtered(query: String) = passRepository.filtered(query)
 
-    suspend fun add(loadResult: PassLoadResult) {
+    fun add(loadResult: PassLoadResult) {
         insert(loadResult)
         if (loadResult.pass.pass.updatable()) {
             updateScheduler.scheduleUpdate(loadResult.pass.pass)
@@ -51,29 +51,30 @@ class PassStore @Inject constructor(
         }
     }
 
-    suspend fun group(passes: Set<Pass>): PassGroup {
+    fun group(passes: Set<Pass>): PassGroup {
         val group = passRepository.insert(PassGroup())
         passes.forEach { passRepository.associate(it, group) }
         return group
     }
 
-    suspend fun delete(pass: Pass) {
+    fun delete(pass: Pass) {
         passRepository.delete(pass)
         updateScheduler.cancelUpdate(pass)
         Shortcut.remove(context, pass)
     }
 
-    suspend fun load(context: Context, inputStream: InputStream) {
+    fun load(context: Context, inputStream: InputStream) {
         val loaded = PassLoader(PassParser(context)).load(inputStream)
         add(loaded)
     }
 
-    private suspend fun insert(loadResult: PassLoadResult) {
+    private fun insert(loadResult: PassLoadResult) {
         val passWithLocalization = loadResult.pass
         passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
         passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
     }
 
-    suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
+    fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
+    fun dessociate(pass: Pass, groupId: Long) = passRepository.dessociate(pass, groupId)
 }

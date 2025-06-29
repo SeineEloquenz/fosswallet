@@ -56,11 +56,11 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
+    fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
 
-    suspend fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
+    fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
 
-    suspend fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
+    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
 
     fun filter(query: String) {
         viewModelScope.launch {
@@ -68,12 +68,13 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    suspend fun add(loadResult: PassLoadResult) = passStore.add(loadResult).apply { updatePasses() }
+    fun add(loadResult: PassLoadResult) = passStore.add(loadResult).apply { updatePasses() }
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass).apply { updatePasses() }
 
-    suspend fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
+    fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
 
-    suspend fun load(context: Context, inputStream: InputStream) = passStore.load(context, inputStream).apply { updatePasses() }
+    fun load(context: Context, inputStream: InputStream) = passStore.load(context, inputStream).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
+    fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
 }

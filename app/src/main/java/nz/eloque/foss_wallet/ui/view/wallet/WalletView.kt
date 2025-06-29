@@ -11,13 +11,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -36,8 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
@@ -103,20 +97,8 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${it.id}")
                 },
-                actions = {
-                    if (selectedPasses.isNotEmpty()) {
-                        IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let {
-                            passViewModel.associate(groupId, selectedPasses)
-                            selectedPasses.clear()
-                        } } }) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
-                        }
-                    }
-                    IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
-                    ) {
-                        Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup))
-                    }
-                }
+                passViewModel = passViewModel,
+                selectedPasses = selectedPasses
             )
         }
         items(ungrouped) { pass ->

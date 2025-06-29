@@ -1,28 +1,56 @@
 package nz.eloque.foss_wallet.persistence.pass
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 
-interface PassRepository {
-    fun all(): Flow<List<PassWithLocalization>>
+class PassRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val passDao: PassDao
+) {
 
-    suspend fun updatable(): List<Pass>
+    fun all(): Flow<List<PassWithLocalization>> = passDao.all()
 
-    suspend fun filtered(query: String) : Flow<List<PassWithLocalization>>
+    fun updatable(): List<Pass> = passDao.updatable()
 
-    suspend fun byId(id: String): PassWithLocalization
+    fun filtered(query: String): Flow<List<PassWithLocalization>> {
+        return if (query.isEmpty()) {
+            all()
+        } else {
+            val result = all()
+            result.map { it.filter { it.pass.contains(query) } } }
+    }
 
-    suspend fun associate(pass: Pass, group: PassGroup)
+    fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
-    suspend fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass)
+    fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
-    suspend fun insert(group: PassGroup): PassGroup
+    fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass) {
+        val id = pass.id
+        passDao.insert(pass)
+        bitmaps.saveToDisk(context, id)
+        originalPass.saveToDisk(context, id)
+    }
 
-    suspend fun delete(pass: Pass)
-    suspend fun deleteGroup(groupId: Long)
-    fun associate(groupId: Long, passes: Set<Pass>)
+    fun insert(group: PassGroup): PassGroup {
+        val id = passDao.insert(group)
+        return group.copy(id)
+    }
+
+    fun delete(pass: Pass) {
+        pass.deleteFiles(context)
+        passDao.delete(pass)
+    }
+
+    fun dessociate(pass: Pass, groupId: Long) = passDao.dessociate(pass, groupId)
+
+    fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
+    fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
 }
