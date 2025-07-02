@@ -1,5 +1,11 @@
 package nz.eloque.foss_wallet.ui.screens
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
@@ -12,9 +18,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -51,6 +60,7 @@ fun PassScreen(
         }
     }
 
+    val isLoading = remember { mutableStateOf(false) }
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
@@ -62,9 +72,11 @@ fun PassScreen(
                 Row {
                     if (pass.value.updatable()) {
                         val uriHandler = LocalUriHandler.current
-                        IconButton(onClick = {
+                        UpdateButton(isLoading = isLoading.value) {
                             coroutineScope.launch(Dispatchers.IO) {
+                                isLoading.value = true
                                 val result = passViewModel.update(pass.value)
+                                isLoading.value = false
                                 when (result) {
                                     is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
                                         pass.value = result.content.pass
@@ -93,8 +105,6 @@ fun PassScreen(
                                     }
                                 }
                             }
-                        }) {
-                            Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update))
                         }
                     }
                     val passFile = pass.value.originalPassFile(context)
@@ -111,5 +121,28 @@ fun PassScreen(
         ) { scrollBehavior ->
             PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior)
         }
+    }
+}
+
+@Composable
+fun UpdateButton(
+    isLoading: Boolean,
+    onClick: () -> Unit,
+) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 360f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "spin"
+    )
+
+    IconButton(onClick = { if (!isLoading) onClick() }) {
+        Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update), modifier = Modifier.graphicsLayer(
+            rotationZ = if (isLoading) rotation else 0f
+        ))
     }
 }
