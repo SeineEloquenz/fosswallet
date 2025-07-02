@@ -26,4 +26,8 @@
     <string name="update_successful">Carte mise à jour avec succès</string>
     <string name="update_failed">Échec de la mise à jour de la carte</string>
     <string name="share">Partager la carte</string>
+    <string name="details">Détails</string>
+    <string name="copy">Copier</string>
+    <string name="status_code">Le serveur a répondu avec le statut %1$s</string>
+    <string name="barcode_top_center">Haut / Centrer</string>
 </resources>

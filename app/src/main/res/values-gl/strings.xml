@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Axustes</string>
     <string name="update">Actualizar</string>
@@ -25,4 +26,26 @@
     <string name="update_successful">Pass actualizado correctamente</string>
     <string name="update_failed">Fallou a actualización do Pass</string>
     <string name="share">Compartir Pass</string>
+    <string name="pass_updates_channel">Actualizacións de pases</string>
+    <string name="pass_updated">Pase actualizado</string>
+    <string name="group">Agrupar pases</string>
+    <string name="ungroup">Desagrupar pases</string>
+    <string name="passes">Pases</string>
+    <string name="sync_interval">Intervalo de actualización de pases (min)</string>
+    <string name="enable_sync">Actualizacións de pases</string>
+    <string name="enable">Activar</string>
+    <string name="search">Buscar</string>
+    <string name="add_shortcut">Engadir acceso directo</string>
+    <string name="shortcut_exists">O acceso directo xa existe!</string>
+    <string name="privacy">Privacidade</string>
+    <string name="details">Detalles</string>
+    <string name="timeout">Esgotouse o tempo de espera intentando conectar co servidor de actualizacións</string>
+    <string name="exception">Ocorreu unha excepción ao contactar co servidor de actualizacións</string>
+    <string name="copy">Copiar</string>
+    <string name="status_code">O servidor respondeu co estado %1$s</string>
+    <string name="status_forbidden">O servidor non permitiu o acceso ao pase. Quizais o pase xa expirou?</string>
+    <string name="status_not_updated">O seu pase xa está actualizado</string>
+    <string name="open_wallet">Abrir FossWallet</string>
+    <string name="barcode_position">Posición do código de barras en pantalla completa</string>
+    <string name="barcode_top_center">Arriba / Centro</string>
 </resources>
