@@ -27,7 +27,7 @@ data class BarCode(
     }
 
     fun encodeAsBitmap(width: Int, height: Int): Bitmap {
-        val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, Charsets.UTF_8))
+        val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
         val result = MultiFormatWriter().encode(message, format, width, height, encodeHints)
         val w = result.width
         val h = result.height
