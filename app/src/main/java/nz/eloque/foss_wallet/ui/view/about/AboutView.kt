@@ -68,7 +68,7 @@ fun AboutView() {
             uri = "https://github.com/SeineEloquenz/fosswallet"
         )
         UriButton(
-            icon = Icons.Default.Description,
+            icon = Icons.Default.Balance,
             text = stringResource(R.string.license),
             uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE"
         )
