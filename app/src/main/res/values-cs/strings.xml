@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Nastavení</string>
     <string name="update">Aktualizovat</string>
@@ -25,4 +26,7 @@
     <string name="update_successful">Lístek úspěšně aktualizován</string>
     <string name="update_failed">Nepodařilo se aktualizovat lístek</string>
     <string name="share">Sdílet lístek</string>
+    <string name="pass_updates_channel">Aktualizace lístků</string>
+    <string name="pass_updated">Lístek aktualizován</string>
+    <string name="group">Skupinové lístky</string>
 </resources>
