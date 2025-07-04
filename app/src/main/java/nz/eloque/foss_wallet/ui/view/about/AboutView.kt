@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Construction
-import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material.icons.filled.Wallet
