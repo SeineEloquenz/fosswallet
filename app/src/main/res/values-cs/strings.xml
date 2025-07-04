@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Nastavení</string>
     <string name="update">Aktualizovat</string>
@@ -25,4 +26,26 @@
     <string name="update_successful">Lístek úspěšně aktualizován</string>
     <string name="update_failed">Nepodařilo se aktualizovat lístek</string>
     <string name="share">Sdílet lístek</string>
+    <string name="pass_updates_channel">Aktualizace lístků</string>
+    <string name="pass_updated">Lístek aktualizován</string>
+    <string name="group">Seskupit lístky</string>
+    <string name="ungroup">Zrušit seskupení lístků</string>
+    <string name="passes">Lístky</string>
+    <string name="sync_interval">Interval aktualizace lístků (min)</string>
+    <string name="enable_sync">Aktualizace lístků</string>
+    <string name="enable">Povolit</string>
+    <string name="search">Hledat</string>
+    <string name="add_shortcut">Přidat zkratku</string>
+    <string name="shortcut_exists">Zkratka již existuje!</string>
+    <string name="privacy">Soukromí</string>
+    <string name="details">Podrobnosti</string>
+    <string name="timeout">Při dotazu na aktualizační server vypršel čas</string>
+    <string name="exception">Při dotazu na aktualizační server došlo k chybě</string>
+    <string name="copy">Kopírovat</string>
+    <string name="status_code">Server odpověděl stavem %1$s</string>
+    <string name="status_forbidden">Server neumožnil přístup k lístku. Možná tento lístek již vypršel?</string>
+    <string name="status_not_updated">Váš lístek je již aktuální</string>
+    <string name="open_wallet">Otevřít FossWallet</string>
+    <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
+    <string name="barcode_top_center">Nahoře / uprostřed</string>
 </resources>
