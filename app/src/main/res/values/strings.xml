@@ -55,6 +55,6 @@
     <string name="missing_serial_number">Pass is missing serialNumber.</string>
     <string name="failed_relevant_date">Failed parsing relevantDate: $e</string>
     <string name="failed_expiration_date">Failed parsing expirationDate: $e</string>
-    <string name="exception">Exception: $e</string>
+    <string name="exception_">Exception: $e</string>
     <string name="fields_not_exist">Fields $name not existing. Stopping parsing.</string>
 </resources>
