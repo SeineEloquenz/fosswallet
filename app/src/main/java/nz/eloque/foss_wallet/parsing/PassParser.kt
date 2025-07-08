@@ -143,7 +143,7 @@ class PassParser(val context: Context? = null) {
         } catch (e: JSONException) {
             Log.e(TAG, "Error parsing barcode json")
             Log.e(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
-            Log.e(TAG, context?.getString(R.string.exception))
+            Log.e(TAG, context?.getString(R.string.exception_))
         }
         return barcodes
     }
