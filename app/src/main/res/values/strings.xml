@@ -49,4 +49,12 @@
     <string name="open_wallet">Open FossWallet</string>
     <string name="barcode_position">Barcode Position in Fullscreen</string>
     <string name="barcode_top_center">Top / Center</string>
+    <string name="no_description">Pass has no description.</string>
+    <string name="invalid_format_version">Pass has invalid formatVersion $passVersion</string>
+    <string name="missing_organization_name">Pass is missing organizationName.</string>
+    <string name="missing_serial_number">Pass is missing serialNumber.</string>
+    <string name="failed_relevant_date">Failed parsing relevantDate: $e</string>
+    <string name="failed_expiration_date">Failed parsing expirationDate: $e</string>
+    <string name="exception">Exception: $e</string>
+    <string name="fields_not_exist">Fields $name not existing. Stopping parsing.</string>
 </resources>
