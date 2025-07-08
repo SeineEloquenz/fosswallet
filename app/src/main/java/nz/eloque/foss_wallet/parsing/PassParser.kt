@@ -33,22 +33,22 @@ class PassParser(val context: Context? = null) {
         addedAt: Instant = Instant.now()
     ): Pass {
         if (!passJson.has("description")) {
-            Log.w(TAG, "Pass has no description.")
+            Log.w(TAG, R.string.no_description)
             throw InvalidPassException()
         }
         val description = passJson.getString("description")
         val passVersion = passJson.optInt("formatVersion")
         if (passVersion != 1) {
-            Log.w(TAG, "Pass has invalid formatVersion $passVersion")
+            Log.w(TAG, R.string.invalid_formatVersion)
             throw InvalidPassException()
         }
         if (!passJson.has("organizationName")) {
-            Log.w(TAG, "Pass is missing organizationName.")
+            Log.w(TAG, R.string.missing_organizationName)
             throw InvalidPassException()
         }
         val organizationName = passJson.getString("organizationName")
         if (!passJson.has("serialNumber")) {
-            Log.w(TAG, "Pass is missing serialNumber.")
+            Log.w(TAG, R.string.missing_serialNumber)
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
@@ -112,7 +112,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch (e: DateTimeParseException) {
-            Log.w(TAG, "Failed parsing relevantDate: $e")
+            Log.w(TAG, R.string.failed_relevantDate)
             0L
         }
     }
@@ -125,7 +125,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch(e: DateTimeParseException) {
-            Log.w(TAG, "Failed parsing expirationDate: $e")
+            Log.w(TAG, R.string.failed_expirationDate)
             0L
         }
     }
@@ -143,7 +143,7 @@ class PassParser(val context: Context? = null) {
         } catch (e: JSONException) {
             Log.e(TAG, "Error parsing barcode json")
             Log.e(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
-            Log.e(TAG, "Exception: $e")
+            Log.e(TAG, R.string.exception)
         }
         return barcodes
     }
@@ -188,7 +188,7 @@ class PassParser(val context: Context? = null) {
         return try {
             this.getJSONArray(name).map { FieldParser.parse(it) }
         } catch (_: JSONException) {
-            Log.e(TAG, "Fields $name not existing. Stopping parsing.")
+            Log.e(TAG, R.string.fields_not_exist)
             null
         }
     }
