@@ -33,22 +33,22 @@ class PassParser(val context: Context? = null) {
         addedAt: Instant = Instant.now()
     ): Pass {
         if (!passJson.has("description")) {
-            Log.w(TAG, context.getString(R.string.no_description))
+            Log.w(TAG, context?.getString(R.string.no_description))
             throw InvalidPassException()
         }
         val description = passJson.getString("description")
         val passVersion = passJson.optInt("formatVersion")
         if (passVersion != 1) {
-            Log.w(TAG, context.getString(R.string.invalid_format_version))
+            Log.w(TAG, context?.getString(R.string.invalid_format_version))
             throw InvalidPassException()
         }
         if (!passJson.has("organizationName")) {
-            Log.w(TAG, context.getString(R.string.missing_organization_name))
+            Log.w(TAG, context?.getString(R.string.missing_organization_name))
             throw InvalidPassException()
         }
         val organizationName = passJson.getString("organizationName")
         if (!passJson.has("serialNumber")) {
-            Log.w(TAG, context.getString(R.string.missing_serial_number))
+            Log.w(TAG, context?.getString(R.string.missing_serial_number))
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
@@ -112,7 +112,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch (e: DateTimeParseException) {
-            Log.w(TAG, context.getString(R.string.failed_relevant_date))
+            Log.w(TAG, context?.getString(R.string.failed_relevant_date))
             0L
         }
     }
@@ -125,7 +125,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch(e: DateTimeParseException) {
-            Log.w(TAG, context.getString(R.string.failed_expiration_date))
+            Log.w(TAG, context?.getString(R.string.failed_expiration_date))
             0L
         }
     }
@@ -143,7 +143,7 @@ class PassParser(val context: Context? = null) {
         } catch (e: JSONException) {
             Log.e(TAG, "Error parsing barcode json")
             Log.e(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
-            Log.e(TAG, context.getString(R.string.exception))
+            Log.e(TAG, context?.getString(R.string.exception))
         }
         return barcodes
     }
@@ -188,7 +188,7 @@ class PassParser(val context: Context? = null) {
         return try {
             this.getJSONArray(name).map { FieldParser.parse(it) }
         } catch (_: JSONException) {
-            Log.e(TAG, context.getString(R.string.fields_not_exist))
+            Log.e(TAG, context?.getString(R.string.fields_not_exist))
             null
         }
     }
