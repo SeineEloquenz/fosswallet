@@ -141,9 +141,9 @@ class PassParser(val context: Context? = null) {
                 parseBarCode(passJson.getJSONObject("barcode"))?.let { barcodes.add(it) }
             }
         } catch (e: JSONException) {
-            Log.i(TAG, "Error parsing barcode json")
-            Log.i(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
-            Log.i(TAG, "Exception: $e")
+            Log.e(TAG, "Error parsing barcode json")
+            Log.e(TAG, "Violating json: ${passJson.getJSONObject("barcode").toString(2)}")
+            Log.e(TAG, "Exception: $e")
         }
         return barcodes
     }
@@ -188,7 +188,7 @@ class PassParser(val context: Context? = null) {
         return try {
             this.getJSONArray(name).map { FieldParser.parse(it) }
         } catch (_: JSONException) {
-            Log.i(TAG, "Fields $name not existing. Stopping parsing.")
+            Log.e(TAG, "Fields $name not existing. Stopping parsing.")
             null
         }
     }
