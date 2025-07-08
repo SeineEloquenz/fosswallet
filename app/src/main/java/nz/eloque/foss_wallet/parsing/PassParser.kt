@@ -39,16 +39,16 @@ class PassParser(val context: Context? = null) {
         val description = passJson.getString("description")
         val passVersion = passJson.optInt("formatVersion")
         if (passVersion != 1) {
-            Log.w(TAG, R.string.invalid_formatVersion)
+            Log.w(TAG, R.string.invalid_format_version)
             throw InvalidPassException()
         }
         if (!passJson.has("organizationName")) {
-            Log.w(TAG, R.string.missing_organizationName)
+            Log.w(TAG, R.string.missing_organization_name)
             throw InvalidPassException()
         }
         val organizationName = passJson.getString("organizationName")
         if (!passJson.has("serialNumber")) {
-            Log.w(TAG, R.string.missing_serialNumber)
+            Log.w(TAG, R.string.missing_serial_number)
             throw InvalidPassException()
         }
         val serialNumber = passJson.getString("serialNumber")
@@ -112,7 +112,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch (e: DateTimeParseException) {
-            Log.w(TAG, R.string.failed_relevantDate)
+            Log.w(TAG, R.string.failed_relevant_date)
             0L
         }
     }
@@ -125,7 +125,7 @@ class PassParser(val context: Context? = null) {
                 0L
             }
         } catch(e: DateTimeParseException) {
-            Log.w(TAG, R.string.failed_expirationDate)
+            Log.w(TAG, R.string.failed_expiration_date)
             0L
         }
     }
