@@ -37,4 +37,15 @@
     <string name="date">Data</string>
     <string name="to">do</string>
     <string name="privacy">Prywatność</string>
+    <string name="details">Szczegóły</string>
+    <string name="timeout">Upłynął czas żądania podczas łączenia z serwerem aktualizacji</string>
+    <string name="exception">Wystąpił Wyjątek podczas łączenia z serwerem aktualizacji</string>
+    <string name="copy">Kopiuj</string>
+    <string name="status_code">Status odpowiedzi serwera: %1$s</string>
+    <string name="status_not_updated">Twój Pass jest aktualny</string>
+    <string name="open_wallet">Otwórz FossWallet</string>
+    <string name="barcode_position">Położenie kodu kreskowego na pełnym ekranie</string>
+    <string name="barcode_top_center">Góra / Centrum</string>
+    <string name="pass">Pass</string>
+    <string name="status_forbidden">Serwer nie pozwala na dostęp do pass\'a. Może pass wygasł?</string>
 </resources>
