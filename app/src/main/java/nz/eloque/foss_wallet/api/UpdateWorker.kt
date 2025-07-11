@@ -19,11 +19,10 @@ class UpdateWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val pass = passStore.passById(inputData.getString("id")!!)
         val result = passStore.update(pass.pass)
-        return if (result != null) {
+        return if (result is UpdateResult.Success || result is UpdateResult.NotUpdated) {
             Result.success()
         } else {
             Result.retry()
         }
-        return Result.success()
     }
 }
