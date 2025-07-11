@@ -32,7 +32,7 @@ import nz.eloque.foss_wallet.ui.screens.WalletScreen
 import nz.eloque.foss_wallet.ui.view.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
 
-sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
+sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
     data object About : Screen("about", Icons.Default.Info, R.string.about)
     data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)

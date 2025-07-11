@@ -15,7 +15,7 @@ sealed class UpdateContent() {
     data class Pass(val pass: nz.eloque.foss_wallet.model.Pass) : UpdateContent()
 }
 
-sealed class FailureReason(@StringRes val messageId: Int) {
+sealed class FailureReason(@param:StringRes val messageId: Int) {
     object Timeout : FailureReason(R.string.timeout)
     data class Exception(val exception: kotlin.Exception) : FailureReason(R.string.exception), Detailed
     data class Status(val status: Int) : FailureReason(R.string.status_code), Detailed

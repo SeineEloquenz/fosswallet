@@ -18,7 +18,7 @@ import java.io.InputStream
 import java.util.Locale
 
 class PassStore @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,

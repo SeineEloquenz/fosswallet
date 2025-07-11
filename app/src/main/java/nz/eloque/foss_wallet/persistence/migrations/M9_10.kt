@@ -4,9 +4,9 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 val M_9_10 = object : Migration(9, 10) {
-    override fun migrate(database: SupportSQLiteDatabase) {
+    override fun migrate(db: SupportSQLiteDatabase) {
 
-        database.execSQL(
+        db.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `Pass_new` (
               `id` TEXT NOT NULL,
@@ -40,7 +40,7 @@ val M_9_10 = object : Migration(9, 10) {
         """.trimIndent()
         )
 
-        database.execSQL(
+        db.execSQL(
             """
             INSERT INTO Pass_new (
                 id, description, formatVersion, organization, serialNumber,
@@ -59,13 +59,13 @@ val M_9_10 = object : Migration(9, 10) {
         """.trimIndent()
         )
 
-        database.execSQL("DROP TABLE Pass")
+        db.execSQL("DROP TABLE Pass")
 
-        database.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
+        db.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
 
 
 
-        database.execSQL("""
+        db.execSQL("""
             CREATE TABLE IF NOT EXISTS `localization_new` (
               `passId` TEXT NOT NULL,
               `lang` TEXT NOT NULL,
@@ -76,7 +76,7 @@ val M_9_10 = object : Migration(9, 10) {
             )
         """.trimIndent())
 
-        database.execSQL(
+        db.execSQL(
             """
             INSERT INTO localization_new (
                 passId, lang, label, text
@@ -87,8 +87,8 @@ val M_9_10 = object : Migration(9, 10) {
         """.trimIndent()
         )
 
-        database.execSQL("DROP TABLE localization")
+        db.execSQL("DROP TABLE localization")
 
-        database.execSQL("ALTER TABLE localization_new RENAME TO localization")
+        db.execSQL("ALTER TABLE localization_new RENAME TO localization")
     }
 }

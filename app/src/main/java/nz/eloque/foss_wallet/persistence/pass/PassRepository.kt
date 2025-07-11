@@ -12,7 +12,7 @@ import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.PassBitmaps
 
 class PassRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val passDao: PassDao
 ) {
 

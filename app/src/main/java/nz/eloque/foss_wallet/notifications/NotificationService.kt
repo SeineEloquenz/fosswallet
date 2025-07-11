@@ -16,7 +16,7 @@ import kotlin.random.Random
 const val CHANNEL_ID: String = "pass_updates"
 
 class NotificationService @Inject constructor(
-    @ApplicationContext private val  context: Context,
+    @param:ApplicationContext private val  context: Context,
 ) {
     
     fun createNotificationChannel() {
