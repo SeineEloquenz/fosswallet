@@ -31,7 +31,7 @@ fun AbbreviatingText(
 
     if (isEllipsized) {
         TooltipBox(
-            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
             state = toolTipState,
             tooltip = {
                 PlainTooltip { Text(text) }

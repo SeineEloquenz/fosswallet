@@ -3,8 +3,8 @@ package nz.eloque.foss_wallet.ui.components
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,7 +56,7 @@ fun FilterBar(
                                 onSearch.invoke("")
                             },
                         ) {
-                            Icon(imageVector = Icons.Default.Undo, contentDescription = stringResource(R.string.delete))
+                            Icon(imageVector = Icons.AutoMirrored.Default.Undo, contentDescription = stringResource(R.string.delete))
                         }
                     }
                 }
