@@ -41,7 +41,7 @@ enum class LabelAlign(val textAlign: TextAlign, val horizontalAlignment: Alignme
 
 @Composable
 fun MainLabel(
-    label: String,
+    label: String?,
     content: PassContent
 ) {
     Column(
@@ -50,7 +50,7 @@ fun MainLabel(
             .padding(12.dp)
             .fillMaxWidth()
     ) {
-        if (label.isNotEmpty()) {
+        if (!label.isNullOrEmpty()) {
             AbbreviatingText(
                 text = label,
                 maxLines = 1,
@@ -71,7 +71,7 @@ fun MainLabel(
 
 @Composable
 fun ElevatedPassLabel(
-    label: String,
+    label: String?,
     content: PassContent,
     modifier: Modifier = Modifier,
     labelAlign: LabelAlign = LabelAlign.LEFT,
@@ -87,7 +87,7 @@ fun ElevatedPassLabel(
 
 @Composable
 fun OutlinedPassLabel(
-    label: String,
+    label: String?,
     content: PassContent,
     modifier: Modifier = Modifier,
     labelAlign: LabelAlign = LabelAlign.LEFT,
@@ -103,7 +103,7 @@ fun OutlinedPassLabel(
 
 @Composable
 fun PlainPassLabel(
-    label: String,
+    label: String?,
     content: PassContent,
     modifier: Modifier = Modifier,
     labelAlign: LabelAlign = LabelAlign.LEFT,
@@ -113,7 +113,7 @@ fun PlainPassLabel(
 
 @Composable
 private fun PassLabelContents(
-    label: String,
+    label: String?,
     content: PassContent,
     modifier: Modifier = Modifier,
     labelAlign: LabelAlign = LabelAlign.LEFT,
@@ -128,7 +128,7 @@ private fun PassLabelContents(
             modifier = Modifier
                 .padding(12.dp)
         ) {
-            if (label.isNotEmpty()) {
+            if (!label.isNullOrEmpty()) {
                 AbbreviatingText(
                     text = label,
                     maxLines = 1,

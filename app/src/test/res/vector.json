@@ -1,0 +1,56 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.de.u2d.ventari.wallet2025",
+  "eventTicket": {
+    "headerFields": [
+      {
+        "value": "11.07.2025 - 12.07.2025",
+        "key": "startzeit"
+      }
+    ],
+    "primaryFields": [
+      {
+        "value": "Vector Sommerparty Karlsruhe 2025",
+        "key": "event_title"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "value": " Max Mustermann",
+        "key": "location"
+      },
+      {
+        "value": "",
+        "key": "participant"
+      },
+      {
+        "value": "107711",
+        "key": "participant_id"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "value": "Vector Campus, Karlsruhe",
+        "key": "aux_1"
+      },
+      {
+        "value": "",
+        "key": "aux_2"
+      },
+      {
+        "value": "",
+        "key": "aux_3"
+      }
+    ]
+  },
+  "description": "VECTOR",
+  "serialNumber": "N34276",
+  "logoText": "",
+  "teamIdentifier": "CTGBB8Q5KV",
+  "barcode": {
+    "message": "1177-507711",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "iso-8859-1"
+  },
+  "organizationName": "Vector"
+}
