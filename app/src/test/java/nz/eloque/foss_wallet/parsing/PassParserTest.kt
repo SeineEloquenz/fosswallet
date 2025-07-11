@@ -16,7 +16,8 @@ val passes: List<String> = listOf(
     "eurostar",
     "ksc",
     "swiss",
-    "ticketpay"
+    "ticketpay",
+    "vector"
 )
 
 @RunWith(Parameterized::class)

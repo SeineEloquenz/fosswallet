@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.parsing
 
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
 import java.time.format.FormatStyle
 
@@ -9,7 +10,7 @@ object FieldParser {
 
     fun parse(field: JSONObject): PassField {
         val key = field.getString("key")
-        val label = field.getString("label")
+        val label = field.stringOrNull("label")
         val value = field.getString("value")
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 

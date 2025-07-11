@@ -75,6 +75,10 @@ fun InputStream.toByteArray(): ByteArray {
     return baos.toByteArray()
 }
 
+fun JSONObject.stringOrNull(key: String): String? {
+    return if (this.has(key)) this.getString(key) else null
+}
+
 infix fun <T : CharSequence> T.inIgnoreCase(charSequence: T?): Boolean {
     return charSequence?.contains(this, ignoreCase = true) == true
 }

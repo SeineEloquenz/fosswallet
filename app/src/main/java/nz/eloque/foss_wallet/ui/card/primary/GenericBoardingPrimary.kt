@@ -62,7 +62,7 @@ fun GenericBoardingPrimary(
 
 @Composable
 private fun DestinationCard(
-    label: String,
+    label: String?,
     destination: PassContent,
     modifier: Modifier = Modifier,
     cardColors: CardColors
