@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -10,6 +12,7 @@ plugins {
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xwhen-guards")
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 
@@ -70,9 +73,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     room {
