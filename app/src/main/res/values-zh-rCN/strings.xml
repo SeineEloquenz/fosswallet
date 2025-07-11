@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">设置</string>
+    <string name="update">更新</string>
+    <string name="back">返回</string>
+    <string name="permission_rationale">缺少权限，无法正常运行</string>
+    <string name="request_permissions">请求权限</string>
+    <string name="image">图像</string>
+</resources>
