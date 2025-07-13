@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings">הגדרות</string>
+    <string name="back">אחורה</string>
+    <string name="permission_rationale">ללא הרשאות, הארנק לא עובד כראוי</string>
+    <string name="request_permissions">בקש.י אישור</string>
 </resources>
