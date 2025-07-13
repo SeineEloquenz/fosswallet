@@ -82,7 +82,7 @@ class PassParser(val context: Context? = null) {
             organization = organizationName,
             serialNumber = serialNumber,
             type = type,
-            colors = parsePassColors(passJson),
+            colors = parsePassColors(passJson) ?: bitmaps.logo.derivePassColors(),
             barCodes = parseBarcodes(passJson),
             hasLogo = bitmaps.logo != null,
             hasStrip = bitmaps.strip != null,
