@@ -102,7 +102,7 @@ jobs:
       - name: Publish on Play
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: nz.eloque.foss_wallet
           releaseFiles: aab/*.aab
           track: production
