@@ -3,12 +3,12 @@
     <string name="settings">הגדרות</string>
     <string name="back">אחורה</string>
     <string name="permission_rationale">ללא הרשאות, Wallet לא עובד כראוי</string>
-    <string name="request_permissions">בקש.י אישור</string>
+    <string name="request_permissions">אנא לבקש רשויות</string>
     <string name="image">תמונה</string>
     <string name="barcode">ברקוד</string>
     <string name="serial_number">מספר סידורי</string>
     <string name="organization">ארגון</string>
-    <string name="no_barcode_format_given">פורמט הברקוד לא ניתן! מגדיר כברירת מחדל, קוד QR! ייתכן שהקוד הזה לא נסרק כראוי</string>
+    <string name="no_barcode_format_given">פורמט הברקוד לא ניתן! מגדיר כברירת מחדל, קוד QR. ייתכן שהקוד הזה לא נסרק כראוי</string>
     <string name="front_side">חזית</string>
     <string name="back_side">גב</string>
     <string name="date">תאריך</string>
@@ -46,4 +46,6 @@
     <string name="flip">הפוך/הפכי</string>
     <string name="update">עדכון</string>
     <string name="ungroup">’לבטל את קיבוץ האישורים</string>
+    <string name="timeout">חרגת מהזמן שהוקצב לקרוא לשרת העדכונים</string>
+    <string name="exception">אירעה חריגה בעת הקריאה לשרת העדכונים</string>
 </resources>
