@@ -107,5 +107,4 @@ jobs:
           releaseFiles: aab/*.aab
           track: production
           status: completed
-          userFraction: 1
           whatsNewDirectory: fastlane/metadata/android/en_US/changelogs/
