@@ -8,11 +8,11 @@
     <string name="barcode">ברקוד</string>
     <string name="serial_number">מספר סידורי</string>
     <string name="organization">ארגון</string>
-    <string name="no_barcode_format_given">פורמט הברקוד לא ניתן! מגדיר כברירת מחדל, קוד QR. ייתכן שהקוד הזה לא נסרק כראוי</string>
+    <string name="no_barcode_format_given">תבנית הברקוד לא ניתנה! מגדיר כברירת מחדל, קוד QR. ייתכן שהקוד הזה לא נסרק כראוי</string>
     <string name="front_side">חזית</string>
     <string name="back_side">גב</string>
     <string name="date">תאריך</string>
-    <string name="delete">מחיקה</string>
+    <string name="delete">מחק.י</string>
     <string name="about">מידע</string>
     <string name="source_code">קוד מקור</string>
     <string name="made_with_love">עשוי עם ❤ בגרמניה</string>
@@ -30,7 +30,7 @@
     <string name="barcode_position">מיקום ברקוד במסך מלא</string>
     <string name="barcode_top_center">עליון / מרכז</string>
     <string name="pass">אישור</string>
-    <string name="invalid_pass_toast">לא ניתן היה לטעון את האישור. האם את.ה בטוח.ה שזהו קובץ .pkpass תקין?</string>
+    <string name="invalid_pass_toast">לא ניתן היה לטעון את האישור. האם וידאתם שזהו קובץ .pkpass תקין?</string>
     <string name="add_pass">הוספת אישור</string>
     <string name="update_successful">האישור עודכן בהצלחה</string>
     <string name="update_failed">עדכון האישור נכשל</string>
