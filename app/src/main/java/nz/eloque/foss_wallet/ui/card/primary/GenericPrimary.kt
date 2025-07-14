@@ -28,7 +28,7 @@ fun GenericPrimary(pass: Pass) {
     Row {
         if (primaryField.isNotEmpty()) {
             Row(
-                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth(if (thumbnailFile != null) {0.6f} else {1.0f})
             ) {
                 pass.primaryFields.firstOrNull()?.let {

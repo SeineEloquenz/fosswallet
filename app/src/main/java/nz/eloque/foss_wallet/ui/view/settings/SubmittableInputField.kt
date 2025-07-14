@@ -37,7 +37,7 @@ fun SubmittableTextField(
 
     val isError = rememberSaveable { mutableStateOf( !validInput() ) }
     Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
     ) {

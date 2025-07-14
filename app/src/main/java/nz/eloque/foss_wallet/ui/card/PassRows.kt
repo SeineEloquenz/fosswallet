@@ -30,7 +30,7 @@ fun HeaderRow(
     val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
             .padding(12.dp)
     ) {
@@ -92,7 +92,7 @@ fun FieldsRow(
 ) {
     if (fields.isNotEmpty()) {
         Row(
-            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
             when (fields.size) {
