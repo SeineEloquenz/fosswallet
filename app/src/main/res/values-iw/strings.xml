@@ -26,7 +26,7 @@
     <string name="details">פרטים</string>
     <string name="copy">העתקה</string>
     <string name="status_code">השרת ענה עם המצב %1$s</string>
-    <string name="open_wallet">לפתוח את FossWallet</string>
+    <string name="open_wallet">פתיחת FossWallet</string>
     <string name="barcode_position">מיקום ברקוד במסך מלא</string>
     <string name="barcode_top_center">עליון / מרכז</string>
     <string name="pass">אישור</string>
@@ -40,10 +40,10 @@
     <string name="group">קיבוץ אישורים</string>
     <string name="passes">אישורים</string>
     <string name="sync_interval">תדירות עדכון האישורים (בדקות)</string>
-    <string name="enable_sync">עדכוני האישורים</string>
+    <string name="enable_sync">עדכוני אישורים</string>
     <string name="status_forbidden">השרת לא נתן גישה לאישור. אולי אישור זה כבר פג תוקף?</string>
     <string name="status_not_updated">האישור שלך כבר מעודכן</string>
-    <string name="flip">היפוך</string>
+    <string name="flip">הפיכה</string>
     <string name="update">עדכון</string>
     <string name="ungroup">פיזור קבוצת האישורים</string>
     <string name="timeout">חרגת מהזמן שהוקצב לקרוא לשרת העדכונים</string>
