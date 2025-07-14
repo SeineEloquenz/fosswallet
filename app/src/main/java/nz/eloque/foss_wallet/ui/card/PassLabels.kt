@@ -35,8 +35,8 @@ private val linkStyle = TextLinkStyles(
 )
 
 enum class LabelAlign(val textAlign: TextAlign, val horizontalAlignment: Alignment.Horizontal, val horizontalArrangement: Arrangement.Horizontal) {
-    LEFT(TextAlign.Left, Alignment.Start, Arrangement.Start),
-    RIGHT(TextAlign.Right, Alignment.End, Arrangement.End),
+    LEFT(TextAlign.Start, Alignment.Start, Arrangement.Start),
+    RIGHT(TextAlign.End, Alignment.End, Arrangement.End),
 }
 
 @Composable
