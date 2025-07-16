@@ -22,5 +22,9 @@
     <string name="enable">Habilitar</string>
     <string name="search">Cercar</string>
     <string name="add_shortcut">Afegir drecera</string>
-    <string name="shortcut_exists">L\'accés directe ha existeix!</string>
+    <string name="shortcut_exists">L\'accés directe ja existeix!</string>
+    <string name="privacy">Privacitat</string>
+    <string name="details">Detalls</string>
+    <string name="copy">Copiar</string>
+    <string name="open_wallet">Obrir FossWallet</string>
 </resources>
