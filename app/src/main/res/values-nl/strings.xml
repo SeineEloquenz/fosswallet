@@ -6,17 +6,25 @@
     <string name="front_side">Voorkant</string>
     <string name="back_side">Achterkant</string>
     <string name="license">Licentie</string>
-    <string name="search">Zoek</string>
+    <string name="search">Zoeken</string>
     <string name="privacy">Privacy</string>
     <string name="organization">Organisatie</string>
     <string name="made_with_love">Gemaakt met ❤️ in Duitsland</string>
     <string name="settings">Instellingen</string>
     <string name="source_code">Broncode</string>
-    <string name="delete">Verwijder</string>
+    <string name="delete">Verwijderen</string>
     <string name="update">Bijwerk</string>
     <string name="copy">Kopiëren</string>
     <string name="about">Over</string>
     <string name="barcode_top_center">Boven / Midden</string>
     <string name="details">Details</string>
     <string name="shortcut_exists">Snelkoppeling bestaat al!</string>
+    <string name="serial_number">Serienummer</string>
+    <string name="enable">Inschakelen</string>
+    <string name="add_shortcut">Snelkoppeling toevoegen</string>
+    <string name="open_wallet">FossWallet openen</string>
+    <string name="to">naar</string>
+    <string name="request_permissions">Toestemming aanvragen</string>
+    <string name="barcode">Barcode</string>
+    <string name="barcode_position">Barcodepositie in volledig scherm</string>
 </resources>
