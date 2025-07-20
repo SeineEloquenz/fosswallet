@@ -29,6 +29,7 @@ fun PassView(
     pass: Pass,
     barcodePosition: BarcodePosition,
     modifier: Modifier = Modifier,
+    increaseBrightness: Boolean,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val context = LocalContext.current
@@ -43,7 +44,7 @@ fun PassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context), modifier = Modifier.fillMaxWidth())
-                BarcodesView(pass.barCodes, barcodePosition)
+                BarcodesView(pass.barCodes, barcodePosition, increaseBrightness)
             }
         }
         Column(
@@ -91,5 +92,5 @@ private fun PassPreview() {
             PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         ),
     )
-    PassView(pass, BarcodePosition.Center)
+    PassView(pass, BarcodePosition.Center, increaseBrightness = false)
 }

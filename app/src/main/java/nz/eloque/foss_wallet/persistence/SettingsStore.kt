@@ -11,6 +11,7 @@ import kotlin.time.toDuration
 private const val SYNC_INTERVAL = "syncInterval"
 private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
+private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 
 sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String) {
     object Top : BarcodePosition(Arrangement.Top, "TOP")
@@ -33,6 +34,10 @@ class SettingsStore @Inject constructor(
     fun isSyncEnabled(): Boolean = prefs.getBoolean(SYNC_ENABLED, false)
 
     fun enableSync(enabled: Boolean) = prefs.edit { putBoolean(SYNC_ENABLED, enabled) }
+
+    fun increasePassViewBrightness(): Boolean = prefs.getBoolean(PASS_VIEW_BRIGHTNESS, false)
+
+    fun enablePassViewBrightness(enabled: Boolean) = prefs.edit { putBoolean(PASS_VIEW_BRIGHTNESS, enabled) }
 
     fun syncInterval(): Duration {
         val amount = prefs.getLong(SYNC_INTERVAL, 60)
