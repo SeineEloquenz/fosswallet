@@ -51,4 +51,6 @@
     <string name="pass_view_brightness">Helligkeit erhöhen</string>
     <string name="barcode_position_top">Oben</string>
     <string name="barcode_position_center">Mitte</string>
+    <string name="pass_view">Pass-Ansicht</string>
+    <string name="pass_view_brightness">Helligkeit in Pass-Ansicht erhöhen</string>
 </resources>
