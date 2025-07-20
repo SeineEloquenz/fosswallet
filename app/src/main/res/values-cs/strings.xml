@@ -47,5 +47,6 @@
     <string name="status_not_updated">Váš lístek je již aktuální</string>
     <string name="open_wallet">Otevřít FossWallet</string>
     <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
-    <string name="barcode_top_center">Nahoře / uprostřed</string>
+    <string name="barcode_position_top">Nahoře</string>
+    <string name="barcode_position_center">Uprostřed</string>
 </resources>

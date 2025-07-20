@@ -47,5 +47,6 @@
     <string name="status_not_updated">O seu pase xa está actualizado</string>
     <string name="open_wallet">Abrir FossWallet</string>
     <string name="barcode_position">Posición do código de barras en pantalla completa</string>
-    <string name="barcode_top_center">Arriba / Centro</string>
+    <string name="barcode_position_top">Arriba</string>
+    <string name="barcode_position_center">Centro</string>
 </resources>

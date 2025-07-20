@@ -16,7 +16,6 @@
     <string name="update">Bijwerk</string>
     <string name="copy">Kopiëren</string>
     <string name="about">Over</string>
-    <string name="barcode_top_center">Boven / Midden</string>
     <string name="details">Details</string>
     <string name="shortcut_exists">Snelkoppeling bestaat al!</string>
     <string name="serial_number">Serienummer</string>
@@ -27,4 +26,6 @@
     <string name="request_permissions">Toestemming aanvragen</string>
     <string name="barcode">Barcode</string>
     <string name="barcode_position">Barcodepositie in volledig scherm</string>
+    <string name="barcode_position_top">Boven</string>
+    <string name="barcode_position_center">Midden</string>
 </resources>

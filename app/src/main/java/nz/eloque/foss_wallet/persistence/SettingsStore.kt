@@ -1,9 +1,11 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.SharedPreferences
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.core.content.edit
 import jakarta.inject.Inject
+import nz.eloque.foss_wallet.R
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -13,11 +15,12 @@ private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
 private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 
-sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String) {
-    object Top : BarcodePosition(Arrangement.Top, "TOP")
-    object Center : BarcodePosition(Arrangement.Center, "CENTER")
+sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String, @param:StringRes val label: Int) {
+    object Top : BarcodePosition(Arrangement.Top, "TOP", R.string.barcode_position_top)
+    object Center : BarcodePosition(Arrangement.Center, "CENTER",R.string.barcode_position_center)
 
     companion object {
+        fun all(): List<BarcodePosition> = listOf(Top, Center)
         fun of(representation: String): BarcodePosition {
             return when (representation) {
                 Top.key -> Top

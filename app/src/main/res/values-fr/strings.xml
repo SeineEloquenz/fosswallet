@@ -29,5 +29,6 @@
     <string name="details">Détails</string>
     <string name="copy">Copier</string>
     <string name="status_code">Le serveur a répondu avec le statut %1$s</string>
-    <string name="barcode_top_center">Haut / Centrer</string>
+    <string name="barcode_position_top">Haut</string>
+    <string name="barcode_position_center">Centrer</string>
 </resources>

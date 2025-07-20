@@ -28,7 +28,6 @@
     <string name="status_code">השרת ענה עם המצב %1$s</string>
     <string name="open_wallet">פתיחת FossWallet</string>
     <string name="barcode_position">מיקום ברקוד במסך מלא</string>
-    <string name="barcode_top_center">עליון / מרכז</string>
     <string name="pass">אישור</string>
     <string name="invalid_pass_toast">לא ניתן היה לטעון את האישור. האם וידאתם שזהו קובץ .pkpass תקין?</string>
     <string name="add_pass">הוספת אישור</string>
@@ -48,4 +47,6 @@
     <string name="ungroup">פיזור קבוצת האישורים</string>
     <string name="timeout">חרגת מהזמן שהוקצב לקרוא לשרת העדכונים</string>
     <string name="exception">אירעה חריגה בעת הקריאה לשרת העדכונים</string>
+    <string name="barcode_position_top">עליון</string>
+    <string name="barcode_position_center">מרכז</string>
 </resources>

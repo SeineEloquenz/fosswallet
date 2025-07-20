@@ -45,7 +45,8 @@
     <string name="status_not_updated">Twój Pass jest aktualny</string>
     <string name="open_wallet">Otwórz FossWallet</string>
     <string name="barcode_position">Położenie kodu kreskowego na pełnym ekranie</string>
-    <string name="barcode_top_center">Góra / Centrum</string>
     <string name="pass">Pass</string>
     <string name="status_forbidden">Serwer nie pozwala na dostęp do pass\'a. Może pass wygasł?</string>
+    <string name="barcode_position_top">Góra</string>
+    <string name="barcode_position_center">Centrum</string>
 </resources>

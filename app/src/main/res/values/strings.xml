@@ -48,7 +48,8 @@
     <string name="status_not_updated">Your pass is already up-to-date</string>
     <string name="open_wallet">Open FossWallet</string>
     <string name="barcode_position">Barcode position in fullscreen</string>
-    <string name="barcode_top_center">Top / Center</string>
     <string name="pass_view">Pass View</string>
     <string name="pass_view_brightness">Increase Brightness in Pass View</string>
+    <string name="barcode_position_top">Top</string>
+    <string name="barcode_position_center">Center</string>
 </resources>

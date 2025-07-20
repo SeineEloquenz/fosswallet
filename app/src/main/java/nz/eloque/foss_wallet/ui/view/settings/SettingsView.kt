@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -58,21 +59,21 @@ fun SettingsView(
             )
         }
         SettingsSection(
-            heading = stringResource(R.string.barcode_position),
-        ) {
-            SettingsSwitch(
-                name = R.string.barcode_top_center,
-                switchState = settings.value.barcodePosition == BarcodePosition.Center,
-                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } }
-            )
-        }
-        SettingsSection(
             heading = stringResource(R.string.pass_view),
         ) {
             SettingsSwitch(
                 name = R.string.pass_view_brightness,
                 switchState = settings.value.increasePassViewBrightness,
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
+            )
+            HorizontalDivider()
+            val context = LocalContext.current
+            SettingsComboBox(
+                name = stringResource(R.string.barcode_position),
+                options = BarcodePosition.all(),
+                selectedOption = settings.value.barcodePosition,
+                onOptionSelected = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } },
+                optionLabel = { context.getString(it.label) }
             )
         }
     }

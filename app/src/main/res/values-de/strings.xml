@@ -47,5 +47,6 @@
     <string name="status_not_updated">Der Pass ist bereits aktuell</string>
     <string name="open_wallet">Öffne FossWallet</string>
     <string name="barcode_position">Barcode-Position in Vollbildanzeige</string>
-    <string name="barcode_top_center">Oben / Mitte</string>
+    <string name="barcode_position_top">Oben</string>
+    <string name="barcode_position_center">Mitte</string>
 </resources>

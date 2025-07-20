@@ -47,5 +47,6 @@
     <string name="status_code">El servidor respondió con el estado %1$s</string>
     <string name="status_forbidden">El servidor no permitió el acceso al pase. ¿Quizás este pase ya haya expirado?</string>
     <string name="barcode_position">Posición del código de barras en pantalla completa</string>
-    <string name="barcode_top_center">Arriba / Centro</string>
+    <string name="barcode_position_top">Arriba</string>
+    <string name="barcode_position_center">Centro</string>
 </resources>
