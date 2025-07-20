@@ -59,8 +59,12 @@ fun HeaderFieldsView(
 fun BarcodesView(
     barcodes: Set<BarCode>,
     barcodePosition: BarcodePosition,
+    increaseBrightness: Boolean,
 ) {
     val fullscreen = remember { mutableStateOf(false) }
+    if (increaseBrightness) {
+        UpdateBrightness()
+    }
     barcodes.firstOrNull()?.let {
         val image = it.encodeAsBitmap(1000, 1000)
         Row(

@@ -119,7 +119,7 @@ fun PassScreen(
                 }
             },
         ) { scrollBehavior ->
-            PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior)
+            PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior, increaseBrightness =  passViewModel.increasePassViewBrightness())
         }
     }
 }

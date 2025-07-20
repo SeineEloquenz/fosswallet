@@ -66,6 +66,15 @@ fun SettingsView(
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } }
             )
         }
+        SettingsSection(
+            heading = stringResource(R.string.pass_view),
+        ) {
+            SettingsSwitch(
+                name = R.string.pass_view_brightness,
+                switchState = settings.value.increasePassViewBrightness,
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
+            )
+        }
     }
 }
 
