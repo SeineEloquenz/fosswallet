@@ -49,4 +49,6 @@
     <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
     <string name="barcode_position_top">Nahoře</string>
     <string name="barcode_position_center">Uprostřed</string>
+    <string name="pass_view">Zobrazení lístku</string>
+    <string name="pass_view_brightness">Zvýšit jas</string>
 </resources>
