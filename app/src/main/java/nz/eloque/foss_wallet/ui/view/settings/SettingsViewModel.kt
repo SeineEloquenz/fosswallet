@@ -62,8 +62,8 @@ class SettingsViewModel @Inject constructor(
         update()
     }
 
-    fun setBarcodePosition(center: Boolean) {
-        settingsStore.setBarcodePosition(if (center) BarcodePosition.Center else BarcodePosition.Top)
+    fun setBarcodePosition(barcodePosition: BarcodePosition) {
+        settingsStore.setBarcodePosition(barcodePosition)
         update()
     }
 
