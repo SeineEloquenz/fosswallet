@@ -22,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +48,6 @@ fun WalletView(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val list = passViewModel.uiState.collectAsState()
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
@@ -74,7 +72,7 @@ fun WalletView(
     LazyColumn(
         state = listState,
         verticalArrangement = Arrangement
-            .spacedBy(10.dp),
+            .spacedBy(8.dp),
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -106,7 +104,8 @@ fun WalletView(
                 leftSwipeIcon = Icons.Default.SelectAll,
                 allowRightSwipe = false,
                 onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
-                onRightSwipe = { }
+                onRightSwipe = { },
+                modifier = Modifier.padding(2.dp)
             ) {
                 ShortPassCard(
                     pass = pass,

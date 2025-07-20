@@ -22,9 +22,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun SwipeToDismiss(
-    modifier: Modifier = Modifier,
     onRightSwipe: () -> Unit,
     onLeftSwipe: () -> Unit,
+    modifier: Modifier = Modifier,
     allowRightSwipe: Boolean = true,
     allowLeftSwipe: Boolean = true,
     leftSwipeIcon: ImageVector = Icons.Default.Edit,
@@ -41,7 +41,7 @@ fun SwipeToDismiss(
     }
 
     SwipeToDismissBox(
-        modifier = modifier.animateContentSize(),
+        modifier = Modifier.animateContentSize(),
         state = swipeState,
         enableDismissFromStartToEnd = allowRightSwipe,
         enableDismissFromEndToStart = allowLeftSwipe,
@@ -59,7 +59,11 @@ fun SwipeToDismiss(
             }
         }
     ) {
-        content()
+        Box(
+            modifier = modifier
+        ) {
+            content()
+        }
     }
 
     when (swipeState.currentValue) {
