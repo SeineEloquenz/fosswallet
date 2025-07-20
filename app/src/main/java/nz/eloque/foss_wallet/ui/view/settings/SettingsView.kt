@@ -59,8 +59,14 @@ fun SettingsView(
             )
         }
         SettingsSection(
-            heading = stringResource(R.string.barcode_position),
+            heading = stringResource(R.string.pass_view),
         ) {
+            SettingsSwitch(
+                name = R.string.pass_view_brightness,
+                switchState = settings.value.increasePassViewBrightness,
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
+            )
+            HorizontalDivider()
             val context = LocalContext.current
             SettingsComboBox(
                 name = stringResource(R.string.barcode_position),
@@ -68,15 +74,6 @@ fun SettingsView(
                 selectedOption = settings.value.barcodePosition,
                 onOptionSelected = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } },
                 optionLabel = { context.getString(it.label) }
-            )
-        }
-        SettingsSection(
-            heading = stringResource(R.string.pass_view),
-        ) {
-            SettingsSwitch(
-                name = R.string.pass_view_brightness,
-                switchState = settings.value.increasePassViewBrightness,
-                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
             )
         }
     }
