@@ -49,4 +49,6 @@
     <string name="open_wallet">Apri FossWallet</string>
     <string name="barcode_position_top">Alto</string>
     <string name="barcode_position_center">Centro</string>
+    <string name="pass_view_brightness">Aumentare la luminosità</string>
+    <string name="pass_view">Vista del biglietto</string>
 </resources>
