@@ -49,4 +49,6 @@
     <string name="barcode_position">Triipkoodi asukoht ekraanil</string>
     <string name="barcode_position_top">Ülal</string>
     <string name="barcode_position_center">Keskel</string>
+    <string name="pass_view">Dokumendi vaade</string>
+    <string name="pass_view_brightness">Suurenda eredust</string>
 </resources>
