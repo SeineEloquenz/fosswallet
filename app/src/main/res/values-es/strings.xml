@@ -49,4 +49,6 @@
     <string name="barcode_position">Posición del código de barras en pantalla completa</string>
     <string name="barcode_position_top">Arriba</string>
     <string name="barcode_position_center">Centro</string>
+    <string name="pass_view">Vista de pases</string>
+    <string name="pass_view_brightness">Aumentar brillo</string>
 </resources>
