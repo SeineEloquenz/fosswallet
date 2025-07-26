@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
@@ -71,13 +72,13 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    fun add(loadResult: PassLoadResult) = passStore.add(loadResult).apply { updatePasses() }
+    fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult).apply { updatePasses() }
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass).apply { updatePasses() }
 
     fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
 
-    fun load(context: Context, inputStream: InputStream) = passStore.load(context, inputStream).apply { updatePasses() }
+    fun load(context: Context, inputStream: InputStream): ImportResult = passStore.load(context, inputStream).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
     fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
 

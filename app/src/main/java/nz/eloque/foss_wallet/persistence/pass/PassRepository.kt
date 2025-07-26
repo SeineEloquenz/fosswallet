@@ -30,6 +30,8 @@ class PassRepository @Inject constructor(
 
     fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
+    fun findById(id: String): PassWithLocalization? = passDao.findById(id)
+
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass) {
