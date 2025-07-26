@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             is ImportResult.New -> navController.navigate("pass/$id")
                             is ImportResult.Replaced -> {
                                 Toast
-                                    .makeText(this@MainActivity, "Pass already imported", Toast.LENGTH_SHORT)
+                                    .makeText(this@MainActivity, this@MainActivity.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
                                     .show()
                                 navController.navigate("pass/$id")
                             }

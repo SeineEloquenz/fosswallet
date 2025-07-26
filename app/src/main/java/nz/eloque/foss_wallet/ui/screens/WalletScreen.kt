@@ -64,7 +64,7 @@ fun WalletScreen(
                                     // Pass imported successfully
                                 }
                                 is ImportResult.Replaced -> {
-                                    Toast.makeText(context, "Pass already imported", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
