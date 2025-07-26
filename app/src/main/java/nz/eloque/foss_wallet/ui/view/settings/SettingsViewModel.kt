@@ -21,6 +21,7 @@ data class SettingsUiState(
     val syncInterval: Duration = 1.toDuration(DurationUnit.HOURS),
     val barcodePosition: BarcodePosition = BarcodePosition.Center,
     val increasePassViewBrightness: Boolean = false,
+    val showNamesInListView: Boolean = false,
 )
 
 @HiltViewModel
@@ -43,6 +44,7 @@ class SettingsViewModel @Inject constructor(
                 syncInterval = settingsStore.syncInterval(),
                 barcodePosition = settingsStore.barcodePosition(),
                 increasePassViewBrightness = settingsStore.increasePassViewBrightness(),
+                showNamesInListView = settingsStore.showNamesInListView()
             )
         }
     }
@@ -69,6 +71,11 @@ class SettingsViewModel @Inject constructor(
 
     fun enablePassViewBrightness(enabled: Boolean) {
         settingsStore.enablePassViewBrightness(enabled)
+        update()
+    }
+
+    fun enableShowNamesInListView(enabled: Boolean) {
+        settingsStore.enableShowNamesInListView(enabled)
         update()
     }
 }
