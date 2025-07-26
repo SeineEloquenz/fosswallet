@@ -71,5 +71,4 @@ class SettingsViewModel @Inject constructor(
         settingsStore.enablePassViewBrightness(enabled)
         update()
     }
-
 }
