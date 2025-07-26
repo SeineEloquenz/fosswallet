@@ -76,15 +76,6 @@ fun SettingsView(
                 optionLabel = { context.getString(it.label) }
             )
         }
-        SettingsSection(
-            heading = stringResource(R.string.list_view),
-        ) {
-            SettingsSwitch(
-                name = R.string.show_names,
-                switchState = settings.value.showNamesInListView,
-                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enableShowNamesInListView(it) } }
-            )
-        }
     }
 }
 
