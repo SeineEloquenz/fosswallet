@@ -83,6 +83,11 @@ fun DateLocationRow(
     ) {
         DateView(pass.description, pass.relevantDate, pass.expirationDate)
         pass.locations.firstOrNull()?.let { LocationButton(it) }
+        AbbreviatingText(
+            text = pass.auxiliaryFields.first {it.key=="paxName"}.content.prettyPrint(),
+            maxLines = 1,
+            style = MaterialTheme.typography.headlineSmall,
+        )
     }
 }
 
