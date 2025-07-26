@@ -52,6 +52,4 @@
     <string name="pass_view_brightness">Increase Brightness</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
-    <string name="list_view">List View</string>
-    <string name="show_names">Show Names</string>
 </resources>
