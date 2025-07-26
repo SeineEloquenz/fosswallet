@@ -24,6 +24,10 @@ interface PassDao {
     @Query("SELECT * FROM pass WHERE id=:id")
     fun byId(id: String): PassWithLocalization
 
+    @Transaction
+    @Query("SELECT * FROM pass WHERE id=:id")
+    fun findById(id: String): PassWithLocalization?
+
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
     fun associate(passId: String, groupId: Long)
 

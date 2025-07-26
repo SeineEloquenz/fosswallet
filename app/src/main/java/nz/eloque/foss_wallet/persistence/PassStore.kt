@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.persistence
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
@@ -31,11 +32,16 @@ class PassStore @Inject constructor(
 
     fun filtered(query: String) = passRepository.filtered(query)
 
-    fun add(loadResult: PassLoadResult) {
+    fun add(loadResult: PassLoadResult): ImportResult {
+        val existing = passRepository.findById(loadResult.pass.pass.id)
+        val result = if (existing != null) ImportResult.Replaced else ImportResult.New
+        
         insert(loadResult)
         if (loadResult.pass.pass.updatable()) {
             updateScheduler.scheduleUpdate(loadResult.pass.pass)
         }
+        
+        return result
     }
 
     suspend fun update(pass: Pass): UpdateResult {
@@ -63,9 +69,9 @@ class PassStore @Inject constructor(
         Shortcut.remove(context, pass)
     }
 
-    fun load(context: Context, inputStream: InputStream) {
+    fun load(context: Context, inputStream: InputStream): ImportResult {
         val loaded = PassLoader(PassParser(context)).load(inputStream)
-        add(loaded)
+        return add(loaded)
     }
 
     private fun insert(loadResult: PassLoadResult) {

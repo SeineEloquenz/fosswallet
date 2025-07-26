@@ -52,4 +52,5 @@
     <string name="pass_view_brightness">Increase Brightness</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
+    <string name="pass_already_imported">Pass already imported</string>
 </resources>

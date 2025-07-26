@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.persistence.PassLoader
@@ -77,10 +78,19 @@ class MainActivity : ComponentActivity() {
             it?.let {
                 try {
                     val loadResult = PassLoader(PassParser(this@MainActivity)).load(it)
-                    passViewModel.add(loadResult)
+                    val importResult = passViewModel.add(loadResult)
                     val id: String = loadResult.pass.pass.id
-                    coroutineScope.launch(Dispatchers.Main) { navController
-                        .navigate("pass/$id") }
+                    coroutineScope.launch(Dispatchers.Main) {
+                        when (importResult) {
+                            is ImportResult.New -> navController.navigate("pass/$id")
+                            is ImportResult.Replaced -> {
+                                Toast
+                                    .makeText(this@MainActivity, this@MainActivity.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
+                                    .show()
+                                navController.navigate("pass/$id")
+                            }
+                        }
+                    }
                 } catch (e: InvalidPassException) {
                     Log.w(TAG, "Failed to load pass from intent: $e")
                     coroutineScope.launch(Dispatchers.Main) { Toast

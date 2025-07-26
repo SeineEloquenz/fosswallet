@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.InvalidPassException
 import nz.eloque.foss_wallet.ui.Screen
@@ -56,7 +57,17 @@ fun WalletScreen(
             coroutineScope.launch(Dispatchers.IO) {
                 contentResolver.openInputStream(res)?.use { inputStream ->
                     try {
-                        passViewModel.load(context, inputStream)
+                        val importResult = passViewModel.load(context, inputStream)
+                        withContext(Dispatchers.Main) {
+                            when (importResult) {
+                                is ImportResult.New -> {
+                                    // Pass imported successfully
+                                }
+                                is ImportResult.Replaced -> {
+                                    Toast.makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     } catch (_: InvalidPassException) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
