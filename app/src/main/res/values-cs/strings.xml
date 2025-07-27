@@ -32,7 +32,6 @@
     <string name="ungroup">Zrušit seskupení lístků</string>
     <string name="passes">Lístky</string>
     <string name="sync_interval">Interval aktualizace lístků (min)</string>
-    <string name="enable_sync">Aktualizace lístků</string>
     <string name="enable">Povolit</string>
     <string name="search">Hledat</string>
     <string name="add_shortcut">Přidat zkratku</string>
