@@ -43,7 +43,6 @@
     <string name="pass_updated">Pas bijgewerkt</string>
     <string name="pass_already_imported">Pas al geïmporteerd</string>
     <string name="share">Pas delen</string>
-    <string name="pass_updates_channel"></string>
     <string name="update_failed">Pas-bijwerken mislukt</string>
     <string name="update_successful">Succesvol bijgewerkt pas</string>
     <string name="status_forbidden">De server gaf geen toegang tot de pas. Misschien is deze pas al verlopen?</string>
