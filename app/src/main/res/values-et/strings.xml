@@ -50,4 +50,5 @@
     <string name="barcode_position_center">Keskel</string>
     <string name="pass_view">Dokumendi vaade</string>
     <string name="pass_view_brightness">Suurenda eredust</string>
+    <string name="pass_already_imported">Dokument on juba imporditud</string>
 </resources>

@@ -35,4 +35,18 @@
     <string name="timeout">Er is een time-out opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand</string>
     <string name="image">Beeld</string>
+    <string name="add_pass">Pas toevoegen</string>
+    <string name="pass">Pas</string>
+    <string name="group">Passen groeperen</string>
+    <string name="passes">Passen</string>
+    <string name="ungroup">Passen degroeperen</string>
+    <string name="pass_updated">Pas bijgewerkt</string>
+    <string name="pass_already_imported">Pas al geïmporteerd</string>
+    <string name="share">Pas delen</string>
+    <string name="update_failed">Pas-bijwerken mislukt</string>
+    <string name="update_successful">Succesvol bijgewerkt pas</string>
+    <string name="status_forbidden">De server gaf geen toegang tot de pas. Misschien is deze pas al verlopen?</string>
+    <string name="invalid_pass_toast">De pas kon niet worden geladen. Weet u zeker dat dit een geldige .pkpass is?</string>
+    <string name="pass_view">Pasweergave</string>
+    <string name="status_not_updated">Je pas is al bij de tijd</string>
 </resources>
