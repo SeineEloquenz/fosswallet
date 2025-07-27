@@ -24,7 +24,6 @@
     <string name="ungroup">Rozgrupuj passy</string>
     <string name="passes">Passy</string>
     <string name="sync_interval">Okres aktualizacji (w min.)</string>
-    <string name="enable_sync">Aktualizacje passów</string>
     <string name="enable">Włącz</string>
     <string name="search">Szukaj</string>
     <string name="add_shortcut">Dodaj skrót</string>
