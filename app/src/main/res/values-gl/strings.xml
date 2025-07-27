@@ -32,7 +32,6 @@
     <string name="ungroup">Desagrupar pases</string>
     <string name="passes">Pases</string>
     <string name="sync_interval">Intervalo de actualización de pases (min)</string>
-    <string name="enable_sync">Actualizacións de pases</string>
     <string name="enable">Activar</string>
     <string name="search">Buscar</string>
     <string name="add_shortcut">Engadir acceso directo</string>
