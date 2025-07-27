@@ -32,8 +32,7 @@
     <string name="group">Group passes</string>
     <string name="ungroup">Ungroup passes</string>
     <string name="passes">Passes</string>
-    <string name="sync_interval">Pass update interval (min.)</string>
-    <string name="enable_sync">Pass updates</string>
+    <string name="sync_interval">Pass update interval (min)</string>
     <string name="enable">Enable</string>
     <string name="search">Search</string>
     <string name="add_shortcut">Add shortcut</string>

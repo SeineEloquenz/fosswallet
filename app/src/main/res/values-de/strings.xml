@@ -34,7 +34,6 @@
     <string name="search">Suchen</string>
     <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
     <string name="enable">Aktivieren</string>
-    <string name="enable_sync">Pass-Aktualisierungen</string>
     <string name="add_shortcut">Shortcut hinzufügen</string>
     <string name="shortcut_exists">Es existiert bereits ein Shortcut!</string>
     <string name="privacy">Privatsphäre</string>

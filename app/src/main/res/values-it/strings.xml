@@ -30,8 +30,7 @@
     <string name="group">Metti biglietto in un gruppo</string>
     <string name="ungroup">Togli biglietto dal gruppo</string>
     <string name="passes">Biglietti</string>
-    <string name="sync_interval">Intervallo di tempo di aggiornamento dei biglietti (minuti)</string>
-    <string name="enable_sync">Aggiornamento dei biglietti</string>
+    <string name="sync_interval">Intervallo di tempo di aggiornamento dei biglietti (min)</string>
     <string name="enable">Attiva</string>
     <string name="search">Cerca</string>
     <string name="add_shortcut">Aggiungi scorciatoia</string>
