@@ -50,4 +50,5 @@
     <string name="barcode_position_center">Centro</string>
     <string name="pass_view_brightness">Aumentare la luminosità</string>
     <string name="pass_view">Vista del biglietto</string>
+    <string name="pass_already_imported">Biglietto già importato</string>
 </resources>
