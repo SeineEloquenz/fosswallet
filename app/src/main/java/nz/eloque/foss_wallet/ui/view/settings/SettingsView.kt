@@ -37,7 +37,7 @@ fun SettingsView(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SettingsSection(
-            heading = stringResource(R.string.enable_sync),
+            heading = stringResource(R.string.pass_updates),
         ) {
             SettingsSwitch(
                 name = R.string.enable,
