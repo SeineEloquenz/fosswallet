@@ -39,7 +39,6 @@
     <string name="group">קיבוץ אישורים</string>
     <string name="passes">אישורים</string>
     <string name="sync_interval">תדירות עדכון האישורים (בדקות)</string>
-    <string name="enable_sync">עדכוני אישורים</string>
     <string name="status_forbidden">השרת לא נתן גישה לאישור. אולי אישור זה כבר פג תוקף?</string>
     <string name="status_not_updated">האישור שלך כבר מעודכן</string>
     <string name="flip">הפיכה</string>
