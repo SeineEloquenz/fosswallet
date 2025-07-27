@@ -50,4 +50,5 @@
     <string name="barcode_position_center">Uprostřed</string>
     <string name="pass_view">Zobrazení lístku</string>
     <string name="pass_view_brightness">Zvýšit jas</string>
+    <string name="pass_already_imported">Lístek již byl importován</string>
 </resources>
