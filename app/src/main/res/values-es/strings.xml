@@ -50,4 +50,5 @@
     <string name="barcode_position_center">Centro</string>
     <string name="pass_view">Vista de pases</string>
     <string name="pass_view_brightness">Aumentar brillo</string>
+    <string name="pass_already_imported">Este pase ya ha sido importado</string>
 </resources>
