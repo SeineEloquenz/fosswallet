@@ -33,7 +33,7 @@
     <string name="group">Rühmita dokumente</string>
     <string name="ungroup">Lõpeta dokumentide rühmitamine</string>
     <string name="passes">Dokumendid</string>
-    <string name="sync_interval">Dokumentide uuendamise välp (minuteis)</string>
+    <string name="sync_interval">Dokumentide uuendamise välp (min)</string>
     <string name="add_pass">Lisa dokument</string>
     <string name="pass_updated">Dokument on uuendatud</string>
     <string name="privacy">Privaatsus</string>

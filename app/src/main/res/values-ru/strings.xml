@@ -31,7 +31,7 @@
     <string name="group">Группировать пропуски</string>
     <string name="ungroup">Разгруппировать пропуски</string>
     <string name="passes">Пропуски</string>
-    <string name="sync_interval">Интервал обновления пропусков (мин.)</string>
+    <string name="sync_interval">Интервал обновления пропусков (мин)</string>
     <string name="enable">Включить</string>
     <string name="search">Поиск</string>
     <string name="add_shortcut">Добавить ярлык</string>

@@ -23,7 +23,7 @@
     <string name="group">Grupuj passy</string>
     <string name="ungroup">Rozgrupuj passy</string>
     <string name="passes">Passy</string>
-    <string name="sync_interval">Okres aktualizacji (w min.)</string>
+    <string name="sync_interval">Okres aktualizacji (min)</string>
     <string name="enable">Włącz</string>
     <string name="search">Szukaj</string>
     <string name="add_shortcut">Dodaj skrót</string>
@@ -48,4 +48,7 @@
     <string name="status_forbidden">Serwer nie pozwala na dostęp do pass\'a. Może pass wygasł?</string>
     <string name="barcode_position_top">Góra</string>
     <string name="barcode_position_center">Centrum</string>
+    <string name="pass_view">Widok pass\'a</string>
+    <string name="pass_view_brightness">Zwiększ jasność</string>
+    <string name="pass_already_imported">Pass już zaimportowany</string>
 </resources>
