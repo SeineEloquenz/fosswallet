@@ -49,4 +49,6 @@
     <string name="invalid_pass_toast">De pas kon niet worden geladen. Weet u zeker dat dit een geldige .pkpass is?</string>
     <string name="pass_view">Pasweergave</string>
     <string name="status_not_updated">Je pas is al bij de tijd</string>
+    <string name="pass_updates_channel">Bijwerkingen van passen</string>
+    <string name="sync_interval">Bijwerkingsinterval van de passen (min)</string>
 </resources>
