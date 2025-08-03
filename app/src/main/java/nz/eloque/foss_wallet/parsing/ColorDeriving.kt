@@ -33,5 +33,10 @@ private fun Bitmap.backgroundColor(): Color? {
         colorMap.merge(Color(this[0, i]), 1, Int::plus)
         colorMap.merge(Color(this[this.width - 1, i]), 1, Int::plus)
     }
-    return colorMap.entries.firstOrNull { (_, count) -> count > threshold * bitmapSize }?.key
+    val foundColor = colorMap.entries.firstOrNull { (_, count) -> count > threshold * bitmapSize }?.key
+    return foundColor.coerceOpacity()
+}
+
+private fun Color?.coerceOpacity(): Color? {
+    return if (this?.alpha == 0f) Color.White else this
 }
