@@ -36,7 +36,7 @@ import nz.eloque.foss_wallet.ui.card.LabelAlign
 import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.card.PlainPassLabel
 import nz.eloque.foss_wallet.ui.components.Raise
-import nz.eloque.foss_wallet.ui.components.UpdateBrightness
+import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
 
 
