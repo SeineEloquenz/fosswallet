@@ -21,6 +21,8 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.effects.ForceOrientation
+import nz.eloque.foss_wallet.ui.effects.Orientation
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +35,7 @@ fun PassView(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val context = LocalContext.current
+    ForceOrientation(Orientation.Locked)
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier
