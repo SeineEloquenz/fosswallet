@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components
+package nz.eloque.foss_wallet.ui.effects
 
 import android.content.Context
 import android.content.ContextWrapper
