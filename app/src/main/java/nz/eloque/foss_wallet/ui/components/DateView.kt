@@ -38,7 +38,8 @@ fun DateView(
                     it.type = "vnd.android.cursor.item/event"
                     it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
                     it.putExtra("allDay", false)
-                    it.putExtra("endTime", if (end != 0L) { end } else 1800000) //30 min default
+                    it.putExtra("endTime", if (end != 0L) Instant.ofEpochSecond(end).toEpochMilli()
+                        else Instant.ofEpochSecond(start).plus(30, ChronoUnit.MINUTES).toEpochMilli()) //30 min default
                     it.putExtra("title", title)
                 }
                 context.startActivity(intent)
