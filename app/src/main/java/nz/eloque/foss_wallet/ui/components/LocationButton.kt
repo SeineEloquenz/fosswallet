@@ -1,7 +1,9 @@
 package nz.eloque.foss_wallet.ui.components
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.location.Location
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
@@ -20,9 +22,13 @@ fun LocationButton(
     val context = LocalContext.current
     IconButton(
         onClick = {
-            context.startActivity(Intent(Intent.ACTION_VIEW).also {
-                it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
-            })
+            try {
+                context.startActivity(Intent(Intent.ACTION_VIEW).also {
+                    it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
+                })
+            } catch (e: ActivityNotFoundException) {
+                Log.e("LocationButton", "No map app found!", e)
+            }
         },
         modifier = modifier,
     ) {
