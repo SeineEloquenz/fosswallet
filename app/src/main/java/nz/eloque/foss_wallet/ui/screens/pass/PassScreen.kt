@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.DropdownMenu
@@ -152,6 +153,16 @@ fun Actions(
                 },
                 onClick = {
                     Shortcut.create(context, pass.value, pass.value.description)
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.delete)) },
+                leadingIcon =  {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                },
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                    navController.popBackStack()
                 }
             )
         }
