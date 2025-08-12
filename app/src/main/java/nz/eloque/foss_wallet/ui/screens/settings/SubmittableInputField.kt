@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.view.settings
+package nz.eloque.foss_wallet.ui.screens.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

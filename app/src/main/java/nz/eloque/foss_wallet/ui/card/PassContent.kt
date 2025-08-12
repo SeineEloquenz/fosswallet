@@ -15,7 +15,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.card.primary.AirlineBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericBoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericPrimary
-import nz.eloque.foss_wallet.ui.view.pass.AsyncPassImage
+import nz.eloque.foss_wallet.ui.screens.pass.AsyncPassImage
 
 
 @Composable

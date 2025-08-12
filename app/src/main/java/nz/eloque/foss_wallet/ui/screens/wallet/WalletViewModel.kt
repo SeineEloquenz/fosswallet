@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.view.wallet
+package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.app.Application
 import android.content.Context

@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.screens
+package nz.eloque.foss_wallet.ui.screens.archive
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,8 +26,8 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
-import nz.eloque.foss_wallet.ui.view.wallet.WalletView
+import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -25,14 +25,14 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.shortcut.Shortcut
-import nz.eloque.foss_wallet.ui.screens.AboutScreen
-import nz.eloque.foss_wallet.ui.screens.ArchiveScreen
-import nz.eloque.foss_wallet.ui.screens.PassScreen
-import nz.eloque.foss_wallet.ui.screens.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
-import nz.eloque.foss_wallet.ui.screens.WalletScreen
-import nz.eloque.foss_wallet.ui.view.settings.SettingsViewModel
-import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
+import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
+import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
+import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
+import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
 
 sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)

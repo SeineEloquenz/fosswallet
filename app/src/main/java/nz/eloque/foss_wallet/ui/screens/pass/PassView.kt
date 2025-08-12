@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.view.pass
+package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

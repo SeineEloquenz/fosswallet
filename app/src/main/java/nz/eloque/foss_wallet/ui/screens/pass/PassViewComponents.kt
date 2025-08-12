@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.view.pass
+package nz.eloque.foss_wallet.ui.screens.pass
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image

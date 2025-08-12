@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.screens
+package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -45,9 +45,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.view.pass.PassShareButton
-import nz.eloque.foss_wallet.ui.view.pass.PassView
-import nz.eloque.foss_wallet.ui.view.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.utils.asString
 import java.util.Locale
 
