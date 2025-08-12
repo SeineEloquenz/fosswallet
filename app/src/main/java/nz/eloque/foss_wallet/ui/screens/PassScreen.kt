@@ -18,6 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +52,6 @@ fun PassScreen(
     navController: NavHostController,
     passViewModel: PassViewModel
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val pass = remember { mutableStateOf(Pass.placeholder())}
     LaunchedEffect(coroutineScope) {
@@ -60,7 +60,6 @@ fun PassScreen(
         }
     }
 
-    val isLoading = remember { mutableStateOf(false) }
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
@@ -69,57 +68,71 @@ fun PassScreen(
             title = pass.value.description,
             toolWindow = true,
             actions = {
-                Row {
-                    if (pass.value.updatable()) {
-                        val uriHandler = LocalUriHandler.current
-                        UpdateButton(isLoading = isLoading.value) {
-                            coroutineScope.launch(Dispatchers.IO) {
-                                isLoading.value = true
-                                val result = passViewModel.update(pass.value)
-                                isLoading.value = false
-                                when (result) {
-                                    is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
-                                        pass.value = result.content.pass
-                                        snackbarHostState.showSnackbar(
-                                            message = context.getString(R.string.update_successful),
-                                            actionLabel = context.getString(R.string.details),
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                    is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
-                                    is UpdateResult.Failed -> {
-                                        val snackResult = snackbarHostState.showSnackbar(
-                                            message = when (result.reason) {
-                                                is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
-                                                else -> context.getString(result.reason.messageId)
-                                            },
-                                            actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
-                                            duration = SnackbarDuration.Short
-                                        )
-                                        if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
-                                            when (result.reason) {
-                                                is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
-                                                is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
-                                            }
-                                        }
-                                    }
+                Actions(pass, navController, snackbarHostState, passViewModel)
+            },
+        ) { scrollBehavior ->
+            PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior, increaseBrightness =  passViewModel.increasePassViewBrightness())
+        }
+    }
+}
+
+@Composable
+fun Actions(
+    pass: MutableState<Pass>,
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
+    passViewModel: PassViewModel
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val isLoading = remember { mutableStateOf(false) }
+    Row {
+        if (pass.value.updatable()) {
+            val uriHandler = LocalUriHandler.current
+            UpdateButton(isLoading = isLoading.value) {
+                coroutineScope.launch(Dispatchers.IO) {
+                    isLoading.value = true
+                    val result = passViewModel.update(pass.value)
+                    isLoading.value = false
+                    when (result) {
+                        is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
+                            pass.value = result.content.pass
+                            snackbarHostState.showSnackbar(
+                                message = context.getString(R.string.update_successful),
+                                actionLabel = context.getString(R.string.details),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+                        is UpdateResult.Failed -> {
+                            val snackResult = snackbarHostState.showSnackbar(
+                                message = when (result.reason) {
+                                    is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
+                                    else -> context.getString(result.reason.messageId)
+                                },
+                                actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                duration = SnackbarDuration.Short
+                            )
+                            if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
+                                when (result.reason) {
+                                    is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
+                                    is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
                                 }
                             }
                         }
                     }
-                    val passFile = pass.value.originalPassFile(context)
-                    if (passFile != null) {
-                        PassShareButton(passFile)
-                    }
-                    IconButton(onClick = {
-                        Shortcut.create(context, pass.value, pass.value.description)
-                    }) {
-                        Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-                    }
                 }
-            },
-        ) { scrollBehavior ->
-            PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior, increaseBrightness =  passViewModel.increasePassViewBrightness())
+            }
+        }
+        val passFile = pass.value.originalPassFile(context)
+        if (passFile != null) {
+            PassShareButton(passFile)
+        }
+        IconButton(onClick = {
+            Shortcut.create(context, pass.value, pass.value.description)
+        }) {
+            Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
         }
     }
 }
