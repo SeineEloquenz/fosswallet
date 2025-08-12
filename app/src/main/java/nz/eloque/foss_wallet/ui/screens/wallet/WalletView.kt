@@ -26,6 +26,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ fun WalletView(
     navController: NavController,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
+    emptyIcon: ImageVector = Icons.Default.Wallet,
     showArchived: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
@@ -61,7 +63,7 @@ fun WalletView(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                imageVector = Icons.Default.Wallet,
+                imageVector = emptyIcon,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                 contentDescription = stringResource(R.string.wallet),
                 contentScale = ContentScale.FillWidth,

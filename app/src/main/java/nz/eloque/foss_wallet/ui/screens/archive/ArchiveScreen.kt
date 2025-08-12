@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Unarchive
@@ -91,6 +92,7 @@ fun ArchiveScreen(
             navController,
             passViewModel,
             showArchived = true,
+            emptyIcon = Icons.Default.Archive,
             listState = listState,
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses
