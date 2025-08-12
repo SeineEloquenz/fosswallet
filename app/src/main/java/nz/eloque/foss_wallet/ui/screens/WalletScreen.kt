@@ -82,7 +82,7 @@ fun WalletScreen(
 
     WalletScaffold(
         navController = navController,
-        title = stringResource(id = R.string.wallet),
+        title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
             IconButton(onClick = {
                 navController.navigate(Screen.Archive.route)
@@ -97,7 +97,7 @@ fun WalletScreen(
             }) {
                 Icon(
                     imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(R.string.about)
+                    contentDescription = stringResource(Screen.Settings.resourceId)
                 )
             }
         },
