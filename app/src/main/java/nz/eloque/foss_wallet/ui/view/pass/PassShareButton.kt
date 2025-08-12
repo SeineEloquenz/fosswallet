@@ -5,8 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
@@ -24,20 +25,24 @@ fun PassShareButton(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    IconButton(onClick = {
-        coroutineScope.launch(Dispatchers.IO) {
-            val uri = uri(context, file)
-            val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_STREAM, uri)
-                setDataAndType(uri, "application/vnd.apple.pkpass")
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    DropdownMenuItem(
+        text = { Text(stringResource(R.string.share)) },
+        leadingIcon =  {
+            Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share))
+        },
+        onClick = {
+            coroutineScope.launch(Dispatchers.IO) {
+                val uri = uri(context, file)
+                val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    setDataAndType(uri, "application/vnd.apple.pkpass")
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
+                val shareIntent = Intent.createChooser(sendIntent, "Share pass")
+                context.startActivity(shareIntent)
             }
-            val shareIntent = Intent.createChooser(sendIntent, "Share pass")
-            context.startActivity(shareIntent)
         }
-    }) {
-        Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share))
-    }
+    )
 }
 
 private fun uri(context: Context, file: File): Uri {
