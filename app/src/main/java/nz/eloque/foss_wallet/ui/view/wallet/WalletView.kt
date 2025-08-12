@@ -44,17 +44,19 @@ fun WalletView(
     navController: NavController,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
+    showArchived: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
 ) {
-    val list = passViewModel.uiState.collectAsState()
+    val walletState = passViewModel.uiState.collectAsState()
+    val passes = walletState.value.passes.filter { showArchived == it.archived }
 
     val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
         -left.addedAt.compareTo(right.addedAt)
     }) }
 
-    if (list.value.passes.isEmpty()) {
+    if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -85,7 +87,7 @@ fun WalletView(
                     .padding(start = 6.dp, end = 6.dp, bottom = 6.dp)
             )
         }
-        val sortedPasses = list.value.passes.sortedWith(comparator).groupBy { it.groupId }.toList()
+        val sortedPasses = passes.sortedWith(comparator).groupBy { it.groupId }.toList()
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
         items(groups) { (groupId, passes) ->

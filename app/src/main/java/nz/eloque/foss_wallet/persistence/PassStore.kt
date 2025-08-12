@@ -57,6 +57,10 @@ class PassStore @Inject constructor(
         }
     }
 
+    fun archive(pass: Pass) = passRepository.archive(pass)
+
+    fun unarchive(pass: Pass) = passRepository.unarchive(pass)
+
     fun group(passes: Set<Pass>): PassGroup {
         val group = passRepository.insert(PassGroup())
         passes.forEach { passRepository.associate(it, group) }

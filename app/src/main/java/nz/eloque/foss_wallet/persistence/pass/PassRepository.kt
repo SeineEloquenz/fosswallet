@@ -55,4 +55,6 @@ class PassRepository @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
+    fun archive(pass: Pass) = passDao.archive(pass.id)
+    fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 }

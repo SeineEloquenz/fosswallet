@@ -67,4 +67,10 @@ interface PassDao {
         ) = 1
     """)
     fun deleteEmptyGroup(groupId: Long)
+
+    @Query("UPDATE pass SET archived = 1 WHERE id = :passId")
+    fun archive(passId: String)
+
+    @Query("UPDATE pass SET archived = 0 WHERE id = :passId")
+    fun unarchive(passId: String)
 }
