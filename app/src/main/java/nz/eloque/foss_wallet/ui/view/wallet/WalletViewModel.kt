@@ -82,6 +82,9 @@ class PassViewModel @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
     fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
 
+    fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
+    fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
+
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
