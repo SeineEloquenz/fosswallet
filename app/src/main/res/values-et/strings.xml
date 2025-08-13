@@ -51,4 +51,6 @@
     <string name="pass_view">Dokumendi vaade</string>
     <string name="pass_view_brightness">Suurenda eredust</string>
     <string name="pass_already_imported">Dokument on juba imporditud</string>
+    <string name="archive">Arhiveeri</string>
+    <string name="unarchive">Eemalda arhiivist</string>
 </resources>
