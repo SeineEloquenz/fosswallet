@@ -51,4 +51,6 @@
     <string name="pass_view_brightness">Aumentare la luminosità</string>
     <string name="pass_view">Vista del biglietto</string>
     <string name="pass_already_imported">Biglietto già importato</string>
+    <string name="unarchive">Togli dall\'archivio</string>
+    <string name="archive">Archivia</string>
 </resources>
