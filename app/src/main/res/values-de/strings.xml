@@ -51,4 +51,6 @@
     <string name="barcode_position_top">Oben</string>
     <string name="barcode_position_center">Mitte</string>
     <string name="pass_already_imported">Pass bereits importiert</string>
+    <string name="archive">Archivieren</string>
+    <string name="unarchive">Wiederherstellen</string>
 </resources>

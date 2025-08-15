@@ -51,4 +51,6 @@
     <string name="pass_view">Zobrazení lístku</string>
     <string name="pass_view_brightness">Zvýšit jas</string>
     <string name="pass_already_imported">Lístek již byl importován</string>
+    <string name="archive">Archivovat</string>
+    <string name="unarchive">Odebrat z archivu</string>
 </resources>
