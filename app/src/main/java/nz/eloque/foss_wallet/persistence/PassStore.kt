@@ -12,10 +12,11 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
+import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.shortcut.Shortcut
-import java.io.InputStream
 import java.util.Locale
 
 class PassStore @Inject constructor(
@@ -73,8 +74,8 @@ class PassStore @Inject constructor(
         Shortcut.remove(context, pass)
     }
 
-    fun load(context: Context, inputStream: InputStream): ImportResult {
-        val loaded = PassLoader(PassParser(context)).load(inputStream)
+    fun load(context: Context, bytes: ByteArray): ImportResult {
+        val loaded = PassLoader(PassParser(context)).load(bytes)
         return add(loaded)
     }
 

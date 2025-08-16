@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -29,11 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.persistence.InvalidPassException
+import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.isScrollingUp
@@ -54,24 +51,13 @@ fun WalletScreen(
         res?.let {
             println("selected file URI $res")
             coroutineScope.launch(Dispatchers.IO) {
-                contentResolver.openInputStream(res)?.use { inputStream ->
-                    try {
-                        val importResult = passViewModel.load(context, inputStream)
-                        withContext(Dispatchers.Main) {
-                            when (importResult) {
-                                is ImportResult.New -> {
-                                    // Pass imported successfully
-                                }
-                                is ImportResult.Replaced -> {
-                                    Toast.makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    } catch (_: InvalidPassException) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                contentResolver.openInputStream(res)?.use {
+                    Loader(context).handleInputStream(
+                        it,
+                        navController,
+                        passViewModel,
+                        coroutineScope
+                    )
                 }
             }
         }

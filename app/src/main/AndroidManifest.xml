@@ -25,6 +25,37 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- PKPASSES -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content"/>
+                <data android:mimeType="application/pkpasses"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="application/pkpasses"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content"/>
+                <data android:mimeType="application/vnd.apple.pkpasses"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="application/vnd.apple.pkpasses"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content"/>
+                <data android:mimeType="application/vnd-com.apple.pkpasses"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="application/vnd-com.apple.pkpasses"/>
+            </intent-filter>
+
+            <!-- PKPASS -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -52,6 +83,7 @@
                 <data android:scheme="file"/>
                 <data android:mimeType="application/vnd-com.apple.pkpass"/>
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

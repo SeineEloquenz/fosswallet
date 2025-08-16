@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,10 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.api.ImportResult
-import nz.eloque.foss_wallet.parsing.PassParser
-import nz.eloque.foss_wallet.persistence.InvalidPassException
-import nz.eloque.foss_wallet.persistence.PassLoader
+import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
@@ -76,27 +71,12 @@ class MainActivity : ComponentActivity() {
     private fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope, navController: NavHostController) {
         contentResolver.openInputStream(this).use {
             it?.let {
-                try {
-                    val loadResult = PassLoader(PassParser(this@MainActivity)).load(it)
-                    val importResult = passViewModel.add(loadResult)
-                    val id: String = loadResult.pass.pass.id
-                    coroutineScope.launch(Dispatchers.Main) {
-                        when (importResult) {
-                            is ImportResult.New -> navController.navigate("pass/$id")
-                            is ImportResult.Replaced -> {
-                                Toast
-                                    .makeText(this@MainActivity, this@MainActivity.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
-                                    .show()
-                                navController.navigate("pass/$id")
-                            }
-                        }
-                    }
-                } catch (e: InvalidPassException) {
-                    Log.w(TAG, "Failed to load pass from intent: $e")
-                    coroutineScope.launch(Dispatchers.Main) { Toast
-                        .makeText(this@MainActivity, this@MainActivity.getString(R.string.invalid_pass_toast), Toast.LENGTH_SHORT)
-                        .show() }
-                }
+                Loader(this@MainActivity).handleInputStream(
+                    it,
+                    navController,
+                    passViewModel,
+                    coroutineScope
+                )
             }
         }
     }

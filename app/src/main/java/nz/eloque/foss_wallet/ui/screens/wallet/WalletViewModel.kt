@@ -19,10 +19,9 @@ import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.persistence.PassLoadResult
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
-import java.io.InputStream
+import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import java.util.Locale
 
 data class PassUiState(
@@ -78,7 +77,7 @@ class PassViewModel @Inject constructor(
 
     fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
 
-    fun load(context: Context, inputStream: InputStream): ImportResult = passStore.load(context, inputStream).apply { updatePasses() }
+    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
     fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
 
