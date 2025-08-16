@@ -176,10 +176,11 @@ class PassParser(val context: Context? = null) {
     private fun parseColor(key: String, passJson: JSONObject): Color? {
         return if (passJson.has(key)) {
             val representation = passJson.getString(key).filterNot { it.isWhitespace() }
-            val regexResult = "rgb\\((\\d+),(\\d+),(\\d+)\\)".toRegex().find((representation))
+            val regexResult = "rgba?\\((\\d+),(\\d+),(\\d+)(?:,([\\d.]+))?\\)".toRegex().find((representation))
             if (regexResult != null) {
-                val (red, green, blue) = regexResult.destructured
-                return Color(red.toInt(), green.toInt(), blue.toInt(), 255)
+                val (red, green, blue, alpha) = regexResult.destructured
+                val parsedAlpha = alpha.ifEmpty { "1.0" }.toDoubleOrNull() ?: return null
+                return Color(red.toInt(), green.toInt(), blue.toInt(), (parsedAlpha * 255.0).toInt())
             } else null
         } else null
     }
