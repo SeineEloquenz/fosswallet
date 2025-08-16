@@ -2,14 +2,18 @@ package nz.eloque.foss_wallet.ui.screens.wallet
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -18,16 +22,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.loader.Loader
@@ -46,19 +53,25 @@ fun WalletScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val listState = rememberLazyListState()
-    val toastMessage = stringResource(R.string.invalid_pass_toast)
+
+    val loading = remember { mutableStateOf(false) }
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
         res?.let {
             println("selected file URI $res")
-            coroutineScope.launch(Dispatchers.IO) {
-                contentResolver.openInputStream(res)?.use {
-                    Loader(context).handleInputStream(
-                        it,
-                        navController,
-                        passViewModel,
-                        coroutineScope
-                    )
+            coroutineScope.launch {
+                loading.value = true
+                withContext(Dispatchers.IO) {
+                    contentResolver.openInputStream(res)?.use {
+                        Loader(context).handleInputStream(
+                            it,
+                            navController,
+                            passViewModel,
+                            coroutineScope
+                        )
+                    }
                 }
+                loading.value = false
             }
         }
     }
@@ -135,5 +148,16 @@ fun WalletScreen(
         },
     ) { scrollBehavior ->
         WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+
+        if (loading.value) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
