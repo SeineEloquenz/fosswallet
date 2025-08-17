@@ -70,7 +70,7 @@ fun WalletApp(
                 AboutScreen(navController)
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(navController, settingsViewModel)
+                SettingsScreen(navController, passViewModel, settingsViewModel)
             }
             composable(
                 route = "pass/{passId}",

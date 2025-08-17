@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.parsing
 
-import nz.eloque.foss_wallet.persistence.PassBitmaps
+import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test

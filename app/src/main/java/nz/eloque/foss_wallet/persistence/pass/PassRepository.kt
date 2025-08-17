@@ -9,7 +9,7 @@ import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassWithLocalization
-import nz.eloque.foss_wallet.persistence.PassBitmaps
+import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 
 class PassRepository @Inject constructor(
     @param:ApplicationContext private val context: Context,

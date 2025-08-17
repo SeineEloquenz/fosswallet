@@ -53,4 +53,8 @@
     <string name="pass_already_imported">Pass bereits importiert</string>
     <string name="archive">Archivieren</string>
     <string name="unarchive">Wiederherstellen</string>
+    <string name="n_passes_imported">%1$d Pässe importiert</string>
+    <string name="export">Export</string>
+    <string name="share_passes">Pässe teilen</string>
+    <string name="more_options">Mehr Optionen</string>
 </resources>

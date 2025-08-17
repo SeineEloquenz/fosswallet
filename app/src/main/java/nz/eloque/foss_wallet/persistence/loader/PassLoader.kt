@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.persistence
+package nz.eloque.foss_wallet.persistence.loader
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,13 +10,11 @@ import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.parsing.LocalizationParser
 import nz.eloque.foss_wallet.parsing.PassParser
-import nz.eloque.foss_wallet.utils.toByteArray
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.zip.ZipInputStream
@@ -26,11 +24,6 @@ data class PassLoadResult(
     val bitmaps: PassBitmaps,
     val originalPass: OriginalPass
 )
-
-class InvalidPassException : Exception {
-    constructor() : super ()
-    constructor(e: Exception) : super(e)
-}
 
 class PassBitmaps(
     val icon: Bitmap,
@@ -65,16 +58,15 @@ class PassLoader(
     private val passParser: PassParser
 ) {
 
-    fun load(inputStream: InputStream, resultingId: String? = null, addedAt: Instant = Instant.now()): PassLoadResult {
+    fun load(bytes: ByteArray, resultingId: String? = null, addedAt: Instant = Instant.now()): PassLoadResult {
         try {
-            return loadPass(inputStream, resultingId, addedAt)
+            return loadPass(bytes, resultingId, addedAt)
         } catch (e: Exception) {
             throw InvalidPassException(e)
         }
     }
 
-    private fun loadPass(inputStream: InputStream, resultingId: String? = null, addedAt: Instant): PassLoadResult {
-        val bytes = inputStream.toByteArray()
+    private fun loadPass(bytes: ByteArray, resultingId: String? = null, addedAt: Instant): PassLoadResult {
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
         var logo: Bitmap? = null

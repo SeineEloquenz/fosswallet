@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.api
 
 import androidx.annotation.StringRes
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.persistence.PassLoadResult
+import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 
 sealed class UpdateResult() {
     data class Success(val content: UpdateContent) : UpdateResult()
