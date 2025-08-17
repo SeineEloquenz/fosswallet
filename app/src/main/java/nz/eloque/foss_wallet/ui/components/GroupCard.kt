@@ -110,7 +110,7 @@ fun GroupCard(
                         modifier = Modifier
                     ) {
                         IconButton(onClick = { expanded.value = !expanded.value }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
                         }
                         DropdownMenu(
                             expanded = expanded.value,
