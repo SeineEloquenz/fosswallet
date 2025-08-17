@@ -56,4 +56,5 @@
     <string name="unarchive">Unarchive</string>
     <string name="n_passes_imported">Imported %1$d passes</string>
     <string name="export">Export</string>
+    <string name="share_passes">Share passes</string>
 </resources>

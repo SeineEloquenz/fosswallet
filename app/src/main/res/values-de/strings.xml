@@ -55,4 +55,5 @@
     <string name="unarchive">Wiederherstellen</string>
     <string name="n_passes_imported">%1$d Pässe importiert</string>
     <string name="export">Export</string>
+    <string name="share_passes">Pässe teilen</string>
 </resources>
