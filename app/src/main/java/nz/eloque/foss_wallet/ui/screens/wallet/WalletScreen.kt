@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -38,6 +39,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.loader.Loader
+import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.isScrollingUp
@@ -124,6 +126,15 @@ fun WalletScreen(
                         },
                     ) {
                         Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
+                    }
+                    FloatingActionButton(
+                        onClick = {
+                            coroutineScope.launch(Dispatchers.IO) {
+                                share(selectedPasses, context)
+                            }
+                        },
+                    ) {
+                        Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share_passes))
                     }
                     ExtendedFloatingActionButton(
                         text = { Text(stringResource(R.string.group)) },
