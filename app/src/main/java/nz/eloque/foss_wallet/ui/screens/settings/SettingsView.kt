@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -21,16 +22,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.share.share
+import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsView(
+    passViewModel: PassViewModel,
     settingsViewModel: SettingsViewModel,
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
+    val passes = passViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -67,13 +73,25 @@ fun SettingsView(
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
             )
             HorizontalDivider()
-            val context = LocalContext.current
             SettingsComboBox(
                 name = stringResource(R.string.barcode_position),
                 options = BarcodePosition.all(),
                 selectedOption = settings.value.barcodePosition,
                 onOptionSelected = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } },
                 optionLabel = { context.getString(it.label) }
+            )
+        }
+        SettingsSection(
+            heading = stringResource(R.string.export),
+        ) {
+            SettingsButton(
+                name = stringResource(R.string.export),
+                icon = Icons.Default.Share,
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        share(passViewModel.uiState.value.passes, context)
+                    }
+                }
             )
         }
     }
