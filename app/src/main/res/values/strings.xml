@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">FossWallet</string>
     <string name="settings">Settings</string>
@@ -54,7 +55,7 @@
     <string name="pass_already_imported">Pass already imported</string>
     <string name="archive">Archive</string>
     <string name="unarchive">Unarchive</string>
-    <string name="n_passes_imported">Imported %1$d passes</string>
+    <string name="n_passes_imported">%1$d passes imported</string>
     <string name="export">Export</string>
     <string name="share_passes">Share passes</string>
     <string name="more_options">More options</string>

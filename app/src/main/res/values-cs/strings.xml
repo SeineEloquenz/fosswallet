@@ -53,4 +53,8 @@
     <string name="pass_already_imported">Lístek již byl importován</string>
     <string name="archive">Archivovat</string>
     <string name="unarchive">Odebrat z archivu</string>
+    <string name="n_passes_imported">Importováno %1$d lístků</string>
+    <string name="export">Export</string>
+    <string name="share_passes">Sdílet lístky</string>
+    <string name="more_options">Další možnosti</string>
 </resources>

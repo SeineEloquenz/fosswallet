@@ -53,4 +53,8 @@
     <string name="pass_already_imported">Dokument on juba imporditud</string>
     <string name="archive">Arhiveeri</string>
     <string name="unarchive">Eemalda arhiivist</string>
+    <string name="n_passes_imported">%1$d dokumenti on imporditud</string>
+    <string name="export">Ekspordi</string>
+    <string name="share_passes">Jaga dokumente</string>
+    <string name="more_options">Lisavalikud</string>
 </resources>

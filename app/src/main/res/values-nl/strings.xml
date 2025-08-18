@@ -53,4 +53,8 @@
     <string name="sync_interval">Bijwerkingsinterval van de passen (min)</string>
     <string name="archive">Archiveren</string>
     <string name="unarchive">Dearchiveren</string>
+    <string name="more_options">Meer opties</string>
+    <string name="export">Exporteren</string>
+    <string name="n_passes_imported">%1$d passen geïmporteerd</string>
+    <string name="share_passes">Passen delen</string>
 </resources>
