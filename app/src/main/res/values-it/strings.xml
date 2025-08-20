@@ -54,4 +54,7 @@
     <string name="unarchive">Togli dall\'archivio</string>
     <string name="archive">Archivia</string>
     <string name="more_options">Altre opzioni</string>
+    <string name="n_passes_imported">%1$d biglietti importati</string>
+    <string name="export">Esporta</string>
+    <string name="share_passes">Condividi biglietti</string>
 </resources>
