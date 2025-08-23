@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
@@ -54,9 +55,7 @@ fun WalletView(
     val walletState = passViewModel.uiState.collectAsState()
     val passes = walletState.value.passes.filter { showArchived == it.archived }
 
-    val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
-        -left.addedAt.compareTo(right.addedAt)
-    }) }
+    val comparator by remember { mutableStateOf(SortOption.TimeAdded.comparator) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
