@@ -57,4 +57,7 @@
     <string name="export">Export</string>
     <string name="share_passes">Pässe teilen</string>
     <string name="more_options">Mehr Optionen</string>
+    <string name="date_added">Datum hinzugefügt</string>
+    <string name="selected">Ausgewählt</string>
+    <string name="filter">Sortieren nach</string>
 </resources>
