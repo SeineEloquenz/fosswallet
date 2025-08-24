@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.model
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.saveable.Saver
 import nz.eloque.foss_wallet.R
 
 const val TIME_ADDED = "TimeAdded"
@@ -20,3 +21,8 @@ sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val co
         }
     }
 }
+
+val SortOptionSaver: Saver<SortOption, String> = Saver(
+    save = { it.name },  // how to save User
+    restore = { SortOption.all().find { option -> option.name == it } } // how to restore User
+)

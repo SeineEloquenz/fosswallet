@@ -22,7 +22,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.SortOption
+import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
@@ -59,7 +60,7 @@ fun WalletView(
     val walletState = passViewModel.uiState.collectAsState()
     val passes = walletState.value.passes.filter { showArchived == it.archived }
 
-    val sortOption = remember { mutableStateOf<SortOption>(SortOption.TimeAdded) }
+    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf<SortOption>(SortOption.TimeAdded) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
