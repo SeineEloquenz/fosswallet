@@ -25,13 +25,13 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun DateView(
     title: String,
-    start: Long,
-    end: Long,
+    start: Long?,
+    end: Long?,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
-    if (start != 0L || end != 0L) {
+    if (start != null) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
@@ -41,28 +41,26 @@ fun DateView(
                     it.type = "vnd.android.cursor.item/event"
                     it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
                     it.putExtra("allDay", false)
-                    it.putExtra("endTime", if (end != 0L) Instant.ofEpochSecond(end).toEpochMilli()
-                        else Instant.ofEpochSecond(start).plus(30, ChronoUnit.MINUTES).toEpochMilli()) //30 min default
+                    it.putExtra("endTime", if (end != null) Instant.ofEpochSecond(end).toEpochMilli()
+                    else Instant.ofEpochSecond(start).plus(30, ChronoUnit.MINUTES).toEpochMilli()) //30 min default
                     it.putExtra("title", title)
                 }
-                
+
                 try {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     Log.e("DateView", "No calendar app found!", e)
                 }
-                
+
             }) {
                 Icon(imageVector = Icons.Default.CalendarToday, contentDescription = stringResource(R.string.date))
             }
             Column {
-                if (start != 0L) {
-                    Text(
-                        text = Instant.ofEpochSecond(start).prettyDateTime(),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                if (end != 0L) {
+                Text(
+                    text = Instant.ofEpochSecond(start).prettyDateTime(),
+                    style = MaterialTheme.typography.bodySmall
+                )
+                if (end != null) {
                     Text(
                         text = Instant.ofEpochSecond(end).prettyDateTime(),
                         style = MaterialTheme.typography.bodySmall
