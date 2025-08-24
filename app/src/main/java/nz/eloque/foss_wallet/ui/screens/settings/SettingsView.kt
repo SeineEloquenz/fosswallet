@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.share
+import nz.eloque.foss_wallet.ui.components.ComboBox
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -73,11 +74,17 @@ fun SettingsView(
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
             )
             HorizontalDivider()
-            SettingsComboBox(
+            ComboBox(
                 name = stringResource(R.string.barcode_position),
                 options = BarcodePosition.all(),
                 selectedOption = settings.value.barcodePosition,
-                onOptionSelected = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setBarcodePosition(it) } },
+                onOptionSelected = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        settingsViewModel.setBarcodePosition(
+                            it
+                        )
+                    }
+                },
                 optionLabel = { context.getString(it.label) }
             )
         }

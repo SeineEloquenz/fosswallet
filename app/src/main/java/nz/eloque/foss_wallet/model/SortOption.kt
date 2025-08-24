@@ -7,7 +7,7 @@ const val TIME_ADDED = "TimeAdded"
 const val RELEVANT_DATE_NEWEST = ""
 const val RELEVANT_DATE_OLDEST = ""
 
-sealed class SortOption(val name: String, @StringRes l18n: Int, val comparator: Comparator<Pass>) {
+sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val comparator: Comparator<Pass>) {
     object TimeAdded : SortOption(TIME_ADDED, R.string.date_added, Comparator { left, right ->
         -left.addedAt.compareTo(right.addedAt)
     })

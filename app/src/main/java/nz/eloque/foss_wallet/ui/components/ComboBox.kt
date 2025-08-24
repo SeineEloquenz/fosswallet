@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.screens.settings
+package nz.eloque.foss_wallet.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> SettingsComboBox(
+fun <T> ComboBox(
     name: String,
     options: List<T>,
     selectedOption: T,
