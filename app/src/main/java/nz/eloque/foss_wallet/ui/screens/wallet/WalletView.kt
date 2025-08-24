@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.screens.wallet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,9 +21,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +30,18 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.SortOption
+import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
+import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,12 +56,11 @@ fun WalletView(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
 ) {
+    val context = LocalContext.current
     val walletState = passViewModel.uiState.collectAsState()
     val passes = walletState.value.passes.filter { showArchived == it.archived }
 
-    val comparator by remember { mutableStateOf( Comparator<Pass> { left, right ->
-        -left.addedAt.compareTo(right.addedAt)
-    }) }
+    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf<SortOption>(SortOption.TimeAdded) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
@@ -82,14 +86,27 @@ fun WalletView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         item {
-            FilterBar(
-                onSearch = { passViewModel.filter(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 6.dp, end = 6.dp, bottom = 6.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FilterBar(
+                    onSearch = { passViewModel.filter(it) },
+                    modifier = Modifier
+                        .padding(start = 6.dp, bottom = 6.dp)
+                        .weight(1f)
+                )
+                SelectionMenu(
+                    icon = Icons.AutoMirrored.Default.Sort,
+                    contentDescription = R.string.filter,
+                    options = SortOption.all(),
+                    selectedOption = sortOption.value,
+                    onOptionSelected = { sortOption.value = it },
+                    optionLabel = { context.getString(it.l18n) }
+                )
+            }
         }
-        val sortedPasses = passes.sortedWith(comparator).groupBy { it.groupId }.toList()
+        val sortedPasses = passes.sortedWith(sortOption.value.comparator).groupBy { it.groupId }.toList()
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
         items(groups) { (groupId, passes) ->

@@ -59,4 +59,9 @@
     <string name="export">Export</string>
     <string name="share_passes">Share passes</string>
     <string name="more_options">More options</string>
+    <string name="date_added">Date added</string>
+    <string name="relevant_date_newest">Newest relevant date</string>
+    <string name="relevant_date_oldest">Oldest relevant date</string>
+    <string name="selected">Selected</string>
+    <string name="filter">Sort by</string>
 </resources>

@@ -81,7 +81,11 @@ fun DateLocationRow(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DateView(pass.description, pass.relevantDate, pass.expirationDate)
+        DateView(
+            title = pass.description,
+            start = pass.relevantDate,
+            end = pass.expirationDate,
+        )
         pass.locations.firstOrNull()?.let { LocationButton(it) }
     }
 }
