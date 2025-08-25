@@ -16,7 +16,7 @@
     <string name="back_side">Оборотная сторона</string>
     <string name="date">Дата</string>
     <string name="delete">Удалить</string>
-    <string name="invalid_pass_toast">Не удалось загрузить пропуск. Вы уверены, что это корректный .pkpass?</string>
+    <string name="invalid_pass_toast">Не удалось загрузить пропуск. Вы уверены, что это правильный .pkpass?</string>
     <string name="add_pass">Добавить пропуск</string>
     <string name="about">О приложении</string>
     <string name="source_code">Исходный код</string>
@@ -42,7 +42,7 @@
     <string name="exception">При обращении к серверу обновлений произошла ошибка</string>
     <string name="copy">Копировать</string>
     <string name="status_code">Сервер ответил со статусом %1$s</string>
-    <string name="status_forbidden">Сервер не разрешил доступ к пропуску. Возможно, срок действия пропуска уже истёк?</string>
+    <string name="status_forbidden">Сервер не разрешил доступ к пропуску. Может срок действия пропуска уже истёк?</string>
     <string name="status_not_updated">Ваш пропуск уже актуален</string>
     <string name="open_wallet">Открыть FossWallet</string>
     <string name="barcode_position">Положение штрихкода в полноэкранном режиме</string>
@@ -50,4 +50,16 @@
     <string name="pass_view_brightness">Увеличить яркость</string>
     <string name="barcode_position_top">Вверх</string>
     <string name="barcode_position_center">По центру</string>
+    <string name="pass_already_imported">Пропуск уже импортирован</string>
+    <string name="archive">Архивировать</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="n_passes_imported">Импортировано %1$d пропусков</string>
+    <string name="export">Экспортировать</string>
+    <string name="share_passes">Поделиться пропусками</string>
+    <string name="more_options">Больше настроек</string>
+    <string name="date_added">Дата добавления</string>
+    <string name="relevant_date_newest">Последняя релевантная дата</string>
+    <string name="relevant_date_oldest">Старейшая релевантная дата</string>
+    <string name="selected">Выбрано</string>
+    <string name="filter">Сортировать по</string>
 </resources>

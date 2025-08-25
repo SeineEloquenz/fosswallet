@@ -57,4 +57,9 @@
     <string name="n_passes_imported">%1$d biglietti importati</string>
     <string name="export">Esporta</string>
     <string name="share_passes">Condividi biglietti</string>
+    <string name="filter">Ordina per</string>
+    <string name="date_added">Data aggiunta</string>
+    <string name="relevant_date_newest">La più recente data rilevante</string>
+    <string name="relevant_date_oldest">La più vecchia data rilevante</string>
+    <string name="selected">Selezionati</string>
 </resources>

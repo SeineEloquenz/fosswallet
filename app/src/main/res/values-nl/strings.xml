@@ -57,4 +57,7 @@
     <string name="export">Exporteren</string>
     <string name="n_passes_imported">%1$d passen geïmporteerd</string>
     <string name="share_passes">Passen delen</string>
+    <string name="date_added">Datum toegevoegd</string>
+    <string name="selected">Geselecteerd</string>
+    <string name="filter">Sorteren op</string>
 </resources>
