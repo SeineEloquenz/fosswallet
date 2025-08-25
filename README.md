@@ -6,13 +6,14 @@ I tried to recreate the necessary functionality in Material Design 3 and with mo
 technologies.
 
 Features (non-exhaustive):
-* Store and share Passes (.pkpass)
+* Store and share Passes (.pkpass/.pkpasses)
 * Displays Pass information and barcodes
 * Manual Pass Updates
 * Optional automatic Pass updates (pull based, with notifications)
 * Home-Screen shortcuts
 * Passes display over lockscreen
 * Per App language support
+* Import/Export to .pkpasses
 
 ## Installation
 
