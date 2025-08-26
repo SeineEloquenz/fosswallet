@@ -51,4 +51,15 @@
     <string name="pass_view">Widok pass\'a</string>
     <string name="pass_view_brightness">Zwiększ jasność</string>
     <string name="pass_already_imported">Pass już zaimportowany</string>
+    <string name="archive">Archiwizuj</string>
+    <string name="unarchive">Przywróć z archiwum</string>
+    <string name="n_passes_imported">Zaimportowano %1$d passów</string>
+    <string name="export">Eksport</string>
+    <string name="share_passes">Udostępnij pass\'y</string>
+    <string name="more_options">Więcej opcji</string>
+    <string name="date_added">Data dodana</string>
+    <string name="selected">Zaznaczone</string>
+    <string name="filter">Sortuj wg</string>
+    <string name="relevant_date_newest">Najnowsza istotna data</string>
+    <string name="relevant_date_oldest">Najstarsza istotna data</string>
 </resources>
