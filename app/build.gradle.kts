@@ -117,6 +117,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.accompanist.permissions)
+    
+    // Fragment
+    implementation(libs.androidx.fragment.ktx)
+
+    // BiometricPrompt
+    implementation(libs.androidx.biometric)
 
     //navigation
     implementation(libs.androidx.navigation.compose)

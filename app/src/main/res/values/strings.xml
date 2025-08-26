@@ -64,4 +64,14 @@
     <string name="relevant_date_oldest">Oldest relevant date</string>
     <string name="selected">Selected</string>
     <string name="filter">Sort by</string>
+    <string name="hide">Hide pass</string>
+    <string name="unhide">Unhide pass</string>
+    <string name="conceal">Conceal hidden passes</string>
+    <string name="reveal">Reveal hidden passes</string>
+    <string name="pin">Pin pass on top</string>
+    <string name="unpin">Unpin pass</string>
+    <string name="auth">Authentication</string>
+    <string name="auth_by">using the device's own biometrics/password/pattern/PIN</string>
+    <string name="to_conceal"></string>
+    <string name="to_reveal"></string>
 </resources>

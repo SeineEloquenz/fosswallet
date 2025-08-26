@@ -88,4 +88,9 @@ class PassStore @Inject constructor(
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
     fun dessociate(pass: Pass, groupId: Long) = passRepository.dessociate(pass, groupId)
+
+    fun unhiddenPasses() = passRepository.unhidden()
+    fun filteredUnhidden(query: String) = passRepository.filteredUnhidden(query)
+    fun hide(pass: Pass) = passRepository.hide(pass)
+    fun unhide(pass: Pass) = passRepository.unhide(pass)
 }

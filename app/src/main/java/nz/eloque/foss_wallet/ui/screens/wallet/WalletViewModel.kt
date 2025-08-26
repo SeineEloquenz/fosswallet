@@ -25,6 +25,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import java.util.Locale
 
 data class PassUiState(
+    var isAuthenticated = false,
     val query: String = "",
     val passes: List<Pass> = ArrayList()
 )
@@ -59,6 +60,10 @@ class PassViewModel @Inject constructor(
         }
     }
 
+    fun toggleAuthentication() {
+        _uiState.value = _uiState.value.copy(isAuthenticated = !_uiState.value.isAuthenticated)
+    }
+
     fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
 
     fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
@@ -87,4 +92,8 @@ class PassViewModel @Inject constructor(
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+    
+    fun showAllPasses(): List<Pass> = uiState.value.passes
+
+    fun showUnhiddenPasses(): List<Pass> = uiState.value.passes.filterNot { pass -> pass.hidden }
 }

@@ -57,4 +57,20 @@ class PassRepository @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+
+    fun unhidden(): Flow<List<PassWithLocalization>> = passDao.unhidden()
+
+    fun filteredUnhidden(query: String): Flow<List<PassWithLocalization>> {
+        return if (query.isEmpty()) {
+            unhidden()
+        } else {
+            unhidden().map { it.filter { it.pass.contains(query) } }
+        }
+    }
+
+    fun hide(pass: Pass) = passDao.hide(pass.id)
+    fun unhide(pass: Pass) = passDao.unhide(pass.id)
+
+    fun pin(pass: Pass) = passDao.pin(pass.id)
+    fun unpin(pass: Pass) = passDao.unpin(pass.id)
 }
