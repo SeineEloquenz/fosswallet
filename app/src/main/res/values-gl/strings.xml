@@ -51,4 +51,15 @@
     <string name="pass_view">Vista de pases</string>
     <string name="pass_view_brightness">Aumentar brillo</string>
     <string name="pass_already_imported">O pase xa foi importado</string>
+    <string name="archive">Arquivo</string>
+    <string name="unarchive">Desarquivar</string>
+    <string name="n_passes_imported">Importaronse %1$d pases</string>
+    <string name="export">Exportar</string>
+    <string name="share_passes">Compartir pases</string>
+    <string name="more_options">Máis opcións</string>
+    <string name="date_added">Data en que se engadiu</string>
+    <string name="relevant_date_newest">Data relevante máis nova</string>
+    <string name="relevant_date_oldest">Data relevante máis vella</string>
+    <string name="selected">Seleccionado</string>
+    <string name="filter">Ordenar por</string>
 </resources>
