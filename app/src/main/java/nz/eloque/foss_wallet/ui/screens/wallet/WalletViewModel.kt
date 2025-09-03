@@ -25,6 +25,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import java.util.Locale
 
 data class PassUiState(
+    var isAuthenticated: Boolean = false,
     val query: String = "",
     val passes: List<Pass> = ArrayList()
 )
@@ -54,7 +55,7 @@ class PassViewModel @Inject constructor(
 
     private fun updatePasses() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(passes = passStore.allPasses().first().map { it.applyLocalization(
+            _uiState.value = _uiState.value.copy(passes = passStore.allPasses(true).first().map { it.applyLocalization(
                 Locale.getDefault().language) })
         }
     }
@@ -65,9 +66,9 @@ class PassViewModel @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
 
-    fun filter(query: String) {
+    fun filter(query: String, authStatus: Boolean) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query).first().map { it.applyLocalization(Locale.getDefault().language) })
+            _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query, authStatus).first().map { it.applyLocalization(Locale.getDefault().language) })
         }
     }
 
@@ -79,10 +80,21 @@ class PassViewModel @Inject constructor(
 
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
-    fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
+    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId).apply { updatePasses() }
 
     fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
     fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
+
+    fun hide(pass: Pass) = passStore.hide(pass).apply { updatePasses() }
+    fun unhide(pass: Pass) = passStore.unhide(pass).apply { updatePasses() }
+
+
+
+    fun pin(pass: Pass) = passStore.pin(pass).apply { updatePasses() }
+    fun unpin(pass: Pass) = passStore.unpin(pass).apply { updatePasses() }
+
+    fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
+    fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
