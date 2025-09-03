@@ -16,15 +16,15 @@ class PassRepository @Inject constructor(
     private val passDao: PassDao
 ) {
 
-    fun all(): Flow<List<PassWithLocalization>> = passDao.all()
+    fun all(authStatus: Boolean): Flow<List<PassWithLocalization>> = passDao.all(authStatus)
 
     fun updatable(): List<Pass> = passDao.updatable()
 
-    fun filtered(query: String): Flow<List<PassWithLocalization>> {
+    fun filtered(query: String, authStatus: Boolean): Flow<List<PassWithLocalization>> {
         return if (query.isEmpty()) {
-            all()
+            all(authStatus)
         } else {
-            val result = all()
+            val result = all(authStatus)
             result.map { it.filter { it.pass.contains(query) } } }
     }
 
@@ -51,10 +51,20 @@ class PassRepository @Inject constructor(
         passDao.delete(pass)
     }
 
-    fun dessociate(pass: Pass, groupId: Long) = passDao.dessociate(pass, groupId)
-
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
+    fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
+
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+
+    fun hide(pass: Pass) = passDao.hide(pass.id)
+    fun unhide(pass: Pass) = passDao.unhide(pass.id)
+
+    suspend fun hidden(pass: Pass) = passDao.hidden(pass.id)
+
+    fun pin(pass: Pass) = passDao.pin(pass.id)
+    fun unpin(pass: Pass) = passDao.unpin(pass.id)
+
+    suspend fun pinned(pass: Pass) = passDao.pinned(pass.id)
 }
