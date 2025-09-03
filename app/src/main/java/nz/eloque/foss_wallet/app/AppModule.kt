@@ -9,7 +9,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import jakarta.inject.Singleton
 import nz.eloque.foss_wallet.persistence.WalletDb
+import nz.eloque.foss_wallet.persistence.buildDb
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassDao
@@ -31,8 +33,9 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideWalletDb(@ApplicationContext context: Context): WalletDb {
-        return WalletDb.getDb(context)
+        return buildDb(context)
     }
 
     @Provides

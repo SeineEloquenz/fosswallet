@@ -23,20 +23,33 @@ fun Bitmap?.derivePassColors(): PassColors? {
 
 private fun Bitmap.backgroundColor(): Color? {
     val bitmapSize = 2 * this.width + 2 * this.height
-    val threshold = 0.95
+    val threshold = 0.75
     val colorMap = HashMap<Color, Int>()
     for (i in 0..< this.width) {
-        colorMap.merge(Color(this[i, 0]), 1, Int::plus)
-        colorMap.merge(Color(this[i, this.height - 1]), 1, Int::plus)
+        colorMap.merge(Color(this[i, 0]).clamp(), 1, Int::plus)
+        colorMap.merge(Color(this[i, this.height - 1]).clamp(), 1, Int::plus)
     }
     for (i in 0..< this.height) {
-        colorMap.merge(Color(this[0, i]), 1, Int::plus)
-        colorMap.merge(Color(this[this.width - 1, i]), 1, Int::plus)
+        colorMap.merge(Color(this[0, i]).clamp(), 1, Int::plus)
+        colorMap.merge(Color(this[this.width - 1, i]).clamp(), 1, Int::plus)
     }
     val foundColor = colorMap.entries.firstOrNull { (_, count) -> count > threshold * bitmapSize }?.key
-    return foundColor.coerceOpacity()
+    return foundColor?.coerceOpacity()
 }
 
-private fun Color?.coerceOpacity(): Color? {
-    return if (this?.alpha == 0f) Color.White else this
+private fun Color.clamp(): Color {
+    return this.copy(
+        alpha = this.alpha.round(),
+        red = this.red.round(),
+        blue = this.blue.round(),
+        green = this.green.round()
+    )
+}
+
+private fun Float.round(): Float {
+    return (this * 10).toInt() / 10.toFloat()
+}
+
+private fun Color.coerceOpacity(): Color {
+    return if (this.alpha == 0f) Color.White else this
 }
