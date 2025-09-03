@@ -31,4 +31,17 @@
     <string name="status_code">Le serveur a répondu avec le statut %1$s</string>
     <string name="barcode_position_top">Haut</string>
     <string name="barcode_position_center">Centrer</string>
+    <string name="pass_updates_channel">Mises à jour de la carte</string>
+    <string name="pass_updated">Mise à jour de la carte réussie</string>
+    <string name="group">Cartes de groupe</string>
+    <string name="passes">Cartes</string>
+    <string name="enable">Activer</string>
+    <string name="search">Rechercher</string>
+    <string name="status_forbidden">Le serveur n\'as pas permis l\'access à cette carte. Peut-être que cette carte a expiré ?</string>
+    <string name="status_not_updated">La carte est dejà mise à jour</string>
+    <string name="export">Exporter</string>
+    <string name="share_passes">Partager les cartes</string>
+    <string name="more_options">Plus d\'options</string>
+    <string name="date_added">Date d\'ajout</string>
+    <string name="filter">Trier par</string>
 </resources>
