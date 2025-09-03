@@ -12,7 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.PushPinOff
+import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Visibility
@@ -116,12 +116,12 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (pinned()) {
+            if (passViewModel.pinned(pass.value)) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unpin)) },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.PushPinOff,
+                            imageVector = Icons.Default.Square,
                             contentDescription = stringResource(R.string.unpin)
                         )
                     },
@@ -193,7 +193,7 @@ fun Actions(
                 }
             }
 
-            if (hidden()) {
+            if (passViewModel.hidden(pass.value)) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unhide)) },
                     leadingIcon = {

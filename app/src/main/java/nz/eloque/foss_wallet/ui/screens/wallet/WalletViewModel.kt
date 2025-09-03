@@ -93,8 +93,12 @@ class PassViewModel @Inject constructor(
     fun pin(pass: Pass) = passStore.pin(pass).apply { updatePasses() }
     fun unpin(pass: Pass) = passStore.unpin(pass).apply { updatePasses() }
 
+    fun pinned(pass: Pass) = passStore.pinned(pass).apply { updatePasses() }
+
     fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
     fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
+
+    fun hidden(pass: Pass) = passStore.hidden(pass).apply { updatePasses() }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 

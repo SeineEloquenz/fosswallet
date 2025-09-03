@@ -14,11 +14,11 @@ import nz.eloque.foss_wallet.model.PassWithLocalization
 @Dao
 interface PassDao {
     @Transaction
-    @Query("SELECT * FROM pass")
+    @Query("SELECT * FROM pass ORDER BY pinned DESC")
     fun allInternal(): Flow<List<PassWithLocalization>>
 
     @Transaction
-    @Query("SELECT * FROM pass WHERE hidden = 0")
+    @Query("SELECT * FROM pass WHERE hidden = 0 ORDER BY pinned DESC")
     fun allVisibleInternal(): Flow<List<PassWithLocalization>>
 
     fun all(authStatus: Boolean): Flow<List<PassWithLocalization>> {
@@ -88,7 +88,7 @@ interface PassDao {
     fun unhide(passId: String)
 
     @Query("SELECT hidden = 1 FROM Pass WHERE id = :passId")
-    suspend fun hidden(passId: String): Boolean
+    fun hidden(passId: String): Boolean
 
     @Query("UPDATE pass SET pinned = 1 WHERE id = :passId")
     fun pin(passId: String)
@@ -97,5 +97,5 @@ interface PassDao {
     fun unpin(passId: String)
 
     @Query("SELECT pinned = 1 FROM Pass WHERE id = :passId")
-    suspend fun pinned(passId: String): Boolean
+    fun pinned(passId: String): Boolean
 }
