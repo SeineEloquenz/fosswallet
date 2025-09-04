@@ -48,8 +48,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 36
-        versionCode = 72
-        versionName = "0.26.0"
+        versionCode = 73
+        versionName = "0.27.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
