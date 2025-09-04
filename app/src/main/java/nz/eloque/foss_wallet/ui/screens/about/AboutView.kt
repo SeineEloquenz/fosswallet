@@ -43,7 +43,7 @@ fun AboutView() {
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
+                painter = painterResource(R.drawable.icon),
                 contentDescription = stringResource(R.string.wallet),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth(0.5f)

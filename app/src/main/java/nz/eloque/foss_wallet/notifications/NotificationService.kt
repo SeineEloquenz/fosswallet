@@ -35,7 +35,7 @@ class NotificationService @Inject constructor(
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             && message != null) {
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)  // Ensure this exists
+                .setSmallIcon(R.drawable.icon)  // Ensure this exists
                 .setContentTitle(context.getString(R.string.pass_updated))
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
