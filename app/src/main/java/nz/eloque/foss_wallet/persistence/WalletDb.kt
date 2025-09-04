@@ -14,6 +14,9 @@ import nz.eloque.foss_wallet.persistence.migrations.M14_15
 import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 
+fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.java, "wallet_db")
+        .addMigrations(M_9_10)
+        .build()
 
 @Database(
     version = 15,
@@ -36,19 +39,4 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
 abstract class WalletDb : RoomDatabase() {
     abstract fun passDao(): PassDao
     abstract fun localizationDao(): PassLocalizationDao
-
-    companion object {
-        @Volatile
-        private var Instance: WalletDb? = null
-
-        fun getDb(context: Context): WalletDb {
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, WalletDb::class.java, "wallet_db")
-                    .addMigrations(M_9_10)
-                    .build()
-                    .also { Instance = it }
-            }
-        }
-    }
-
 }
