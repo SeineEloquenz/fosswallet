@@ -16,7 +16,7 @@ class WalletTileService : TileService() {
         val tile = qsTile
         tile?.apply {
             label = this@WalletTileService.getString(R.string.open_wallet) // <-- Name shown on the tile
-            icon = Icon.createWithResource(this@WalletTileService, R.drawable.ic_launcher_foreground)
+            icon = Icon.createWithResource(this@WalletTileService, R.drawable.icon)
             state = Tile.STATE_ACTIVE
             updateTile()
         }
