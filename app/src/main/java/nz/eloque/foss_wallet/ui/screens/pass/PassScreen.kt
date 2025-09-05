@@ -117,7 +117,6 @@ fun Actions(
                                 pass.value = result.content.pass
                                 snackbarHostState.showSnackbar(
                                     message = context.getString(R.string.update_successful),
-                                    actionLabel = context.getString(R.string.details),
                                     duration = SnackbarDuration.Short
                                 )
                             }
