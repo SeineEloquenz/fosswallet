@@ -1,4 +1,4 @@
-# <img alt="Logo" src="app/src/main/ic_launcher-playstore.png" width="40" height="40"/> FossWallet
+# <img alt="Logo" src="app/src/main/icon-source.svg" width="40" height="40"/> FossWallet
 
 FossWallet is a free and open source (foss) .pkpass application.
 Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid)-App,
