@@ -2,7 +2,9 @@ package nz.eloque.foss_wallet.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +60,7 @@ fun WalletScaffold(
                 scrollBehavior = scrollBehavior
             )
         },
+        contentWindowInsets = WindowInsets.statusBars,
         bottomBar = bottomBar,
         floatingActionButton = floatingActionButton
     ) { innerPadding ->

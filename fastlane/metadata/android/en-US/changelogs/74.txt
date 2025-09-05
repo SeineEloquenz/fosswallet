@@ -1,0 +1,2 @@
+* Make app content show truly edge to edge under navigation bar
+* Remove unused details button from successful pass update snackbar
