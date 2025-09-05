@@ -17,13 +17,13 @@ Features (non-exhaustive):
 
 ## Installation
 
-[<img src="https://github.com/machiav3lli/oandbackupx/blob/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png"
+[<img src="https://raw.githubusercontent.com/SeineEloquenz/fosswallet/refs/heads/main/.github/badges/github.png"
 alt="Get it on GitHub"
 height="80">](https://github.com/SeineEloquenz/fosswallet/releases)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+[<img src="https://raw.githubusercontent.com/SeineEloquenz/fosswallet/refs/heads/main/.github/badges/fdroid.png"
 alt="Get it on F-Droid"
 height="80">](https://f-droid.org/packages/nz.eloque.foss_wallet/)
-[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+[<img src="https://raw.githubusercontent.com/SeineEloquenz/fosswallet/refs/heads/main/.github/badges/play.png"
 alt="Get it on Google Play"
 height="80">](https://play.google.com/store/apps/details?id=nz.eloque.foss_wallet)
 
