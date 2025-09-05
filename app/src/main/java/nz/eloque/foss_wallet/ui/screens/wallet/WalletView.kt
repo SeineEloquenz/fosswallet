@@ -140,6 +140,9 @@ fun WalletView(
             }
         }
         item {
+            Spacer(modifier = Modifier.padding(4.dp))
+        }
+        item {
             Spacer(modifier = Modifier.imePadding())
         }
     }
