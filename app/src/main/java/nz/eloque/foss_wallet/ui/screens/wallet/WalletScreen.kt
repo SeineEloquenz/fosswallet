@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -86,26 +87,28 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
-            if (uiState.isAuthenticated) {
-                IconButton(onClick = { passViewModel.conceal() }) {
-                    Icon(
-                        imageVector = Icons.Default.VisibilityOff,
-                        contentDescription = stringResource(R.string.conceal)
-                    )
-                }
-            } else {
-                IconButton(
-                    onClick = {
-                        biometric.showBiometricPrompt(
-                            description = context.getString(R.string.reveal),
-                            onSuccess = { passViewModel.reveal() }
+            key(uiState.isAuthenticated) {
+                if (uiState.isAuthenticated) {
+                    IconButton(onClick = { passViewModel.conceal() }) {
+                        Icon(
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = stringResource(R.string.conceal)
                         )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Visibility,
-                        contentDescription = stringResource(R.string.reveal)
-                    )
+                } else {
+                    IconButton(
+                        onClick = {
+                            biometric.showBiometricPrompt(
+                                description = context.getString(R.string.reveal),
+                                onSuccess = { passViewModel.reveal() }
+                            )
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = stringResource(R.string.reveal)
+                        )
+                    }
                 }
             }
 

@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -192,51 +193,53 @@ fun Actions(
                 }
             }
 
-            if (passViewModel.hidden(pass.value)) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.unhide)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Visibility,
-                            contentDescription = stringResource(R.string.unhide)
-                        )
-                    },
-                    onClick = {
-                        if (uiState.isAuthenticated) {
-                            passViewModel.unhide(pass.value)
-                        } else {
-                            biometric.showBiometricPrompt(
-                                description = context.getString(R.string.unhide),
-                                onSuccess = {
-                                    passViewModel.unhide(pass.value)
-                                }
+            key(uiState.isAuthenticated) {
+                if (passViewModel.hidden(pass.value)) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.unhide)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Visibility,
+                                contentDescription = stringResource(R.string.unhide)
                             )
+                        },
+                        onClick = {
+                            if (uiState.isAuthenticated) {
+                                passViewModel.unhide(pass.value)
+                            } else {
+                                biometric.showBiometricPrompt(
+                                    description = context.getString(R.string.unhide),
+                                    onSuccess = {
+                                        passViewModel.unhide(pass.value)
+                                    }
+                                )
+                            }
                         }
-                    }
-                )
-            } else {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.hide)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.VisibilityOff,
-                            contentDescription = stringResource(R.string.hide)
-                        )
-                    },
-                    onClick = {
-                        if (uiState.isAuthenticated) {
-                            passViewModel.hide(pass.value)
-                        } else {
-                            biometric.showBiometricPrompt(
-                                description = context.getString(R.string.hide),
-                                onSuccess = {
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.hide)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.VisibilityOff,
+                                contentDescription = stringResource(R.string.hide)
+                            )
+                        },
+                        onClick = {
+                            if (uiState.isAuthenticated) {
+                                passViewModel.hide(pass.value)
+                            } else {
+                                biometric.showBiometricPrompt(
+                                    description = context.getString(R.string.hide),
+                                    onSuccess = {
 
-                                    passViewModel.hide(pass.value)
-                                }
-                            )
+                                        passViewModel.hide(pass.value)
+                                    }
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
             DropdownMenuItem(
