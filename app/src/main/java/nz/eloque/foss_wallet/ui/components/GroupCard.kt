@@ -100,7 +100,7 @@ fun GroupCard(
                     }
                     IconButton(onClick = {
                         val selectedPass = passes[pagerState.currentPage]
-                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dessociate(selectedPass, groupId) } }
+                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dissociate(selectedPass, groupId) } }
                     }) {
                         Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
                     }
