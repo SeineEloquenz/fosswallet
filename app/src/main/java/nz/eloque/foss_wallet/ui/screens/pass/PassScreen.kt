@@ -118,7 +118,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            uiState.isPinned = passViewModel.pinned(pass.value)
+            passViewModel.pinned(pass.value)
             key(uiState.isPinned) {
                 if (passViewModel.pinned(pass.value)) {
                     DropdownMenuItem(
@@ -197,7 +197,7 @@ fun Actions(
                 }
             }
 
-            uiState.isHidden = passViewModel.hidden(pass.value)
+            passViewModel.hidden(pass.value)
             key(uiState.isAuthenticated, uiState.isHidden) {
                 if (passViewModel.hidden(pass.value)) {
                     DropdownMenuItem(
