@@ -48,8 +48,8 @@ import nz.eloque.foss_wallet.utils.isScrollingUp
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver
