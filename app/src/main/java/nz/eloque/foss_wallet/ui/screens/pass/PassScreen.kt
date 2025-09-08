@@ -118,28 +118,37 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (passViewModel.pinned(pass.value)) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.unpin)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Square,
-                            contentDescription = stringResource(R.string.unpin)
-                        )
-                    },
-                    onClick = { passViewModel.unpin(pass.value) }
-                )
-            } else {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.pin)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.PushPin,
-                            contentDescription = stringResource(R.string.pin)
-                        )
-                    },
-                    onClick = { passViewModel.pin(pass.value) }
-                )
+            uiState.isPinned = passViewModel.pinned(pass.value)
+            key(uiState.isPinned) {
+                if (passViewModel.pinned(pass.value)) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.unpin)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Square,
+                                contentDescription = stringResource(R.string.unpin)
+                            )
+                        },
+                        onClick = {
+                            passViewModel.unpin(pass.value)
+                            uiState.isPinned = false
+                        }
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.pin)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.PushPin,
+                                contentDescription = stringResource(R.string.pin)
+                            )
+                        },
+                        onClick = {
+                            passViewModel.pin(pass.value)
+                            uiState.isPinned = true
+                        }
+                    )
+                }
             }
 
             DropdownMenuItem(
@@ -194,7 +203,8 @@ fun Actions(
                 }
             }
 
-            key(uiState.isAuthenticated) {
+            uiState.isHidden = passViewModel.hidden(pass.value)
+            key(uiState.isAuthenticated, uiState.isHidden) {
                 if (passViewModel.hidden(pass.value)) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.unhide)) },
@@ -212,6 +222,7 @@ fun Actions(
                                     description = context.getString(R.string.unhide),
                                     onSuccess = {
                                         passViewModel.unhide(pass.value)
+                                        uiState.isHidden = false
                                     }
                                 )
                             }
@@ -233,8 +244,8 @@ fun Actions(
                                 biometric.showBiometricPrompt(
                                     description = context.getString(R.string.hide),
                                     onSuccess = {
-
                                         passViewModel.hide(pass.value)
+                                        uiState.isHidden = true
                                     }
                                 )
                             }
