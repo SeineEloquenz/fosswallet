@@ -1,163 +1,133 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableStateSetOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import kotlinx.coroutines.Dispatchers
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.api.ImportResult
+import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.utils.Biometric
-import nz.eloque.foss_wallet.utils.isScrollingUp
+import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.persistence.PassStore
+import nz.eloque.foss_wallet.persistence.SettingsStore
+import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun WalletScreen(
-    navController: NavHostController,
-    passViewModel: PassViewModel,
-    snackbarHostState: SnackbarHostState
-) {
-    val context = LocalContext.current
-    val contentResolver = context.contentResolver
-    val coroutineScope = rememberCoroutineScope()
+data class PassUiState(
+    var isAuthenticated: Boolean = false,
+    var isHidden: Boolean = false,
+    var isPinned: Boolean = false,
+    val query: String = "",
+    val passes: List<Pass> = ArrayList()
+)
 
-    val activity = remember(context) { context as FragmentActivity }
-    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
+@HiltViewModel
+class PassViewModel @Inject constructor(
+    application: Application,
+    private val passStore: PassStore,
+    private val settingsStore: SettingsStore,
+    private val workManager: WorkManager
+) : AndroidViewModel(application) {
 
-    val listState = rememberLazyListState()
-    val loading = remember { mutableStateOf(false) }
-    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
+    private val _uiState = MutableStateFlow(PassUiState())
+    val uiState: StateFlow<PassUiState> = _uiState.asStateFlow()
+    private val workData: LiveData<List<WorkInfo>>
+    private val observer = { workInfo: List<WorkInfo> -> updatePasses() }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
-        res?.let {
-            println("selected file URI $res")
-            coroutineScope.launch {
-                loading.value = true
-                withContext(Dispatchers.IO) {
-                    contentResolver.openInputStream(res)?.use {
-                        Loader(context).handleInputStream(
-                            it,
-                            navController,
-                            passViewModel,
-                            coroutineScope
-                        )
-                    }
-                }
-                loading.value = false
-            }
+    init {
+        updatePasses()
+        workData = workManager.getWorkInfosByTagLiveData("update")
+        workData.observeForever(observer)
+    }
+
+    override fun onCleared() {
+        workData.removeObserver(observer)
+    }
+
+    private fun updatePasses() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(passes = passStore.allPasses(true).first().map { it.applyLocalization(
+                Locale.getDefault().language) })
         }
     }
-    val selectedPasses = remember { mutableStateSetOf<Pass>() }
 
-    WalletScaffold(
-        navController = navController,
-        title = stringResource(id = Screen.Wallet.resourceId),
-        actions = {
-            key(uiState.isAuthenticated) {
-                if (uiState.isAuthenticated) {
-                    IconButton(onClick = { passViewModel.conceal() }) {
-                        Icon(
-                            imageVector = Icons.Default.VisibilityOff,
-                            contentDescription = stringResource(R.string.conceal)
-                        )
-                    }
-                } else {
-                    IconButton(
-                        onClick = {
-                            biometric.showBiometricPrompt(
-                                description = context.getString(R.string.reveal),
-                                onSuccess = { passViewModel.reveal() }
-                            )
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Visibility,
-                            contentDescription = stringResource(R.string.reveal)
-                        )
-                    }
-                }
-            }
+    fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
 
-            IconButton(onClick = {
-                navController.navigate(Screen.Archive.route)
-            }) {
-                Icon(
-                    imageVector = Screen.Archive.icon,
-                    contentDescription = stringResource(R.string.archive)
-                )
-            }
+    fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
 
-            IconButton(onClick = {
-                navController.navigate(Screen.Settings.route)
-            }) {
-                Icon(
-                    imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(Screen.Settings.resourceId)
-                )
-            }
-        },
-        floatingActionButton = {
-            if (selectedPasses.isNotEmpty()) {
-                SelectionActions(
-                    selectedPasses,
-                    listState,
-                    passViewModel
-                )
-            } else {
-                ExtendedFloatingActionButton(
-                    text = { Text(stringResource(R.string.add_pass)) },
-                    icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
-                    expanded = listState.isScrollingUp(),
-                    onClick = { launcher.launch(arrayOf("*/*")) }
-                )
-            }
-        },
-    ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
 
-        if (loading.value) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                CircularProgressIndicator()
-            }
+    fun filter(query: String, authStatus: Boolean) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query, authStatus).first().map { it.applyLocalization(Locale.getDefault().language) })
         }
     }
+
+    fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult).apply { updatePasses() }
+
+    suspend fun update(pass: Pass): UpdateResult = passStore.update(pass).apply { updatePasses() }
+
+    fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
+
+    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes).apply { updatePasses() }
+    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
+    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId).apply { updatePasses() }
+
+    fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
+    fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
+
+    fun hide(pass: Pass) {
+        passStore.hide(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isHidden = true)
+            updatePasses()
+        }
+    }
+    
+    fun unhide(pass: Pass) {
+        passStore.unhide(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isHidden = false)
+            updatePasses()
+        }
+    }
+
+    fun pin(pass: Pass) {
+        passStore.pin(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isPinned = true)
+            updatePasses()
+        }
+    }
+    
+    fun unpin(pass: Pass) {
+        passStore.unpin(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isPinned = false)
+            updatePasses()
+        }
+    }
+
+    fun pinned(pass: Pass) = passStore.pinned(pass).apply { updatePasses() }
+
+    fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
+    
+    fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
+
+    fun hidden(pass: Pass) = passStore.hidden(pass).apply { updatePasses() }
+
+    fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
+
+    fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
 }
