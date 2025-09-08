@@ -87,13 +87,37 @@ class PassViewModel @Inject constructor(
     fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
     fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
 
-    fun hide(pass: Pass) = passStore.hide(pass).apply { updatePasses() }
-    fun unhide(pass: Pass) = passStore.unhide(pass).apply { updatePasses() }
+    fun hide(pass: Pass) {
+        passStore.hide(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isHidden = true)
+            updatePasses()
+        }
+    }
+    
+    fun unhide(pass: Pass) {
+        passStore.unhide(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isHidden = false)
+            updatePasses()
+        }
+    }
 
-
-
-    fun pin(pass: Pass) = passStore.pin(pass).apply { updatePasses() }
-    fun unpin(pass: Pass) = passStore.unpin(pass).apply { updatePasses() }
+    fun pin(pass: Pass) {
+        passStore.pin(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isPinned = true)
+            updatePasses()
+        }
+    }
+    
+    fun unpin(pass: Pass) {
+        passStore.unpin(pass)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isPinned = false)
+            updatePasses()
+        }
+    }
 
     fun pinned(pass: Pass) = passStore.pinned(pass).apply { updatePasses() }
 
