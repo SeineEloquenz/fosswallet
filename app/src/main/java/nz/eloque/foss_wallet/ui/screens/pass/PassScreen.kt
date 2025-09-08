@@ -120,7 +120,7 @@ fun Actions(
         ) {
             passViewModel.pinned(pass.value)
             key(uiState.isPinned) {
-                if (passViewModel.pinned(pass.value)) {
+                if (uiState.isPinned) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.unpin)) },
                         leadingIcon = {
@@ -199,7 +199,7 @@ fun Actions(
 
             passViewModel.hidden(pass.value)
             key(uiState.isAuthenticated, uiState.isHidden) {
-                if (passViewModel.hidden(pass.value)) {
+                if (uiState.isHidden) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.unhide)) },
                         leadingIcon = {
