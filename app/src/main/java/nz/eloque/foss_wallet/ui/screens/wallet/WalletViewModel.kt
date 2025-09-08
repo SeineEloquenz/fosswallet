@@ -26,6 +26,8 @@ import java.util.Locale
 
 data class PassUiState(
     var isAuthenticated: Boolean = false,
+    var isHidden: Boolean = false,
+    var isPinned: Boolean = false,
     val query: String = "",
     val passes: List<Pass> = ArrayList()
 )
