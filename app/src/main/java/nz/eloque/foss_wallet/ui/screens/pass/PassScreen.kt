@@ -129,10 +129,7 @@ fun Actions(
                                 contentDescription = stringResource(R.string.unpin)
                             )
                         },
-                        onClick = {
-                            passViewModel.unpin(pass.value)
-                            uiState.isPinned = false
-                        }
+                        onClick = { passViewModel.unpin(pass.value) }
                     )
                 } else {
                     DropdownMenuItem(
@@ -143,10 +140,7 @@ fun Actions(
                                 contentDescription = stringResource(R.string.pin)
                             )
                         },
-                        onClick = {
-                            passViewModel.pin(pass.value)
-                            uiState.isPinned = true
-                        }
+                        onClick = { passViewModel.pin(pass.value) }
                     )
                 }
             }
@@ -220,10 +214,7 @@ fun Actions(
                             } else {
                                 biometric.showBiometricPrompt(
                                     description = context.getString(R.string.unhide),
-                                    onSuccess = {
-                                        passViewModel.unhide(pass.value)
-                                        uiState.isHidden = false
-                                    }
+                                    onSuccess = { passViewModel.unhide(pass.value) }
                                 )
                             }
                         }
@@ -243,10 +234,7 @@ fun Actions(
                             } else {
                                 biometric.showBiometricPrompt(
                                     description = context.getString(R.string.hide),
-                                    onSuccess = {
-                                        passViewModel.hide(pass.value)
-                                        uiState.isHidden = true
-                                    }
+                                    onSuccess = { passViewModel.hide(pass.value) }
                                 )
                             }
                         }
