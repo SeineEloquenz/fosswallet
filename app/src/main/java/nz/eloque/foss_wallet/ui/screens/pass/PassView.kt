@@ -2,7 +2,9 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -56,6 +58,8 @@ fun PassView(
                 .padding(10.dp)
         ) {
             BackFields(pass.backFields)
+            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier = Modifier.imePadding())
         }
     }
 }
