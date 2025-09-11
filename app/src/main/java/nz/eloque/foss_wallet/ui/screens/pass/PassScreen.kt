@@ -73,6 +73,16 @@ fun PassScreen(
             pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
         }
     }
+    LaunchedEffect(passId) {
+        coroutineScope.launch(Dispatchers.IO) {
+            val loadedPass = passViewModel.passById(passId)
+                .applyLocalization(Locale.getDefault().language)
+            pass.value = loadedPass
+            
+            passViewModel.pinned(loadedPass)
+            passViewModel.hidden(loadedPass)
+        }
+    }
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -118,7 +128,6 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            passViewModel.pinned(pass.value)
             key(uiState.isPinned) {
                 if (uiState.isPinned) {
                     DropdownMenuItem(
@@ -197,7 +206,6 @@ fun Actions(
                 }
             }
 
-            passViewModel.hidden(pass.value)
             key(uiState.isAuthenticated, uiState.isHidden) {
                 if (uiState.isHidden) {
                     DropdownMenuItem(
