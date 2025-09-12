@@ -10,7 +10,7 @@
     <string name="barcode">Barcode</string>
     <string name="serial_number">Seriennummer</string>
     <string name="organization">Organisation</string>
-    <string name="no_barcode_format_given">Kein Barcode-Format gefunden! Rendere Barcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden</string>
+    <string name="no_barcode_format_given">Kein Barcode-Format gefunden! Rendere Barcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden.</string>
     <string name="flip">Umdrehen</string>
     <string name="front_side">Vorderseite</string>
     <string name="back_side">Rückseite</string>

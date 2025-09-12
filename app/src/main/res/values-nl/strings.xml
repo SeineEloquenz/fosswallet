@@ -33,7 +33,7 @@
     <string name="permission_rationale">Zonder de toestemming(en) werkt Wallet niet correct</string>
     <string name="exception">Er is een uitzondering opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="timeout">Er is een time-out opgetreden tijdens het aanroepen van de updateserver</string>
-    <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand</string>
+    <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand.</string>
     <string name="image">Beeld</string>
     <string name="add_pass">Pas toevoegen</string>
     <string name="pass">Pas</string>

@@ -12,7 +12,7 @@
     <string name="barcode">Barcode</string>
     <string name="serial_number">Serial number</string>
     <string name="organization">Organization</string>
-    <string name="no_barcode_format_given">No barcode format given! Defaulting to QR code. This code might not get scanned correctly</string>
+    <string name="no_barcode_format_given">No barcode format given! Defaulting to QR code. This code might not get scanned correctly.</string>
     <string name="flip">Flip</string>
     <string name="front_side">Front</string>
     <string name="back_side">Back</string>

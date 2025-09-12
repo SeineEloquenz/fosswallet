@@ -21,7 +21,7 @@
     <string name="request_permissions">Küsi õigusi</string>
     <string name="enable">Võta kasutusele</string>
     <string name="permission_rationale">Ilma vajalike õigusteta FossWallet ei toimi korralikult</string>
-    <string name="no_barcode_format_given">Triipkoodi vorming on määratlemata! Kasutan vaikimisi QR-koodi vormingut. See aga ei pruugi olla korrektselt skaneeritav</string>
+    <string name="no_barcode_format_given">Triipkoodi vorming on määratlemata! Kasutan vaikimisi QR-koodi vormingut. See aga ei pruugi olla korrektselt skaneeritav.</string>
     <string name="made_with_love">Tehtud Saksamaal suure ❤-ga</string>
     <string name="pass">Dokument</string>
     <string name="invalid_pass_toast">Dokumendi laadimine ei õnnestunud. Kas oled kindel, et see on korrektne .pkpass-vormingus fail?</string>
