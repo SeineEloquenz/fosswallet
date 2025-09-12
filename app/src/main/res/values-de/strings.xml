@@ -62,4 +62,5 @@
     <string name="filter">Sortieren nach</string>
     <string name="relevant_date_newest">Aktuellstes Datum</string>
     <string name="relevant_date_oldest">Ältestes Datum</string>
+    <string name="libraries">Bibliotheken</string>
 </resources>

@@ -17,6 +17,6 @@ fun AboutScreen(
         toolWindow = true,
         title = stringResource(id = R.string.about)
     ) {
-        AboutView()
+        AboutView(navController)
     }
 }

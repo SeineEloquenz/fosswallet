@@ -7,6 +7,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
@@ -25,6 +26,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
@@ -39,6 +41,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes v
     data object Archive : Screen("archive", Icons.Default.Archive, R.string.archive)
     data object About : Screen("about", Icons.Default.Info, R.string.about)
     data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
+    data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
 }
 
 @Composable
@@ -71,6 +74,9 @@ fun WalletApp(
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, passViewModel, settingsViewModel)
+            }
+            composable(Screen.Libraries.route) {
+                LibrariesScreen(navController)
             }
             composable(
                 route = "pass/{passId}",
