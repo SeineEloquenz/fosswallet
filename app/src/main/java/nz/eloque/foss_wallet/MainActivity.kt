@@ -11,7 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -19,7 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
+import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
@@ -50,7 +51,12 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(dataUri) {
                 if (Shortcut.SCHEME != dataUri?.scheme) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        dataUri?.handleIntent(passViewModel, coroutineScope, navController)
+                        val result = dataUri?.handleIntent(passViewModel, coroutineScope)
+                        if (result is LoaderResult.Single) {
+                            withContext(Dispatchers.Main) {
+                                navController.navigate("pass/${result.passId}")
+                            }
+                        }
                     }
                 }
             }
@@ -68,20 +74,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope, navController: NavHostController) {
+    private fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope): LoaderResult {
         contentResolver.openInputStream(this).use {
             it?.let {
-                Loader(this@MainActivity).handleInputStream(
+                return Loader(this@MainActivity).handleInputStream(
                     it,
-                    navController,
                     passViewModel,
                     coroutineScope
                 )
             }
         }
-    }
 
-    companion object {
-        private const val TAG = "MainActivity"
+        return LoaderResult.Invalid
     }
 }

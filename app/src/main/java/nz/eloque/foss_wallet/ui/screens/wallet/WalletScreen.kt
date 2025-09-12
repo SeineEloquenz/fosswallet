@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.loader.Loader
+import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.isScrollingUp
@@ -49,23 +50,30 @@ fun WalletScreen(
 
     val loading = remember { mutableStateOf(false) }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { res ->
-        res?.let {
-            println("selected file URI $res")
-            coroutineScope.launch {
-                loading.value = true
-                withContext(Dispatchers.IO) {
-                    contentResolver.openInputStream(res)?.use {
-                        Loader(context).handleInputStream(
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        println("selected file URI $uris")
+        coroutineScope.launch {
+            loading.value = true
+            withContext(Dispatchers.IO) {
+                var result: LoaderResult? = null
+                uris.forEach { uri ->
+                    contentResolver.openInputStream(uri)?.use {
+                        result = Loader(context).handleInputStream(
                             it,
-                            navController,
                             passViewModel,
                             coroutineScope
                         )
                     }
                 }
-                loading.value = false
+                if (uris.size == 1) {
+                    if (result is LoaderResult.Single) {
+                        withContext(Dispatchers.Main) {
+                            navController.navigate("pass/${result.passId}")
+                        }
+                    }
+                }
             }
+            loading.value = false
         }
     }
     val selectedPasses = remember { mutableStateSetOf<Pass>() }
