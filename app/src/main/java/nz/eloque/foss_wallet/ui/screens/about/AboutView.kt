@@ -28,11 +28,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.BuildConfig
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.Screen
 
 @Composable
-fun AboutView() {
+fun AboutView(
+    navController: NavHostController,
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(30.dp),
@@ -75,6 +79,7 @@ fun AboutView() {
             text = stringResource(R.string.privacy),
             uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/PRIVACY.md"
         )
+        LicensesButton(navController)
     }
     Box(
         modifier = Modifier.fillMaxSize().padding(bottom = 24.dp),
@@ -103,6 +108,19 @@ private fun UriButton(
         AboutContent(icon = icon, text = text)
     }
 }
+
+@Composable
+private fun LicensesButton(
+    navController: NavHostController
+) {
+    OutlinedButton(
+        onClick = { navController.navigate(Screen.Libraries.route) },
+        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
+    ) {
+        AboutContent(icon = Screen.Libraries.icon, text = stringResource(Screen.Libraries.resourceId))
+    }
+}
+
 
 @Composable
 fun AboutContent(
