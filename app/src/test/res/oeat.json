@@ -1,0 +1,71 @@
+{
+  "passTypeIdentifier"    : "pass.at.alpenverein.mgd2025",
+  "formatVersion"         : 1,
+  "organizationName"      : "Osterreichischer Alpenverein (OeAV)",
+  "teamIdentifier"        : "WBXJURF744",
+  "serialNumber"          : "1020090000000000",
+  "backgroundColor"       : "rgb(255,255,255)",
+  "logoText"              : "",
+  "description"           : "Mitgliedskarte XXXX",
+  "storeCard" : {
+    "headerFields"     : [
+      {
+        "key"       : "year",
+        "label"     : "",
+        "value"     : "XXXX"
+      }
+    ],
+    "primaryFields"     : [
+      {
+        "key"       : "member_card",
+        "label"     : "MEMBER_CARD",
+        "value"     : ""
+      }
+    ],
+    "secondaryFields"   : [
+      {
+        "key"       : "name",
+        "label"     : "",
+        "value"     : "Max Mustermann"
+      },
+    ],
+    "backFields": [
+      {
+        "key"       : "section",
+        "label"     : "SECTION",
+        "value"     : "Alpenverein Austria"
+      },
+      {
+        "key"       : "name",
+        "label"     : "NAME",
+        "value"     : "Max Mustermann"
+      },
+      {
+        "key"       : "id",
+        "label"     : "MEMBER_NR",
+        "value"     : "000-000000"
+      },
+      {
+        "key"       : "category",
+        "label"     : "CATEGORY",
+        "value"     : "A-Mitglied"
+      },
+      {
+        "key"       : "entry_year",
+        "label"     : "ENTRY_YEAR",
+        "value"     : "XXXX"
+      },
+      {
+        "key"       : "birth_year",
+        "label"     : "BIRTH_YEAR",
+        "value"     : "XXXX"
+      },
+    ]
+  },
+  "barcode": {
+    "format"            : "PKBarcodeFormatCode128",
+    "message"           : "1020090000000000000",
+    "messageEncoding"   : "iso-8859-1",
+    "altText"           : "10200XXXXXXXXXXXXXX"
+  },
+}
