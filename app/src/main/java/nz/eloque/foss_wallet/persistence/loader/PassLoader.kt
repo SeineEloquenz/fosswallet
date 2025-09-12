@@ -89,7 +89,7 @@ class PassLoader(
                     when (entry.name) {
                         "pass.json" -> {
                             val content = baos.toString("UTF-8")
-                            passJson = JSONObject(content)
+                            passJson = JsonLoader.load(content)
                             println("Content:\n$content")
                         }
                         in Regex("logo@?.*\\.png") -> {
