@@ -10,7 +10,7 @@
     <string name="barcode">Γραμμοκώδικας</string>
     <string name="serial_number">Σειριακός αριθμός</string>
     <string name="organization">Οργανισμός</string>
-    <string name="no_barcode_format_given">Ελλιπής γραμμοκώδικας. Εναλλαγή σε QR κωδικό. Το QR μπορεί να μην σαρωθεί σωστά</string>
+    <string name="no_barcode_format_given">Ελλιπής γραμμοκώδικας. Εναλλαγή σε QR κωδικό. Το QR μπορεί να μην σαρωθεί σωστά.</string>
     <string name="flip">Αναποδογύρισμα</string>
     <string name="front_side">Μπροστινή όψη</string>
     <string name="back_side">Οπίσθια όψη</string>

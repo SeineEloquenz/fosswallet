@@ -10,7 +10,7 @@
     <string name="barcode">Code-barres</string>
     <string name="serial_number">Numéro de série</string>
     <string name="organization">Organisation</string>
-    <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement</string>
+    <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement.</string>
     <string name="flip">Retourner</string>
     <string name="front_side">Avant</string>
     <string name="back_side">Arrière</string>
