@@ -20,7 +20,7 @@ class Biometric(
     private val resultChannel = Channel<BiometricResult>()
     // val promptResults = resultChannel.receiveAsFlow()
 
-    fun showBiometricPrompt(
+    fun prompt(
         description: String,
         onSuccess: () -> Unit
     ) {
