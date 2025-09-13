@@ -95,28 +95,26 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
-            key(uiState.isAuthenticated) {
-                if (uiState.isAuthenticated) {
-                    IconButton(onClick = { passViewModel.conceal() }) {
-                        Icon(
-                            imageVector = Icons.Default.VisibilityOff,
-                            contentDescription = stringResource(R.string.conceal)
+            if (uiState.isAuthenticated) {
+                IconButton(onClick = { passViewModel.conceal() }) {
+                    Icon(
+                        imageVector = Icons.Default.VisibilityOff,
+                        contentDescription = stringResource(R.string.conceal)
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = {
+                        biometric.prompt(
+                            description = context.getString(R.string.reveal),
+                            onSuccess = { passViewModel.reveal() }
                         )
                     }
-                } else {
-                    IconButton(
-                        onClick = {
-                            biometric.showBiometricPrompt(
-                                description = context.getString(R.string.reveal),
-                                onSuccess = { passViewModel.reveal() }
-                            )
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Visibility,
-                            contentDescription = stringResource(R.string.reveal)
-                        )
-                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = stringResource(R.string.reveal)
+                    )
                 }
             }
 
@@ -155,7 +153,7 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authStatus = uiState.isAuthenticated)
 
         if (loading.value) {
             Box(
