@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -69,18 +70,11 @@ fun PassScreen(
     val coroutineScope = rememberCoroutineScope()
     val pass = remember { mutableStateOf(Pass.placeholder())}
     LaunchedEffect(coroutineScope) {
-        coroutineScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
-        }
-    }
-    LaunchedEffect(passId) {
-        coroutineScope.launch(Dispatchers.IO) {
-            val loadedPass = passViewModel.passById(passId)
-                .applyLocalization(Locale.getDefault().language)
-            pass.value = loadedPass
             
-            passViewModel.pinned(loadedPass)
-            passViewModel.hidden(loadedPass)
+            passViewModel.pinned(pass.value)
+            passViewModel.hidden(pass.value)
         }
     }
 
@@ -128,7 +122,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            key(uiState.isPinned) {
+//            key(uiState.isPinned) {
                 if (uiState.isPinned) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.unpin)) },
@@ -152,7 +146,7 @@ fun Actions(
                         onClick = { passViewModel.pin(pass.value) }
                     )
                 }
-            }
+            //}
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
@@ -206,7 +200,7 @@ fun Actions(
                 }
             }
 
-            key(uiState.isAuthenticated, uiState.isHidden) {
+//            key(uiState.isAuthenticated, uiState.isHidden) {
                 if (uiState.isHidden) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.unhide)) },
@@ -248,7 +242,7 @@ fun Actions(
                         }
                     )
                 }
-            }
+            //}
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },

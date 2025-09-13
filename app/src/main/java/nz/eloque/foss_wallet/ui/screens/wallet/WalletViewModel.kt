@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
@@ -87,24 +89,32 @@ class PassViewModel @Inject constructor(
     fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
     fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
 
-    fun hide(pass: Pass) {
+    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.hide(pass)
-        _uiState.value = _uiState.value.copy(isHidden = true)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isHidden = true)
+        }
     }
     
-    fun unhide(pass: Pass) {
+    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unhide(pass)
-        _uiState.value = _uiState.value.copy(isHidden = false)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isHidden = false)
+        }
     }
 
-    fun pin(pass: Pass) {
+    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)
-        _uiState.value = _uiState.value.copy(isPinned = true)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isPinned = true)
+        }
     }
-    
-    fun unpin(pass: Pass) {
+
+    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unpin(pass)
-        _uiState.value = _uiState.value.copy(isPinned = false)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isPinned = false)
+        }
     }
 
     fun pinned(pass: Pass) {

@@ -58,13 +58,13 @@ class PassRepository @Inject constructor(
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 
-    fun hide(pass: Pass) = passDao.hide(pass.id)
-    fun unhide(pass: Pass) = passDao.unhide(pass.id)
+    suspend fun hide(pass: Pass) = passDao.hide(pass.id)
+    suspend fun unhide(pass: Pass) = passDao.unhide(pass.id)
 
     fun hidden(pass: Pass) = passDao.hidden(pass.id)
 
-    fun pin(pass: Pass) = passDao.pin(pass.id)
-    fun unpin(pass: Pass) = passDao.unpin(pass.id)
+    suspend fun pin(pass: Pass) = passDao.pin(pass.id)
+    suspend fun unpin(pass: Pass) = passDao.unpin(pass.id)
 
     fun pinned(pass: Pass) = passDao.pinned(pass.id)
 }

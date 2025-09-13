@@ -89,13 +89,13 @@ class PassStore @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
 
-    fun hide(pass: Pass) = passRepository.hide(pass)
-    fun unhide(pass: Pass) = passRepository.unhide(pass)
+    suspend fun hide(pass: Pass) = passRepository.hide(pass)
+    suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
 
     fun hidden(pass: Pass) = passRepository.hidden(pass)
 
-    fun pin(pass: Pass) = passRepository.pin(pass)
-    fun unpin(pass: Pass) = passRepository.unpin(pass)
+    suspend fun pin(pass: Pass) = passRepository.pin(pass)
+    suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
 
     fun pinned(pass: Pass) = passRepository.pinned(pass)
 }

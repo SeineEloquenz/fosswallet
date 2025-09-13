@@ -82,19 +82,19 @@ interface PassDao {
     fun unarchive(passId: String)
 
     @Query("UPDATE pass SET hidden = 1 WHERE id = :passId")
-    fun hide(passId: String)
+    suspend fun hide(passId: String)
 
     @Query("UPDATE pass SET hidden = 0 WHERE id = :passId")
-    fun unhide(passId: String)
+    suspend fun unhide(passId: String)
 
     @Query("SELECT hidden = 1 FROM Pass WHERE id = :passId")
     fun hidden(passId: String): Boolean
 
     @Query("UPDATE pass SET pinned = 1 WHERE id = :passId")
-    fun pin(passId: String)
+    suspend fun pin(passId: String)
 
     @Query("UPDATE pass SET pinned = 0 WHERE id = :passId")
-    fun unpin(passId: String)
+    suspend fun unpin(passId: String)
 
     @Query("SELECT pinned = 1 FROM Pass WHERE id = :passId")
     fun pinned(passId: String): Boolean
