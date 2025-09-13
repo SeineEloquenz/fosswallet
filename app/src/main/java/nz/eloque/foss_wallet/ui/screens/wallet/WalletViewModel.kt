@@ -95,13 +95,13 @@ class PassViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isHidden = true)
         }
     }
-    
     fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unhide(pass)
         withContext(Dispatchers.Main) {
             _uiState.value = _uiState.value.copy(isHidden = false)
         }
     }
+    fun hidden(pass: Pass) { _uiState.value = _uiState.value.copy(isHidden = passStore.hidden(pass)) }
 
     fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)
@@ -109,26 +109,16 @@ class PassViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isPinned = true)
         }
     }
-
     fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unpin(pass)
         withContext(Dispatchers.Main) {
             _uiState.value = _uiState.value.copy(isPinned = false)
         }
     }
-
-    fun pinned(pass: Pass) {
-        val isPinnedValue = passStore.pinned(pass)
-        _uiState.value = _uiState.value.copy(isPinned = isPinnedValue)
-    }
+    fun pinned(pass: Pass) { _uiState.value = _uiState.value.copy(isPinned = passStore.pinned(pass)) }
 
     fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
     fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
-
-    fun hidden(pass: Pass) {
-        val isHiddenValue = passStore.hidden(pass)
-        _uiState.value = _uiState.value.copy(isHidden = isHiddenValue)
-    }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
