@@ -122,31 +122,29 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-//            key(uiState.isPinned) {
-                if (uiState.isPinned) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.unpin)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Square,
-                                contentDescription = stringResource(R.string.unpin)
-                            )
-                        },
-                        onClick = { passViewModel.unpin(pass.value) }
-                    )
-                } else {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.pin)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.PushPin,
-                                contentDescription = stringResource(R.string.pin)
-                            )
-                        },
-                        onClick = { passViewModel.pin(pass.value) }
-                    )
-                }
-            //}
+            if (uiState.isPinned) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unpin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Square,
+                            contentDescription = stringResource(R.string.unpin)
+                        )
+                    },
+                    onClick = { passViewModel.unpin(pass.value) }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.pin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.PushPin,
+                            contentDescription = stringResource(R.string.pin)
+                        )
+                    },
+                    onClick = { passViewModel.pin(pass.value) }
+                )
+            }
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
@@ -199,50 +197,48 @@ fun Actions(
                     }
                 }
             }
-
-//            key(uiState.isAuthenticated, uiState.isHidden) {
-                if (uiState.isHidden) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.unhide)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Visibility,
-                                contentDescription = stringResource(R.string.unhide)
+            
+            if (uiState.isHidden) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unhide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = stringResource(R.string.unhide)
+                        )
+                    },
+                    onClick = {
+                        if (uiState.isAuthenticated) {
+                            passViewModel.unhide(pass.value)
+                        } else {
+                            biometric.prompt(
+                                description = context.getString(R.string.unhide),
+                                onSuccess = { passViewModel.unhide(pass.value) }
                             )
-                        },
-                        onClick = {
-                            if (uiState.isAuthenticated) {
-                                passViewModel.unhide(pass.value)
-                            } else {
-                                biometric.showBiometricPrompt(
-                                    description = context.getString(R.string.unhide),
-                                    onSuccess = { passViewModel.unhide(pass.value) }
-                                )
-                            }
                         }
-                    )
-                } else {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.hide)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.VisibilityOff,
-                                contentDescription = stringResource(R.string.hide)
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.hide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = stringResource(R.string.hide)
+                        )
+                    },
+                    onClick = {
+                        if (uiState.isAuthenticated) {
+                            passViewModel.hide(pass.value)
+                        } else {
+                            biometric.prompt(
+                                description = context.getString(R.string.hide),
+                                onSuccess = { passViewModel.hide(pass.value) }
                             )
-                        },
-                        onClick = {
-                            if (uiState.isAuthenticated) {
-                                passViewModel.hide(pass.value)
-                            } else {
-                                biometric.showBiometricPrompt(
-                                    description = context.getString(R.string.hide),
-                                    onSuccess = { passViewModel.hide(pass.value) }
-                                )
-                            }
                         }
-                    )
-                }
-            //}
+                    }
+                )
+            }
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
