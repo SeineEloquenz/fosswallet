@@ -27,11 +27,11 @@ class PassStore @Inject constructor(
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses() = passRepository.all()
+    fun allPasses(authStatus: Boolean) = passRepository.all(authStatus)
 
     fun passById(id: String) = passRepository.byId(id)
 
-    fun filtered(query: String) = passRepository.filtered(query)
+    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus)
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
@@ -87,5 +87,15 @@ class PassStore @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
-    fun dessociate(pass: Pass, groupId: Long) = passRepository.dessociate(pass, groupId)
+    fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
+
+    suspend fun hide(pass: Pass) = passRepository.hide(pass)
+    suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
+
+    fun hidden(pass: Pass) = passRepository.hidden(pass)
+
+    suspend fun pin(pass: Pass) = passRepository.pin(pass)
+    suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
+
+    fun pinned(pass: Pass) = passRepository.pinned(pass)
 }

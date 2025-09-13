@@ -11,13 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -26,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,9 +41,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -47,6 +56,7 @@ import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.utils.Biometric
 import nz.eloque.foss_wallet.utils.asString
 import java.util.Locale
 
@@ -60,8 +70,11 @@ fun PassScreen(
     val coroutineScope = rememberCoroutineScope()
     val pass = remember { mutableStateOf(Pass.placeholder())}
     LaunchedEffect(coroutineScope) {
-        coroutineScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+            
+            passViewModel.pinned(pass.value)
+            passViewModel.hidden(pass.value)
         }
     }
 
@@ -89,10 +102,14 @@ fun Actions(
     passViewModel: PassViewModel
 ) {
     val context = LocalContext.current
+    val activity = remember(context) { context as FragmentActivity }
     val coroutineScope = rememberCoroutineScope()
+
+    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
+    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -105,6 +122,47 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
+//            key(uiState.isPinned) {
+                if (uiState.isPinned) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.unpin)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Square,
+                                contentDescription = stringResource(R.string.unpin)
+                            )
+                        },
+                        onClick = { passViewModel.unpin(pass.value) }
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.pin)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.PushPin,
+                                contentDescription = stringResource(R.string.pin)
+                            )
+                        },
+                        onClick = { passViewModel.pin(pass.value) }
+                    )
+                }
+            //}
+
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.add_shortcut)) },
+                leadingIcon =  {
+                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
+                },
+                onClick = {
+                    Shortcut.create(context, pass.value, pass.value.description)
+                }
+            )
+
+            val passFile = pass.value.originalPassFile(context)
+            if (passFile != null) {
+                PassShareButton(passFile)
+            }
+
             if (pass.value.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
@@ -141,23 +199,55 @@ fun Actions(
                     }
                 }
             }
-            val passFile = pass.value.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
-            }
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon =  {
-                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-                },
-                onClick = {
-                    Shortcut.create(context, pass.value, pass.value.description)
+
+//            key(uiState.isAuthenticated, uiState.isHidden) {
+                if (uiState.isHidden) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.unhide)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Visibility,
+                                contentDescription = stringResource(R.string.unhide)
+                            )
+                        },
+                        onClick = {
+                            if (uiState.isAuthenticated) {
+                                passViewModel.unhide(pass.value)
+                            } else {
+                                biometric.showBiometricPrompt(
+                                    description = context.getString(R.string.unhide),
+                                    onSuccess = { passViewModel.unhide(pass.value) }
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.hide)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.VisibilityOff,
+                                contentDescription = stringResource(R.string.hide)
+                            )
+                        },
+                        onClick = {
+                            if (uiState.isAuthenticated) {
+                                passViewModel.hide(pass.value)
+                            } else {
+                                biometric.showBiometricPrompt(
+                                    description = context.getString(R.string.hide),
+                                    onSuccess = { passViewModel.hide(pass.value) }
+                                )
+                            }
+                        }
+                    )
                 }
-            )
+            //}
+
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.delete)) },
+                text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
                 leadingIcon =  {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
