@@ -59,6 +59,7 @@ fun WalletView(
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
+    authStatus: Booean = false
 ) {
     val context = LocalContext.current
     val walletState = passViewModel.uiState.collectAsState()
