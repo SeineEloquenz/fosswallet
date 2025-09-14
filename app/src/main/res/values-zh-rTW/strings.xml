@@ -10,7 +10,7 @@
     <string name="barcode">條形碼</string>
     <string name="serial_number">序號</string>
     <string name="organization">組織</string>
-    <string name="no_barcode_format_given">未提供條碼格式！將預設為 QR Code。此代碼可能無法被正確掃描</string>
+    <string name="no_barcode_format_given">未提供條碼格式！將預設為 QR Code。此代碼可能無法被正確掃描。</string>
     <string name="flip">翻轉</string>
     <string name="front_side">正面</string>
     <string name="back_side">背面</string>
@@ -62,4 +62,5 @@
     <string name="relevant_date_oldest">最早相關日期</string>
     <string name="selected">已選取</string>
     <string name="filter">排序依據</string>
+    <string name="libraries">庫</string>
 </resources>
