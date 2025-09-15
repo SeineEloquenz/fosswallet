@@ -32,7 +32,7 @@
     <string name="image">Obraz</string>
     <string name="barcode">Kod kreskowy</string>
     <string name="invalid_pass_toast">Nie można załadować pliku. Czy na pewno jest to prawidłowy .pkpass?</string>
-    <string name="no_barcode_format_given">Brak podanego formatu kodu kreskowego! Ustawiono QR-Code. Ten kod może nie zostać zeskanowany poprawnie.</string>
+    <string name="no_barcode_format_given">Brak podanego formatu kodu kreskowego! Ustawiono kod QR. Ten kod może nie zostać zeskanowany poprawnie.</string>
     <string name="date">Data</string>
     <string name="to">do</string>
     <string name="privacy">Prywatność</string>
@@ -62,4 +62,5 @@
     <string name="filter">Sortuj wg</string>
     <string name="relevant_date_newest">Najnowsza istotna data</string>
     <string name="relevant_date_oldest">Najstarsza istotna data</string>
+    <string name="libraries">Biblioteki</string>
 </resources>
