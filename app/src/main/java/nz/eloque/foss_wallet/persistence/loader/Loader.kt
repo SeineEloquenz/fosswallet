@@ -56,37 +56,39 @@ class Loader(val context: Context) {
         passViewModel: PassViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {
-        try {
-            val loadResults = Loader(context).load(inputStream)
-            if (loadResults.size == 1) {
-                val loadResult = loadResults.first()
-                val importResult = passViewModel.add(loadResult)
-                val id: String = loadResult.pass.pass.id
-                coroutineScope.launch(Dispatchers.Main) {
-                    if (importResult is ImportResult.Replaced) {
-                        Toast
-                            .makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-                return LoaderResult.Single(id)
-            } else {
-                loadResults.forEach { result -> passViewModel.add(result) }
-                coroutineScope.launch(Dispatchers.Main) {
-                    Toast.makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)
-                        .show()
-                }
-                return LoaderResult.Multiple
-            }
-        } catch (e: InvalidPassException) {
+        val loadResults = try {
+            this.load(inputStream)
+        } catch (e: InvalidInputException) {
             Log.w(TAG, "Failed to load pass from intent: $e")
             coroutineScope.launch(Dispatchers.Main) { Toast
                 .makeText(context, context.getString(R.string.invalid_pass_toast), Toast.LENGTH_SHORT)
                 .show() }
             return LoaderResult.Invalid
         }
+
+        if (loadResults.size == 1) {
+            val loadResult = loadResults.first()
+            val importResult = passViewModel.add(loadResult)
+            val id: String = loadResult.pass.pass.id
+            coroutineScope.launch(Dispatchers.Main) {
+                if (importResult is ImportResult.Replaced) {
+                    Toast
+                        .makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            return LoaderResult.Single(id)
+        } else {
+            loadResults.forEach { result -> passViewModel.add(result) }
+            coroutineScope.launch(Dispatchers.Main) {
+                Toast.makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)
+                    .show()
+            }
+            return LoaderResult.Multiple
+        }
     }
-    
+
+    @Throws(InvalidInputException::class)
     private fun load(input: InputStream): Set<PassLoadResult> {
         val passParser = PassParser(context)
         val bytes = input.readBytes()
@@ -98,7 +100,7 @@ class Loader(val context: Context) {
         }
     }
     
-    fun detectFileType(bytes: ByteArray): Input {
+    private fun detectFileType(bytes: ByteArray): Input {
         val zipStream = ZipInputStream(ByteArrayInputStream(bytes))
         val entries = mutableListOf<String>()
 
