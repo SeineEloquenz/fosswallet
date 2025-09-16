@@ -1,0 +1,3 @@
+* Allow loading of other encodings than utf-8
+* Fix potential crash when loading .pkpasses files
+* Update translations
