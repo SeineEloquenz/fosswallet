@@ -86,9 +86,10 @@ class PassLoader(
                     while (zip.read(buffer).also { bytesRead = it } != -1) {
                         baos.write(buffer, 0, bytesRead)
                     }
+                    val passBytes = baos.toByteArray()
                     when (entry.name) {
                         "pass.json" -> {
-                            val content = baos.toString("UTF-8")
+                            val content = passBytes.toString(detectEncoding(passBytes))
                             passJson = JsonLoader.load(content)
                             println("Content:\n$content")
                         }
