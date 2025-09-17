@@ -14,8 +14,20 @@ import nz.eloque.foss_wallet.model.PassWithLocalization
 @Dao
 interface PassDao {
     @Transaction
-    @Query("SELECT * FROM pass")
-    fun all(): Flow<List<PassWithLocalization>>
+    @Query("SELECT * FROM pass ORDER BY pinned DESC")
+    fun allInternal(): Flow<List<PassWithLocalization>>
+
+    @Transaction
+    @Query("SELECT * FROM pass WHERE hidden = 0 ORDER BY pinned DESC")
+    fun allVisibleInternal(): Flow<List<PassWithLocalization>>
+
+    fun all(authStatus: Boolean): Flow<List<PassWithLocalization>> {
+        return if (authStatus) {
+            allInternal()
+        } else {
+            allVisibleInternal()
+        }
+    }
 
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
     fun updatable(): List<Pass>
@@ -32,7 +44,7 @@ interface PassDao {
     fun associate(passId: String, groupId: Long)
 
     @Query("UPDATE pass SET groupId = NULL WHERE id = :passId")
-    fun dessociate(passId: String)
+    fun dissociate(passId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pass: Pass)
@@ -54,18 +66,13 @@ interface PassDao {
     }
 
     @Transaction
-    fun dessociate(pass: Pass, groupId: Long) {
-        dessociate(pass.id)
+    fun dissociate(pass: Pass, groupId: Long) {
+        dissociate(pass.id)
         deleteEmptyGroup(groupId)
     }
 
-    @Query("""
-        DELETE FROM PassGroup
-        WHERE id = :groupId 
-        AND (
-          SELECT COUNT(*) FROM Pass WHERE Pass.groupId = :groupId
-        ) = 1
-    """)
+    @Query("""DELETE FROM PassGroup WHERE id = :groupId AND (
+          SELECT COUNT(*) FROM Pass WHERE Pass.groupId = :groupId) = 1""")
     fun deleteEmptyGroup(groupId: Long)
 
     @Query("UPDATE pass SET archived = 1 WHERE id = :passId")
@@ -73,4 +80,22 @@ interface PassDao {
 
     @Query("UPDATE pass SET archived = 0 WHERE id = :passId")
     fun unarchive(passId: String)
+
+    @Query("UPDATE pass SET hidden = 1 WHERE id = :passId")
+    suspend fun hide(passId: String)
+
+    @Query("UPDATE pass SET hidden = 0 WHERE id = :passId")
+    suspend fun unhide(passId: String)
+
+    @Query("SELECT hidden = 1 FROM Pass WHERE id = :passId")
+    fun hidden(passId: String): Boolean
+
+    @Query("UPDATE pass SET pinned = 1 WHERE id = :passId")
+    suspend fun pin(passId: String)
+
+    @Query("UPDATE pass SET pinned = 0 WHERE id = :passId")
+    suspend fun unpin(passId: String)
+
+    @Query("SELECT pinned = 1 FROM Pass WHERE id = :passId")
+    fun pinned(passId: String): Boolean
 }

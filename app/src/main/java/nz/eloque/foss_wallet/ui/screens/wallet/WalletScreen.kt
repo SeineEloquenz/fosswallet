@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -24,6 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +41,7 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.utils.Biometric
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,14 +49,18 @@ import nz.eloque.foss_wallet.utils.isScrollingUp
 fun WalletScreen(
     navController: NavHostController,
     passViewModel: PassViewModel,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
 
-    val listState = rememberLazyListState()
+    val activity = remember(context) { context as FragmentActivity }
+    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
+    val listState = rememberLazyListState()
     val loading = remember { mutableStateOf(false) }
+    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
         println("selected file URI $uris")
@@ -82,6 +94,29 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
+            if (uiState.isAuthenticated) {
+                IconButton(onClick = { passViewModel.conceal() }) {
+                    Icon(
+                        imageVector = Icons.Default.VisibilityOff,
+                        contentDescription = stringResource(R.string.conceal)
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = {
+                        biometric.prompt(
+                            description = context.getString(R.string.reveal),
+                            onSuccess = { passViewModel.reveal() }
+                        )
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = stringResource(R.string.reveal)
+                    )
+                }
+            }
+
             IconButton(onClick = {
                 navController.navigate(Screen.Archive.route)
             }) {
@@ -90,6 +125,7 @@ fun WalletScreen(
                     contentDescription = stringResource(R.string.archive)
                 )
             }
+
             IconButton(onClick = {
                 navController.navigate(Screen.Settings.route)
             }) {
@@ -116,7 +152,7 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authStatus = uiState.isAuthenticated)
 
         if (loading.value) {
             Box(

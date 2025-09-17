@@ -62,6 +62,10 @@ data class Pass(
     val backFields: List<PassField> = LinkedList(),
     @ColumnInfo(defaultValue = "0")
     val archived: Boolean = false,
+    @ColumnInfo(defaultValue = "0")
+    val hidden: Boolean = false,
+    @ColumnInfo(defaultValue = "0")
+    val pinned: Boolean = false
 ) {
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)
