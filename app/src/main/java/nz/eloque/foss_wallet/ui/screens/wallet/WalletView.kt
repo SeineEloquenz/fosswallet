@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
@@ -35,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
@@ -57,12 +59,14 @@ fun WalletView(
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
+    authStatus: Boolean = false
 ) {
     val context = LocalContext.current
     val walletState = passViewModel.uiState.collectAsState()
     val passes = walletState.value.passes.filter { showArchived == it.archived }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf<SortOption>(SortOption.TimeAdded) }
+    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
@@ -93,7 +97,7 @@ fun WalletView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FilterBar(
-                    onSearch = { passViewModel.filter(it) },
+                    onSearch = { passViewModel.filter(it, authStatus = uiState.isAuthenticated) },
                     modifier = Modifier
                         .padding(start = 6.dp, bottom = 6.dp)
                         .weight(1f)
