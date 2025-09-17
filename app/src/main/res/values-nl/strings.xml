@@ -60,4 +60,5 @@
     <string name="date_added">Datum toegevoegd</string>
     <string name="selected">Geselecteerd</string>
     <string name="filter">Sorteren op</string>
+    <string name="libraries">Bibliotheken</string>
 </resources>

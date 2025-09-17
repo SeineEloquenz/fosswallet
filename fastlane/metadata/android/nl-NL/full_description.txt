@@ -1,0 +1,4 @@
+FossWallet is een eenvoudige en moderne Passbook (.pkpass)-wallet op basis van Material Design 3 en Jetpack Compose.
+
+Bekijk barcodes en alle details van je passen.
+Ondersteunt het bijwerken van passen via aanbieders, maar werkt ook volledig offline.

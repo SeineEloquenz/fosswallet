@@ -62,4 +62,5 @@
     <string name="relevant_date_oldest">Vanim oluline kuupäev</string>
     <string name="selected">Valitud</string>
     <string name="filter">Järjestus</string>
+    <string name="libraries">Teegid</string>
 </resources>
