@@ -5,8 +5,8 @@ import androidx.compose.runtime.saveable.Saver
 import nz.eloque.foss_wallet.R
 
 const val TIME_ADDED = "TimeAdded"
-const val RELEVANT_DATE_NEWEST = ""
-const val RELEVANT_DATE_OLDEST = ""
+const val RELEVANT_DATE_NEWEST = "RelevantDateNewest"
+const val RELEVANT_DATE_OLDEST = "RelevantDateOldest"
 
 sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val comparator: Comparator<Pass>) {
     object TimeAdded : SortOption(TIME_ADDED, R.string.date_added, Comparator { left, right ->
@@ -23,6 +23,6 @@ sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val co
 }
 
 val SortOptionSaver: Saver<SortOption, String> = Saver(
-    save = { it.name },  // how to save User
-    restore = { SortOption.all().find { option -> option.name == it } } // how to restore User
+    save = { it.name },
+    restore = { SortOption.all().find { option -> option.name == it } }
 )
