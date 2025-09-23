@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -83,6 +86,7 @@ fun WalletView(
         state = listState,
         verticalArrangement = Arrangement
             .spacedBy(8.dp),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -141,9 +145,6 @@ fun WalletView(
         }
         item {
             Spacer(modifier = Modifier.padding(4.dp))
-        }
-        item {
-            Spacer(modifier = Modifier.imePadding())
         }
     }
 }

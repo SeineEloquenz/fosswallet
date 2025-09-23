@@ -1,6 +1,11 @@
 package nz.eloque.foss_wallet.ui.screens
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +29,10 @@ fun LibrariesScreen(
         title = stringResource(id = Screen.Libraries.resourceId)
     ) {
         val libraries by rememberLibraries(R.raw.aboutlibraries)
-        LibrariesContainer(libraries, Modifier.fillMaxSize())
+        LibrariesContainer(
+            libraries = libraries,
+            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }

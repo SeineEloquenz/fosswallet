@@ -59,8 +59,8 @@ fun PassView(
         ) {
             BackFields(pass.backFields)
             Spacer(modifier = Modifier.padding(4.dp))
-            Spacer(modifier = Modifier.imePadding())
         }
+        Spacer(Modifier.imePadding())
     }
 }
 

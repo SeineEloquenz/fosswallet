@@ -19,6 +19,7 @@
         tools:targetApi="35">
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.FossWallet">
             <intent-filter>
