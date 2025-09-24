@@ -96,7 +96,7 @@ fun SettingsView(
             heading = stringResource(R.string.export),
         ) {
             SettingsButton(
-                name = stringResource(R.string.export),
+                name = stringResource(R.string.export) + " (.pkpasses)",
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
