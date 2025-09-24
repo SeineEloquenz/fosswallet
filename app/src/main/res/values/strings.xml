@@ -4,18 +4,15 @@
     <string name="settings">Settings</string>
     <string name="update">Update</string>
     <string name="back">Back</string>
-    <string name="permission_rationale">Without the permission(s), Wallet does not work correctly</string>
+    <string name="permission_rationale">Without the permission(s), FossWallet does not work correctly</string>
     <string name="request_permissions">Request Permission</string>
-    <string name="wallet" translatable="false">Wallet</string>
+    <string name="wallet">Wallet</string>
     <string name="image">Image</string>
     <string name="pass">Pass</string>
     <string name="barcode">Barcode</string>
     <string name="serial_number">Serial number</string>
     <string name="organization">Organization</string>
     <string name="no_barcode_format_given">No barcode format given! Defaulting to QR code. This code might not get scanned correctly.</string>
-    <string name="flip">Flip</string>
-    <string name="front_side">Front</string>
-    <string name="back_side">Back</string>
     <string name="date">Date</string>
     <string name="delete">Delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
