@@ -3,7 +3,7 @@
     <string name="settings">Paràmetres</string>
     <string name="update">Actualizar</string>
     <string name="back">Enrera</string>
-    <string name="permission_rationale">Sense permís(os), Wallet no funciona correctament</string>
+    <string name="permission_rationale">Sense permís(os), FossWallet no funciona correctament</string>
     <string name="request_permissions">Demanar Permisos</string>
     <string name="image">Imatge</string>
     <string name="barcode">Codi de barres</string>
