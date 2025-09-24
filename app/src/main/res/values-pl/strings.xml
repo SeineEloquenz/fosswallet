@@ -28,7 +28,7 @@
     <string name="search">Szukaj</string>
     <string name="add_shortcut">Dodaj skrót</string>
     <string name="shortcut_exists">Skrót już istnieje!</string>
-    <string name="permission_rationale">Bez tego uprawnienia, Wallet nie będzie działał poprawnie</string>
+    <string name="permission_rationale">Bez tego uprawnienia, FossWallet nie będzie działał poprawnie</string>
     <string name="image">Obraz</string>
     <string name="barcode">Kod kreskowy</string>
     <string name="invalid_pass_toast">Nie można załadować pliku. Czy na pewno jest to prawidłowy .pkpass?</string>
