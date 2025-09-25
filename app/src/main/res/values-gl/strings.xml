@@ -3,7 +3,7 @@
     <string name="settings">Axustes</string>
     <string name="update">Actualizar</string>
     <string name="back">Volver</string>
-    <string name="permission_rationale">Sen permiso(s), Wallet non funciona correctamente</string>
+    <string name="permission_rationale">Sen permiso(s), FossWallet non funciona correctamente</string>
     <string name="request_permissions">Solicitar permiso</string>
     <string name="image">Imaxe</string>
     <string name="pass">Pass</string>

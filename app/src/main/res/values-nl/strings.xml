@@ -30,7 +30,7 @@
     <string name="barcode_position_center">Midden</string>
     <string name="pass_view_brightness">Helderheid verhogen</string>
     <string name="status_code">De server antwoordde met status %1$s</string>
-    <string name="permission_rationale">Zonder de toestemming(en) werkt Wallet niet correct</string>
+    <string name="permission_rationale">Zonder de toestemming(en) werkt FossWallet niet correct</string>
     <string name="exception">Er is een uitzondering opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="timeout">Er is een time-out opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand.</string>

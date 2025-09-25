@@ -2,13 +2,13 @@
 <resources>
     <string name="settings">הגדרות</string>
     <string name="back">אחורה</string>
-    <string name="permission_rationale">ללא הרשאות, Wallet לא עובד כראוי</string>
+    <string name="permission_rationale">ללא הרשאות, FossWallet לא עובד כראוי</string>
     <string name="request_permissions">נא לבקש אישור</string>
     <string name="image">תמונה</string>
     <string name="barcode">ברקוד</string>
     <string name="serial_number">מספר סידורי</string>
     <string name="organization">ארגון</string>
-    <string name="no_barcode_format_given">תבנית הברקוד לא ניתנה! מגדיר קוד QR כברירת המחדל. ייתכן שהקוד הזה לא יסרק כראוי</string>
+    <string name="no_barcode_format_given">תבנית הברקוד לא ניתנה! מגדיר קוד QR כברירת המחדל. ייתכן שהקוד הזה לא יסרק כראוי.</string>
     <string name="front_side">חזית</string>
     <string name="back_side">גב</string>
     <string name="date">תאריך</string>

@@ -3,7 +3,7 @@
     <string name="settings">Настройки</string>
     <string name="update">Обновить</string>
     <string name="back">Назад</string>
-    <string name="permission_rationale">Без этих разрешений Wallet не будет работать правильно</string>
+    <string name="permission_rationale">Без этих разрешений FossWallet не будет работать правильно</string>
     <string name="request_permissions">Запросить разрешение</string>
     <string name="image">Изображение</string>
     <string name="pass">Пропуск</string>
