@@ -8,8 +8,6 @@
     <string name="barcode">ברקוד</string>
     <string name="serial_number">מספר סידורי</string>
     <string name="organization">ארגון</string>
-    <string name="no_barcode_format_given">תבנית הברקוד לא ניתנה! מגדיר קוד QR כברירת המחדל. ייתכן שהקוד הזה לא יסרק כראוי.</string>
-    <string name="front_side">חזית</string>
     <string name="back_side">גב</string>
     <string name="date">תאריך</string>
     <string name="delete">מחיקה</string>
@@ -41,7 +39,6 @@
     <string name="sync_interval">תדירות עדכון האישורים (בדקות)</string>
     <string name="status_forbidden">השרת לא נתן גישה לאישור. אולי אישור זה כבר פג תוקף?</string>
     <string name="status_not_updated">האישור שלך כבר מעודכן</string>
-    <string name="flip">הפיכה</string>
     <string name="update">עדכון</string>
     <string name="ungroup">פיזור קבוצת האישורים</string>
     <string name="timeout">חרגת מהזמן שהוקצב לקרוא לשרת העדכונים</string>
