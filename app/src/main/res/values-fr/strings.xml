@@ -11,9 +11,6 @@
     <string name="serial_number">Numéro de série</string>
     <string name="organization">Organisation</string>
     <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement.</string>
-    <string name="flip">Retourner</string>
-    <string name="front_side">Avant</string>
-    <string name="back_side">Arrière</string>
     <string name="date">Date</string>
     <string name="delete">Supprimer</string>
     <string name="invalid_pass_toast">La carte n\'a pas pu être chargée. Êtes-vous certain que c’est un .pkpass valide ?</string>
