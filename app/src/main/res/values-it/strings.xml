@@ -11,9 +11,6 @@
     <string name="serial_number">Numero seriale</string>
     <string name="organization">Organizzazione</string>
     <string name="no_barcode_format_given">Non c\'è alcun formato di codice a barre! In automatico verrà definito come codice QR. Questo codice potrebbe non essere scansionato correttamente.</string>
-    <string name="flip">Gira</string>
-    <string name="front_side">Fronte</string>
-    <string name="back_side">Retro</string>
     <string name="date">Data</string>
     <string name="delete">Elimina</string>
     <string name="invalid_pass_toast">Il biglietto non può essere caricato. Sei sicuro che sia un file .pkpass valido?</string>
