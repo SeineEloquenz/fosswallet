@@ -8,9 +8,6 @@
     <string name="image">Pilt</string>
     <string name="barcode">Triipkood</string>
     <string name="serial_number">Seerianumber</string>
-    <string name="flip">Pööra ümber</string>
-    <string name="front_side">Esikülg</string>
-    <string name="back_side">Tagakülg</string>
     <string name="date">Kuupäev</string>
     <string name="about">Rakenduse teave</string>
     <string name="source_code">Lähtekood</string>
