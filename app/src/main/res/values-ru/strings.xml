@@ -11,9 +11,6 @@
     <string name="serial_number">Серийный номер</string>
     <string name="organization">Организация</string>
     <string name="no_barcode_format_given">Формат штрихкода не указан! По умолчанию используется QR-код. Этот код может сканироваться неправильно.</string>
-    <string name="flip">Перевернуть</string>
-    <string name="front_side">Лицевая сторона</string>
-    <string name="back_side">Оборотная сторона</string>
     <string name="date">Дата</string>
     <string name="delete">Удалить</string>
     <string name="invalid_pass_toast">Не удалось загрузить пропуск. Вы уверены, что это правильный .pkpass?</string>
