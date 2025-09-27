@@ -11,9 +11,6 @@
     <string name="serial_number">Número de serie</string>
     <string name="organization">Organización</string>
     <string name="no_barcode_format_given">¡No se especificó un formato de código de barras! Se usará por defecto un código QR. Es posible que este código no se escanee correctamente.</string>
-    <string name="flip">Voltear</string>
-    <string name="front_side">Anverso</string>
-    <string name="back_side">Reverso</string>
     <string name="date">Fecha</string>
     <string name="delete">Eliminar</string>
     <string name="invalid_pass_toast">No se ha podido cargar el pase. ¿Es un fichero .pkpass con formato correcto?</string>
