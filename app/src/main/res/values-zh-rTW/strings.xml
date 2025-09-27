@@ -63,4 +63,5 @@
     <string name="selected">已選取</string>
     <string name="filter">排序依據</string>
     <string name="libraries">庫</string>
+    <string name="wallet">錢包</string>
 </resources>
