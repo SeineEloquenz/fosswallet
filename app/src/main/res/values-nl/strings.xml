@@ -2,9 +2,6 @@
 <resources>
     <string name="back">Terug</string>
     <string name="date">Datum</string>
-    <string name="flip">Omdraaien</string>
-    <string name="front_side">Voorkant</string>
-    <string name="back_side">Achterkant</string>
     <string name="license">Licentie</string>
     <string name="search">Zoeken</string>
     <string name="privacy">Privacy</string>
