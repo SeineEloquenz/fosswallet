@@ -9,9 +9,6 @@
     <string name="barcode">Codi de barres</string>
     <string name="serial_number">Número de sèrie</string>
     <string name="organization">Organizació</string>
-    <string name="flip">Donar la volta</string>
-    <string name="front_side">Davant</string>
-    <string name="back_side">Darrera</string>
     <string name="date">Data</string>
     <string name="delete">Esborrar</string>
     <string name="about">A sobre de</string>
