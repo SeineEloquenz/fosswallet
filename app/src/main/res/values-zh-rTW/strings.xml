@@ -11,9 +11,6 @@
     <string name="serial_number">序號</string>
     <string name="organization">組織</string>
     <string name="no_barcode_format_given">未提供條碼格式！將預設為 QR Code。此代碼可能無法被正確掃描。</string>
-    <string name="flip">翻轉</string>
-    <string name="front_side">正面</string>
-    <string name="back_side">背面</string>
     <string name="date">日期</string>
     <string name="delete">刪除</string>
     <string name="invalid_pass_toast">無法載入通行證。確定這是有效的 .pkpass 嗎？</string>
