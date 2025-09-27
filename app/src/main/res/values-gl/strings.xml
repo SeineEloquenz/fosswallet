@@ -11,9 +11,6 @@
     <string name="serial_number">Número de serie</string>
     <string name="organization">Organización</string>
     <string name="no_barcode_format_given">Non se indica o formato do código de barras! Código QR por defecto. Podería non escanearse correctamente.</string>
-    <string name="flip">Virar</string>
-    <string name="front_side">Anverso</string>
-    <string name="back_side">Reverso</string>
     <string name="date">Data</string>
     <string name="delete">Eliminar</string>
     <string name="invalid_pass_toast">Non se puido cargar o Pass. É un ficheiro .pkpass correcto?</string>

@@ -7,9 +7,6 @@
     <string name="request_permissions">Zarządaj uprawnienia</string>
     <string name="serial_number">Numer seryjny</string>
     <string name="organization">Organizacja</string>
-    <string name="flip">Odwróć</string>
-    <string name="front_side">Przód</string>
-    <string name="back_side">Tył</string>
     <string name="delete">Usuń</string>
     <string name="add_pass">Dodaj Pass</string>
     <string name="about">O programie</string>
