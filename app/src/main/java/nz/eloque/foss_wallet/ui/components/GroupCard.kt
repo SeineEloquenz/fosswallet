@@ -53,7 +53,7 @@ fun GroupCard(
     selectedPasses: MutableSet<Pass>,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
-    onClick: ((Pass) -> Unit)? = null,
+    onClick: (Pass) -> Unit = {}
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -65,7 +65,10 @@ fun GroupCard(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier.padding(10.dp)
         ) {
-            val pagerState = rememberPagerState(0) { passes.size }
+            val pagerState = rememberPagerState(
+                initialPage = 0, 
+                pageCount = { passes.size }
+            )
             HorizontalPager(
                 state = pagerState,
                 pageSpacing = 28.dp,
@@ -78,7 +81,7 @@ fun GroupCard(
                             1.25f
                         )
                     ),
-                    onClick = { onClick?.invoke(item) },
+                    onClick = { onClick.invoke(item) },
                 )
             }
             Box(

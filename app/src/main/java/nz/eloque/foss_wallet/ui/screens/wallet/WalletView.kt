@@ -136,9 +136,7 @@ fun WalletView(
             ) {
                 ShortPassCard(
                     pass = pass,
-                    onClick = {
-                        navController.navigate("pass/${pass.id}")
-                    },
+                    onClick = { navController.navigate("pass/${pass.id}") },
                     selected = selectedPasses.contains(pass)
                 )
             }
