@@ -1,1 +1,1 @@
-FossWallet è un portabigietti per file Apple Passbook (.pkpass)
+FossWallet è un portabiglietti per file Apple Passbook (.pkpass)
