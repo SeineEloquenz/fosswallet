@@ -59,4 +59,6 @@
     <string name="relevant_date_oldest">Старейшая релевантная дата</string>
     <string name="selected">Выбрано</string>
     <string name="filter">Сортировать по</string>
+    <string name="wallet">Кошелёк</string>
+    <string name="libraries">Сборники</string>
 </resources>
