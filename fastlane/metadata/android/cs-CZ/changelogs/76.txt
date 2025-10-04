@@ -1,0 +1,6 @@
+* Allow some deviations from the JSON standard when importing
+* Allow to add multiple passes at once
+* Add third party license screen
+* Add Chinese translation (Traditional Han Script)
+* Fix some wrong insets for button navigation
+* Update translations

@@ -1,0 +1,5 @@
+* Add pass delete button in pass view
+* Add drop down menu for actions in pass view
+* Add pass archiving support
+* Fix crash when clicking calendar/location button if no suitable app is installed
+* Fix wrong default event end time

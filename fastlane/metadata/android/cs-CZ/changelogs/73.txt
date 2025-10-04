@@ -1,0 +1,7 @@
+* New App icon
+* Add greek translation
+* Add better indicators for pass selection
+* Improve pass background color deriving
+* Fix passes shared from other apps not visible until restart of the app
+* Fix content not scrolling up fully if on-screen keyboard is active
+* Update translations

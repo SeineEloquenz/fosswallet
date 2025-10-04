@@ -1,0 +1,2 @@
+* Add loading animation to pass update button
+* Update translations

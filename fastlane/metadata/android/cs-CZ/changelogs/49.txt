@@ -1,0 +1,4 @@
+* Add settings screen for pass updates
+* Utilize charset from pass and only fallback to UTF-8 if it is unknown.
+Note: This will only apply to passes imported from this version onward. Old passes will still default to UTF-8 unless deleted and re-imported.
+* Fix wrong pass display if no logo or logo text exists

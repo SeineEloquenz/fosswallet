@@ -1,0 +1,4 @@
+* Improve feedback when pass updates fail
+* Hide the add-to-calendar button if no date exists in the pass
+* Update translations
+* Fix layout issue where fields were displayed off screen

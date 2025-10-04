@@ -1,0 +1,1 @@
+* Lock orientation in pass view

@@ -1,0 +1,1 @@
+* Add partial hebrew translation

@@ -1,0 +1,4 @@
+* Add polish translation
+* Add sliding animations between views
+* Add link to privacy information to About page
+* Updated translations

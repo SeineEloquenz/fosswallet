@@ -1,0 +1,5 @@
+* Redesign all pass views to closer match Apple's guidelines
+* Accept shares from PassAndroid
+* Show barcode alt-texts
+* Add undo search button to pass filtering
+* Make selection hint on swipe less pronounced
