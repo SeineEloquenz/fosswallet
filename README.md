@@ -38,3 +38,7 @@ Prefer using builds from GitHub or F-Droid if possible.
 FossWallet can be translated via [Weblate](https://hosted.weblate.org/projects/fosswallet/app/).
 
 [![Translation status](https://hosted.weblate.org/widget/fosswallet/app/multi-auto.svg)](https://hosted.weblate.org/engage/fosswallet/)
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
