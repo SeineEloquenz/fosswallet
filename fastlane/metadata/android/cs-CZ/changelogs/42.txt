@@ -1,0 +1,5 @@
+* Add pass grouping
+* Add swipe gestures for grouping and deleting passes
+* Add notification support for pass updates
+* Add support for pretty DateTime
+* Fix wrong colors on Generic Boarding Pass Card

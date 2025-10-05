@@ -1,0 +1,8 @@
+* Render html in pass fields
+* Render tooltips when hovering over abbreviated text
+* Add generic boarding pass view when airline style does not make sense
+* Render date fields and currency correctly
+* Fix crash because of wrong stride calculation when loading some bar codes
+* Fix crash when importing empty passbook file
+* Fix quirky vendor passes from being seen as duplicates though they are not (id calculation changed, so some passes might be able to be added again)
+* Update dependencies

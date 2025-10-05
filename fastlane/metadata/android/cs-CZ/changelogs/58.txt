@@ -1,0 +1,5 @@
+* Add quick settings tile to open the app
+* Update translations
+* Fix update notifications not being localized
+* Fix calculation determining which fields to show update notification for
+* Fix wrong arrangement of last field in row

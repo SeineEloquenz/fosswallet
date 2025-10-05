@@ -1,0 +1,5 @@
+* Move pass deletion from swiping to fab menu
+* Add haptic feedback to pass selection
+* Add build information to about page
+* Fix keyboard not disappearing when pressing "done" when filtering
+* Fix cut off corners when swiping passes in a group

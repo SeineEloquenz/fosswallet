@@ -1,0 +1,4 @@
+* Add galician translation
+* Add spanish translation
+* Add french translation (best effort by a non-native speaker)
+* Some misc translation fixes

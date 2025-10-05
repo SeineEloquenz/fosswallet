@@ -1,0 +1,4 @@
+* Aggiunta la traduzione in galiziano
+* Aggiunta la traduzione in spagnolo
+* Aggiunta la traduzione in francese (il massimo sforzo da parte di un non-nativo)
+* Alcune correzioni varie sulle traduzioni

@@ -1,0 +1,4 @@
+* Add widget to filter pass list
+* Improve date formatting
+* Store original pass files in app storage and allow re-export of file
+* Fix card being clickable in Pass View
