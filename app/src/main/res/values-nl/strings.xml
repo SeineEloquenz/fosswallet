@@ -58,4 +58,6 @@
     <string name="selected">Geselecteerd</string>
     <string name="filter">Sorteren op</string>
     <string name="libraries">Bibliotheken</string>
+    <string name="relevant_date_newest">Nieuwste relevante datum</string>
+    <string name="relevant_date_oldest">Oudste relevante datum</string>
 </resources>
