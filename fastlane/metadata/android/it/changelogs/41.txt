@@ -1,0 +1,1 @@
+* Sistemata la mancanza di una condizione di guardia per trattare i dati precedenti
