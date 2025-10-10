@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -56,16 +55,16 @@ fun WalletView(
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
-    showArchived: Boolean = false,
+    archive: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
 ) {
     val context = LocalContext.current
     val walletState = passViewModel.uiState.collectAsState()
-    val passes = walletState.value.passes.filter { showArchived == it.archived }
+    val passes = walletState.value.passes.filter { archive == it.archived }
 
-    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf<SortOption>(SortOption.TimeAdded) }
+    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
