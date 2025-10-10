@@ -1,0 +1,4 @@
+* Fix vertical images rendering too small
+* Fix archive action being present in archive instead of unarchive action
+* Update translations
+
