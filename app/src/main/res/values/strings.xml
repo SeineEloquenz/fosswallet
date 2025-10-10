@@ -49,6 +49,7 @@
     <string name="pass_view_brightness">Increase Brightness</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
+    <string name="barcode_position_bottom">Bottom</string>
     <string name="pass_already_imported">Pass already imported</string>
     <string name="archive">Archive</string>
     <string name="unarchive">Unarchive</string>
@@ -61,5 +62,7 @@
     <string name="relevant_date_oldest">Oldest relevant date</string>
     <string name="selected">Selected</string>
     <string name="filter">Sort by</string>
+    <string name="deleted">Pass successfully deleted</string>
+    <string name="imported">Pass successfully imported</string>
     <string name="libraries">Libraries</string>
 </resources>

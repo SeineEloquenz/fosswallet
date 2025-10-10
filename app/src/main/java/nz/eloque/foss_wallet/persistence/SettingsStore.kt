@@ -17,14 +17,16 @@ private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 
 sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String, @param:StringRes val label: Int) {
     object Top : BarcodePosition(Arrangement.Top, "TOP", R.string.barcode_position_top)
-    object Center : BarcodePosition(Arrangement.Center, "CENTER",R.string.barcode_position_center)
+    object Center : BarcodePosition(Arrangement.Center, "CENTER", R.string.barcode_position_center)
+    object Bottom : BarcodePosition(Arrangement.Bottom, "BOTTOM", R.string.barcode_position_bottom)
 
     companion object {
-        fun all(): List<BarcodePosition> = listOf(Top, Center)
+        fun all(): List<BarcodePosition> = listOf(Top, Center, Bottom)
         fun of(representation: String): BarcodePosition {
             return when (representation) {
                 Top.key -> Top
                 Center.key -> Center
+                Bottom.key -> Bottom
                 else -> Center
             }
         }

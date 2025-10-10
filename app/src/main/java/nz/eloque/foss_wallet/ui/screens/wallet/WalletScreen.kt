@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -69,6 +70,7 @@ fun WalletScreen(
                     if (result is LoaderResult.Single) {
                         withContext(Dispatchers.Main) {
                             navController.navigate("pass/${result.passId}")
+                            Toast.makeText(context, context.getString(R.string.imported), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -76,6 +78,7 @@ fun WalletScreen(
             loading.value = false
         }
     }
+
     val selectedPasses = remember { mutableStateSetOf<Pass>() }
 
     WalletScaffold(
@@ -112,7 +115,20 @@ fun WalletScreen(
                     text = { Text(stringResource(R.string.add_pass)) },
                     icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
                     expanded = listState.isScrollingUp(),
-                    onClick = { launcher.launch(arrayOf("*/*")) }
+                    onClick = {
+                        launcher.launch(arrayOf(
+                            "application/json+zip",
+                            "application/octet-stream",
+                            "application/pkpass",
+                            "application/pkpass+zip",
+                            "application/pkpasses",
+                            "application/vnd.apple.pkpass",
+                            "application/x-apple-pkpass",
+                            "application/x-passbook",
+                            "application/x-pkpass",
+                            "text/json"
+                        ))
+                    }
                 )
             }
         },
