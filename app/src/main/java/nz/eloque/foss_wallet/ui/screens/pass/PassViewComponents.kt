@@ -4,11 +4,11 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -132,14 +132,17 @@ fun AsyncPassImage(
     modifier: Modifier = Modifier
 ) {
     model?.let {
-        AsyncImage(
-            model = it,
-            contentDescription = stringResource(R.string.image),
-            contentScale = ContentScale.Fit,
-            modifier = modifier
-                .width(100.dp)
-                .height(100.dp)
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AsyncImage(
+                model = it,
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = modifier
+            )
+        }
     }
 }
 
