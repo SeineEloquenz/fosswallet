@@ -25,7 +25,7 @@ class PassRepository @Inject constructor(
             all()
         } else {
             val result = all()
-            result.map { it.filter { it.pass.contains(query) } } }
+            result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 
     fun byId(id: String): PassWithLocalization = passDao.byId(id)

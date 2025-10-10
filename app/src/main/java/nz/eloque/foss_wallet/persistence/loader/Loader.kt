@@ -8,8 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportResult
-import nz.eloque.foss_wallet.api.UpdateContent
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import java.io.ByteArrayInputStream

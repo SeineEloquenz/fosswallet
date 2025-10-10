@@ -38,12 +38,12 @@ class UpdateScheduler @Inject constructor(
         if (settingsStore.isSyncEnabled()) {
             Log.i(TAG, "Scheduled update for pass ${pass.id}")
             val workRequest = PeriodicWorkRequestBuilder<UpdateWorker>(settingsStore.syncInterval().toJavaDuration())
-                .setInputData(Data.Builder().putString("id", pass.id.toString()).build())
+                .setInputData(Data.Builder().putString("id", pass.id).build())
                 .addTag("update")
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
                 .build()
             workManager.enqueueUniquePeriodicWork(
-                pass.id.toString(),
+                pass.id,
                 ExistingPeriodicWorkPolicy.REPLACE,
                 workRequest
             )
@@ -52,7 +52,7 @@ class UpdateScheduler @Inject constructor(
 
     fun cancelUpdate(pass: Pass) {
         Log.i(TAG, "Canceled update for pass ${pass.id}")
-        workManager.cancelUniqueWork(pass.id.toString())
+        workManager.cancelUniqueWork(pass.id)
     }
 
     companion object {

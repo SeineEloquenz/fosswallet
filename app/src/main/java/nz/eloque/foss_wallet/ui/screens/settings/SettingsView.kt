@@ -41,7 +41,6 @@ fun SettingsView(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
-    val passes = passViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp).verticalScroll(rememberScrollState()),

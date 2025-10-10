@@ -65,8 +65,8 @@ fun BarcodesView(
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    barcodes.firstOrNull()?.let {
-        val image = it.encodeAsBitmap(1000, 1000)
+    barcodes.firstOrNull()?.let { barcode ->
+        val image = barcode.encodeAsBitmap(1000, 1000)
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
@@ -83,7 +83,7 @@ fun BarcodesView(
                         .clickable { fullscreen.value = !fullscreen.value },
                     barcodePosition = barcodePosition
                 )
-                it.altText?.let { Text(
+                barcode.altText?.let { Text(
                     text = it,
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center,
