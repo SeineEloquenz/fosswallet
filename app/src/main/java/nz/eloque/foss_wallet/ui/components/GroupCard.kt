@@ -53,7 +53,7 @@ fun GroupCard(
     selectedPasses: MutableSet<Pass>,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
-    onClick: (Pass) -> Unit = {}
+    onClick: ((Pass) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
