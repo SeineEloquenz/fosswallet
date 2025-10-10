@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
+import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.Screen
@@ -26,7 +26,7 @@ fun LibrariesScreen(
         toolWindow = true,
         title = stringResource(id = Screen.Libraries.resourceId)
     ) {
-        val libraries by rememberLibraries(R.raw.aboutlibraries)
+        val libraries by produceLibraries(R.raw.aboutlibraries)
         LibrariesContainer(
             libraries = libraries,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
