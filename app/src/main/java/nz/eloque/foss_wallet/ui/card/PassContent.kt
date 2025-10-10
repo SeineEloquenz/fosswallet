@@ -40,7 +40,9 @@ fun ShortPassContent(
             else -> GenericPrimary(pass)
         }
         if (pass.primaryFields.empty() && pass.hasStrip) {
-            AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
+            AsyncPassImage(
+                model = pass.stripFile(context),
+            )
         }
 
         DateLocationRow(pass)
@@ -74,7 +76,9 @@ fun PassContent(
                 }
             else -> GenericPrimary(pass)
         }
-        AsyncPassImage(model = pass.stripFile(context), modifier = Modifier.fillMaxWidth())
+        AsyncPassImage(
+            model = pass.stripFile(context),
+        )
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
 
