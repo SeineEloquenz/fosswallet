@@ -30,14 +30,25 @@ fun ShortPassCard(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        ElevatedCard(
-            colors = cardColors,
-            modifier = modifier
-                .fillMaxWidth()
-                .scale(scale),
-            onClick = onClick,
-        ) {
-            ShortPassContent(pass, cardColors)
+        if (onClick == null) {
+            ElevatedCard(
+                colors = cardColors,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .scale(scale)
+            ) {
+                ShortPassContent(pass, cardColors)
+            }
+        } else {
+            ElevatedCard(
+                onClick = onClick,
+                colors = cardColors,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .scale(scale)
+            ) {
+                ShortPassContent(pass, cardColors)
+            }
         }
 
         if (selected) {
