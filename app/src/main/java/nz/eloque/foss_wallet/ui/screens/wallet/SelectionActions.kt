@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @Composable
 fun SelectionActions(
+    isArchive: Boolean,
     selectedPasses: SnapshotStateSet<Pass>,
     listState: LazyListState,
     passViewModel: PassViewModel,
@@ -50,15 +52,28 @@ fun SelectionActions(
         ) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
         }
-        FloatingActionButton(
-            onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    selectedPasses.forEach { passViewModel.archive(it) }
-                    selectedPasses.clear()
-                }
-            },
-        ) {
-            Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
+        if (isArchive) {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        selectedPasses.forEach { passViewModel.unarchive(it) }
+                        selectedPasses.clear()
+                    }
+                },
+            ) {
+                Icon(imageVector = Icons.Default.Unarchive, contentDescription = stringResource(R.string.unarchive))
+            }
+        } else {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        selectedPasses.forEach { passViewModel.archive(it) }
+                        selectedPasses.clear()
+                    }
+                },
+            ) {
+                Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
+            }
         }
         FloatingActionButton(
             onClick = {
