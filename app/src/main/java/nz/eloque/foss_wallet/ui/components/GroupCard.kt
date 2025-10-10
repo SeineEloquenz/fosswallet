@@ -81,7 +81,7 @@ fun GroupCard(
                             1.25f
                         )
                     ),
-                    onClick = { onClick.invoke(item) },
+                    onClick = { onClick?.invoke(item) },
                 )
             }
             Box(
