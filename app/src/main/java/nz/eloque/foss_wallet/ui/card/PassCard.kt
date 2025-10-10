@@ -19,7 +19,7 @@ import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 fun ShortPassCard(
     pass: Pass,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
+    onClick: () -> Unit = {},
     selected: Boolean = false,
     colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
@@ -30,25 +30,14 @@ fun ShortPassCard(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        if (onClick == null) {
-            ElevatedCard(
-                colors = cardColors,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .scale(scale)
-            ) {
-                ShortPassContent(pass, cardColors)
-            }
-        } else {
-            ElevatedCard(
-                onClick = onClick,
-                colors = cardColors,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .scale(scale)
-            ) {
-                ShortPassContent(pass, cardColors)
-            }
+        ElevatedCard(
+            colors = cardColors,
+            modifier = modifier
+                .fillMaxWidth()
+                .scale(scale),
+            onClick = onClick,
+        ) {
+            ShortPassContent(pass, cardColors)
         }
 
         if (selected) {
