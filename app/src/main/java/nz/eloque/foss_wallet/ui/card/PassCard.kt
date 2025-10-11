@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
@@ -8,6 +10,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -58,16 +61,20 @@ fun PassCard(
     val cardColors = pass.colors?.toCardColors() ?: colors
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     ElevatedCard(
-        onClick = onClick,
-        enabled = onClick!={},
         colors = cardColors,
         modifier = modifier
             .fillMaxWidth()
             .scale(scale)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
     ) {
         PassContent(pass, cardColors, Modifier, content)
     }
 }
+
 
 @Preview
 @Composable
