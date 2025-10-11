@@ -48,7 +48,7 @@ fun SelectionActions(
                     selectedPasses.forEach { passViewModel.delete(it) }
                     selectedPasses.clear()
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, context.getString(R.string.deleted), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                     }
                 }
             },

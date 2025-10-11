@@ -70,7 +70,6 @@ fun WalletScreen(
                     if (result is LoaderResult.Single) {
                         withContext(Dispatchers.Main) {
                             navController.navigate("pass/${result.passId}")
-                            Toast.makeText(context, context.getString(R.string.imported), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -119,7 +118,6 @@ fun WalletScreen(
                             "application/json+zip",
                             "application/octet-stream",
                             "application/pkpass",
-                            "application/pkpass+zip",
                             "application/pkpasses",
                             "application/vnd.apple.pkpass",
                             "application/x-apple-pkpass",
