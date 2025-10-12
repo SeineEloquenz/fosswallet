@@ -17,10 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -44,13 +40,13 @@ import java.time.Instant
 fun PassView(
     pass: Pass,
     barcodePosition: BarcodePosition,
-    modifier: Modifier = Modifier,
     increaseBrightness: Boolean,
+    onRenderingChange: () -> Unit,
+    modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val barCode = pass.barCodes.firstOrNull()
     val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
-    var legacyRendering by remember { mutableStateOf(false) }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -66,7 +62,7 @@ fun PassView(
                 AsyncPassImage(model = pass.footerFile(context))
                 barCode?.let {
                     BarcodesView(
-                        legacyRendering = legacyRendering && hasLegacyRepresentation,
+                        legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
                         barcode = it,
                         barcodePosition = barcodePosition,
                         increaseBrightness = increaseBrightness
@@ -88,8 +84,10 @@ fun PassView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Switch(
-                            checked = legacyRendering,
-                            onCheckedChange = { legacyRendering = !legacyRendering}
+                            checked = pass.renderLegacy,
+                            onCheckedChange = {
+                                onRenderingChange.invoke()
+                            }
                         )
                         Spacer(Modifier.width(16.dp))
                         Text(
@@ -140,5 +138,9 @@ private fun PassPreview() {
             PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         ),
     )
-    PassView(pass, BarcodePosition.Center, increaseBrightness = false)
+    PassView(
+        pass = pass,
+        barcodePosition = BarcodePosition.Center,
+        increaseBrightness = false,
+        onRenderingChange = {})
 }

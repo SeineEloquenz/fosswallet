@@ -9,6 +9,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,7 +60,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    fun passById(id: String): PassWithLocalization = passStore.passById(id).apply { updatePasses() }
+    fun passFlowById(id: String): Flow<PassWithLocalization> = passStore.passFlowById(id).apply { updatePasses() }
 
     fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
 
@@ -87,4 +88,5 @@ class PassViewModel @Inject constructor(
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+    fun toggleLegacyRendering(pass: Pass) = passStore.toggleLegacyRendering(pass)
 }

@@ -23,8 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
@@ -58,32 +59,34 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val pass = remember { mutableStateOf(Pass.placeholder())}
-    LaunchedEffect(coroutineScope) {
-        coroutineScope.launch(Dispatchers.IO) {
-            pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
-        }
-    }
+    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it.applyLocalization(Locale.getDefault().language) }
+    val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
             snackbarHostState = snackbarHostState,
             navController = navController,
-            title = pass.value.description,
+            title = pass.description,
             toolWindow = true,
             actions = {
                 Actions(pass, navController, snackbarHostState, passViewModel)
             },
         ) { scrollBehavior ->
-            PassView(pass.value, passViewModel.barcodePosition(), scrollBehavior = scrollBehavior, increaseBrightness =  passViewModel.increasePassViewBrightness())
+            PassView(
+                pass = pass,
+                barcodePosition = passViewModel.barcodePosition(),
+                scrollBehavior = scrollBehavior,
+                increaseBrightness = passViewModel.increasePassViewBrightness(),
+                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(pass) } },
+            )
         }
     }
 }
 
 @Composable
 fun Actions(
-    pass: MutableState<Pass>,
+    pass: Pass,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel
@@ -105,16 +108,15 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (pass.value.updatable()) {
+            if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
                     coroutineScope.launch(Dispatchers.IO) {
                         isLoading.value = true
-                        val result = passViewModel.update(pass.value)
+                        val result = passViewModel.update(pass)
                         isLoading.value = false
                         when (result) {
                             is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
-                                pass.value = result.content.pass
                                 snackbarHostState.showSnackbar(
                                     message = context.getString(R.string.update_successful),
                                     duration = SnackbarDuration.Short
@@ -141,7 +143,7 @@ fun Actions(
                     }
                 }
             }
-            val passFile = pass.value.originalPassFile(context)
+            val passFile = pass.originalPassFile(context)
             if (passFile != null) {
                 PassShareButton(passFile)
             }
@@ -151,7 +153,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                 },
                 onClick = {
-                    Shortcut.create(context, pass.value, pass.value.description)
+                    Shortcut.create(context, pass, pass.description)
                 }
             )
             DropdownMenuItem(
@@ -160,7 +162,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
                 }
             )
