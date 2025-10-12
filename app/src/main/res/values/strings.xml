@@ -62,4 +62,5 @@
     <string name="selected">Selected</string>
     <string name="filter">Sort by</string>
     <string name="libraries">Libraries</string>
+    <string name="compatibility_mode">Compatibility Mode</string>
 </resources>

@@ -2,20 +2,29 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassContent
@@ -31,10 +40,13 @@ import java.time.Instant
 fun PassView(
     pass: Pass,
     barcodePosition: BarcodePosition,
-    modifier: Modifier = Modifier,
     increaseBrightness: Boolean,
+    onRenderingChange: () -> Unit,
+    modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
+    val barCode = pass.barCodes.firstOrNull()
+    val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -48,7 +60,14 @@ fun PassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context))
-                BarcodesView(pass.barCodes, barcodePosition, increaseBrightness)
+                barCode?.let {
+                    BarcodesView(
+                        legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
+                        barcode = it,
+                        barcodePosition = barcodePosition,
+                        increaseBrightness = increaseBrightness
+                    )
+                }
             }
         }
         Column(
@@ -56,6 +75,27 @@ fun PassView(
             modifier = Modifier
                 .padding(10.dp)
         ) {
+            if (hasLegacyRepresentation) {
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Switch(
+                            checked = pass.renderLegacy,
+                            onCheckedChange = {
+                                onRenderingChange.invoke()
+                            }
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(R.string.compatibility_mode),
+                        )
+                    }
+                }
+            }
             BackFields(pass.backFields)
             Spacer(modifier = Modifier.padding(4.dp))
         }
@@ -98,5 +138,9 @@ private fun PassPreview() {
             PassField("data2", "data2", PassContent.Plain("Shorter Value")),
         ),
     )
-    PassView(pass, BarcodePosition.Center, increaseBrightness = false)
+    PassView(
+        pass = pass,
+        barcodePosition = BarcodePosition.Center,
+        increaseBrightness = false,
+        onRenderingChange = {})
 }

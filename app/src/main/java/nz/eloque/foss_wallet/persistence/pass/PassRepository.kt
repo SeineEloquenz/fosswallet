@@ -28,6 +28,8 @@ class PassRepository @Inject constructor(
             result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 
+    fun flowById(id: String): Flow<PassWithLocalization> = passDao.flowById(id)
+
     fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
     fun findById(id: String): PassWithLocalization? = passDao.findById(id)
@@ -57,4 +59,5 @@ class PassRepository @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+    fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 }

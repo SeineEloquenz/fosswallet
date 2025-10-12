@@ -7,19 +7,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -57,49 +62,54 @@ fun HeaderFieldsView(
 
 @Composable
 fun BarcodesView(
-    barcodes: Set<BarCode>,
+    legacyRendering: Boolean,
+    barcode: BarCode,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
 ) {
-    val fullscreen = remember { mutableStateOf(false) }
+    var fullscreen by remember { mutableStateOf(false) }
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    barcodes.firstOrNull()?.let { barcode ->
-        val image = barcode.encodeAsBitmap(1000, 1000)
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+    val image = barcode.encodeAsBitmap(1000, 1000, legacyRendering)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                PassImage(
-                    bitmap = image,
-                    modifier = Modifier
-                        .heightIn(max = 150.dp)
-                        .fillMaxWidth()
-                        .clickable { fullscreen.value = !fullscreen.value },
-                    barcodePosition = barcodePosition
-                )
-                barcode.altText?.let { Text(
+            Image(
+                bitmap = image.asImageBitmap(),
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .heightIn(max = 150.dp)
+                    .widthIn(max = 150.dp)
+                    .clickable { fullscreen = !fullscreen }
+            )
+            barcode.altText?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
                     text = it,
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(180.dp)
-                ) }
-            }
-        }
-        if (fullscreen.value) {
-            Raise(onDismiss = { fullscreen.value = !fullscreen.value }) {
-                UpdateBrightness()
-                PassImage(
-                    bitmap = image,
-                    barcodePosition = barcodePosition,
-                    modifier = Modifier.padding(16.dp)
                 )
             }
+        }
+    }
+
+    if (fullscreen) {
+        Raise(onDismiss = { fullscreen = !fullscreen }) {
+            UpdateBrightness()
+            PassImage(
+                bitmap = image,
+                barcodePosition = barcodePosition,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
