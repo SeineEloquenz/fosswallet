@@ -14,6 +14,7 @@ Features (non-exhaustive):
 * Passes display over lockscreen
 * Per App language support
 * Import/Export to .pkpasses
+* Compatibility mode for legacy scanners
 
 ## Installation
 
