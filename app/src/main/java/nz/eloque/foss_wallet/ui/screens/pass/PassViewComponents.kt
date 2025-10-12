@@ -63,7 +63,7 @@ fun HeaderFieldsView(
 @Composable
 fun BarcodesView(
     legacyRendering: Boolean,
-    barcodes: Set<BarCode>,
+    barcode: BarCode,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
 ) {
@@ -71,47 +71,45 @@ fun BarcodesView(
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    barcodes.firstOrNull()?.let { barcode ->
-        val image = barcode.encodeAsBitmap(1000, 1000, legacyRendering)
+    val image = barcode.encodeAsBitmap(1000, 1000, legacyRendering)
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    bitmap = image.asImageBitmap(),
-                    contentDescription = stringResource(R.string.image),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .heightIn(max = 150.dp)
-                        .widthIn(max = 150.dp)
-                        .clickable { fullscreen = !fullscreen }
+            Image(
+                bitmap = image.asImageBitmap(),
+                contentDescription = stringResource(R.string.image),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .heightIn(max = 150.dp)
+                    .widthIn(max = 150.dp)
+                    .clickable { fullscreen = !fullscreen }
+            )
+            barcode.altText?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.width(180.dp)
                 )
-                barcode.altText?.let {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.width(180.dp)
-                    )
-                }
             }
         }
+    }
 
-        if (fullscreen) {
-            Raise(onDismiss = { fullscreen = !fullscreen }) {
-                UpdateBrightness()
-                PassImage(
-                    bitmap = image,
-                    barcodePosition = barcodePosition,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+    if (fullscreen) {
+        Raise(onDismiss = { fullscreen = !fullscreen }) {
+            UpdateBrightness()
+            PassImage(
+                bitmap = image,
+                barcodePosition = barcodePosition,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }

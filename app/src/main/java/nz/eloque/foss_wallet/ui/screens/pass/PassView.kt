@@ -48,7 +48,9 @@ fun PassView(
     increaseBrightness: Boolean,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    var compatibilityMode by remember { mutableStateOf(false) }
+    val barCode = pass.barCodes.firstOrNull()
+    val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
+    var legacyRendering by remember { mutableStateOf(false) }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -62,7 +64,14 @@ fun PassView(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context))
-                BarcodesView(compatibilityMode, pass.barCodes, barcodePosition, increaseBrightness)
+                barCode?.let {
+                    BarcodesView(
+                        legacyRendering = legacyRendering && hasLegacyRepresentation,
+                        barcode = it,
+                        barcodePosition = barcodePosition,
+                        increaseBrightness = increaseBrightness
+                    )
+                }
             }
         }
         Column(
@@ -70,21 +79,23 @@ fun PassView(
             modifier = Modifier
                 .padding(10.dp)
         ) {
-            OutlinedCard(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+            if (hasLegacyRepresentation) {
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Switch(
-                        checked = compatibilityMode,
-                        onCheckedChange = { compatibilityMode = !compatibilityMode}
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    Text(
-                        text = stringResource(R.string.compatibility_mode),
-                    )
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Switch(
+                            checked = legacyRendering,
+                            onCheckedChange = { legacyRendering = !legacyRendering}
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(R.string.compatibility_mode),
+                        )
+                    }
                 }
             }
             BackFields(pass.backFields)
