@@ -61,4 +61,5 @@
     <string name="filter">Järjestus</string>
     <string name="libraries">Teegid</string>
     <string name="wallet">Kaarditasku</string>
+    <string name="compatibility_mode">Ühilduvusrežiim</string>
 </resources>
