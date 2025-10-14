@@ -61,4 +61,5 @@
     <string name="filter">Сортировать по</string>
     <string name="wallet">Кошелёк</string>
     <string name="libraries">Сборники</string>
+    <string name="compatibility_mode">Режим совместимости</string>
 </resources>
