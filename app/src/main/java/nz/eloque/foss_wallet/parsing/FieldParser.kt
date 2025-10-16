@@ -16,9 +16,9 @@ object FieldParser {
 
         val content = when {
             field.has("currencyCode") -> PassContent.Currency(value, field.getString("currencyCode"))
-            field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(InstantParser.parse(value), chooseBetter(field.getDateStyle(), field.getTimeStyle()))
-            field.hasDateStyle() -> PassContent.Date(InstantParser.parse(value), field.getDateStyle())
-            field.hasTimeStyle() -> PassContent.Time(InstantParser.parse(value), field.getTimeStyle())
+            field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(InstantParser.parse(value), chooseBetter(field.getDateStyle(), field.getTimeStyle()), field.ignoresTimezone(), field.isRelative())
+            field.hasDateStyle() -> PassContent.Date(InstantParser.parse(value), field.getDateStyle(), field.ignoresTimezone(), field.isRelative())
+            field.hasTimeStyle() -> PassContent.Time(InstantParser.parse(value), field.getTimeStyle(), field.ignoresTimezone(), field.isRelative())
             else -> PassContent.Plain(value)
         }
 
@@ -39,6 +39,8 @@ object FieldParser {
     private fun JSONObject.hasTimeStyle() = hasStyle("timeStyle")
     private fun JSONObject.getDateStyle() = getString("dateStyle").toFormatStyle()
     private fun JSONObject.getTimeStyle() = getString("timeStyle").toFormatStyle()
+    private fun JSONObject.ignoresTimezone() = optBoolean("ignoresTimeZone")
+    private fun JSONObject.isRelative() = optBoolean("isRelative")
 
     private fun JSONObject.hasStyle(key: String): Boolean {
         return this.has(key) && this.getString(key) != "PKDateStyleNone"
