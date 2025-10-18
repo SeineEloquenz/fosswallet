@@ -1,0 +1,4 @@
+* Přidán režim kompatibility pro starší skenery
+* Opraveno příliš malé vykreslování vertikálních obrázků
+* Opravena přítomnost akce archivace v archivu namísto akce zrušení archivace
+* Aktualizovány překlady
