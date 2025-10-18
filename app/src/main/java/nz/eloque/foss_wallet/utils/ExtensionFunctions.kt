@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.utils
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -37,22 +38,32 @@ fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     }
 }
 
-fun Instant.prettyDateTime(style: FormatStyle = FormatStyle.SHORT): String {
-    val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
+fun Instant.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(style)
-    return zonedTime.format(dateFormatter)
+    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun Instant.prettyDate(style: FormatStyle = FormatStyle.SHORT): String {
-    val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
+fun Instant.prettyDate(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(style)
-    return zonedTime.format(dateFormatter)
+    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun Instant.prettyTime(style: FormatStyle = FormatStyle.SHORT): String {
-    val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
+fun Instant.prettyTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(style)
-    return zonedTime.format(dateFormatter)
+    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
+}
+
+private fun Instant.pretty(dateFormatter: DateTimeFormatter, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+    if (isRelative) {
+        return DateUtils.getRelativeTimeSpanString(this.toEpochMilli()).toString()
+    }
+    return if (ignoresTimezone) {
+        val time = ZonedDateTime.ofInstant(this, ZoneId.of("UTC"))
+        time.format(dateFormatter)
+    } else {
+        val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
+        zonedTime.format(dateFormatter)
+    }
 }
 
 fun Color.darken(factor: Float = 0.3f): Color {
