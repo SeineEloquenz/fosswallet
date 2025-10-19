@@ -61,4 +61,5 @@
     <string name="relevant_date_newest">Nieuwste relevante datum</string>
     <string name="relevant_date_oldest">Oudste relevante datum</string>
     <string name="compatibility_mode">Kompatibilitätsmodus</string>
+    <string name="wallet">Portemonnee</string>
 </resources>
