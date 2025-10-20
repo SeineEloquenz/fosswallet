@@ -42,6 +42,7 @@ fun ShortPassContent(
         if (pass.primaryFields.empty() && pass.hasStrip) {
             AsyncPassImage(
                 model = pass.stripFile(context),
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -78,6 +79,7 @@ fun PassContent(
         }
         AsyncPassImage(
             model = pass.stripFile(context),
+            modifier = Modifier.fillMaxWidth()
         )
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
