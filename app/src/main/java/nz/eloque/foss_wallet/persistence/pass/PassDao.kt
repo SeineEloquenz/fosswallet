@@ -13,15 +13,20 @@ import nz.eloque.foss_wallet.model.PassWithLocalization
 
 @Dao
 interface PassDao {
+
+    @Transaction
     @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithLocalization>>
 
+    @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
     fun updatable(): List<Pass>
 
+    @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
     fun flowById(id: String): Flow<PassWithLocalization>
 
+    @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
     fun byId(id: String): PassWithLocalization
 
