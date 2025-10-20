@@ -1,0 +1,4 @@
+* Add padded white card around code and alt text
+* Add support for relative and timezone ignoring dates (Passes will need to be re-imported to use these tags)
+* Fix strips not being full pass width
+* Update translations
