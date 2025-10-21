@@ -32,17 +32,19 @@ data class PassWithLocalization(
     private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> {
         return this.map { field ->
 
-            var content = field.content;
-
-            if(content is PassContent.Plain) {
-                if (mapping.containsKey(content.text)) {
-                    content = content.copy(mapping[content.text]!!.text);
-                }
-            }
+            val content = field.content.applyLocalization(mapping)
 
             val localizedLabel = mapping[field.label]?.text ?: field.label
             val localizedChangeMessage = (mapping[field.changeMessage]?.text ?: field.changeMessage) ?.replace(CHANGE_MESSAGE_FORMAT, content.prettyPrint())
             field.copy(label = localizedLabel, changeMessage = localizedChangeMessage, content = content)
+        }
+    }
+
+    private fun PassContent.applyLocalization(mapping: Map<String, PassLocalization>): PassContent {
+        return if (this is PassContent.Plain && mapping.containsKey(this.text)) {
+            PassContent.Plain(mapping[this.text]!!.text);
+        } else {
+            this
         }
     }
 
