@@ -4,7 +4,7 @@ accompanistPermissions = "0.37.3"
 activityCompose = "1.11.0"
 androidGradlePlugin = "8.11.2"
 coil = "2.7.0"
-composeBom = "2025.10.00"
+composeBom = "2025.10.01"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
 espressoCore = "3.7.0"
@@ -23,8 +23,8 @@ mockito = "5.20.0"
 navigationCompose = "2.9.5"
 okhttp = "5.2.1"
 preferenceKtx = "1.2.1"
-room = "2.8.2"
-work = "2.10.5"
+room = "2.8.3"
+work = "2.11.0"
 
 [libraries]
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
