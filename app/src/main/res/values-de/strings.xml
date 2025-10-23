@@ -61,4 +61,5 @@
     <string name="relevant_date_oldest">Ältestes Datum</string>
     <string name="libraries">Bibliotheken</string>
     <string name="wallet">Passetui</string>
+    <string name="compatibility_mode">Kompatibilitätsmodus</string>
 </resources>
