@@ -39,7 +39,7 @@
     <string name="copy">Kopiuj</string>
     <string name="status_code">Status odpowiedzi serwera: %1$s</string>
     <string name="status_not_updated">Twój Pass jest aktualny</string>
-    <string name="open_wallet">Otwórz FossWallet</string>
+    <string name="open">Otwórz</string>
     <string name="barcode_position">Położenie kodu kreskowego na pełnym ekranie</string>
     <string name="pass">Pass</string>
     <string name="status_forbidden">Serwer nie pozwala na dostęp do pass\'a. Może pass wygasł?</string>

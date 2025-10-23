@@ -13,11 +13,13 @@ import nz.eloque.foss_wallet.R
 class WalletTileService : TileService() {
 
     override fun onStartListening() {
-        val tile = qsTile
-        tile?.apply {
-            label = this@WalletTileService.getString(R.string.open_wallet) // <-- Name shown on the tile
-            icon = Icon.createWithResource(this@WalletTileService, R.drawable.icon)
-            state = Tile.STATE_ACTIVE
+        qsTile.apply {
+            label = this@WalletTileService.getString(R.string.app_name)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                subtitle = this@WalletTileService.getString(R.string.open)
+            }
+            icon = Icon.createWithResource(this@WalletTileService, R.drawable.qs_icon)
+            state = Tile.STATE_INACTIVE
             updateTile()
         }
     }

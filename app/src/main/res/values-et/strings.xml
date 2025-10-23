@@ -41,7 +41,7 @@
     <string name="details">Üksikasjad</string>
     <string name="status_forbidden">Server ei lubanud sellel dokumendil andmeid uuendada. Võib-olla on dokument juba aegunud?</string>
     <string name="status_not_updated">See dokument sisaldab uuendatud andmeid</string>
-    <string name="open_wallet">Ava FossWallet</string>
+    <string name="open">Ava</string>
     <string name="barcode_position">Triipkoodi asukoht ekraanil</string>
     <string name="barcode_position_top">Ülal</string>
     <string name="barcode_position_center">Keskel</string>

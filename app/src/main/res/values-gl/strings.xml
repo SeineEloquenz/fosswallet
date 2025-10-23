@@ -41,7 +41,7 @@
     <string name="status_code">O servidor respondeu co estado %1$s</string>
     <string name="status_forbidden">O servidor non permitiu o acceso ao pase. Quizais o pase xa expirou?</string>
     <string name="status_not_updated">O seu pase xa está actualizado</string>
-    <string name="open_wallet">Abrir FossWallet</string>
+    <string name="open">Abrir</string>
     <string name="barcode_position">Posición do código de barras en pantalla completa</string>
     <string name="barcode_position_top">Arriba</string>
     <string name="barcode_position_center">Centro</string>

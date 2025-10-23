@@ -43,7 +43,7 @@
     <string name="status_code">The server replied with status %1$s</string>
     <string name="status_forbidden">The server did not allow access to the pass. Maybe this pass is already expired?</string>
     <string name="status_not_updated">Your pass is already up-to-date</string>
-    <string name="open_wallet">Open FossWallet</string>
+    <string name="open">Open</string>
     <string name="barcode_position">Barcode position in fullscreen</string>
     <string name="pass_view">Pass View</string>
     <string name="pass_view_brightness">Increase Brightness</string>

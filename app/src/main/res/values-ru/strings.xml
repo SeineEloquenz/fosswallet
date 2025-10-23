@@ -41,7 +41,7 @@
     <string name="status_code">Сервер ответил со статусом %1$s</string>
     <string name="status_forbidden">Сервер не разрешил доступ к пропуску. Может срок действия пропуска уже истёк?</string>
     <string name="status_not_updated">Ваш пропуск уже актуален</string>
-    <string name="open_wallet">Открыть FossWallet</string>
+    <string name="open">Открыть</string>
     <string name="barcode_position">Положение штрихкода в полноэкранном режиме</string>
     <string name="pass_view">Вид пропуска</string>
     <string name="pass_view_brightness">Увеличить яркость</string>

@@ -41,7 +41,7 @@
     <string name="status_code">Server odpověděl stavem %1$s</string>
     <string name="status_forbidden">Server neumožnil přístup k lístku. Možná tento lístek již vypršel?</string>
     <string name="status_not_updated">Váš lístek je již aktuální</string>
-    <string name="open_wallet">Otevřít FossWallet</string>
+    <string name="open">Otevřít</string>
     <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
     <string name="barcode_position_top">Nahoře</string>
     <string name="barcode_position_center">Uprostřed</string>
