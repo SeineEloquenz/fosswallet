@@ -41,7 +41,7 @@
     <string name="status_code">伺服器回應狀態為 %1$s</string>
     <string name="status_forbidden">伺服器未允許存取通行證。也許此通行證已過期？</string>
     <string name="status_not_updated">通行證已是最新狀態</string>
-    <string name="open_wallet">開啟 FossWallet</string>
+    <string name="open">開啟</string>
     <string name="barcode_position">全螢幕時的條碼位置</string>
     <string name="pass_view">通信志檢視</string>
     <string name="pass_view_brightness">提高亮度</string>

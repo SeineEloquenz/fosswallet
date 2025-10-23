@@ -39,7 +39,7 @@
     <string name="exception">Se produjo una excepción al contactar con el servidor de actualizaciones</string>
     <string name="copy">Copiar</string>
     <string name="status_not_updated">Tu pase ya está actualizado</string>
-    <string name="open_wallet">Abrir FossWallet</string>
+    <string name="open">Abrir</string>
     <string name="status_code">El servidor respondió con el estado %1$s</string>
     <string name="status_forbidden">El servidor no permitió el acceso al pase. ¿Quizás este pase ya haya expirado?</string>
     <string name="barcode_position">Posición del código de barras en pantalla completa</string>

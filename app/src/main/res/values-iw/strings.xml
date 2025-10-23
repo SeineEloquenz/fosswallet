@@ -23,7 +23,7 @@
     <string name="details">פרטים</string>
     <string name="copy">העתקה</string>
     <string name="status_code">השרת ענה עם המצב %1$s</string>
-    <string name="open_wallet">פתיחת FossWallet</string>
+    <string name="open">פתיחת</string>
     <string name="barcode_position">מיקום ברקוד במסך מלא</string>
     <string name="pass">אישור</string>
     <string name="invalid_pass_toast">לא ניתן היה לטעון את האישור. האם וידאתם שזהו קובץ .pkpass תקין?</string>

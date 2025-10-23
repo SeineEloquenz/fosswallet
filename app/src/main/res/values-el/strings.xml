@@ -41,7 +41,7 @@
     <string name="status_code">Ο διακομιστής απάντησε με κωδικό %1$s</string>
     <string name="status_forbidden">Ο διακομιστής δεν επέτρεψε να ενημερωθεί το πάσο. Ίσως έχει λήξει;</string>
     <string name="status_not_updated">Το πάσο είναι ενημερωμένο</string>
-    <string name="open_wallet">Άνοιγμα FossWallet</string>
+    <string name="open">Άνοιγμα</string>
     <string name="barcode_position">Θέση γραμμοκώδικα σε πλήρη οθόνη</string>
     <string name="pass_view">Προβολή Πάσων</string>
     <string name="pass_view_brightness">Αύξηση φωτεινότητας</string>
