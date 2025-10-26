@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 17,
-    "identityHash": HASH_PLACEHOLDER,
+    "identityHash": "HASH_PLACEHOLDER",
     "entities": [
       {
         "tableName": "Pass",
