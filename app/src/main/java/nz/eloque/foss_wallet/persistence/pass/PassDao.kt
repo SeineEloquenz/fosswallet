@@ -37,7 +37,7 @@ interface PassDao {
     fun associate(passId: String, groupId: Long)
 
     @Query("UPDATE pass SET groupId = NULL WHERE id = :passId")
-    fun dessociate(passId: String)
+    fun dissociate(passId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pass: Pass)
@@ -59,8 +59,8 @@ interface PassDao {
     }
 
     @Transaction
-    fun dessociate(pass: Pass, groupId: Long) {
-        dessociate(pass.id)
+    fun dissociate(pass: Pass, groupId: Long) {
+        dissociate(pass.id)
         deleteEmptyGroup(groupId)
     }
 
