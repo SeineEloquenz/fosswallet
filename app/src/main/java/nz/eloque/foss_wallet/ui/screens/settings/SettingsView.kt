@@ -41,7 +41,6 @@ fun SettingsView(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
-    val passes = passViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp).verticalScroll(rememberScrollState()),
@@ -93,10 +92,10 @@ fun SettingsView(
             )
         }
         SettingsSection(
-            heading = stringResource(R.string.export),
+            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share),
         ) {
             SettingsButton(
-                name = stringResource(R.string.export),
+                name = stringResource(R.string.export) + " (.pkpasses)",
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {

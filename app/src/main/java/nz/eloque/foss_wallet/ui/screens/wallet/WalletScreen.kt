@@ -138,6 +138,7 @@ fun WalletScreen(
         floatingActionButton = {
             if (selectedPasses.isNotEmpty()) {
                 SelectionActions(
+                    false,
                     selectedPasses,
                     listState,
                     passViewModel

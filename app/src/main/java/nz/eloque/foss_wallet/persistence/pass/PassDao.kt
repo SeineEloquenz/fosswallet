@@ -13,6 +13,7 @@ import nz.eloque.foss_wallet.model.PassWithLocalization
 
 @Dao
 interface PassDao {
+
     @Transaction
     @Query("SELECT * FROM pass ORDER BY pinned DESC")
     fun allInternal(): Flow<List<PassWithLocalization>>
@@ -29,14 +30,18 @@ interface PassDao {
         }
     }
 
+    @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
     fun updatable(): List<Pass>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun byId(id: String): PassWithLocalization
+    fun flowById(id: String): Flow<PassWithLocalization>
 
     @Transaction
+    @Query("SELECT * FROM pass WHERE id=:id")
+    fun byId(id: String): PassWithLocalization
+
     @Query("SELECT * FROM pass WHERE id=:id")
     fun findById(id: String): PassWithLocalization?
 
@@ -98,4 +103,6 @@ interface PassDao {
 
     @Query("SELECT pinned = 1 FROM Pass WHERE id = :passId")
     fun pinned(passId: String): Boolean
+    @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
+    fun setLegacyRendering(passId: String, renderLegacy: Boolean)
 }

@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -55,7 +57,7 @@ fun WalletView(
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
-    showArchived: Boolean = false,
+    archive: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<Pass>,
@@ -63,10 +65,10 @@ fun WalletView(
 ) {
     val context = LocalContext.current
     val walletState = passViewModel.uiState.collectAsState()
-    val passes = walletState.value.passes.filter { showArchived == it.archived }
+    val passes = walletState.value.passes.filter { archive == it.archived }
 
-    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf<SortOption>(SortOption.TimeAdded) }
     val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
+    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
@@ -87,6 +89,7 @@ fun WalletView(
         state = listState,
         verticalArrangement = Arrangement
             .spacedBy(8.dp),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -145,9 +148,6 @@ fun WalletView(
         }
         item {
             Spacer(modifier = Modifier.padding(4.dp))
-        }
-        item {
-            Spacer(modifier = Modifier.imePadding())
         }
     }
 }

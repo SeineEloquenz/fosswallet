@@ -66,6 +66,7 @@ data class Pass(
     val hidden: Boolean = false,
     @ColumnInfo(defaultValue = "0")
     val pinned: Boolean = false
+    val renderLegacy: Boolean = false,
 ) {
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)

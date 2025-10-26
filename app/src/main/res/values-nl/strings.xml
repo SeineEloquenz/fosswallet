@@ -2,9 +2,6 @@
 <resources>
     <string name="back">Terug</string>
     <string name="date">Datum</string>
-    <string name="flip">Omdraaien</string>
-    <string name="front_side">Voorkant</string>
-    <string name="back_side">Achterkant</string>
     <string name="license">Licentie</string>
     <string name="search">Zoeken</string>
     <string name="privacy">Privacy</string>
@@ -21,7 +18,7 @@
     <string name="serial_number">Serienummer</string>
     <string name="enable">Inschakelen</string>
     <string name="add_shortcut">Snelkoppeling toevoegen</string>
-    <string name="open_wallet">FossWallet openen</string>
+    <string name="open">Openen</string>
     <string name="to">naar</string>
     <string name="request_permissions">Toestemming aanvragen</string>
     <string name="barcode">Barcode</string>
@@ -30,7 +27,7 @@
     <string name="barcode_position_center">Midden</string>
     <string name="pass_view_brightness">Helderheid verhogen</string>
     <string name="status_code">De server antwoordde met status %1$s</string>
-    <string name="permission_rationale">Zonder de toestemming(en) werkt Wallet niet correct</string>
+    <string name="permission_rationale">Zonder de toestemming(en) werkt FossWallet niet correct</string>
     <string name="exception">Er is een uitzondering opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="timeout">Er is een time-out opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand.</string>
@@ -61,4 +58,8 @@
     <string name="selected">Geselecteerd</string>
     <string name="filter">Sorteren op</string>
     <string name="libraries">Bibliotheken</string>
+    <string name="relevant_date_newest">Nieuwste relevante datum</string>
+    <string name="relevant_date_oldest">Oudste relevante datum</string>
+    <string name="compatibility_mode">Compatibiliteitsmodus</string>
+    <string name="wallet">Portemonnee</string>
 </resources>

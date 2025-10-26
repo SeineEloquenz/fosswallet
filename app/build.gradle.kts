@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.aboutLibraries.android)
 }
 
 kotlin {
@@ -49,8 +50,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 36
-        versionCode = 77
-        versionName = "0.28.2"
+        versionCode = 82
+        versionName = "0.30.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

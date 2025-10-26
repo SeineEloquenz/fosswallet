@@ -11,9 +11,6 @@
     <string name="serial_number">序號</string>
     <string name="organization">組織</string>
     <string name="no_barcode_format_given">未提供條碼格式！將預設為 QR Code。此代碼可能無法被正確掃描。</string>
-    <string name="flip">翻轉</string>
-    <string name="front_side">正面</string>
-    <string name="back_side">背面</string>
     <string name="date">日期</string>
     <string name="delete">刪除</string>
     <string name="invalid_pass_toast">無法載入通行證。確定這是有效的 .pkpass 嗎？</string>
@@ -44,7 +41,7 @@
     <string name="status_code">伺服器回應狀態為 %1$s</string>
     <string name="status_forbidden">伺服器未允許存取通行證。也許此通行證已過期？</string>
     <string name="status_not_updated">通行證已是最新狀態</string>
-    <string name="open_wallet">開啟 FossWallet</string>
+    <string name="open">開啟</string>
     <string name="barcode_position">全螢幕時的條碼位置</string>
     <string name="pass_view">通信志檢視</string>
     <string name="pass_view_brightness">提高亮度</string>
@@ -63,4 +60,6 @@
     <string name="selected">已選取</string>
     <string name="filter">排序依據</string>
     <string name="libraries">庫</string>
+    <string name="wallet">錢包</string>
+    <string name="compatibility_mode">相容模式</string>
 </resources>

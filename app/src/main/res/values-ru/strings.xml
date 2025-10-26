@@ -3,7 +3,7 @@
     <string name="settings">Настройки</string>
     <string name="update">Обновить</string>
     <string name="back">Назад</string>
-    <string name="permission_rationale">Без этих разрешений Wallet не будет работать правильно</string>
+    <string name="permission_rationale">Без этих разрешений FossWallet не будет работать правильно</string>
     <string name="request_permissions">Запросить разрешение</string>
     <string name="image">Изображение</string>
     <string name="pass">Пропуск</string>
@@ -11,9 +11,6 @@
     <string name="serial_number">Серийный номер</string>
     <string name="organization">Организация</string>
     <string name="no_barcode_format_given">Формат штрихкода не указан! По умолчанию используется QR-код. Этот код может сканироваться неправильно.</string>
-    <string name="flip">Перевернуть</string>
-    <string name="front_side">Лицевая сторона</string>
-    <string name="back_side">Оборотная сторона</string>
     <string name="date">Дата</string>
     <string name="delete">Удалить</string>
     <string name="invalid_pass_toast">Не удалось загрузить пропуск. Вы уверены, что это правильный .pkpass?</string>
@@ -44,7 +41,7 @@
     <string name="status_code">Сервер ответил со статусом %1$s</string>
     <string name="status_forbidden">Сервер не разрешил доступ к пропуску. Может срок действия пропуска уже истёк?</string>
     <string name="status_not_updated">Ваш пропуск уже актуален</string>
-    <string name="open_wallet">Открыть FossWallet</string>
+    <string name="open">Открыть</string>
     <string name="barcode_position">Положение штрихкода в полноэкранном режиме</string>
     <string name="pass_view">Вид пропуска</string>
     <string name="pass_view_brightness">Увеличить яркость</string>
@@ -62,4 +59,7 @@
     <string name="relevant_date_oldest">Старейшая релевантная дата</string>
     <string name="selected">Выбрано</string>
     <string name="filter">Сортировать по</string>
+    <string name="wallet">Кошелёк</string>
+    <string name="libraries">Сборники</string>
+    <string name="compatibility_mode">Режим совместимости</string>
 </resources>

@@ -4,18 +4,15 @@
     <string name="settings">Settings</string>
     <string name="update">Update</string>
     <string name="back">Back</string>
-    <string name="permission_rationale">Without the permission(s), Wallet does not work correctly</string>
+    <string name="permission_rationale">Without the permission(s), FossWallet does not work correctly</string>
     <string name="request_permissions">Request Permission</string>
-    <string name="wallet" translatable="false">Wallet</string>
+    <string name="wallet">Wallet</string>
     <string name="image">Image</string>
     <string name="pass">Pass</string>
     <string name="barcode">Barcode</string>
     <string name="serial_number">Serial number</string>
     <string name="organization">Organization</string>
     <string name="no_barcode_format_given">No barcode format given! Defaulting to QR code. This code might not get scanned correctly.</string>
-    <string name="flip">Flip</string>
-    <string name="front_side">Front</string>
-    <string name="back_side">Back</string>
     <string name="date">Date</string>
     <string name="delete">Delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
@@ -46,7 +43,7 @@
     <string name="status_code">The server replied with status %1$s</string>
     <string name="status_forbidden">The server did not allow access to the pass. Maybe this pass is already expired?</string>
     <string name="status_not_updated">Your pass is already up-to-date</string>
-    <string name="open_wallet">Open FossWallet</string>
+    <string name="open">Open</string>
     <string name="barcode_position">Barcode position in fullscreen</string>
     <string name="pass_view">Pass View</string>
     <string name="pass_view_brightness">Increase Brightness</string>
@@ -73,4 +70,5 @@
     <string name="auth">Authentication</string>
     <string name="auth_by">using the biometrics/password/pattern/PIN of your device</string>
     <string name="libraries">Libraries</string>
+    <string name="compatibility_mode">Compatibility Mode</string>
 </resources>

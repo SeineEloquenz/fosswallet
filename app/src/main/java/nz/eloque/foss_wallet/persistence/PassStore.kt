@@ -32,6 +32,8 @@ class PassStore @Inject constructor(
     fun passById(id: String) = passRepository.byId(id)
 
     fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus)
+    
+    fun passFlowById(id: String) = passRepository.flowById(id)
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
@@ -61,6 +63,8 @@ class PassStore @Inject constructor(
     fun archive(pass: Pass) = passRepository.archive(pass)
 
     fun unarchive(pass: Pass) = passRepository.unarchive(pass)
+
+    fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
 
     fun group(passes: Set<Pass>): PassGroup {
         val group = passRepository.insert(PassGroup())

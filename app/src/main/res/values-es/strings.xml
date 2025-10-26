@@ -3,7 +3,7 @@
     <string name="settings">Ajustes</string>
     <string name="update">Actualizar</string>
     <string name="back">Atrás</string>
-    <string name="permission_rationale">Sin permiso(s), Wallet no funciona correctamente</string>
+    <string name="permission_rationale">Sin permiso(s), FossWallet no funciona correctamente</string>
     <string name="request_permissions">Solicitar permisos</string>
     <string name="image">Imagen</string>
     <string name="pass">Pase</string>
@@ -11,9 +11,6 @@
     <string name="serial_number">Número de serie</string>
     <string name="organization">Organización</string>
     <string name="no_barcode_format_given">¡No se especificó un formato de código de barras! Se usará por defecto un código QR. Es posible que este código no se escanee correctamente.</string>
-    <string name="flip">Voltear</string>
-    <string name="front_side">Anverso</string>
-    <string name="back_side">Reverso</string>
     <string name="date">Fecha</string>
     <string name="delete">Eliminar</string>
     <string name="invalid_pass_toast">No se ha podido cargar el pase. ¿Es un fichero .pkpass con formato correcto?</string>
@@ -42,7 +39,7 @@
     <string name="exception">Se produjo una excepción al contactar con el servidor de actualizaciones</string>
     <string name="copy">Copiar</string>
     <string name="status_not_updated">Tu pase ya está actualizado</string>
-    <string name="open_wallet">Abrir FossWallet</string>
+    <string name="open">Abrir</string>
     <string name="status_code">El servidor respondió con el estado %1$s</string>
     <string name="status_forbidden">El servidor no permitió el acceso al pase. ¿Quizás este pase ya haya expirado?</string>
     <string name="barcode_position">Posición del código de barras en pantalla completa</string>

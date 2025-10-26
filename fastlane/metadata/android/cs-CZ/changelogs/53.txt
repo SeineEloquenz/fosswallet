@@ -1,0 +1,4 @@
+* Added estonian translation
+* Update translations
+* Make empty passes show their strip on preview
+* Fix potential crash because of broken date formats in passes

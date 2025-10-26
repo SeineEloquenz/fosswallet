@@ -25,8 +25,10 @@ class PassRepository @Inject constructor(
             all(authStatus)
         } else {
             val result = all(authStatus)
-            result.map { it.filter { it.pass.contains(query) } } }
+            result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
+
+    fun flowById(id: String): Flow<PassWithLocalization> = passDao.flowById(id)
 
     fun byId(id: String): PassWithLocalization = passDao.byId(id)
 
@@ -67,4 +69,5 @@ class PassRepository @Inject constructor(
     suspend fun unpin(pass: Pass) = passDao.unpin(pass.id)
 
     fun pinned(pass: Pass) = passDao.pinned(pass.id)
+    fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 }

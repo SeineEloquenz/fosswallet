@@ -7,9 +7,6 @@
     <string name="request_permissions">Zarządaj uprawnienia</string>
     <string name="serial_number">Numer seryjny</string>
     <string name="organization">Organizacja</string>
-    <string name="flip">Odwróć</string>
-    <string name="front_side">Przód</string>
-    <string name="back_side">Tył</string>
     <string name="delete">Usuń</string>
     <string name="add_pass">Dodaj Pass</string>
     <string name="about">O programie</string>
@@ -28,7 +25,7 @@
     <string name="search">Szukaj</string>
     <string name="add_shortcut">Dodaj skrót</string>
     <string name="shortcut_exists">Skrót już istnieje!</string>
-    <string name="permission_rationale">Bez tego uprawnienia, Wallet nie będzie działał poprawnie</string>
+    <string name="permission_rationale">Bez tego uprawnienia, FossWallet nie będzie działał poprawnie</string>
     <string name="image">Obraz</string>
     <string name="barcode">Kod kreskowy</string>
     <string name="invalid_pass_toast">Nie można załadować pliku. Czy na pewno jest to prawidłowy .pkpass?</string>
@@ -42,7 +39,7 @@
     <string name="copy">Kopiuj</string>
     <string name="status_code">Status odpowiedzi serwera: %1$s</string>
     <string name="status_not_updated">Twój Pass jest aktualny</string>
-    <string name="open_wallet">Otwórz FossWallet</string>
+    <string name="open">Otwórz</string>
     <string name="barcode_position">Położenie kodu kreskowego na pełnym ekranie</string>
     <string name="pass">Pass</string>
     <string name="status_forbidden">Serwer nie pozwala na dostęp do pass\'a. Może pass wygasł?</string>

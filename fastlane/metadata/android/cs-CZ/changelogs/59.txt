@@ -1,0 +1,3 @@
+* Add setting for barcode position in fullscreen view (top/center)
+* Allow removal of single pass from existing group
+* Allow addition of single pass to existing group

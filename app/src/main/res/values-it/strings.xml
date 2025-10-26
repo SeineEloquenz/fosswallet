@@ -11,9 +11,6 @@
     <string name="serial_number">Numero seriale</string>
     <string name="organization">Organizzazione</string>
     <string name="no_barcode_format_given">Non c\'è alcun formato di codice a barre! In automatico verrà definito come codice QR. Questo codice potrebbe non essere scansionato correttamente.</string>
-    <string name="flip">Gira</string>
-    <string name="front_side">Fronte</string>
-    <string name="back_side">Retro</string>
     <string name="date">Data</string>
     <string name="delete">Elimina</string>
     <string name="invalid_pass_toast">Il biglietto non può essere caricato. Sei sicuro che sia un file .pkpass valido?</string>
@@ -45,7 +42,7 @@
     <string name="status_forbidden">Il server non ha permesso l\'accesso al biglietto. Forse il biglietto è già scaduto?</string>
     <string name="status_not_updated">Il tuo biglietto è già aggiornato</string>
     <string name="barcode_position">Posizione del codice a schermo intero</string>
-    <string name="open_wallet">Apri FossWallet</string>
+    <string name="open">Apri</string>
     <string name="barcode_position_top">Alto</string>
     <string name="barcode_position_center">Centro</string>
     <string name="pass_view_brightness">Aumenta la luminosità</string>
@@ -63,4 +60,6 @@
     <string name="relevant_date_oldest">La più vecchia data rilevante</string>
     <string name="selected">Selezionati</string>
     <string name="libraries">Biblioteche</string>
+    <string name="wallet">Portabiglietti</string>
+    <string name="compatibility_mode">Modalità compatibilità</string>
 </resources>

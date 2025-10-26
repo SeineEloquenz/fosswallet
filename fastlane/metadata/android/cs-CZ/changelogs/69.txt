@@ -1,0 +1,1 @@
+* Fix case where a wrong background color for a pass could be derived if logos have a fully translucent border

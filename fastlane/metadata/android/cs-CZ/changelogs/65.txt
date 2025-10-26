@@ -1,0 +1,1 @@
+* Revert to older zxing dependency to (hopefully) fix aztec code issues

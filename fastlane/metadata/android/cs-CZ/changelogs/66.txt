@@ -1,0 +1,4 @@
+* Improve settings UI
+* Add setting to increase brightness in pass view
+* Update translations
+* Fix shadow clipping in Wallet View

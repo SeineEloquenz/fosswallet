@@ -8,9 +8,6 @@
     <string name="image">Pilt</string>
     <string name="barcode">Triipkood</string>
     <string name="serial_number">Seerianumber</string>
-    <string name="flip">Pööra ümber</string>
-    <string name="front_side">Esikülg</string>
-    <string name="back_side">Tagakülg</string>
     <string name="date">Kuupäev</string>
     <string name="about">Rakenduse teave</string>
     <string name="source_code">Lähtekood</string>
@@ -44,7 +41,7 @@
     <string name="details">Üksikasjad</string>
     <string name="status_forbidden">Server ei lubanud sellel dokumendil andmeid uuendada. Võib-olla on dokument juba aegunud?</string>
     <string name="status_not_updated">See dokument sisaldab uuendatud andmeid</string>
-    <string name="open_wallet">Ava FossWallet</string>
+    <string name="open">Ava</string>
     <string name="barcode_position">Triipkoodi asukoht ekraanil</string>
     <string name="barcode_position_top">Ülal</string>
     <string name="barcode_position_center">Keskel</string>
@@ -63,4 +60,6 @@
     <string name="selected">Valitud</string>
     <string name="filter">Järjestus</string>
     <string name="libraries">Teegid</string>
+    <string name="wallet">Kaarditasku</string>
+    <string name="compatibility_mode">Ühilduvusrežiim</string>
 </resources>

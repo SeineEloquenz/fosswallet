@@ -26,9 +26,15 @@ data class BarCode(
         }
     }
 
-    fun encodeAsBitmap(width: Int, height: Int): Bitmap {
+    fun hasLegacyRepresentation() : Boolean {
+        val legacyRepresentation = encodeAsBitmap(100, 100, true)
+        val representation = encodeAsBitmap(100, 100, false)
+        return !representation.sameAs(legacyRepresentation)
+    }
+
+    fun encodeAsBitmap(width: Int, height: Int, legacyRendering: Boolean): Bitmap {
         val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
-        val result = MultiFormatWriter().encode(message, format, width, height, encodeHints)
+        val result = MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
         val w = result.width
         val h = result.height
         val pixels = IntArray(w * h)

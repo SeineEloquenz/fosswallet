@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 16,
-    "identityHash": "f6c21a5ea25953cfb4450c657708911e",
+    "version": 17,
+    "identityHash": HASH_PLACEHOLDER,
     "entities": [
       {
         "tableName": "Pass",
@@ -181,6 +181,8 @@
           {
             "fieldPath": "pinned",
             "columnName": "pinned",
+            "fieldPath": "renderLegacy",
+            "columnName": "renderLegacy",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"

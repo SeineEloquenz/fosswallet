@@ -3,15 +3,12 @@
     <string name="settings">Paràmetres</string>
     <string name="update">Actualizar</string>
     <string name="back">Enrera</string>
-    <string name="permission_rationale">Sense permís(os), Wallet no funciona correctament</string>
+    <string name="permission_rationale">Sense permís(os), FossWallet no funciona correctament</string>
     <string name="request_permissions">Demanar Permisos</string>
     <string name="image">Imatge</string>
     <string name="barcode">Codi de barres</string>
     <string name="serial_number">Número de sèrie</string>
     <string name="organization">Organizació</string>
-    <string name="flip">Donar la volta</string>
-    <string name="front_side">Davant</string>
-    <string name="back_side">Darrera</string>
     <string name="date">Data</string>
     <string name="delete">Esborrar</string>
     <string name="about">A sobre de</string>
@@ -26,5 +23,5 @@
     <string name="privacy">Privacitat</string>
     <string name="details">Detalls</string>
     <string name="copy">Copiar</string>
-    <string name="open_wallet">Obrir FossWallet</string>
+    <string name="open">Obrir FossWallet</string>
 </resources>

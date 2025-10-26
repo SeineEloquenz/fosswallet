@@ -11,9 +11,6 @@
     <string name="serial_number">Sériové číslo</string>
     <string name="organization">Organizace</string>
     <string name="no_barcode_format_given">Nebyl nastaven formát čárového kódu! Přepínám na QR kód. Tento kód nemusí být správně naskenován.</string>
-    <string name="flip">Otočit</string>
-    <string name="front_side">Přední strana</string>
-    <string name="back_side">Zadní strana</string>
     <string name="date">Datum</string>
     <string name="delete">Odstranit</string>
     <string name="invalid_pass_toast">Nepodařilo se načíst lístek. Jste si jistí, že se jedná o platný soubor .pkpass?</string>
@@ -44,7 +41,7 @@
     <string name="status_code">Server odpověděl stavem %1$s</string>
     <string name="status_forbidden">Server neumožnil přístup k lístku. Možná tento lístek již vypršel?</string>
     <string name="status_not_updated">Váš lístek je již aktuální</string>
-    <string name="open_wallet">Otevřít FossWallet</string>
+    <string name="open">Otevřít</string>
     <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
     <string name="barcode_position_top">Nahoře</string>
     <string name="barcode_position_center">Uprostřed</string>
@@ -63,4 +60,6 @@
     <string name="selected">Vybráno</string>
     <string name="filter">Seřadit podle</string>
     <string name="libraries">Knihovny</string>
+    <string name="wallet">Peněženka</string>
+    <string name="compatibility_mode">Režim kompatibility</string>
 </resources>
