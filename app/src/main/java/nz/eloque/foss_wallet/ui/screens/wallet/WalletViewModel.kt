@@ -80,7 +80,7 @@ class PassViewModel @Inject constructor(
 
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes).apply { updatePasses() }
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
-    fun dessociate(pass: Pass, groupId: Long) = passStore.dessociate(pass, groupId).apply { updatePasses() }
+    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId).apply { updatePasses() }
 
     fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
     fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
