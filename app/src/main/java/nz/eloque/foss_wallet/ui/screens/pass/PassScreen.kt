@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
+import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -77,7 +78,7 @@ fun PassScreen(
             passViewModel.hidden(pass.value)
         }
     }
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it.applyLocalization(Locale.getDefault().language) }
+    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
     val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
 
     AllowOnLockscreen {
@@ -259,6 +260,7 @@ fun Actions(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
+                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }

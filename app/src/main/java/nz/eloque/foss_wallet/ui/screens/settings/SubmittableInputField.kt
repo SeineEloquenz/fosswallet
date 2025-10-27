@@ -1,24 +1,32 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 
-@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun SubmittableTextField(
-    label: @Composable () -> Unit,
+    label: String,
     imageVector: ImageVector,
     onSubmit: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -30,45 +38,71 @@ fun SubmittableTextField(
     clearOnSubmit: Boolean = true,
     contentDescription: String = "",
 ) {
-    val msgInput = rememberSaveable { mutableStateOf(initialValue) }
+    var text by rememberSaveable { mutableStateOf(initialValue) }
 
-    val onlyWhitespace: () -> Boolean = { msgInput.value.trim() == "" }
-    val validInput: () -> Boolean = { !onlyWhitespace() && inputValidator.invoke(msgInput.value) }
+    val isError by remember { derivedStateOf {
+        val trimmed = text.trim()
+        trimmed.isEmpty() || !inputValidator(trimmed)
+    } }
 
-    val isError = rememberSaveable { mutableStateOf( !validInput() ) }
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = msgInput.value,
-            label = label,
-            singleLine = singleLine,
-            isError = isError.value,
-            modifier = modifier.fillMaxWidth(0.8f),
+    val errorMessage = if (isError && text.isNotBlank()) "Invalid input" else null
+    val buttonEnabled = enabled && !isError && text != initialValue
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        TextField(
+            label = { Text(text = label) },
+            value = text,
             onValueChange = {
-                msgInput.value = it
-                isError.value = !validInput()
-                onValueChange.invoke(it)
+                text = it
+                onValueChange(it)
             },
+            singleLine = singleLine,
             enabled = enabled,
-        )
-        IconButton(
-            onClick = {
-                if (validInput()) {
-                    onSubmit.invoke(msgInput.value)
-                    if (clearOnSubmit) {
-                        msgInput.value = ""
-                    }
-                    isError.value = !validInput()
+            isError = isError,
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyLarge,
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        if (!isError) {
+                            onSubmit(text)
+                            if (clearOnSubmit) text = ""
+                        }
+                    },
+                    enabled = buttonEnabled
+                ) {
+                    Icon(
+                        imageVector = imageVector,
+                        contentDescription = contentDescription,
+                        tint = if (buttonEnabled)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             },
-            enabled = enabled && !isError.value,
-        ) {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = contentDescription
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                cursorColor = MaterialTheme.colorScheme.primary
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (!isError) {
+                        onSubmit(text)
+                        if (clearOnSubmit) text = ""
+                    }
+                }
+            )
+        )
+
+        if (errorMessage != null) {
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
             )
         }
     }

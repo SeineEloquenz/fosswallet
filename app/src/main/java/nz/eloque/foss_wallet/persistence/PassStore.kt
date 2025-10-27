@@ -29,7 +29,7 @@ class PassStore @Inject constructor(
 
     fun allPasses(authStatus: Boolean) = passRepository.all(authStatus)
 
-    fun passById(id: String) = passRepository.byId(id)
+    fun passById(id: String) = passRepository.findById(id)
 
     fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus)
     

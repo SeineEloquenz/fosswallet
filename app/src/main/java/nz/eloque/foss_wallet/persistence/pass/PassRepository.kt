@@ -28,9 +28,7 @@ class PassRepository @Inject constructor(
             result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 
-    fun flowById(id: String): Flow<PassWithLocalization> = passDao.flowById(id)
-
-    fun byId(id: String): PassWithLocalization = passDao.byId(id)
+    fun flowById(id: String): Flow<PassWithLocalization?> = passDao.flowById(id)
 
     fun findById(id: String): PassWithLocalization? = passDao.findById(id)
 
