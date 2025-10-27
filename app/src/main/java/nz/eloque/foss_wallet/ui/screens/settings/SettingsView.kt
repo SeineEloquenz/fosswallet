@@ -11,9 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.share
-import nz.eloque.foss_wallet.ui.components.ComboBox
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -43,20 +43,20 @@ fun SettingsView(
     val settings = settingsViewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SettingsSection(
             heading = stringResource(R.string.pass_updates_channel),
         ) {
             SettingsSwitch(
-                name = R.string.enable,
-                switchState = settings.value.enableSync,
+                title = stringResource(R.string.enable),
+                checked = settings.value.enableSync,
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enableSync(it) } }
             )
             HorizontalDivider()
             SubmittableTextField(
-                label = { Text(stringResource(R.string.sync_interval)) },
+                label = stringResource(R.string.sync_interval),
                 initialValue = settings.value.syncInterval.inWholeMinutes.toString(),
                 imageVector = Icons.Default.Save,
                 inputValidator = { isNaturalNumber(it) },
@@ -72,13 +72,13 @@ fun SettingsView(
             heading = stringResource(R.string.pass_view),
         ) {
             SettingsSwitch(
-                name = R.string.pass_view_brightness,
-                switchState = settings.value.increasePassViewBrightness,
+                title = stringResource(R.string.pass_view_brightness),
+                checked = settings.value.increasePassViewBrightness,
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
             )
             HorizontalDivider()
             ComboBox(
-                name = stringResource(R.string.barcode_position),
+                title = stringResource(R.string.barcode_position),
                 options = BarcodePosition.all(),
                 selectedOption = settings.value.barcodePosition,
                 onOptionSelected = {
@@ -95,7 +95,7 @@ fun SettingsView(
             heading = stringResource(R.string.export) + " / " + stringResource(R.string.share),
         ) {
             SettingsButton(
-                name = stringResource(R.string.export) + " (.pkpasses)",
+                title = stringResource(R.string.export) + " (.pkpasses)",
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
@@ -113,15 +113,26 @@ fun SettingsSection(
     heading: String,
     content: @Composable () -> Unit,
 ) {
-    Text(
-        text = heading
-    )
-    ElevatedCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
+    ) {
+        Text(
+            text = heading,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(start = 16.dp, bottom = 8.dp)
+        )
+        Surface(
+            tonalElevation = 1.dp,
+            shape = MaterialTheme.shapes.medium,
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            content()
+            Column(modifier = Modifier.fillMaxWidth()) {
+                content()
+            }
         }
     }
 }
