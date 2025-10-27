@@ -48,6 +48,7 @@ class UnknownInputException : InvalidInputException {
 }
 
 class Loader(val context: Context) {
+    
     fun handleInputStream(
         inputStream: InputStream,
         passViewModel: PassViewModel,
