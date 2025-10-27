@@ -71,7 +71,7 @@ fun PassScreen(
     val pass = remember { mutableStateOf(Pass.placeholder())}
     LaunchedEffect(coroutineScope) {
         withContext(Dispatchers.IO) {
-            pass.value = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+            pass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
             
             passViewModel.pinned(pass.value)
             passViewModel.hidden(pass.value)
@@ -139,7 +139,7 @@ fun Actions(
                             contentDescription = stringResource(R.string.unpin)
                         )
                     },
-                    onClick = { passViewModel.unpin(pass.value) }
+                    onClick = { passViewModel.unpin(pass) }
                 )
             } else {
                 DropdownMenuItem(
@@ -150,7 +150,7 @@ fun Actions(
                             contentDescription = stringResource(R.string.pin)
                         )
                     },
-                    onClick = { passViewModel.pin(pass.value) }
+                    onClick = { passViewModel.pin(pass) }
                 )
             }
 
@@ -160,11 +160,11 @@ fun Actions(
                     Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                 },
                 onClick = {
-                    Shortcut.create(context, pass.value, pass.value.description)
+                    Shortcut.create(context, pass, pass.description)
                 }
             )
 
-            val passFile = pass.value.originalPassFile(context)
+            val passFile = pass.originalPassFile(context)
             if (passFile != null) {
                 PassShareButton(passFile)
             }
@@ -217,11 +217,11 @@ fun Actions(
                     },
                     onClick = {
                         if (uiState.isAuthenticated) {
-                            passViewModel.unhide(pass.value)
+                            passViewModel.unhide(pass)
                         } else {
                             biometric.prompt(
                                 description = context.getString(R.string.unhide),
-                                onSuccess = { passViewModel.unhide(pass.value) }
+                                onSuccess = { passViewModel.unhide(pass) }
                             )
                         }
                     }
@@ -237,11 +237,11 @@ fun Actions(
                     },
                     onClick = {
                         if (uiState.isAuthenticated) {
-                            passViewModel.hide(pass.value)
+                            passViewModel.hide(pass)
                         } else {
                             biometric.prompt(
                                 description = context.getString(R.string.hide),
-                                onSuccess = { passViewModel.hide(pass.value) }
+                                onSuccess = { passViewModel.hide(pass) }
                             )
                         }
                     }
