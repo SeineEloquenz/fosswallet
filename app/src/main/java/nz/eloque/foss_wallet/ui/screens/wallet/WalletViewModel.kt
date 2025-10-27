@@ -60,7 +60,7 @@ class PassViewModel @Inject constructor(
         }
     }
 
-    fun passFlowById(id: String): Flow<PassWithLocalization> = passStore.passFlowById(id).apply { updatePasses() }
+    fun passFlowById(id: String): Flow<PassWithLocalization?> = passStore.passFlowById(id).apply { updatePasses() }
 
     fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
 

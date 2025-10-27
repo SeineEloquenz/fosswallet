@@ -59,7 +59,7 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it.applyLocalization(Locale.getDefault().language) }
+    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
     val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
 
     AllowOnLockscreen {
