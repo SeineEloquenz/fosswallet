@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
+import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -18,6 +19,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -156,14 +158,16 @@ fun Actions(
                     Shortcut.create(context, pass, pass.description)
                 }
             )
+
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.delete)) },
+                text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
                 leadingIcon =  {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
+                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
                     navController.popBackStack()
+                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }

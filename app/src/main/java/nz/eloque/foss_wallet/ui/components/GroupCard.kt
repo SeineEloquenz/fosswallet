@@ -65,7 +65,10 @@ fun GroupCard(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier.padding(10.dp)
         ) {
-            val pagerState = rememberPagerState(0) { passes.size }
+            val pagerState = rememberPagerState(
+                initialPage = 0, 
+                pageCount = { passes.size }
+            )
             HorizontalPager(
                 state = pagerState,
                 pageSpacing = 28.dp,
@@ -100,7 +103,7 @@ fun GroupCard(
                     }
                     IconButton(onClick = {
                         val selectedPass = passes[pagerState.currentPage]
-                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dissociate(selectedPass, groupId) } }
+                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dessociate(selectedPass, groupId) } }
                     }) {
                         Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
                     }
