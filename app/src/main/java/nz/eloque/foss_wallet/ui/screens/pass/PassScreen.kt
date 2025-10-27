@@ -165,7 +165,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass.value) }
+                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
                     Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
