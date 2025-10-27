@@ -1,4 +1,5 @@
 package nz.eloque.foss_wallet.persistence.loader
+
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -12,32 +13,40 @@ import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.zip.ZipInputStream
+
 private const val TAG: String = "Loader"
+
 enum class Input {
     PKPASS,
     PKPASSES,
 }
+
 sealed class LoaderResult {
     data class Single(val passId: String) : LoaderResult()
     object Multiple : LoaderResult()
     object Invalid : LoaderResult()
 }
+
 sealed class InvalidInputException : Exception {
     constructor() : super()
     constructor(e: Exception) : super(e)
 }
+
 class InvalidPassException : InvalidInputException {
     constructor() : super()
     constructor(e: Exception) : super(e)
 }
+
 class InvalidPassesException : InvalidInputException {
     constructor() : super()
     constructor(e: Exception) : super(e)
 }
+
 class UnknownInputException : InvalidInputException {
     constructor() : super()
     constructor(e: Exception) : super(e)
 }
+
 class Loader(val context: Context) {
     fun handleInputStream(
         inputStream: InputStream,
@@ -81,6 +90,7 @@ class Loader(val context: Context) {
             return LoaderResult.Multiple
         }
     }
+    
     @Throws(InvalidInputException::class)
     private fun load(input: InputStream): Set<PassLoadResult> {
         val passParser = PassParser(context)
