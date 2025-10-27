@@ -62,4 +62,7 @@
     <string name="libraries">Biblioteche</string>
     <string name="wallet">Portabiglietti</string>
     <string name="compatibility_mode">Modalità compatibilità</string>
+    <string name="barcode_position_bottom">Fondo</string>
+    <string name="pass_imported">Biglietto importato con successo</string>
+    <string name="pass_deleted">Biglietto eliminato con successo</string>
 </resources>
