@@ -62,4 +62,7 @@
     <string name="libraries">庫</string>
     <string name="wallet">錢包</string>
     <string name="compatibility_mode">相容模式</string>
+    <string name="barcode_position_bottom">底部</string>
+    <string name="pass_deleted">成功刪除通行證</string>
+    <string name="pass_imported">成功匯入通行證</string>
 </resources>
