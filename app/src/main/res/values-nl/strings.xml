@@ -62,4 +62,7 @@
     <string name="relevant_date_oldest">Oudste relevante datum</string>
     <string name="compatibility_mode">Compatibiliteitsmodus</string>
     <string name="wallet">Portemonnee</string>
+    <string name="pass_deleted">Pas succesvol verwijderd</string>
+    <string name="pass_imported">Pas succesvol geïmporteerd</string>
+    <string name="barcode_position_bottom">Onder</string>
 </resources>
