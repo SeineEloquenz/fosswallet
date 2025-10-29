@@ -62,4 +62,7 @@
     <string name="libraries">Bibliotheken</string>
     <string name="wallet">Passetui</string>
     <string name="compatibility_mode">Kompatibilitätsmodus</string>
+    <string name="pass_deleted">Pass erfolgreich gelöscht</string>
+    <string name="pass_imported">Pass erfolgreich importiert</string>
+    <string name="barcode_position_bottom">Unten</string>
 </resources>

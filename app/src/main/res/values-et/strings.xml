@@ -62,4 +62,7 @@
     <string name="libraries">Teegid</string>
     <string name="wallet">Kaarditasku</string>
     <string name="compatibility_mode">Ühilduvusrežiim</string>
+    <string name="barcode_position_bottom">All</string>
+    <string name="pass_deleted">Dokumendi kustutamine õnnestus</string>
+    <string name="pass_imported">Dokumendi importimine õnnestus</string>
 </resources>

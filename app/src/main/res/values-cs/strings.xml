@@ -62,4 +62,7 @@
     <string name="libraries">Knihovny</string>
     <string name="wallet">Peněženka</string>
     <string name="compatibility_mode">Režim kompatibility</string>
+    <string name="barcode_position_bottom">Dole</string>
+    <string name="pass_deleted">Lístek úspěšně smazán</string>
+    <string name="pass_imported">Lístek úspěšně importován</string>
 </resources>
