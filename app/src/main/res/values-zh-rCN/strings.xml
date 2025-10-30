@@ -50,4 +50,14 @@
     <string name="pass_imported">通行证导入成功</string>
     <string name="timeout">调用更新服务器超时</string>
     <string name="exception">调用更新服务器时发生错误</string>
+    <string name="date_added">添加日期</string>
+    <string name="relevant_date_oldest">最早活动日期</string>
+    <string name="relevant_date_newest">最近活动日期</string>
+    <string name="selected">已选择</string>
+    <string name="pass_view">卡片视图</string>
+    <string name="open">打开</string>
+    <string name="add_shortcut">添加快捷方式</string>
+    <string name="shortcut_exists">快捷方式已存在！</string>
+    <string name="ungroup">取消分组卡片</string>
+    <string name="group">分组卡片</string>
 </resources>
