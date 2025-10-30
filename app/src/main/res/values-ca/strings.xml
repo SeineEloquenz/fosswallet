@@ -65,4 +65,5 @@
     <string name="share"></string>
     <string name="add_pass"></string>
     <string name="relevant_date_newest"></string>
+    <string name="no_barcode_format_given"></string>
 </resources>
