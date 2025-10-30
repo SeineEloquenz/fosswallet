@@ -65,5 +65,4 @@
     <string name="barcode_position_bottom">All</string>
     <string name="pass_deleted">Dokumendi kustutamine õnnestus</string>
     <string name="pass_imported">Dokumendi importimine õnnestus</string>
-    <string name="app_name" translatable="false"></string>
 </resources>

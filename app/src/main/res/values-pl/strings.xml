@@ -62,8 +62,4 @@
     <string name="libraries">Biblioteki</string>
     <string name="wallet">Portfel</string>
     <string name="compatibility_mode">Tryb kompatybilności</string>
-    <string name="pass_deleted"></string>
-    <string name="pass_imported"></string>
-    <string name="barcode_position_bottom"></string>
-    <string name="app_name" translatable="false"></string>
 </resources>
