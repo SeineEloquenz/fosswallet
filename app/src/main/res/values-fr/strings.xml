@@ -57,4 +57,13 @@
     <string name="relevant_date_oldest">Date pertinente la plus ancienne</string>
     <string name="libraries">Librairies</string>
     <string name="ungroup">Dégrouper les cartes</string>
+    <string name="pass_deleted"></string>
+    <string name="compatibility_mode"></string>
+    <string name="pass_imported"></string>
+    <string name="selected"></string>
+    <string name="pass_view"></string>
+    <string name="barcode_position_bottom"></string>
+    <string name="wallet"></string>
+    <string name="open"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
