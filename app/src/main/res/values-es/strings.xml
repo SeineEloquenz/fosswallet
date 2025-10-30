@@ -59,4 +59,11 @@
     <string name="relevant_date_oldest">Fecha relevante más vieja</string>
     <string name="selected">Seleccionado</string>
     <string name="filter">Ordenar por</string>
+    <string name="pass_deleted"></string>
+    <string name="compatibility_mode"></string>
+    <string name="pass_imported"></string>
+    <string name="barcode_position_bottom"></string>
+    <string name="wallet"></string>
+    <string name="libraries"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
