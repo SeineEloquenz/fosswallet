@@ -65,4 +65,5 @@
     <string name="invalid_pass_toast"></string>
     <string name="no_barcode_format_given"></string>
     <string name="pass_updated"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
