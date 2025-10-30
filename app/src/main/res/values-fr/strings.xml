@@ -10,10 +10,10 @@
     <string name="barcode">Code-barres</string>
     <string name="serial_number">Numéro de série</string>
     <string name="organization">Organisation</string>
-    <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement.</string>
+    <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement.</string>
     <string name="date">Date</string>
     <string name="delete">Supprimer</string>
-    <string name="invalid_pass_toast">La carte n\'a pas pu être chargée. Êtes-vous certain que c’est un .pkpass valide ?</string>
+    <string name="invalid_pass_toast">La carte n\'a pas pu être chargée. Êtes-vous certain que c’est un .pkpass valide ?</string>
     <string name="add_pass">Ajouter une carte</string>
     <string name="about">À propos</string>
     <string name="source_code">Code source</string>
@@ -34,7 +34,7 @@
     <string name="passes">Cartes</string>
     <string name="enable">Activer</string>
     <string name="search">Rechercher</string>
-    <string name="status_forbidden">Le serveur n’a pas permis l’accès à cette carte. Peut-être que celle-ci a expiré ?</string>
+    <string name="status_forbidden">Le serveur n’a pas permis l’accès à cette carte. Peut-être que celle-ci a expiré ?</string>
     <string name="status_not_updated">La carte est déjà à jour</string>
     <string name="export">Exporter</string>
     <string name="share_passes">Partager les cartes</string>
@@ -43,7 +43,7 @@
     <string name="filter">Trier par</string>
     <string name="sync_interval">Intervalle de mise à jour (min)</string>
     <string name="add_shortcut">Ajouter un raccourci</string>
-    <string name="shortcut_exists">Le raccourci existe déjà !</string>
+    <string name="shortcut_exists">Le raccourci existe déjà !</string>
     <string name="privacy">Confidentialité</string>
     <string name="timeout">Temps d’attente dépassé en contactant le serveur de mise à jour</string>
     <string name="exception">Exception lors de l’appel du serveur de mise à jour</string>
