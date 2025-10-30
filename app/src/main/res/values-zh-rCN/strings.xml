@@ -60,10 +60,4 @@
     <string name="shortcut_exists">快捷方式已存在！</string>
     <string name="ungroup">取消分组卡片</string>
     <string name="group">分组卡片</string>
-    <string name="made_with_love"></string>
-    <string name="pass_updates_channel"></string>
-    <string name="invalid_pass_toast"></string>
-    <string name="no_barcode_format_given"></string>
-    <string name="pass_updated"></string>
-    <string name="app_name" translatable="false"></string>
 </resources>
