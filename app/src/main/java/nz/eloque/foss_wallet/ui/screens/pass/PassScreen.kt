@@ -29,6 +29,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,17 +70,18 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val pass = remember { mutableStateOf(Pass.placeholder())}
-    LaunchedEffect(coroutineScope) {
-        withContext(Dispatchers.IO) {
-            pass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
-            
-            passViewModel.pinned(pass.value)
-            passViewModel.hidden(pass.value)
-        }
-    }
+//    val pass = remember { mutableStateOf(Pass.placeholder())}
     val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
     val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
+
+    LaunchedEffect(passId) {
+        withContext(Dispatchers.IO) {
+//            pass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+
+            passViewModel.pinned(pass)
+            passViewModel.hidden(pass)
+        }
+    }
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -127,21 +129,7 @@ fun Actions(
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.add_shortcut)) },
-            leadingIcon =  {
-                Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-            },
-            onClick = {
-                Shortcut.create(context, pass, pass.description)
-            }
-        )
-        
-        val passFile = pass.originalPassFile(context)
-        if (passFile != null) {
-            PassShareButton(passFile)
-        }
-        
+
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
@@ -172,8 +160,11 @@ fun Actions(
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon =  {
-                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.AppShortcut,
+                        contentDescription = stringResource(R.string.add_shortcut)
+                    )
                 },
                 onClick = {
                     Shortcut.create(context, pass, pass.description)
@@ -185,7 +176,6 @@ fun Actions(
                 PassShareButton(passFile)
             }
 
-            if (pass.value.updatable()) {
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
@@ -200,19 +190,34 @@ fun Actions(
                                     duration = SnackbarDuration.Short
                                 )
                             }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+
+                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(
+                                message = context.getString(
+                                    R.string.status_not_updated
+                                )
+                            )
+
                             is UpdateResult.Failed -> {
                                 val snackResult = snackbarHostState.showSnackbar(
                                     message = when (result.reason) {
-                                        is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
+                                        is FailureReason.Status -> context.getString(
+                                            result.reason.messageId,
+                                            result.reason.status
+                                        )
+
                                         else -> context.getString(result.reason.messageId)
                                     },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                    actionLabel = if (result.reason is FailureReason.Detailed) context.getString(
+                                        R.string.details
+                                    ) else null,
                                     duration = SnackbarDuration.Short
                                 )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
                                     when (result.reason) {
-                                        is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
+                                        is FailureReason.Exception -> coroutineScope.launch(
+                                            Dispatchers.Main
+                                        ) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
+
                                         is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
                                     }
                                 }
@@ -221,7 +226,7 @@ fun Actions(
                     }
                 }
             }
-            
+
             if (uiState.isHidden) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unhide)) },
@@ -262,20 +267,30 @@ fun Actions(
                         }
                     }
                 )
-            val passFile = pass.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
             }
 
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
-                leadingIcon =  {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
+                text = {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 },
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
-                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.pass_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             )
         }
@@ -287,7 +302,7 @@ fun UpdateButton(
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "rotation")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 360f,
         targetValue = 0f,
@@ -301,9 +316,13 @@ fun UpdateButton(
     DropdownMenuItem(
         text = { Text(stringResource(R.string.update)) },
         leadingIcon = {
-            Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update), modifier = Modifier.graphicsLayer(
-                rotationZ = if (isLoading) rotation else 0f
-            ))
+            Icon(
+                imageVector = Icons.Default.Sync,
+                contentDescription = stringResource(R.string.update),
+                modifier = Modifier.graphicsLayer(
+                    rotationZ = if (isLoading) rotation else 0f
+                )
+            )
         },
         onClick = { if (!isLoading) onClick() },
     )

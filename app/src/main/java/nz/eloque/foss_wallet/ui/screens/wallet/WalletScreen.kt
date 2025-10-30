@@ -55,10 +55,10 @@ fun WalletScreen(
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
 
+    val listState = rememberLazyListState()
     val activity = remember(context) { context as FragmentActivity }
     val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
-    val listState = rememberLazyListState()
     val loading = remember { mutableStateOf(false) }
     val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
 
