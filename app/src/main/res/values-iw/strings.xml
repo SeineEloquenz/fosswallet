@@ -44,4 +44,6 @@
     <string name="exception">אירעה חריגה בעת הקריאה לשרת העדכונים</string>
     <string name="barcode_position_top">עליון</string>
     <string name="barcode_position_center">מרכז</string>
+    <string name="no_barcode_format_given"></string>
+    <string name="n_passes_imported"></string>
 </resources>
