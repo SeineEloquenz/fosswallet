@@ -65,4 +65,5 @@
     <string name="pass_deleted">Kortet har tagits bort</string>
     <string name="pass_imported">Kortet har importerats</string>
     <string name="selected">Markerat</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
