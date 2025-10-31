@@ -106,25 +106,25 @@ fun Actions(
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.add_shortcut)) },
-            leadingIcon =  {
-                Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-            },
-            onClick = {
-                Shortcut.create(context, pass, pass.description)
-            }
-        )
-        
-        val passFile = pass.originalPassFile(context)
-        if (passFile != null) {
-            PassShareButton(passFile)
-        }
         
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.add_shortcut)) },
+                leadingIcon =  {
+                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
+                },
+                onClick = {
+                    Shortcut.create(context, pass, pass.description)
+                }
+            )
+
+            val passFile = pass.originalPassFile(context)
+            if (passFile != null) {
+                PassShareButton(passFile)
+            }
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
