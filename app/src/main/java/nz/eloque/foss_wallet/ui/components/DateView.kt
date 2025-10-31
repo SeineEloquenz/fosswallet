@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 @Composable
@@ -57,12 +59,12 @@ fun DateView(
             }
             Column {
                 Text(
-                    text = Instant.ofEpochSecond(start).prettyDateTime(),
+                    text = ZonedDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.systemDefault()).prettyDateTime(),
                     style = MaterialTheme.typography.bodySmall
                 )
                 if (end != null) {
                     Text(
-                        text = Instant.ofEpochSecond(end).prettyDateTime(),
+                        text = ZonedDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.systemDefault()).prettyDateTime(),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
