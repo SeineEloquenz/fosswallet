@@ -13,11 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -139,7 +139,7 @@ fun Actions(
                     text = { Text(stringResource(R.string.unpin)) },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Square,
+                            imageVector = Icons.Outlined.PushPin,
                             contentDescription = stringResource(R.string.unpin)
                         )
                     },
@@ -254,7 +254,8 @@ fun Actions(
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
                 leadingIcon =  {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error) },
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
+                },
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
