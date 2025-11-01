@@ -83,8 +83,8 @@ fun DateLocationRow(
     ) {
         DateView(
             title = pass.description,
-            start = pass.relevantDate,
-            end = pass.expirationDate,
+            start = pass.relevantDate?.toLong(),
+            end = pass.expirationDate?.toLong(),
         )
         pass.locations.firstOrNull()?.let { LocationButton(it) }
     }

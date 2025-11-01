@@ -120,7 +120,7 @@ private fun PassPreview() {
         hasStrip = false,
         hasThumbnail = false,
         hasFooter = false,
-        relevantDate = 1800000000L,
+        relevantDate = "1800000000L",
         headerFields = mutableListOf(
             PassField("block", "Block", PassContent.Plain("S1")),
             PassField("seat", "Seat", PassContent.Plain("47")),
