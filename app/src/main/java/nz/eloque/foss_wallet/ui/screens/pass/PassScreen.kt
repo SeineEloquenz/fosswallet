@@ -125,6 +125,7 @@ fun Actions(
             if (passFile != null) {
                 PassShareButton(passFile)
             }
+            
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
@@ -181,7 +182,7 @@ fun UpdateButton(
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "updateButtonAnimation")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 360f,
         targetValue = 0f,
