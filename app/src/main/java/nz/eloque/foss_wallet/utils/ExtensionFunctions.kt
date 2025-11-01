@@ -15,8 +15,6 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.time.Instant
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -38,31 +36,29 @@ fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     }
 }
 
-fun Instant.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(style)
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun Instant.prettyDate(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyDate(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(style)
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun Instant.prettyTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(style)
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-private fun Instant.pretty(dateFormatter: DateTimeFormatter, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
     if (isRelative) {
-        return DateUtils.getRelativeTimeSpanString(this.toEpochMilli()).toString()
+        return DateUtils.getRelativeTimeSpanString(this.toInstant().toEpochMilli()).toString()
     }
     return if (ignoresTimezone) {
-        val time = ZonedDateTime.ofInstant(this, ZoneId.of("UTC"))
-        time.format(dateFormatter)
+        this.toLocalDateTime().format(dateFormatter)
     } else {
-        val zonedTime = ZonedDateTime.ofInstant(this, ZoneId.systemDefault())
-        zonedTime.format(dateFormatter)
+        this.format(dateFormatter)
     }
 }
 

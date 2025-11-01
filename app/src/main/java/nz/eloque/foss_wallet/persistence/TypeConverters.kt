@@ -13,9 +13,20 @@ import nz.eloque.foss_wallet.utils.map
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.UUID
 
 class TypeConverters {
+
+    @TypeConverter
+    fun fromZonedDateTime(dateTime: ZonedDateTime): String {
+        return dateTime.toString()
+    }
+
+    @TypeConverter
+    fun toZonedDateTime(dateTime: String) : ZonedDateTime {
+        return ZonedDateTime.parse(dateTime)
+    }
 
     @TypeConverter
     fun fromInstant(instant: Instant): Long {
