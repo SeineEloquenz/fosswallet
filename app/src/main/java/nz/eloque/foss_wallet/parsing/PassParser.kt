@@ -104,10 +104,10 @@ class PassParser(val context: Context? = null) {
         )
     }
 
-    private fun parseRelevantDate(passJson: JSONObject): String? {
+    private fun parseRelevantDate(passJson: JSONObject): ZonedDateTime? {
         return try {
             if (passJson.has("relevantDate")) {
-                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }?.toEpochSecond().toString()
+                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }
             } else {
                 null
             }
@@ -117,10 +117,10 @@ class PassParser(val context: Context? = null) {
         }
     }
 
-    private fun parseExpiration(passJson: JSONObject): String? {
+    private fun parseExpiration(passJson: JSONObject): ZonedDateTime? {
         return try {
             if (passJson.has("expirationDate")) {
-                passJson.stringOrNull("expirationDate")?.let { ZonedDateTime.parse(it) }?.toEpochSecond().toString()
+                passJson.stringOrNull("expirationDate")?.let { ZonedDateTime.parse(it) }
             } else {
                 null
             }

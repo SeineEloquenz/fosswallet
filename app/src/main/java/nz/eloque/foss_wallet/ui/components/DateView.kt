@@ -19,16 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.utils.prettyDateTime
-import java.time.Instant
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 @Composable
 fun DateView(
     title: String,
-    start: Long?,
-    end: Long?,
+    start: ZonedDateTime?,
+    end: ZonedDateTime?,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -41,10 +39,10 @@ fun DateView(
             IconButton(onClick = {
                 val intent = Intent(Intent.ACTION_EDIT).also {
                     it.type = "vnd.android.cursor.item/event"
-                    it.putExtra("beginTime", Instant.ofEpochSecond(start).toEpochMilli())
+                    it.putExtra("beginTime", start.toEpochSecond() * 1000)
                     it.putExtra("allDay", false)
-                    it.putExtra("endTime", if (end != null) Instant.ofEpochSecond(end).toEpochMilli()
-                    else Instant.ofEpochSecond(start).plus(30, ChronoUnit.MINUTES).toEpochMilli()) //30 min default
+                    it.putExtra("endTime", if (end != null) end.toEpochSecond() * 1000
+                    else start.plus(30, ChronoUnit.MINUTES).toEpochSecond() * 1000) //30 min default
                     it.putExtra("title", title)
                 }
 
@@ -59,12 +57,12 @@ fun DateView(
             }
             Column {
                 Text(
-                    text = ZonedDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.systemDefault()).prettyDateTime(),
+                    text = start.prettyDateTime(),
                     style = MaterialTheme.typography.bodySmall
                 )
                 if (end != null) {
                     Text(
-                        text = ZonedDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.systemDefault()).prettyDateTime(),
+                        text = end.prettyDateTime(),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -78,8 +76,8 @@ fun DateView(
 private fun DateViewStartOnlyPreview() {
     DateView(
         title = "KSC - HSV",
-        start = 1000000000,
-        end = 0
+        start = ZonedDateTime.now(),
+        end = ZonedDateTime.now()
     )
 }
 
@@ -88,7 +86,7 @@ private fun DateViewStartOnlyPreview() {
 private fun DateViewStartAndEndPreview() {
     DateView(
         title = "KSC - HSV",
-        start = 1000000000,
-        end = 1001000000
+        start = ZonedDateTime.now(),
+        end = ZonedDateTime.now()
     )
 }
