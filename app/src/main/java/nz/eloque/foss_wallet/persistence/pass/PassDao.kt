@@ -26,6 +26,7 @@ interface PassDao {
     @Query("SELECT * FROM pass WHERE id=:id")
     fun flowById(id: String): Flow<PassWithLocalization?>
 
+    @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
     fun findById(id: String): PassWithLocalization?
 
