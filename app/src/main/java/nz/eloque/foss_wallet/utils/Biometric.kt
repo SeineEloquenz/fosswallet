@@ -7,7 +7,6 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.channels.Channel
-// import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
@@ -18,7 +17,6 @@ class Biometric(
     private val coroutineScope: CoroutineScope
 ) {
     private val resultChannel = Channel<BiometricResult>()
-    // val promptResults = resultChannel.receiveAsFlow()
 
     fun prompt(
         description: String,
@@ -71,16 +69,16 @@ class Biometric(
                     resultChannel.trySend(BiometricResult.AuthenticationError(errString.toString()))
                 }
 
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    showErrorSnackbar("Authentication failed. Please try again.")
+                    resultChannel.trySend(BiometricResult.AuthenticationFailed)
+                }
+
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     resultChannel.trySend(BiometricResult.AuthenticationSuccess)
                     onSuccess()
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    showErrorSnackbar("Authentication failed. Try again.")
-                    resultChannel.trySend(BiometricResult.AuthenticationFailed)
                 }
             }
         )
