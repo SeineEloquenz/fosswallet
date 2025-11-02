@@ -22,6 +22,7 @@ import java.util.Locale
 
 class PassStore @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val transactionalExecutor: TransactionalExecutor,
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
@@ -85,9 +86,11 @@ class PassStore @Inject constructor(
     }
 
     private fun insert(loadResult: PassLoadResult) {
-        val passWithLocalization = loadResult.pass
-        passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
-        passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        transactionalExecutor.runTransactionally {
+            val passWithLocalization = loadResult.pass
+            passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
+            passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        }
     }
 
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
