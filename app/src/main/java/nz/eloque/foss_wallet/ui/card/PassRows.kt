@@ -78,7 +78,6 @@ fun DateLocationRow(
     pass: Pass
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (pass.relevantDate != null) {
