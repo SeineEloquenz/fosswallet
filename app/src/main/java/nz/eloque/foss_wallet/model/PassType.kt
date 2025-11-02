@@ -5,15 +5,15 @@ import androidx.room.Entity
 sealed class PassType(val jsonKey: String) {
 
     @Entity
-    class Generic : PassType(GENERIC)
+    object Generic : PassType(GENERIC)
     @Entity
-    class Event: PassType(EVENT)
+    object Event: PassType(EVENT)
     @Entity
-    class Coupon : PassType(COUPON)
+    object Coupon : PassType(COUPON)
     @Entity
     data class Boarding(val transitType: TransitType) : PassType(BOARDING)
     @Entity
-    class StoreCard : PassType(STORE_CARD)
+    object StoreCard : PassType(STORE_CARD)
 
     companion object {
 

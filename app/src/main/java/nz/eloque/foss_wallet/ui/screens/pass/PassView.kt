@@ -114,7 +114,7 @@ private fun PassPreview() {
         1,
         "KSC",
         "serial",
-        PassType.Generic(),
+        PassType.Generic,
         HashSet(),
         Instant.ofEpochSecond(0),
         hasLogo = false,

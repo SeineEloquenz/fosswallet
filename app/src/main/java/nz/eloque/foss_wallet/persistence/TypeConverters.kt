@@ -73,10 +73,10 @@ class TypeConverters {
             PassType.Boarding(TransitType.valueOf(split[1]))
         } else {
             when (passType) {
-                PassType.EVENT -> PassType.Event()
-                PassType.COUPON -> PassType.Coupon()
-                PassType.STORE_CARD -> PassType.StoreCard()
-                else -> PassType.Generic()
+                PassType.EVENT -> PassType.Event
+                PassType.COUPON -> PassType.Coupon
+                PassType.STORE_CARD -> PassType.StoreCard
+                else -> PassType.Generic
             }
         }
     }
