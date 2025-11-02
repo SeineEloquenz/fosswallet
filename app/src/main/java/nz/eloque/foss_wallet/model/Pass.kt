@@ -11,6 +11,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import java.io.File
 import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.LinkedList
 import java.util.UUID
 
@@ -48,8 +49,8 @@ data class Pass(
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
     val groupId: Long? = null,
-    val relevantDate: Long? = null,
-    val expirationDate: Long? = null,
+    val relevantDate: ZonedDateTime? = null,
+    val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,
     val authToken: String? = null,
     val webServiceUrl: String? = null,
