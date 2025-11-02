@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.persistence
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -27,13 +28,13 @@ class PassStore @Inject constructor(
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses() = passRepository.all()
+    fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun passById(id: String) = passRepository.findById(id)
 
     fun passFlowById(id: String) = passRepository.flowById(id)
 
-    fun filtered(query: String) = passRepository.filtered(query)
+    fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)

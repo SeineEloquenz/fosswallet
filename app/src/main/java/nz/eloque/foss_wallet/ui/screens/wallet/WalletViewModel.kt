@@ -3,17 +3,15 @@ package nz.eloque.foss_wallet.ui.screens.wallet
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
@@ -23,67 +21,47 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
-import java.util.Locale
 
-data class PassUiState(
-    val query: String = "",
-    val passes: List<Pass> = ArrayList()
+data class QueryState(
+    val query: String = ""
 )
 
 @HiltViewModel
 class PassViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
-    private val settingsStore: SettingsStore,
-    private val workManager: WorkManager
+    private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
-    private val _uiState = MutableStateFlow(PassUiState())
-    val uiState: StateFlow<PassUiState> = _uiState.asStateFlow()
-    private val workData: LiveData<List<WorkInfo>>
-    private val observer = { workInfo: List<WorkInfo> -> updatePasses() }
+    private val _queryState = MutableStateFlow(QueryState())
+    val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
-    init {
-        updatePasses()
-        workData = workManager.getWorkInfosByTagLiveData("update")
-        workData.observeForever(observer)
-    }
+    fun passFlowById(id: String): Flow<PassWithLocalization?> = passStore.passFlowById(id)
 
-    override fun onCleared() {
-        workData.removeObserver(observer)
-    }
+    fun group(passes: Set<Pass>) = passStore.group(passes)
 
-    private fun updatePasses() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(passes = passStore.allPasses().first().map { it.applyLocalization(
-                Locale.getDefault().language) })
-        }
-    }
-
-    fun passFlowById(id: String): Flow<PassWithLocalization?> = passStore.passFlowById(id).apply { updatePasses() }
-
-    fun group(passes: Set<Pass>) = passStore.group(passes).apply { updatePasses() }
-
-    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId).apply { updatePasses() }
+    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
     fun filter(query: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(query = query, passes = passStore.filtered(query).first().map { it.applyLocalization(Locale.getDefault().language) })
+            _queryState.value = _queryState.value.copy(query = query)
         }
     }
 
-    fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult).apply { updatePasses() }
+    fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
-    suspend fun update(pass: Pass): UpdateResult = passStore.update(pass).apply { updatePasses() }
+    suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
 
-    fun delete(pass: Pass) = passStore.delete(pass).apply { updatePasses() }
+    fun delete(pass: Pass) = passStore.delete(pass)
 
-    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes).apply { updatePasses() }
-    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes).apply { updatePasses() }
-    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId).apply { updatePasses() }
+    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
+    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
+    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
-    fun archive(pass: Pass) = passStore.archive(pass).apply { updatePasses() }
-    fun unarchive(pass: Pass) = passStore.unarchive(pass).apply { updatePasses() }
+    fun archive(pass: Pass) = passStore.archive(pass)
+    fun unarchive(pass: Pass) = passStore.unarchive(pass)
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
