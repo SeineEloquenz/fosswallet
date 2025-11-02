@@ -53,15 +53,15 @@ class PassParser(val context: Context? = null) {
         }
         val serialNumber = passJson.getString("serialNumber")
         val type = when {
-            passJson.has(PassType.EVENT) -> PassType.Event()
+            passJson.has(PassType.EVENT) -> PassType.Event
             passJson.has(PassType.BOARDING) -> {
                 val boardingJson = passJson.getJSONObject(PassType.BOARDING)
                 val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
                 PassType.Boarding(transitType)
             }
-            passJson.has(PassType.COUPON) -> PassType.Coupon()
-            passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
-            else -> PassType.Generic()
+            passJson.has(PassType.COUPON) -> PassType.Coupon
+            passJson.has(PassType.STORE_CARD) -> PassType.StoreCard
+            else -> PassType.Generic
         }
 
         val locations = if (passJson.has("locations")) {
@@ -204,6 +204,5 @@ class PassParser(val context: Context? = null) {
 
     companion object {
         private const val TAG = "PassParser"
-        private const val EPOCH = "1970-01-01T00:00:00Z"
     }
 }

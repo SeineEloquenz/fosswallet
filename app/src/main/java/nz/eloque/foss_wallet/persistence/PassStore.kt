@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.persistence
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -21,19 +22,20 @@ import java.util.Locale
 
 class PassStore @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val transactionalExecutor: TransactionalExecutor,
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses() = passRepository.all()
+    fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun passById(id: String) = passRepository.findById(id)
 
     fun passFlowById(id: String) = passRepository.flowById(id)
 
-    fun filtered(query: String) = passRepository.filtered(query)
+    fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
@@ -84,9 +86,11 @@ class PassStore @Inject constructor(
     }
 
     private fun insert(loadResult: PassLoadResult) {
-        val passWithLocalization = loadResult.pass
-        passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
-        passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        transactionalExecutor.runTransactionally {
+            val passWithLocalization = loadResult.pass
+            passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
+            passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        }
     }
 
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)

@@ -73,7 +73,7 @@ fun WalletApp(
                 AboutScreen(navController)
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(navController, passViewModel, settingsViewModel)
+                SettingsScreen(navController, settingsViewModel)
             }
             composable(Screen.Libraries.route) {
                 LibrariesScreen(navController)

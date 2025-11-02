@@ -123,7 +123,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass("", "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
+            return Pass("", "Loading", 1, "", "", PassType.Generic, setOf(), addedAt = Instant.ofEpochMilli(0))
         }
     }
 
