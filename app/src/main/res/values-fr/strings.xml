@@ -57,4 +57,6 @@
     <string name="relevant_date_oldest">Date pertinente la plus ancienne</string>
     <string name="libraries">Librairies</string>
     <string name="ungroup">Dégrouper les cartes</string>
+    <string name="open">Ouvrir</string>
+    <string name="barcode_position_bottom">Bas</string>
 </resources>
