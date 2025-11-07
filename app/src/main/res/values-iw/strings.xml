@@ -44,4 +44,5 @@
     <string name="exception">אירעה חריגה בעת הקריאה לשרת העדכונים</string>
     <string name="barcode_position_top">עליון</string>
     <string name="barcode_position_center">מרכז</string>
+    <string name="wallet">ארנק</string>
 </resources>
