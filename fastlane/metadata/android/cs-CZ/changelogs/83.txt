@@ -1,0 +1,6 @@
+* Přepracován kalendář a navigační tlačítka
+* Přepracována práce s časovými pásmy (nesprávné lístky budou muset být znovu přidány)
+* Přepracována obrazovka nastavení
+* Přidána švédština
+* Opraveno příliš rychlé odesílání oznámení
+* Opraven pád při smazání lístku
