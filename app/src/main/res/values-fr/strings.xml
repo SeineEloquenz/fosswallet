@@ -29,7 +29,7 @@
     <string name="barcode_position_top">Haut</string>
     <string name="barcode_position_center">Centrer</string>
     <string name="pass_updates_channel">Mises à jour de la carte</string>
-    <string name="pass_updated">Mise à jour de la carte réussie</string>
+    <string name="pass_updated">Carte mise à jour</string>
     <string name="group">Cartes de groupe</string>
     <string name="passes">Cartes</string>
     <string name="enable">Activer</string>
@@ -59,4 +59,10 @@
     <string name="ungroup">Dégrouper les cartes</string>
     <string name="open">Ouvrir</string>
     <string name="barcode_position_bottom">Bas</string>
+    <string name="wallet">Portefeuille</string>
+    <string name="pass_view">Vue de la carte</string>
+    <string name="pass_deleted">Carte supprimée avec succès</string>
+    <string name="pass_imported">Carte importée avec succès</string>
+    <string name="selected">Sélectionnée</string>
+    <string name="compatibility_mode">Mode compatibilité</string>
 </resources>
