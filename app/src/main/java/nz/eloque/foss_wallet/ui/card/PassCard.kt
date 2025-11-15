@@ -74,7 +74,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors, Modifier, content)
+        PassContent(pass, cardColors, Modifier)
     }
 }
 
