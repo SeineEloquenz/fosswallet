@@ -40,8 +40,8 @@ fun ShortPassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .scale(scale),
-            onClick = onClick,
+                .scale(scale)
+                .clickable(onClick = onClick)
         ) {
             ShortPassContent(pass, cardColors)
         }
@@ -74,7 +74,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors, Modifier)
+        PassContent(pass, cardColors)
     }
 }
 
@@ -101,8 +101,6 @@ private fun getCardColors(pass: Pass, defaultColors: CardColors): CardColors {
 @Composable
 private fun PasscardPreview() {
     PassCard(
-        pass = Pass.placeholder(),
-    ) {
-
-    }
+        pass = Pass.placeholder()
+    )
 }
