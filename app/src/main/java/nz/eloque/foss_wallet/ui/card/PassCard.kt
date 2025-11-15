@@ -29,22 +29,7 @@ fun ShortPassCard(
     selected: Boolean = false,
     colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
-    val cardColors = if (pass.colors == null) {
-        if (isSystemInDarkTheme()) {
-            CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
-        } else {
-            CardDefaults.elevatedCardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            )
-        }
-    } else {
-        pass.colors.toCardColors()
-    }
-    
+    val cardColors = getCardColors(pass, colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -73,10 +58,29 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    colors: CardColors = CardDefaults.elevatedCardColors(),
-    content: @Composable ((cardColors: CardColors) -> Unit),
+    colors: CardColors = CardDefaults.elevatedCardColors()
 ) {
-    val cardColors = if (pass.colors == null) {
+    val cardColors = getCardColors(pass, colors)
+    val scale by animateFloatAsState(if (selected) 0.95f else 1f)
+    
+    ElevatedCard(
+        colors = cardColors,
+        modifier = modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+    ) {
+        PassContent(pass, cardColors, Modifier, content)
+    }
+}
+
+@Composable
+private fun getCardColors(pass: Pass, defaultColors: CardColors): CardColors {
+    return if (pass.colors == null) {
         if (isSystemInDarkTheme()) {
             CardDefaults.elevatedCardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -90,21 +94,6 @@ fun PassCard(
         }
     } else {
         pass.colors.toCardColors()
-    }
-    
-    val scale by animateFloatAsState(if (selected) 0.95f else 1f)
-    ElevatedCard(
-        colors = cardColors,
-        modifier = modifier
-            .fillMaxWidth()
-            .scale(scale)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-    ) {
-        PassContent(pass, cardColors, Modifier, content)
     }
 }
 
