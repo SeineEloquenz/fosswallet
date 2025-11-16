@@ -52,7 +52,15 @@ class PassStore @Inject constructor(
     suspend fun update(pass: Pass): UpdateResult {
         val updated = PassbookApi.getUpdated(pass)
         return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
-            insert(updated.content.result)
+            val updatedWithCustomSettings = updated.content.result.copy(
+                pass = updated.content.result.pass.copy(
+                    pass = updated.content.result.pass.pass.copy(
+                        archived = pass.archived,
+                        renderLegacy = pass.renderLegacy
+                    )
+                )
+            )
+            insert(updatedWithCustomSettings)
             notificationService.createNotificationChannel()
             val localizedPass = updated.content.result.pass.applyLocalization(Locale.getDefault().language)
             localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
