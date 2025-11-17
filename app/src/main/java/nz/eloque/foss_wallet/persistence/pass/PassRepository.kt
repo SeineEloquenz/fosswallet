@@ -43,7 +43,7 @@ class PassRepository @Inject constructor(
 
     fun insert(group: PassGroup): PassGroup {
         val id = passDao.insert(group)
-        return group.copy(id)
+        return group.copy(id = id)
     }
 
     fun delete(pass: Pass) {
