@@ -1,0 +1,2 @@
+* Render 1D passes wider horizontally
+* Fix passes getting unarchived when receiving an update
