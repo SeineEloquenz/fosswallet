@@ -75,7 +75,7 @@ fun BarcodesView(
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    val image = barcode.encodeAsBitmap(1000, 1000, legacyRendering)
+    val image = barcode.encodeAsBitmap(if (barcode.is1d()) 3000 else 1000, 1000, legacyRendering)
 
     Box(
         modifier = Modifier
@@ -97,7 +97,7 @@ fun BarcodesView(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .heightIn(max = 150.dp)
-                        .widthIn(max = 150.dp)
+                        .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
                         .clickable { fullscreen = !fullscreen }
                 )
                 barcode.altText?.let {

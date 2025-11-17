@@ -26,6 +26,28 @@ data class BarCode(
         }
     }
 
+    fun is1d(): Boolean {
+        return when (format) {
+            BarcodeFormat.AZTEC -> false
+            BarcodeFormat.CODABAR -> true
+            BarcodeFormat.CODE_39 -> true
+            BarcodeFormat.CODE_93 -> true
+            BarcodeFormat.CODE_128 -> true
+            BarcodeFormat.DATA_MATRIX -> false
+            BarcodeFormat.EAN_8 -> true
+            BarcodeFormat.EAN_13 -> true
+            BarcodeFormat.ITF -> true
+            BarcodeFormat.MAXICODE -> false
+            BarcodeFormat.PDF_417 -> true
+            BarcodeFormat.QR_CODE -> false
+            BarcodeFormat.RSS_14 -> true
+            BarcodeFormat.RSS_EXPANDED -> true
+            BarcodeFormat.UPC_A -> true
+            BarcodeFormat.UPC_E -> true
+            BarcodeFormat.UPC_EAN_EXTENSION -> true
+        }
+    }
+
     fun hasLegacyRepresentation() : Boolean {
         val legacyRepresentation = encodeAsBitmap(100, 100, true)
         val representation = encodeAsBitmap(100, 100, false)
