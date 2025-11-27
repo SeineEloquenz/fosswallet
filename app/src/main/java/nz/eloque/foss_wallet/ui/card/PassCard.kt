@@ -9,14 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
@@ -29,7 +28,15 @@ fun ShortPassCard(
     selected: Boolean = false,
     colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
-    val cardColors = getCardColors(pass, colors)
+    val containerColor = pass.colors?.background
+        ?: (if (isSystemInDarkTheme()) Color.Black else Color.White)
+
+    val cardColors = CardDefaults.elevatedCardColors(
+        containerColor = containerColor,
+        contentColor = colors.contentColor,
+        disabledContainerColor = colors.disabledContainerColor,
+        disabledContentColor = colors.disabledContentColor,
+    )
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -40,8 +47,8 @@ fun ShortPassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .scale(scale)
-                .clickable(onClick = onClick)
+                .scale(scale),
+            onClick = onClick,
         ) {
             ShortPassContent(pass, cardColors)
         }
@@ -58,11 +65,11 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    colors: CardColors = CardDefaults.elevatedCardColors()
+    colors: CardColors = CardDefaults.elevatedCardColors(),
+    content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
-    val cardColors = getCardColors(pass, colors)
+    val cardColors = pass.colors?.toCardColors() ?: colors
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
-    
     ElevatedCard(
         colors = cardColors,
         modifier = modifier
@@ -74,26 +81,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors)
-    }
-}
-
-@Composable
-private fun getCardColors(pass: Pass, defaultColors: CardColors): CardColors {
-    return if (pass.colors == null) {
-        if (isSystemInDarkTheme()) {
-            CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
-        } else {
-            CardDefaults.elevatedCardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            )
-        }
-    } else {
-        pass.colors.toCardColors()
+        PassContent(pass, cardColors, Modifier, content)
     }
 }
 
@@ -101,6 +89,8 @@ private fun getCardColors(pass: Pass, defaultColors: CardColors): CardColors {
 @Composable
 private fun PasscardPreview() {
     PassCard(
-        pass = Pass.placeholder()
-    )
+        pass = Pass.placeholder(),
+    ) {
+
+    }
 }
