@@ -1,11 +1,11 @@
 package nz.eloque.foss_wallet.model.field
 
-import nz.eloque.foss_wallet.parsing.InstantParser
+import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.prettyDate
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import nz.eloque.foss_wallet.utils.prettyTime
-import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.FormatStyle
 
 sealed class PassContent(val id: Int) {
@@ -30,21 +30,21 @@ sealed class PassContent(val id: Int) {
         }
     }
 
-    data class Date(val date: Instant, val format: FormatStyle) : PassContent(DATE) {
-        override fun contains(query: String) = query inIgnoreCase date.prettyDate(format)
-        override fun prettyPrint(): String  = date.prettyDate(format)
+    data class Date(val date: ZonedDateTime, val format: FormatStyle, val ignoresTimeZone: Boolean, val isRelative: Boolean) : PassContent(DATE) {
+        override fun contains(query: String) = query inIgnoreCase date.prettyDate(format, ignoresTimeZone, isRelative)
+        override fun prettyPrint(): String  = date.prettyDate(format, ignoresTimeZone, isRelative)
         override fun isEmpty(): Boolean = false
     }
 
-    data class Time(val time: Instant, val format: FormatStyle) : PassContent(TIME) {
-        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format)
-        override fun prettyPrint(): String  = time.prettyTime(format)
+    data class Time(val time: ZonedDateTime, val format: FormatStyle, val ignoresTimeZone: Boolean, val isRelative: Boolean) : PassContent(TIME) {
+        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format, ignoresTimeZone, isRelative)
+        override fun prettyPrint(): String  = time.prettyTime(format, ignoresTimeZone, isRelative)
         override fun isEmpty(): Boolean = false
     }
 
-    data class DateTime(val dateTime: Instant, val format: FormatStyle) : PassContent(DATE_TIME) {
-        override fun contains(query: String) = query inIgnoreCase dateTime.prettyDateTime(format)
-        override fun prettyPrint(): String  = dateTime.prettyDateTime(format)
+    data class DateTime(val dateTime: ZonedDateTime, val format: FormatStyle, val ignoresTimeZone: Boolean, val isRelative: Boolean) : PassContent(DATE_TIME) {
+        override fun contains(query: String) = query inIgnoreCase dateTime.prettyDateTime(format, ignoresTimeZone, isRelative)
+        override fun prettyPrint(): String  = dateTime.prettyDateTime(format, ignoresTimeZone, isRelative)
         override fun isEmpty(): Boolean = false
     }
 
@@ -60,16 +60,21 @@ sealed class PassContent(val id: Int) {
             return if (content.length >= 2 && content[0].isDigit() && content[1] == '|') {
                 val id = content[0].digitToInt()
                 val content = content.substring(2)
+                val components = content.split("|")
                 return when(id) {
-                    CURRENCY -> content.split("|").let { Currency(it[0], it[1]) }
-                    DATE -> content.split("|").let { Date(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
-                    TIME -> content.split("|").let { Time(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
-                    DATE_TIME -> content.split("|").let { DateTime(InstantParser.parse(it[0]), FormatStyle.valueOf(it[1])) }
+                    CURRENCY -> Currency(components[0], components[1])
+                    DATE -> Date(TimeParser.parse(components[0]), FormatStyle.valueOf(components[1]), components.safeBool(2), components.safeBool(3))
+                    TIME -> Time(TimeParser.parse(components[0]), FormatStyle.valueOf(components[1]), components.safeBool(2), components.safeBool(3))
+                    DATE_TIME -> DateTime(TimeParser.parse(components[0]), FormatStyle.valueOf(components[1]), components.safeBool(2), components.safeBool(3))
                     else -> Plain(content)
                 }
             } else {
                 Plain(content)
             }
+        }
+
+        private fun List<String>.safeBool(index: Int): Boolean {
+            return this.getOrNull(index)?.toBoolean() ?: false
         }
     }
 
@@ -77,9 +82,9 @@ sealed class PassContent(val id: Int) {
         return when (this) {
             is Plain -> this.id.toString() + "|" + this.text
             is Currency -> this.id.toString() + "|" + this.amount + "|" + this.currency
-            is Date -> this.id.toString() + "|" + this.date + "|" + this.format.name
-            is Time -> this.id.toString() + "|" + this.time + "|" + this.format.name
-            is DateTime -> this.id.toString() + "|" + this.dateTime + "|" + this.format.name
+            is Date -> this.id.toString() + "|" + this.date + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" + this.isRelative
+            is Time -> this.id.toString() + "|" + this.time + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" + this.isRelative
+            is DateTime -> this.id.toString() + "|" + this.dateTime + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" + this.isRelative
         }
     }
 

@@ -10,12 +10,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
+import nz.eloque.foss_wallet.persistence.TransactionalExecutor
 import nz.eloque.foss_wallet.persistence.WalletDb
 import nz.eloque.foss_wallet.persistence.buildDb
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
+import java.util.concurrent.Callable
 
 
 @Module
@@ -41,6 +43,14 @@ object AppModule {
     @Provides
     fun providePassDao(walletDb: WalletDb): PassDao {
         return walletDb.passDao()
+    }
+
+    @Provides
+    fun provideTransactionalExecutor(walletDb: WalletDb): TransactionalExecutor {
+        return object : TransactionalExecutor {
+            override fun <T> runTransactionally(callable: Callable<T>): T = walletDb.runInTransaction(callable)
+            override fun runTransactionally(runnable: Runnable) = walletDb.runInTransaction(runnable)
+        }
     }
 
     @Provides

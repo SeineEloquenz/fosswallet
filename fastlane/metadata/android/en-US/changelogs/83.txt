@@ -1,0 +1,6 @@
+* Rework calendar and navigation buttons
+* Rework timezone handling (wrong passes need to be re-added for this to work)
+* Rework settings screen
+* Add swedish translation
+* Fix notifications firing too often
+* Fix crash on pass deletion

@@ -18,7 +18,7 @@
     <string name="serial_number">Serienummer</string>
     <string name="enable">Inschakelen</string>
     <string name="add_shortcut">Snelkoppeling toevoegen</string>
-    <string name="open_wallet">FossWallet openen</string>
+    <string name="open">Openen</string>
     <string name="to">naar</string>
     <string name="request_permissions">Toestemming aanvragen</string>
     <string name="barcode">Barcode</string>
@@ -58,4 +58,11 @@
     <string name="selected">Geselecteerd</string>
     <string name="filter">Sorteren op</string>
     <string name="libraries">Bibliotheken</string>
+    <string name="relevant_date_newest">Nieuwste relevante datum</string>
+    <string name="relevant_date_oldest">Oudste relevante datum</string>
+    <string name="compatibility_mode">Compatibiliteitsmodus</string>
+    <string name="wallet">Portemonnee</string>
+    <string name="pass_deleted">Pas succesvol verwijderd</string>
+    <string name="pass_imported">Pas succesvol geïmporteerd</string>
+    <string name="barcode_position_bottom">Onder</string>
 </resources>

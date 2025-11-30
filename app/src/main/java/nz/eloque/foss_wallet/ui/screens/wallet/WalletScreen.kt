@@ -102,6 +102,7 @@ fun WalletScreen(
         floatingActionButton = {
             if (selectedPasses.isNotEmpty()) {
                 SelectionActions(
+                    false,
                     selectedPasses,
                     listState,
                     passViewModel
@@ -111,7 +112,19 @@ fun WalletScreen(
                     text = { Text(stringResource(R.string.add_pass)) },
                     icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
                     expanded = listState.isScrollingUp(),
-                    onClick = { launcher.launch(arrayOf("*/*")) }
+                    onClick = {
+                        launcher.launch(arrayOf(
+                            "application/json+zip",
+                            "application/octet-stream",
+                            "application/pkpass",
+                            "application/pkpasses",
+                            "application/vnd.apple.pkpass",
+                            "application/x-apple-pkpass",
+                            "application/x-passbook",
+                            "application/x-pkpass",
+                            "text/json"
+                        ))
+                    }
                 )
             }
         },

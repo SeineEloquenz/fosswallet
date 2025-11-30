@@ -32,6 +32,7 @@ fun ArchiveScreen(
         floatingActionButton = {
             if (selectedPasses.isNotEmpty()) {
                 SelectionActions(
+                    true,
                     selectedPasses,
                     listState,
                     passViewModel
@@ -42,7 +43,7 @@ fun ArchiveScreen(
         WalletView(
             navController,
             passViewModel,
-            showArchived = true,
+            archive = true,
             emptyIcon = Icons.Default.Archive,
             listState = listState,
             scrollBehavior = scrollBehavior,

@@ -41,7 +41,7 @@
     <string name="copy">Kopieren</string>
     <string name="status_forbidden">Der Server hat den Zugriff auf den Pass verwehrt. Ist der Pass vielleicht schon abgelaufen?</string>
     <string name="status_not_updated">Der Pass ist bereits aktuell</string>
-    <string name="open_wallet">Öffne FossWallet</string>
+    <string name="open">Öffnen</string>
     <string name="barcode_position">Barcode-Position in Vollbildanzeige</string>
     <string name="pass_view">Pass-Ansicht</string>
     <string name="pass_view_brightness">Helligkeit erhöhen</string>
@@ -61,4 +61,8 @@
     <string name="relevant_date_oldest">Ältestes Datum</string>
     <string name="libraries">Bibliotheken</string>
     <string name="wallet">Passetui</string>
+    <string name="compatibility_mode">Kompatibilitätsmodus</string>
+    <string name="pass_deleted">Pass erfolgreich gelöscht</string>
+    <string name="pass_imported">Pass erfolgreich importiert</string>
+    <string name="barcode_position_bottom">Unten</string>
 </resources>

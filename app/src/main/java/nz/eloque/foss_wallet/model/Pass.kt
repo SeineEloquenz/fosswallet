@@ -11,6 +11,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import java.io.File
 import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.LinkedList
 import java.util.UUID
 
@@ -48,8 +49,8 @@ data class Pass(
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
     val groupId: Long? = null,
-    val relevantDate: Long? = null,
-    val expirationDate: Long? = null,
+    val relevantDate: ZonedDateTime? = null,
+    val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,
     val authToken: String? = null,
     val webServiceUrl: String? = null,
@@ -62,6 +63,8 @@ data class Pass(
     val backFields: List<PassField> = LinkedList(),
     @ColumnInfo(defaultValue = "0")
     val archived: Boolean = false,
+    @ColumnInfo(defaultValue = "0")
+    val renderLegacy: Boolean = false,
 ) {
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)
@@ -120,7 +123,7 @@ data class Pass(
 
     companion object {
         fun placeholder(): Pass {
-            return Pass("", "Loading", 1, "", "", PassType.Generic(), setOf(), addedAt = Instant.ofEpochMilli(0))
+            return Pass("", "Loading", 1, "", "", PassType.Generic, setOf(), addedAt = Instant.ofEpochMilli(0))
         }
     }
 

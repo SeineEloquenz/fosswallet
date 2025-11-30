@@ -1,0 +1,4 @@
+* Přidána bílá karta kolem kódu a alternativního textu
+* Přidána podpora pro relativní data a data ignorující časové pásmo (pro použití těchto značek bude nutné znovu importovat lístky)
+* Opraveny proužky, které nemají plnou šířku lístku
+* Aktualizovány překlady

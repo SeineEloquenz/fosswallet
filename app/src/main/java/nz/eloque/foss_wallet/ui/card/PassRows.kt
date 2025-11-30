@@ -18,7 +18,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.DateView
+import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.screens.pass.HeaderFieldsView
 import java.io.File
@@ -78,14 +78,15 @@ fun DateLocationRow(
     pass: Pass
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DateView(
-            title = pass.description,
-            start = pass.relevantDate,
-            end = pass.expirationDate,
-        )
+        if (pass.relevantDate != null) {
+            CalendarButton(
+                title = pass.description,
+                start = pass.relevantDate,
+                end = pass.expirationDate,
+            )
+        }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
     }
 }

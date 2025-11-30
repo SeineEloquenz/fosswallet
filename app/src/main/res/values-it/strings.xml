@@ -42,7 +42,7 @@
     <string name="status_forbidden">Il server non ha permesso l\'accesso al biglietto. Forse il biglietto è già scaduto?</string>
     <string name="status_not_updated">Il tuo biglietto è già aggiornato</string>
     <string name="barcode_position">Posizione del codice a schermo intero</string>
-    <string name="open_wallet">Apri FossWallet</string>
+    <string name="open">Apri</string>
     <string name="barcode_position_top">Alto</string>
     <string name="barcode_position_center">Centro</string>
     <string name="pass_view_brightness">Aumenta la luminosità</string>
@@ -60,5 +60,9 @@
     <string name="relevant_date_oldest">La più vecchia data rilevante</string>
     <string name="selected">Selezionati</string>
     <string name="libraries">Biblioteche</string>
-    <string name="wallet">portabiglietti</string>
+    <string name="wallet">Portabiglietti</string>
+    <string name="compatibility_mode">Modalità compatibilità</string>
+    <string name="barcode_position_bottom">Fondo</string>
+    <string name="pass_imported">Biglietto importato con successo</string>
+    <string name="pass_deleted">Biglietto eliminato con successo</string>
 </resources>

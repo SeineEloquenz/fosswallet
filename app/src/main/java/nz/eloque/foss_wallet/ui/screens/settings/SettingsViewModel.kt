@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -27,10 +28,12 @@ data class SettingsUiState(
 class SettingsViewModel @Inject constructor(
     application: Application,
     private val settingsStore: SettingsStore,
+    private val passStore: PassStore,
     private val updateScheduler: UpdateScheduler,
 ) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+    val passFlow = passStore.allPasses()
 
     init {
         update()

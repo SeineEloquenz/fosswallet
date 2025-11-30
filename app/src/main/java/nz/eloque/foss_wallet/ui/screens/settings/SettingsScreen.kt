@@ -9,13 +9,11 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    passViewModel: PassViewModel,
     settingsViewModel: SettingsViewModel,
 ) {
     WalletScaffold(
@@ -30,6 +28,6 @@ fun SettingsScreen(
         },
         title = stringResource(id = R.string.settings)
     ) {
-        SettingsView(passViewModel, settingsViewModel)
+        SettingsView(settingsViewModel)
     }
 }

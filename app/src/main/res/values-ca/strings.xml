@@ -23,5 +23,5 @@
     <string name="privacy">Privacitat</string>
     <string name="details">Detalls</string>
     <string name="copy">Copiar</string>
-    <string name="open_wallet">Obrir FossWallet</string>
+    <string name="open">Obrir FossWallet</string>
 </resources>

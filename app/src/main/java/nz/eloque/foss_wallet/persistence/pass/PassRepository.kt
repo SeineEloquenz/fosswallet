@@ -25,10 +25,10 @@ class PassRepository @Inject constructor(
             all()
         } else {
             val result = all()
-            result.map { it.filter { it.pass.contains(query) } } }
+            result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 
-    fun byId(id: String): PassWithLocalization = passDao.byId(id)
+    fun flowById(id: String): Flow<PassWithLocalization?> = passDao.flowById(id)
 
     fun findById(id: String): PassWithLocalization? = passDao.findById(id)
 
@@ -43,7 +43,7 @@ class PassRepository @Inject constructor(
 
     fun insert(group: PassGroup): PassGroup {
         val id = passDao.insert(group)
-        return group.copy(id)
+        return group.copy(id = id)
     }
 
     fun delete(pass: Pass) {
@@ -51,10 +51,11 @@ class PassRepository @Inject constructor(
         passDao.delete(pass)
     }
 
-    fun dessociate(pass: Pass, groupId: Long) = passDao.dessociate(pass, groupId)
+    fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
 
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+    fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 }

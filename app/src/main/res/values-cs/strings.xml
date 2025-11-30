@@ -41,7 +41,7 @@
     <string name="status_code">Server odpověděl stavem %1$s</string>
     <string name="status_forbidden">Server neumožnil přístup k lístku. Možná tento lístek již vypršel?</string>
     <string name="status_not_updated">Váš lístek je již aktuální</string>
-    <string name="open_wallet">Otevřít FossWallet</string>
+    <string name="open">Otevřít</string>
     <string name="barcode_position">Pozice čárového kódu na celé obrazovce</string>
     <string name="barcode_position_top">Nahoře</string>
     <string name="barcode_position_center">Uprostřed</string>
@@ -51,7 +51,7 @@
     <string name="archive">Archivovat</string>
     <string name="unarchive">Odebrat z archivu</string>
     <string name="n_passes_imported">Importováno %1$d lístků</string>
-    <string name="export">Export</string>
+    <string name="export">Exportovat</string>
     <string name="share_passes">Sdílet lístky</string>
     <string name="more_options">Další možnosti</string>
     <string name="date_added">Datum přidání</string>
@@ -61,4 +61,8 @@
     <string name="filter">Seřadit podle</string>
     <string name="libraries">Knihovny</string>
     <string name="wallet">Peněženka</string>
+    <string name="compatibility_mode">Režim kompatibility</string>
+    <string name="barcode_position_bottom">Dole</string>
+    <string name="pass_deleted">Lístek úspěšně smazán</string>
+    <string name="pass_imported">Lístek úspěšně importován</string>
 </resources>
