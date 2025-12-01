@@ -28,15 +28,7 @@ fun ShortPassCard(
     selected: Boolean = false,
     colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
-    val containerColor = pass.colors?.background
-        ?: (if (isSystemInDarkTheme()) Color.Black else Color.White)
-
-    val cardColors = CardDefaults.elevatedCardColors(
-        containerColor = containerColor,
-        contentColor = colors.contentColor,
-        disabledContainerColor = colors.disabledContainerColor,
-        disabledContentColor = colors.disabledContentColor,
-    )
+    val cardColors = pass.colors ?: defaultPassColors(isSystemInDarkTheme())
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -68,7 +60,7 @@ fun PassCard(
     colors: CardColors = CardDefaults.elevatedCardColors(),
     content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
-    val cardColors = pass.colors?.toCardColors() ?: colors
+    val cardColors = pass.colors ?: defaultPassColors(isSystemInDarkTheme())
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     ElevatedCard(
         colors = cardColors,
@@ -82,6 +74,22 @@ fun PassCard(
             )
     ) {
         PassContent(pass, cardColors, Modifier, content)
+    }
+}
+
+fun defaultPassColors(isDarkMode: Boolean): PassColors {
+    return if (isDarkMode) {
+        PassColors(
+            background = Color.Black,
+            foreground = Color.White,
+            label = Color.White
+        )
+    } else {
+        PassColors(
+            background = Color.White,
+            foreground = Color.Black,
+            label = Color.Black
+        )
     }
 }
 
