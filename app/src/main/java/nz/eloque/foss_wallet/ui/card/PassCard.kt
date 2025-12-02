@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 
 @Composable
@@ -55,6 +56,7 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
+    content: @Composable (CardColors) -> Unit = {}
 ) {
     val cardColors = if (pass.colors != null) { pass.colors.toCardColors() } 
     else { CardDefaults.elevatedCardColors() }
@@ -71,6 +73,7 @@ fun PassCard(
             )
     ) {
         PassContent(pass, cardColors, Modifier)
+        content(cardColors)
     }
 }
 
@@ -81,10 +84,13 @@ fun PassColors.toCardColors() = CardColors(
     disabledContentColor = foreground.copy(alpha = 0.38f)
 )
 
+/*
 @Preview
 @Composable
 private fun PasscardPreview() {
     PassCard(
         pass = Pass.placeholder(),
-    ) { }
+    ) {
+    }
 }
+ */
