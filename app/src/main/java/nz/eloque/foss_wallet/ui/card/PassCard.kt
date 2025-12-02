@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.card
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
@@ -13,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,9 +24,9 @@ fun ShortPassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
-    val cardColors = pass.colors ?: defaultPassColors(isSystemInDarkTheme())
+    val cardColors = if (pass.colors != null) { pass.colors.toCardColors() } 
+    else { CardDefaults.elevatedCardColors() }
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -57,9 +55,9 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    colors: CardColors = CardDefaults.elevatedCardColors(),
 ) {
-    val cardColors = pass.colors ?: defaultPassColors(isSystemInDarkTheme())
+    val cardColors = if (pass.colors != null) { pass.colors.toCardColors() } 
+    else { CardDefaults.elevatedCardColors() }
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     ElevatedCard(
         colors = cardColors,
@@ -76,28 +74,17 @@ fun PassCard(
     }
 }
 
-fun defaultPassColors(isDarkMode: Boolean): PassColors {
-    return if (isDarkMode) {
-        PassColors(
-            background = Color.Black,
-            foreground = Color.White,
-            label = Color.White
-        )
-    } else {
-        PassColors(
-            background = Color.White,
-            foreground = Color.Black,
-            label = Color.Black
-        )
-    }
-}
+fun PassColors.toCardColors() = CardColors(
+    containerColor = background,
+    contentColor = foreground,
+    disabledContainerColor = background.copy(alpha = 0.38f),
+    disabledContentColor = foreground.copy(alpha = 0.38f)
+)
 
 @Preview
 @Composable
 private fun PasscardPreview() {
     PassCard(
         pass = Pass.placeholder(),
-    ) {
-
-    }
+    ) { }
 }
