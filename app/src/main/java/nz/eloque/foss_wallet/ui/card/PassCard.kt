@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,8 +27,7 @@ fun ShortPassCard(
     onClick: () -> Unit = {},
     selected: Boolean = false,
 ) {
-    val cardColors = if (pass.colors != null) { pass.colors.toCardColors() } 
-    else { CardDefaults.elevatedCardColors() }
+    val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -58,8 +58,7 @@ fun PassCard(
     selected: Boolean = false,
     content: @Composable (CardColors) -> Unit = {}
 ) {
-    val cardColors = if (pass.colors != null) { pass.colors.toCardColors() } 
-    else { CardDefaults.elevatedCardColors() }
+    val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     ElevatedCard(
         colors = cardColors,
@@ -77,20 +76,27 @@ fun PassCard(
     }
 }
 
-fun PassColors.toCardColors() = CardColors(
-    containerColor = background,
-    contentColor = foreground,
-    disabledContainerColor = background.copy(alpha = 0.38f),
-    disabledContentColor = foreground.copy(alpha = 0.38f)
-)
+@Composable
+fun passCardColors(passColors: PassColors?): CardColors {
+    return if (passColors != null) {
+        CardDefaults.elevatedCardColors(
+            containerColor = passColors.background,
+            contentColor = passColors.foreground,
+            disabledContainerColor = passColors.background.copy(alpha = 0.38f),
+            disabledContentColor = passColors.foreground.copy(alpha = 0.38f)
+        )
+    } else {
+        CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
 
-/*
 @Preview
 @Composable
 private fun PasscardPreview() {
     PassCard(
         pass = Pass.placeholder(),
-    ) {
-    }
+    ) {}
 }
- */
