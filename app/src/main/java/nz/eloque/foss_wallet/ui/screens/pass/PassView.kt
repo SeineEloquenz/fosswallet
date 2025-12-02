@@ -60,8 +60,7 @@ fun PassView(
             pass = pass,
             onClick = {},
             selected = false
-        ) { _ ->
-            Column(
+        ) { -> Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context))

@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.card
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardColors
@@ -56,7 +57,7 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    content: @Composable (CardColors) -> Unit = {}
+    content: @Composable () -> Unit = {}
 ) {
     val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
@@ -72,7 +73,7 @@ fun PassCard(
             )
     ) {
         PassContent(pass, cardColors, Modifier)
-        content(cardColors)
+        content()
     }
 }
 
@@ -86,10 +87,21 @@ fun passCardColors(passColors: PassColors?): CardColors {
             disabledContentColor = passColors.foreground.copy(alpha = 0.38f)
         )
     } else {
-        CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        )
+        if (isSystemInDarkTheme()) {
+            CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.38f),
+                disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
+            )
+        } else {
+            CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            )
+        }
     }
 }
 
