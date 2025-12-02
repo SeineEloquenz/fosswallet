@@ -58,7 +58,6 @@ fun PassCard(
     onClick: () -> Unit = {},
     selected: Boolean = false,
     colors: CardColors = CardDefaults.elevatedCardColors(),
-    content: @Composable ((cardColors: CardColors) -> Unit),
 ) {
     val cardColors = pass.colors ?: defaultPassColors(isSystemInDarkTheme())
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
@@ -73,7 +72,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors, Modifier, content)
+        PassContent(pass, cardColors, Modifier)
     }
 }
 
