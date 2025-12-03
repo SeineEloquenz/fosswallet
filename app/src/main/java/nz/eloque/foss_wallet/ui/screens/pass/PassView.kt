@@ -56,11 +56,8 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(
-            pass = pass,
-            onClick = {},
-            selected = false
-        ) { -> Column(
+        PassCard(pass) { -> 
+            Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 AsyncPassImage(model = pass.footerFile(context))
