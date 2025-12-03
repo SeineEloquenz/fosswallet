@@ -75,6 +75,7 @@ fun GroupCard(
                 ShortPassCard(
                     pass = item,
                     onClick = { onClick.invoke(item) },
+                    toned = true
                 )
             }
             Box(
