@@ -27,6 +27,7 @@ fun ShortPassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
+    toned: Boolean = false
 ) {
     val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
@@ -44,7 +45,6 @@ fun ShortPassCard(
         ) {
             ShortPassContent(pass, cardColors)
         }
-
         if (selected) {
             SelectionIndicator(Modifier.align(Alignment.TopEnd))
         }
@@ -61,6 +61,7 @@ fun PassCard(
 ) {
     val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
+    
     ElevatedCard(
         colors = cardColors,
         modifier = modifier
