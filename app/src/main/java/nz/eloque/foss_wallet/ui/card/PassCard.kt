@@ -30,7 +30,7 @@ fun ShortPassCard(
     selected: Boolean = false,
     toned: Boolean = false
 ) {
-    val cardColors = passCardColors(pass.colors)
+    val cardColors = passCardColors(pass.colors, toned)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
@@ -80,7 +80,7 @@ fun PassCard(
 }
 
 @Composable
-fun passCardColors(passColors: PassColors?): CardColors {
+fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors {
     val untonedPassColors = if (passColors != null) {
         CardDefaults.elevatedCardColors(
             containerColor = passColors.background,
