@@ -79,8 +79,9 @@ fun PassCard(
 }
 
 @Composable
+@Composable
 fun passCardColors(passColors: PassColors?): CardColors {
-    return if (passColors != null) {
+    val untonedPassColors = if (passColors != null) {
         CardDefaults.elevatedCardColors(
             containerColor = passColors.background,
             contentColor = passColors.foreground,
@@ -90,10 +91,10 @@ fun passCardColors(passColors: PassColors?): CardColors {
     } else {
         if (isSystemInDarkTheme()) {
             CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.38f),
-                disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface,
+                disabledContainerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.38f),
+                disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.38f)
             )
         } else {
             CardDefaults.elevatedCardColors(
@@ -104,6 +105,12 @@ fun passCardColors(passColors: PassColors?): CardColors {
             )
         }
     }
+    return if (toned) {
+        val tonedColor = if (untonedPassColors.containerColor.luminance() > 0.5f) {
+            MaterialTheme.colorScheme.surfaceContainerHigh.scale(0.8f)
+        } else { MaterialTheme.colorScheme.surfaceContainerHigh.scale(1.25f) }
+        untonedPassColors.copy(containerColor = tonedColor)
+    } else { untonedPassColor }
 }
 
 @Preview
