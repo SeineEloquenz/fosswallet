@@ -72,7 +72,7 @@ fun Color.darken(factor: Float = 0.3f): Color {
 }
 
 fun Color.tone(degree: Float = 0.3f): Color {
-    val factor = if (luminance() < 0.5f) 2 - degree else degree
+    val factor = if (this.luminance() < 0.5f) 2 - degree else degree
     return copy(
         red = red * factor,
         green = green * factor,
