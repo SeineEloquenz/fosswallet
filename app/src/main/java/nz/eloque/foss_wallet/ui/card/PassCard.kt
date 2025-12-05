@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
-import nz.eloque.foss_wallet.utils.tone
+import nz.eloque.foss_wallet.utils.darken
 
 
 @Composable
@@ -107,7 +107,7 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
             )
         }
     }
-    return if (toned) untonedPassColors.containerColor.copy(containerColor = containerColor.tone(1.25f))
+    return if (toned) untonedPassColors.containerColor.copy(containerColor = containerColor.darken(1.25f))
         else untonedPassColors
 }
 
