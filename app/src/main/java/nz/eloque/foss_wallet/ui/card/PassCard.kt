@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
+import nz.eloque.foss_wallet.utils.tone
+
 
 @Composable
 fun ShortPassCard(
@@ -105,12 +107,8 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
             )
         }
     }
-    return if (toned) {
-        val tonedColor = if (untonedPassColors.containerColor.luminance() > 0.5f) {
-            MaterialTheme.colorScheme.surfaceContainerHigh.scale(0.8f)
-        } else { MaterialTheme.colorScheme.surfaceContainerHigh.scale(1.25f) }
-        untonedPassColors.copy(containerColor = tonedColor)
-    } else { untonedPassColors }
+    return if (toned) untonedPassColors.containerColor.copy(containerColor = containerColor.tone(1.25f))
+        else untonedPassColors
 }
 
 @Preview
