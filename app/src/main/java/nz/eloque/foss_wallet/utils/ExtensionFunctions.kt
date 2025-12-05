@@ -62,6 +62,15 @@ private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezo
     }
 }
 
+fun Color.darken(factor: Float = 0.3f): Color {
+    return copy(
+        red = red * factor,
+        green = green * factor,
+        blue = blue * factor,
+        alpha = alpha
+    )
+}
+
 fun Color.tone(degree: Float = 0.3f): Color {
     val factor = if (luminance() < 0.5f) 2 - degree else degree
     return copy(
