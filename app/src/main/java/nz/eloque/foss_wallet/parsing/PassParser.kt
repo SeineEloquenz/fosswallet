@@ -5,6 +5,7 @@ import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
@@ -181,7 +182,11 @@ class PassParser(val context: Context? = null) {
                 val (red, green, blue, alpha) = regexResult.destructured
                 val parsedAlpha = alpha.ifEmpty { "1.0" }.toDoubleOrNull() ?: return null
                 return Color(red.toInt(), green.toInt(), blue.toInt(), (parsedAlpha * 255.0).toInt())
-            } else null
+            } else try {
+                Color(representation.toColorInt())
+            } catch (_: IllegalArgumentException) {
+                null
+            }
         } else null
     }
 
