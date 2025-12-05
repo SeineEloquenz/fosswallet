@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
@@ -44,7 +43,6 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
-import nz.eloque.foss_wallet.utils.darken
 
 @Composable
 fun GroupCard(
@@ -53,7 +51,7 @@ fun GroupCard(
     selectedPasses: MutableSet<Pass>,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
-    onClick: ((Pass) -> Unit)? = null,
+    onClick: (Pass) -> Unit = {},
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -76,12 +74,8 @@ fun GroupCard(
                 val item = passes[index]
                 ShortPassCard(
                     pass = item,
-                    colors = CardDefaults.elevatedCardColors().copy(
-                        containerColor = CardDefaults.elevatedCardColors().containerColor.darken(
-                            1.25f
-                        )
-                    ),
-                    onClick = { onClick?.invoke(item) },
+                    onClick = { onClick.invoke(item) },
+                    toned = true
                 )
             }
             Box(
