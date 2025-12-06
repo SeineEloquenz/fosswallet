@@ -11,7 +11,11 @@ object FieldParser {
     fun parse(field: JSONObject): PassField {
         val key = field.getString("key")
         val label = field.stringOrNull("label")
-        val value = field.getString("value")
+        val value = if (field.has("attributedValue")) {
+            field.getString("attributedValue")
+        } else {
+            field.getString("value")
+        }
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 
         val content = when {
