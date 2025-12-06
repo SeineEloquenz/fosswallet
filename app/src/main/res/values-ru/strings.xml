@@ -45,7 +45,7 @@
     <string name="barcode_position">Положение штрихкода в полноэкранном режиме</string>
     <string name="pass_view">Вид пропуска</string>
     <string name="pass_view_brightness">Увеличить яркость</string>
-    <string name="barcode_position_top">Вверх</string>
+    <string name="barcode_position_top">Вверху</string>
     <string name="barcode_position_center">По центру</string>
     <string name="pass_already_imported">Пропуск уже импортирован</string>
     <string name="archive">Архивировать</string>
@@ -62,4 +62,7 @@
     <string name="wallet">Кошелёк</string>
     <string name="libraries">Сборники</string>
     <string name="compatibility_mode">Режим совместимости</string>
+    <string name="barcode_position_bottom">Внизу</string>
+    <string name="pass_deleted">Пропуск удалён</string>
+    <string name="pass_imported">Пропуск импортирован</string>
 </resources>
