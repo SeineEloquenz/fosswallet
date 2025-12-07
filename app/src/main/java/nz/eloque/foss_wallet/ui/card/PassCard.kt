@@ -107,7 +107,12 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
             )
         }
     }
-    return if (toned) untonedPassColors.containerColor.copy(containerColor = containerColor.darken(1.25f))
+    return if (toned) CardDefaults.elevatedCardColors(
+        containerColor = untonedPassColors.containerColor.darken(1.25f),
+        contentColor = untonedPassColors.contentColor.darken(1.25f),
+        disabledContainerColor = untonedPassColors.disabledContainerColor.darken(1.25f),
+        disabledContentColor = untonedPassColors.disabledContentColor.darken(1.25f)
+    )
         else untonedPassColors
 }
 
