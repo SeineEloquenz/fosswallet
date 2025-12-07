@@ -15,6 +15,7 @@ Features (non-exhaustive):
 * Per App language support
 * Import/Export to .pkpasses
 * Compatibility mode for legacy scanners
+* Multiple sort options
 
 ## Installation
 
