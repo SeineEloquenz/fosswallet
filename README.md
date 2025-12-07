@@ -1,7 +1,7 @@
 # <img alt="Logo" src="app/src/main/icon-source.svg" width="40" height="40"/> FossWallet
 
 FossWallet is a free and open source (FOSS) .pkpass application.
-Inspired by the venerable PassAndroid app,
+Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid) app,
 I tried to recreate the necessary functionality in Material Design 3 and with modern
 technologies.
 
