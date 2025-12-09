@@ -59,7 +59,6 @@ fun PassContent(
     pass: Pass,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
-    content: @Composable ((CardColors) -> Unit)
 ) {
     val context = LocalContext.current
 
@@ -83,9 +82,6 @@ fun PassContent(
         )
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
-
-        content.invoke(cardColors)
-
         DateLocationRow(pass)
     }
 }
