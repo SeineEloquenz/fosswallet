@@ -56,7 +56,7 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass) { cardColors ->
+        PassCard(pass) { ->
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
