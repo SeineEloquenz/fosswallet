@@ -86,7 +86,6 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
-
             IconButton(onClick = {
                 navController.navigate(Screen.Archive.route)
             }) {
