@@ -1,21 +1,21 @@
 # <img alt="Logo" src="app/src/main/icon-source.svg" width="40" height="40"/> FossWallet
 
-FossWallet is a free and open source (foss) .pkpass application.
-Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid)-App,
+FossWallet is a free and open source (FOSS) .pkpass application.
+Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid) app,
 I tried to recreate the necessary functionality in Material Design 3 and with modern
 technologies.
 
 Features (non-exhaustive):
-* Store and share Passes (.pkpass/.pkpasses)
-* Displays Pass information and barcodes
-* Manual Pass Updates
-* Optional automatic Pass updates (pull based, with notifications)
-* Home-Screen shortcuts
-* Passes display over lockscreen
-* Per App language support
-* Import/Export to .pkpasses
+* Store and share passes (.pkpass/.pkpasses)
+* Display pass information and barcodes
+* Manual pass updates
+* Optional automatic pass updates (pull-based, with notifications)
+* Home screen shortcuts
+* Pass display over lock screen
+* Per-app language support
+* Import/export to .pkpasses
 * Compatibility mode for legacy scanners
-* Multiple sort options
+* Multiple sort options (incl. by date)
 
 ## Installation
 
