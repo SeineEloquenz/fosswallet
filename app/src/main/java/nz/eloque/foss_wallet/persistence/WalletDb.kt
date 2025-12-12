@@ -23,7 +23,7 @@ fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.ja
         .build()
 
 @Database(
-    version = 18,
+    version = 19,
     entities = [Pass::class, PassLocalization::class, PassGroup::class],
     autoMigrations = [
         AutoMigration (from = 4, to = 5),
