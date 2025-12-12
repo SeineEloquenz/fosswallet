@@ -16,6 +16,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.filter
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -91,6 +92,8 @@ class PassParser(val context: Context? = null) {
             hasFooter = bitmaps.footer != null,
             addedAt = addedAt,
             relevantDate = parseRelevantDate(passJson),
+            relevantDateTimeRanges = parseRelevantDateTimeRanges(passJson),
+            relevantDateTimePoints = parseRelevantDateTimePoints(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
             authToken = passJson.stringOrNull("authenticationToken"),
@@ -116,6 +119,29 @@ class PassParser(val context: Context? = null) {
             Log.w(TAG, "Failed parsing relevantDate: $e")
             null
         }
+    }
+
+    private fun parseRelevantDateTimeRanges(passJson: JSONObject): List<Pair<ZonedDateTime, ZonedDateTime>> {
+        return if (passJson.has("relevantDates")) {
+            passJson.getJSONArray("relevantDates")
+                .filter { it.has("startDate") && it.has("endDate") }
+                .map { relDateJson ->
+                    Pair<ZonedDateTime, ZonedDateTime>(
+                        ZonedDateTime.parse(relDateJson.getString("startDate")),
+                        ZonedDateTime.parse(relDateJson.getString("endDate"))
+                    )
+            }
+        } else listOf()
+    }
+
+    private fun parseRelevantDateTimePoints(passJson: JSONObject): List<ZonedDateTime> {
+        return if (passJson.has("relevantDates")) {
+            passJson.getJSONArray("relevantDates")
+                .filter { it.has("date") }
+                .map { relDateJson ->
+                    ZonedDateTime.parse(relDateJson.getString("date"))
+            }
+        } else listOf()
     }
 
     private fun parseExpiration(passJson: JSONObject): ZonedDateTime? {
