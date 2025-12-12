@@ -27,6 +27,12 @@ fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
     return list
 }
 
+fun JSONArray.filter(predicate: (JSONObject) -> Boolean): JSONArray {
+    val result = JSONArray()
+    this.forEach { if (predicate.invoke(it)) result.put(it) }
+    return result
+}
+
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     var i = 0
     while (i < this.length()) {
