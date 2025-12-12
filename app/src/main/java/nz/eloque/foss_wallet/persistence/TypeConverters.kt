@@ -29,6 +29,46 @@ class TypeConverters {
     }
 
     @TypeConverter
+    fun fromListZonedDateTime(dateTimes: List<ZonedDateTime>): String {
+        val json = JSONArray()
+        dateTimes.forEach {
+            val dJson = JSONObject()
+            dJson.put("date", it.toString())
+            json.put(dJson)
+        }
+        return json.toString()
+    }
+
+    @TypeConverter
+    fun toListZonedDateTime(str: String): List<ZonedDateTime> {
+        return JSONArray(str).map {
+            ZonedDateTime.parse(it.getString("date"))
+        }
+    }
+
+    @TypeConverter
+    fun fromListPairZonedDateTime(dateTimes: List<Pair<ZonedDateTime, ZonedDateTime>>): String {
+        val json = JSONArray()
+        dateTimes.forEach {
+            val dJson = JSONObject()
+            dJson.put("startDate", it.first.toString())
+            dJson.put("endDate", it.second.toString())
+            json.put(dJson)
+        }
+        return json.toString()
+    }
+
+    @TypeConverter
+    fun toListPairZonedDateTime(str: String): List<Pair<ZonedDateTime, ZonedDateTime>> {
+        return JSONArray(str).map {
+            Pair<ZonedDateTime, ZonedDateTime>(
+            ZonedDateTime.parse(it.getString("startDate")),
+            ZonedDateTime.parse(it.getString("endDate"))
+            )
+        }
+    }
+
+    @TypeConverter
     fun fromInstant(instant: Instant): Long {
         return instant.toEpochMilli()
     }
