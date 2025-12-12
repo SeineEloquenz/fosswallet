@@ -80,7 +80,20 @@ fun DateLocationRow(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (pass.relevantDate != null) {
+        if (pass.relevantDateTimeRanges.isNotEmpty()) {
+            val startEnd = pass.relevantDateTimeRanges[0]
+            CalendarButton(
+                title = pass.description,
+                start = startEnd.first,
+                end = startEnd.second
+            )
+        } else if (pass.relevantDateTimePoints.isNotEmpty()) {
+            CalendarButton(
+                title = pass.description,
+                start = pass.relevantDateTimePoints[0],
+                end = pass.expirationDate
+            )
+        } else if (pass.relevantDate != null) {
             CalendarButton(
                 title = pass.description,
                 start = pass.relevantDate,
