@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Archive
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
@@ -30,6 +31,8 @@ import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
+import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
+import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
@@ -42,12 +45,14 @@ sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes v
     data object About : Screen("about", Icons.Default.Info, R.string.about)
     data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
+    data object Create : Screen("create", Icons.Default.Create, R.string.create_pass)
 }
 
 @Composable
 fun WalletApp(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
 ) {
@@ -77,6 +82,9 @@ fun WalletApp(
             }
             composable(Screen.Libraries.route) {
                 LibrariesScreen(navController)
+            }
+            composable(Screen.Create.route) {
+                CreateScreen(navController, createViewModel)
             }
             composable(
                 route = "pass/{passId}",

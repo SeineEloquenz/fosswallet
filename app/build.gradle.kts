@@ -134,6 +134,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.zxing)
+    implementation(libs.zxing.android.embedded)
 
     //hilt
     implementation(libs.hilt.android)

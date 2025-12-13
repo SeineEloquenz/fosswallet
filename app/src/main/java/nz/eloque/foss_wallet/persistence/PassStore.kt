@@ -13,6 +13,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
@@ -36,6 +37,10 @@ class PassStore @Inject constructor(
     fun passFlowById(id: String) = passRepository.flowById(id)
 
     fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+
+    fun create(pass: Pass, bitmaps: PassBitmaps) {
+        passRepository.insert(pass, bitmaps, null)
+    }
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
