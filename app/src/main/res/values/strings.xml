@@ -66,4 +66,5 @@
     <string name="filter">Sort by</string>
     <string name="libraries">Libraries</string>
     <string name="compatibility_mode">Compatibility Mode</string>
+    <string name="create_pass">Create pass</string>
 </resources>
