@@ -10,11 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
@@ -34,7 +32,8 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.utils.isScrollingUp
+import nz.eloque.foss_wallet.ui.components.FabMenu
+import nz.eloque.foss_wallet.ui.components.FabMenuItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,24 +107,27 @@ fun WalletScreen(
                     passViewModel
                 )
             } else {
-                ExtendedFloatingActionButton(
-                    text = { Text(stringResource(R.string.add_pass)) },
-                    icon = { Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_pass)) },
-                    expanded = listState.isScrollingUp(),
-                    onClick = {
-                        launcher.launch(arrayOf(
-                            "application/json+zip",
-                            "application/octet-stream",
-                            "application/pkpass",
-                            "application/pkpasses",
-                            "application/vnd.apple.pkpass",
-                            "application/vnd.apple.pkpasses",
-                            "application/x-apple-pkpass",
-                            "application/x-passbook",
-                            "application/x-pkpass",
-                            "text/json"
-                        ))
-                    }
+                FabMenu(
+                    items = listOf(
+                        FabMenuItem(
+                            icon = Icons.Default.Add,
+                            title = stringResource(R.string.add_pass),
+                            onClick = {
+                                launcher.launch(arrayOf(
+                                    "application/json+zip",
+                                    "application/octet-stream",
+                                    "application/pkpass",
+                                    "application/pkpasses",
+                                    "application/vnd.apple.pkpass",
+                                    "application/vnd.apple.pkpasses",
+                                    "application/x-apple-pkpass",
+                                    "application/x-passbook",
+                                    "application/x-pkpass",
+                                    "text/json"
+                                ))
+                            }
+                        )
+                    )
                 )
             }
         },
