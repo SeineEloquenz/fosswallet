@@ -45,7 +45,6 @@ fun ShortPassContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
         DateLocationRow(pass)
     }
 }
@@ -59,7 +58,7 @@ fun PassContent(
     pass: Pass,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
-    content: @Composable ((CardColors) -> Unit)
+    content: @Composable () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -83,9 +82,7 @@ fun PassContent(
         )
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
-
-        content.invoke(cardColors)
-
+        content()
         DateLocationRow(pass)
     }
 }
