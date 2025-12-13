@@ -1,26 +1,34 @@
 package nz.eloque.foss_wallet.model
 
+import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
 import java.time.Instant
 
-class PassCreator {
+object PassCreator {
 
-    fun create(name: String, barCode: BarCode): Pass {
+    const val FORMAT_VERSION = 1
+    const val ORGANIZATION = "nz.eloque.foss_wallet"
+
+    fun create(name: String, type: PassType, barCode: BarCode): Pass {
         val id = Hash.sha256(barCode.toString())
+
+        val nameField = PassField(
+            key = "main",
+            label = "",
+            content = PassContent.Plain(name)
+        )
+
         return Pass(
             id = id,
             description = name,
             formatVersion = FORMAT_VERSION,
             organization = ORGANIZATION,
             serialNumber = id,
-            type = PassType.Generic,
+            type = type,
             barCodes = setOf(barCode),
-            addedAt = Instant.now()
+            addedAt = Instant.now(),
+            primaryFields = listOf(nameField)
         )
-    }
-
-    companion object {
-        const val FORMAT_VERSION = 1
-        const val ORGANIZATION = "nz.eloque.foss_wallet"
     }
 }

@@ -67,4 +67,13 @@
     <string name="libraries">Libraries</string>
     <string name="compatibility_mode">Compatibility Mode</string>
     <string name="create_pass">Create pass</string>
+    <string name="pass_name">Pass name</string>
+    <string name="barcode_value">Barcode value</string>
+    <string name="pass_type">Pass type</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="generic_pass">Generic pass</string>
+    <string name="event">Event ticket</string>
+    <string name="coupon">Coupon</string>
+    <string name="boarding_pass">Boarding pass</string>
+    <string name="store_card">Store card</string>
 </resources>

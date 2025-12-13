@@ -18,6 +18,6 @@ fun CreateScreen(
         toolWindow = true,
         title = stringResource(id = Screen.Create.resourceId)
     ) {
-        CreateView(createViewModel)
+        CreateView(navController, createViewModel)
     }
 }

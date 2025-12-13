@@ -34,11 +34,11 @@ class PassRepository @Inject constructor(
 
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
-    fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass) {
+    fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {
         val id = pass.id
         passDao.insert(pass)
         bitmaps.saveToDisk(context, id)
-        originalPass.saveToDisk(context, id)
+        originalPass?.saveToDisk(context, id)
     }
 
     fun insert(group: PassGroup): PassGroup {
