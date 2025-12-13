@@ -74,8 +74,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors, Modifier)
-        content()
+        PassContent(pass, cardColors, Modifier, content)
     }
 }
 
@@ -90,10 +89,10 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
         )
     } else {
         CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.inverseSurface,
-            contentColor = MaterialTheme.colorScheme.inverseOnSurface,
-            disabledContainerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.38f),
-            disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.38f)
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
+            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         )
     }
     return if (toned) CardDefaults.elevatedCardColors(
