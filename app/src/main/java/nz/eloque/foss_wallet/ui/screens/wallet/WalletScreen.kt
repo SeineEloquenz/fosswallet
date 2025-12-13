@@ -114,7 +114,7 @@ fun WalletScreen(
                             icon = Icons.Default.Create,
                             title = stringResource(R.string.create_pass),
                             onClick = {
-                                //TODO add create screen here
+                                navController.navigate(Screen.Create.route)
                             }
                         ),
                         FabMenuItem(
