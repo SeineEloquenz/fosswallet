@@ -92,8 +92,7 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
         contentColor = untonedPassColors.contentColor.darken(1.25f),
         disabledContainerColor = untonedPassColors.disabledContainerColor.darken(1.25f),
         disabledContentColor = untonedPassColors.disabledContentColor.darken(1.25f)
-    )
-        else untonedPassColors
+    ) else untonedPassColors
 }
 
 @Preview
