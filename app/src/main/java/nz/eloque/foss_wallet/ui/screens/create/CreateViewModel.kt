@@ -29,7 +29,7 @@ class CreateViewModel @Inject constructor(
         val logo = drawableToBitmap(drawable, 256, 256)
 
         passStore.create(
-            pass = pass,
+            pass = pass.copy(hasLogo = true),
             bitmaps = PassBitmaps(
                 icon = icon,
                 logo = logo,
