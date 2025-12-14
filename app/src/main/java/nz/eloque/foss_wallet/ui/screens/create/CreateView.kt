@@ -69,7 +69,7 @@ fun CreateView(
                 message = result.contents
                 try {
                     format = BarcodeFormat.valueOf(result.formatName)
-                } catch (e: IllegalArgumentException) {
+                } catch (_: IllegalArgumentException) {
                     format = BarcodeFormat.QR_CODE
                     Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
                 }
