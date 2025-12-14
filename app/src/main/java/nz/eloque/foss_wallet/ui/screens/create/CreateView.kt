@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateView(
@@ -49,6 +51,7 @@ fun CreateView(
     createViewModel: CreateViewModel,
 ) {
     var message by remember { mutableStateOf("") }
+    var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -56,10 +59,14 @@ fun CreateView(
     val scanLauncher = rememberLauncherForActivityResult(
         contract = ScanContract(),
         onResult = { result ->
-            if (result == null || result.contents == null) {
-                Toast.makeText(context, "Not a valid EmberTalk-Code", Toast.LENGTH_SHORT).show()
-            } else {
+            if (result != null && result.contents != null) {
                 message = result.contents
+                try {
+                    format = BarcodeFormat.valueOf(result.formatName)
+                } catch (e: IllegalArgumentException) {
+                    format = BarcodeFormat.QR_CODE
+                    Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     )
@@ -101,6 +108,13 @@ fun CreateView(
                 )
             }
         }
+        ComboBox(
+            title = stringResource(R.string.barcode_format),
+            options = BarcodeFormat.entries,
+            selectedOption = format,
+            onOptionSelected = { format = it },
+            optionLabel = { it.name },
+        )
 
         var type by remember { mutableStateOf<PassType>(PassType.Generic) }
         ComboBox(
@@ -122,7 +136,7 @@ fun CreateView(
             enabled = createValid,
             onClick = {
                 val barCode = BarCode(
-                    format = BarcodeFormat.QR_CODE,
+                    format = format,
                     message = message,
                     encoding = Charsets.UTF_8,
                     altText = message

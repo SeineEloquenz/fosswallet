@@ -76,4 +76,5 @@
     <string name="coupon">Coupon</string>
     <string name="boarding_pass">Boarding pass</string>
     <string name="store_card">Store card</string>
+    <string name="barcode_format">Barcode format</string>
 </resources>
