@@ -65,4 +65,6 @@
     <string name="pass_deleted">Pas succesvol verwijderd</string>
     <string name="pass_imported">Pas succesvol geïmporteerd</string>
     <string name="barcode_position_bottom">Onder</string>
+    <string name="pass_type">Type pas</string>
+    <string name="create_pass">Pas genereren</string>
 </resources>
