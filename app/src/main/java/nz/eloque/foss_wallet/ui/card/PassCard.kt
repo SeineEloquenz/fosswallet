@@ -44,8 +44,6 @@ fun ShortPassCard(
                 .fillMaxWidth()
                 .scale(scale)
                 .combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
                     onClick = onClick,
                     onLongClick = { TODO() }
                 )
