@@ -16,6 +16,7 @@
     <string name="invalid_pass_toast">Pass konnte nicht geladen werden. Sicher, dass es sich um eine valide .pkpass-Datei handelt?</string>
     <string name="add_pass">Pass hinzufügen</string>
     <string name="about">Über</string>
+    <string name="webview">Öffne URL</string>
     <string name="source_code">Quellcode</string>
     <string name="made_with_love">Mit ❤ gemacht in Deutschland</string>
     <string name="to">nach</string>
@@ -65,4 +66,16 @@
     <string name="pass_deleted">Pass erfolgreich gelöscht</string>
     <string name="pass_imported">Pass erfolgreich importiert</string>
     <string name="barcode_position_bottom">Unten</string>
+    <string name="create_pass">Pass erstellen</string>
+    <string name="pass_name">Name des Passes</string>
+    <string name="barcode_value">Wert des Barcodes</string>
+    <string name="pass_type">Passtyp</string>
+    <string name="scan_barcode">Barcode scannen</string>
+    <string name="generic_pass">Generischer Pass</string>
+    <string name="event">Eventticket</string>
+    <string name="coupon">Coupon</string>
+    <string name="boarding_pass">Boardingpass</string>
+    <string name="store_card">Storecard</string>
+    <string name="barcode_format">Barcode-Format</string>
+    <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
 </resources>
