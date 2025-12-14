@@ -80,15 +80,13 @@ fun PassCard(
 
 @Composable
 fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors {
-    val untonedPassColors = if (passColors != null) { passColors.toCardColors()
-    } else {
-        CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
-    }
+    val untonedPassColors = if (passColors != null) passColors.toCardColors()
+    else CardDefaults.elevatedCardColors(
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
+        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    )
     return if (toned) CardDefaults.elevatedCardColors(
         containerColor = untonedPassColors.containerColor.darken(1.25f),
         contentColor = untonedPassColors.contentColor.darken(1.25f),
