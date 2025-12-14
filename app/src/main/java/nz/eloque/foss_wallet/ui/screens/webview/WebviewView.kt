@@ -1,9 +1,14 @@
 package nz.eloque.foss_wallet.ui.screens.webview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
-import android.webkit.*
-import androidx.compose.runtime.*
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
@@ -21,6 +26,7 @@ import okhttp3.Response
 import java.io.ByteArrayInputStream
 
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebviewView(
     navController: NavHostController,
@@ -80,14 +86,14 @@ class CustomWebViewClient(
             }
             val response = okhttp.newCall(okHttpRequest.build()).execute()
 
-            val contentType = response.headers["content-type"]?.split(";")?.first();
+            val contentType = response.headers["content-type"]?.split(";")?.first()
 
             if (contentType == "application/vnd.apple.pkpass") {
                 return handlePkPassResponse(response)
             } else {
                 WebResourceResponse(contentType, "UTF-8", response.body.byteStream(), )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             super.shouldInterceptRequest(webView, request)
         }
     }

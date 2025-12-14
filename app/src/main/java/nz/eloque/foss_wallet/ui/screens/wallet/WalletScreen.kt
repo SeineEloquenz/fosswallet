@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +40,7 @@ import java.net.URLEncoder
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
@@ -125,13 +127,13 @@ fun WalletScreen(
                                         val string = item?.text.toString();
                                         if(string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
-                                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string)}")
+                                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
                                             }
                                             return@launch
                                         }
                                     }
 
-                                    Toast.makeText(context, "No URL in clipboard", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show();
                                 }
                             }
                         ),
