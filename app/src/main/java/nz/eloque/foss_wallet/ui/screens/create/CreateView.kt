@@ -50,8 +50,14 @@ fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
 ) {
+    var name by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf<PassType>(PassType.Generic) }
     var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
+
+    val nameValid = name.length in 1..<30
+    val messageValid = message.isNotEmpty()
+    val createValid = nameValid && messageValid
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -78,12 +84,12 @@ fun CreateView(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        var name by remember { mutableStateOf("") }
         OutlinedTextField(
             label = { Text(stringResource(R.string.pass_name)) },
             value = name,
             onValueChange = { name = it },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = !nameValid
         )
 
         Row(
@@ -95,7 +101,8 @@ fun CreateView(
                 label = { Text(stringResource(R.string.barcode_value)) },
                 value = message,
                 onValueChange = { message = it },
-                modifier = Modifier.fillMaxWidth(fraction = 0.8f)
+                modifier = Modifier.fillMaxWidth(fraction = 0.8f),
+                isError = !messageValid
             )
             IconButton(
                 onClick = {
@@ -116,7 +123,6 @@ fun CreateView(
             optionLabel = { it.name },
         )
 
-        var type by remember { mutableStateOf<PassType>(PassType.Generic) }
         ComboBox(
             title = stringResource(R.string.pass_type),
             options = listOf(
@@ -129,8 +135,6 @@ fun CreateView(
             onOptionSelected = { type = it },
             optionLabel = { context.getString(it.label) },
         )
-
-        val createValid = name.length in 1..<20 && message.isNotEmpty()
 
         ElevatedButton(
             enabled = createValid,
