@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,8 +42,13 @@ fun ShortPassCard(
             colors = cardColors,
             modifier = modifier
                 .fillMaxWidth()
-                .scale(scale),
-            onClick = onClick,
+                .scale(scale)
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    onLongClick = { TODO() }
+                )
         ) {
             ShortPassContent(pass, cardColors)
         }
