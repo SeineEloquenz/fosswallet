@@ -65,4 +65,17 @@
     <string name="barcode_position_bottom">Dole</string>
     <string name="pass_deleted">Lístek úspěšně smazán</string>
     <string name="pass_imported">Lístek úspěšně importován</string>
+    <string name="webview">Otevřít adresu</string>
+    <string name="create_pass">Vytvořit lístek</string>
+    <string name="pass_name">Název lístku</string>
+    <string name="barcode_value">Hodnota čárového kódu</string>
+    <string name="pass_type">Typ lístku</string>
+    <string name="scan_barcode">Skenovat čárový kód</string>
+    <string name="generic_pass">Obecný lístek</string>
+    <string name="event">Vstupenka na událost</string>
+    <string name="coupon">Kupón</string>
+    <string name="boarding_pass">Palubní vstupenka</string>
+    <string name="store_card">Kartička obchodu</string>
+    <string name="barcode_format">Formát čárového kódu</string>
+    <string name="no_url_in_clipboard">Ve schránce se nenachází žádná adresa URL</string>
 </resources>
