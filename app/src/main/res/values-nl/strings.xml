@@ -21,8 +21,8 @@
     <string name="open">Openen</string>
     <string name="to">naar</string>
     <string name="request_permissions">Toestemming aanvragen</string>
-    <string name="barcode">Barcode</string>
-    <string name="barcode_position">Barcodepositie in volledig scherm</string>
+    <string name="barcode">Streepjescode</string>
+    <string name="barcode_position">Streepjescodepositie in volledig scherm</string>
     <string name="barcode_position_top">Boven</string>
     <string name="barcode_position_center">Midden</string>
     <string name="pass_view_brightness">Helderheid verhogen</string>
@@ -30,7 +30,7 @@
     <string name="permission_rationale">Zonder de toestemming(en) werkt FossWallet niet correct</string>
     <string name="exception">Er is een uitzondering opgetreden tijdens het aanroepen van de updateserver</string>
     <string name="timeout">Er is een time-out opgetreden tijdens het aanroepen van de updateserver</string>
-    <string name="no_barcode_format_given">Geen barcode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand.</string>
+    <string name="no_barcode_format_given">Geen streepjescode formaat gegeven! Standaard ingesteld op QR-code. Deze code wordt mogelijk niet correct gescand.</string>
     <string name="image">Beeld</string>
     <string name="add_pass">Pas toevoegen</string>
     <string name="pass">Pas</string>
@@ -67,4 +67,15 @@
     <string name="barcode_position_bottom">Onder</string>
     <string name="pass_type">Type pas</string>
     <string name="create_pass">Pas genereren</string>
+    <string name="webview">URL openen</string>
+    <string name="no_url_in_clipboard">Geen URL in het klembord</string>
+    <string name="generic_pass">Generieke pas</string>
+    <string name="store_card">Winkelkaart</string>
+    <string name="boarding_pass">Instapkaart</string>
+    <string name="coupon">Kortingsbon</string>
+    <string name="event">Evenementticket</string>
+    <string name="scan_barcode">Streepjescode scannen</string>
+    <string name="barcode_format">Streepjescodeformaat</string>
+    <string name="barcode_value">Streepjescodewaarde</string>
+    <string name="pass_name">Naam van de pas</string>
 </resources>

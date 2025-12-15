@@ -7,10 +7,10 @@
     <string name="request_permissions">Berechtigung anfordern</string>
     <string name="image">Bild</string>
     <string name="pass">Pass</string>
-    <string name="barcode">Barcode</string>
+    <string name="barcode">Strichcode</string>
     <string name="serial_number">Seriennummer</string>
     <string name="organization">Organisation</string>
-    <string name="no_barcode_format_given">Kein Barcode-Format gefunden! Rendere Barcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden.</string>
+    <string name="no_barcode_format_given">Kein Strichcode-Format gefunden! Rendere Strichcode als QR-Code. Dieser Code kann eventuell nicht korrekt gescannt werden.</string>
     <string name="date">Datum</string>
     <string name="delete">Entfernen</string>
     <string name="invalid_pass_toast">Pass konnte nicht geladen werden. Sicher, dass es sich um eine valide .pkpass-Datei handelt?</string>
@@ -32,8 +32,8 @@
     <string name="search">Suchen</string>
     <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
     <string name="enable">Aktivieren</string>
-    <string name="add_shortcut">Shortcut hinzufügen</string>
-    <string name="shortcut_exists">Es existiert bereits ein Shortcut!</string>
+    <string name="add_shortcut">Verknüpfung hinzufügen</string>
+    <string name="shortcut_exists">Es existiert bereits eine Verknüpfung!</string>
     <string name="privacy">Privatsphäre</string>
     <string name="details">Details</string>
     <string name="timeout">Es ist eine Zeitüberschreitung bei der Verbindung aufgetreten</string>
@@ -43,7 +43,7 @@
     <string name="status_forbidden">Der Server hat den Zugriff auf den Pass verwehrt. Ist der Pass vielleicht schon abgelaufen?</string>
     <string name="status_not_updated">Der Pass ist bereits aktuell</string>
     <string name="open">Öffnen</string>
-    <string name="barcode_position">Barcode-Position in Vollbildanzeige</string>
+    <string name="barcode_position">Strichcode-Position in Vollbildanzeige</string>
     <string name="pass_view">Pass-Ansicht</string>
     <string name="pass_view_brightness">Helligkeit erhöhen</string>
     <string name="barcode_position_top">Oben</string>
@@ -68,14 +68,14 @@
     <string name="barcode_position_bottom">Unten</string>
     <string name="create_pass">Pass erstellen</string>
     <string name="pass_name">Name des Passes</string>
-    <string name="barcode_value">Wert des Barcodes</string>
+    <string name="barcode_value">Wert des Strichcodes</string>
     <string name="pass_type">Passtyp</string>
-    <string name="scan_barcode">Barcode scannen</string>
+    <string name="scan_barcode">Strichcode scannen</string>
     <string name="generic_pass">Generischer Pass</string>
     <string name="event">Eventticket</string>
-    <string name="coupon">Coupon</string>
-    <string name="boarding_pass">Boardingpass</string>
-    <string name="store_card">Storecard</string>
-    <string name="barcode_format">Barcode-Format</string>
+    <string name="coupon">Kupon</string>
+    <string name="boarding_pass">Bordkarte</string>
+    <string name="store_card">Kundenkarte</string>
+    <string name="barcode_format">Strichcode-Format</string>
     <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
 </resources>
