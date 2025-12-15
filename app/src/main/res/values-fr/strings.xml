@@ -30,7 +30,7 @@
     <string name="barcode_position_center">Centrer</string>
     <string name="pass_updates_channel">Mises à jour de la carte</string>
     <string name="pass_updated">Carte mise à jour</string>
-    <string name="group">Cartes de groupe</string>
+    <string name="group">Grouper les cartes</string>
     <string name="passes">Cartes</string>
     <string name="enable">Activer</string>
     <string name="search">Rechercher</string>
