@@ -74,7 +74,7 @@
     <string name="generic_pass">Generischer Pass</string>
     <string name="event">Eventticket</string>
     <string name="coupon">Kupon</string>
-    <string name="boarding_pass">Bordpass</string>
+    <string name="boarding_pass">Bordkarte</string>
     <string name="store_card">Kundenkarte</string>
     <string name="barcode_format">Strichcode-Format</string>
     <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
