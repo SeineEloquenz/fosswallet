@@ -39,6 +39,7 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 import java.net.URLEncoder
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
+import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,15 +152,8 @@ fun WalletScreen(
                                 launcher.launch(arrayOf(
                                     "application/json+zip",
                                     "application/octet-stream",
-                                    "application/pkpass",
-                                    "application/pkpasses",
-                                    "application/vnd.apple.pkpass",
-                                    "application/vnd.apple.pkpasses",
-                                    "application/x-apple-pkpass",
-                                    "application/x-passbook",
-                                    "application/x-pkpass",
                                     "text/json"
-                                ))
+                                ).plus(PkpassMimeTypes))
                             }
                         )
                     )
