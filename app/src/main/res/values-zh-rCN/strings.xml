@@ -65,4 +65,18 @@
     <string name="pass_updates_channel">卡片更新</string>
     <string name="invalid_pass_toast">无法加载卡片。您确定这是有效的 .pkpass 文件吗？</string>
     <string name="no_barcode_format_given">未指定条码格式！默认将使用二维码。此代码可能无法正确扫描。</string>
+    <string name="scan_barcode"></string>
+    <string name="boarding_pass"></string>
+    <string name="barcode_format"></string>
+    <string name="coupon"></string>
+    <string name="pass_type"></string>
+    <string name="no_url_in_clipboard"></string>
+    <string name="event"></string>
+    <string name="webview"></string>
+    <string name="barcode_value"></string>
+    <string name="generic_pass"></string>
+    <string name="create_pass"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="pass_name"></string>
+    <string name="store_card"></string>
 </resources>
