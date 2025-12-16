@@ -78,4 +78,5 @@
     <string name="store_card">Kundenkarte</string>
     <string name="barcode_format">Strichcode-Format</string>
     <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
