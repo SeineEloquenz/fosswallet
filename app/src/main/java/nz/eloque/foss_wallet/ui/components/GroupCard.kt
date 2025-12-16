@@ -76,6 +76,7 @@ fun GroupCard(
                     pass = item,
                     onClick = { onClick.invoke(item) },
                     toned = true,
+                    barcodePosition = passViewModel.barcodePosition(),
                     increaseBrightness = passViewModel.increasePassViewBrightness()
                 )
             }
