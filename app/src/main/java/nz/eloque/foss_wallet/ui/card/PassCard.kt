@@ -43,6 +43,7 @@ fun ShortPassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
+    increaseBrightness: Boolean = false,
     toned: Boolean = false
 ) {
     val cardColors = passCardColors(pass.colors, toned)
@@ -74,7 +75,9 @@ fun ShortPassCard(
     if (showBarcode) {
         Raise(onDismiss = { showBarcode = false }) {
             pass.barCodes.firstOrNull()?.let { barcode ->
-                UpdateBrightness()
+                if (increaseBrightness) {
+                    UpdateBrightness()
+                }
                 val image = barcode.encodeAsBitmap(
                     if (barcode.is1d()) 3000 else 1000,
                     1000,

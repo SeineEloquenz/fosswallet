@@ -75,7 +75,8 @@ fun GroupCard(
                 ShortPassCard(
                     pass = item,
                     onClick = { onClick.invoke(item) },
-                    toned = true
+                    toned = true,
+                    increaseBrightness = passViewModel.increasePassViewBrightness()
                 )
             }
             Box(
