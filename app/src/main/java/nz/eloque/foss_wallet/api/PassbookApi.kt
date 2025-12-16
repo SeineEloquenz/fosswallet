@@ -18,7 +18,8 @@ object PassbookApi {
     private const val API_VERSION = "v1"
 
     suspend fun getUpdated(pass: Pass): UpdateResult {
-        val requestUrl = "${pass.webServiceUrl}/${API_VERSION}/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
+        val webServiceUrl = pass.webServiceUrl!!.trimEnd('/')
+        val requestUrl = "$webServiceUrl/${API_VERSION}/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
         val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
 
         val client = OkHttpClient.Builder().build()

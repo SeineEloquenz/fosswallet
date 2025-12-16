@@ -18,6 +18,7 @@
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>
     <string name="about">About</string>
+    <string name="webview">Open URL</string>
     <string name="source_code">Source code</string>
     <string name="made_with_love">Made with ❤ in Germany</string>
     <string name="to">to</string>
@@ -66,4 +67,16 @@
     <string name="filter">Sort by</string>
     <string name="libraries">Libraries</string>
     <string name="compatibility_mode">Compatibility Mode</string>
+    <string name="create_pass">Create pass</string>
+    <string name="pass_name">Pass name</string>
+    <string name="barcode_value">Barcode value</string>
+    <string name="pass_type">Pass type</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="generic_pass">Generic pass</string>
+    <string name="event">Event ticket</string>
+    <string name="coupon">Coupon</string>
+    <string name="boarding_pass">Boarding pass</string>
+    <string name="store_card">Store card</string>
+    <string name="barcode_format">Barcode format</string>
+    <string name="no_url_in_clipboard">No URL in clipboard</string>
 </resources>
