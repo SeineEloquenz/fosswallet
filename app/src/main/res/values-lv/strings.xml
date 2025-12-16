@@ -50,33 +50,4 @@
     <string name="permission_rationale">Bez šīs(-m) atļaujas(-ām) FossWallet nedarbosies korekti</string>
     <string name="organization">Organizācija</string>
     <string name="no_barcode_format_given">Nav norādīts svītrkoda formāts! Izmanto QR kodu. Iespējams, ka šis kods var tikt nepareizi nolasīts.</string>
-    <string name="scan_barcode"></string>
-    <string name="update_successful"></string>
-    <string name="pass_updates_channel"></string>
-    <string name="status_code"></string>
-    <string name="boarding_pass"></string>
-    <string name="barcode_format"></string>
-    <string name="status_forbidden"></string>
-    <string name="coupon"></string>
-    <string name="invalid_pass_toast"></string>
-    <string name="timeout"></string>
-    <string name="pass_type"></string>
-    <string name="no_url_in_clipboard"></string>
-    <string name="to"></string>
-    <string name="event"></string>
-    <string name="unarchive"></string>
-    <string name="sync_interval"></string>
-    <string name="webview"></string>
-    <string name="barcode_value"></string>
-    <string name="details"></string>
-    <string name="relevant_date_oldest"></string>
-    <string name="update_failed"></string>
-    <string name="generic_pass"></string>
-    <string name="libraries"></string>
-    <string name="exception"></string>
-    <string name="create_pass"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="pass_name"></string>
-    <string name="relevant_date_newest"></string>
-    <string name="store_card"></string>
 </resources>

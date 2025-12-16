@@ -62,21 +62,4 @@
     <string name="libraries">Biblioteki</string>
     <string name="wallet">Portfel</string>
     <string name="compatibility_mode">Tryb kompatybilności</string>
-    <string name="scan_barcode"></string>
-    <string name="boarding_pass"></string>
-    <string name="barcode_format"></string>
-    <string name="pass_deleted"></string>
-    <string name="coupon"></string>
-    <string name="pass_imported"></string>
-    <string name="pass_type"></string>
-    <string name="no_url_in_clipboard"></string>
-    <string name="event"></string>
-    <string name="barcode_position_bottom"></string>
-    <string name="webview"></string>
-    <string name="barcode_value"></string>
-    <string name="generic_pass"></string>
-    <string name="create_pass"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="pass_name"></string>
-    <string name="store_card"></string>
 </resources>
