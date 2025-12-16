@@ -78,4 +78,5 @@
     <string name="barcode_format">Streepjescodeformaat</string>
     <string name="barcode_value">Streepjescodewaarde</string>
     <string name="pass_name">Naam van de pas</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
