@@ -20,6 +20,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -88,7 +89,7 @@ class CustomWebViewClient(
 
             val contentType = response.headers["content-type"]?.split(";")?.first()
 
-            if (contentType == "application/vnd.apple.pkpass") {
+            if(PkpassMimeTypes.contains(contentType)) {
                 return handlePkPassResponse(response)
             } else {
                 WebResourceResponse(contentType, "UTF-8", response.body.byteStream(), )
@@ -111,6 +112,10 @@ class CustomWebViewClient(
                     withContext(Dispatchers.Main) {
                         navController.popBackStack()
                         navController.navigate("pass/${result.passId}")
+                    }
+                } else if(result is LoaderResult.Multiple) {
+                    withContext(Dispatchers.Main) {
+                        navController.popBackStack()
                     }
                 }
             }
