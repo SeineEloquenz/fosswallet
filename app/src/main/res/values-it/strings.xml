@@ -65,4 +65,17 @@
     <string name="barcode_position_bottom">Fondo</string>
     <string name="pass_imported">Biglietto importato con successo</string>
     <string name="pass_deleted">Biglietto eliminato con successo</string>
+    <string name="webview">Apri URL</string>
+    <string name="create_pass">Crea biglietto</string>
+    <string name="generic_pass">Biglietto generico</string>
+    <string name="no_url_in_clipboard">Nessun URL negli appunti</string>
+    <string name="pass_name">Nome del biglietto</string>
+    <string name="barcode_value">Valore del codice a barre</string>
+    <string name="pass_type">Tipo di biglietto</string>
+    <string name="coupon">Buono sconto</string>
+    <string name="barcode_format">Formato del codice a barre</string>
+    <string name="scan_barcode">Scansiona codice a barre</string>
+    <string name="event">Biglietto per l’evento</string>
+    <string name="boarding_pass">Carta d\'imbarco</string>
+    <string name="store_card">La carta fedeltà</string>
 </resources>

@@ -65,4 +65,17 @@
     <string name="barcode_position_bottom">All</string>
     <string name="pass_deleted">Dokumendi kustutamine õnnestus</string>
     <string name="pass_imported">Dokumendi importimine õnnestus</string>
+    <string name="webview">Ava võrguaadress</string>
+    <string name="create_pass">Koosta uus dokument</string>
+    <string name="pass_name">Dokumendi nimi</string>
+    <string name="pass_type">Dokumendi tüüp</string>
+    <string name="generic_pass">Üldine dokument</string>
+    <string name="boarding_pass">Pardakaart</string>
+    <string name="barcode_value">Triipkoodi väärtus</string>
+    <string name="scan_barcode">Skaneeri triipkoodi</string>
+    <string name="event">Sündmuse pilet</string>
+    <string name="coupon">Kupong</string>
+    <string name="store_card">Kliendikaart</string>
+    <string name="barcode_format">Triipkoodi vorming</string>
+    <string name="no_url_in_clipboard">Lõikelaual pole ühtegi võrguaadressi</string>
 </resources>
