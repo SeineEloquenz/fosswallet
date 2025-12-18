@@ -10,12 +10,12 @@ const val RELEVANT_DATE_NEWEST = "RelevantDateNewest"
 const val RELEVANT_DATE_OLDEST = "RelevantDateOldest"
 
 private val oldestFirst = Comparator.comparing<Pass, ZonedDateTime?>(
-    { it.relevantDate },
+    { it.relevantDates.firstOrNull()?.startDate() },
     Comparator.nullsLast(Comparator.naturalOrder())
 )
 
 private val newestFirst = Comparator.comparing<Pass, ZonedDateTime?>(
-    { it.relevantDate },
+    { it.relevantDates.firstOrNull()?.startDate() },
     Comparator.nullsLast(Comparator.reverseOrder())
 )
 
