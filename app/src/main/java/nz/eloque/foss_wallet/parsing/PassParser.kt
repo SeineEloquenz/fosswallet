@@ -10,12 +10,14 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.filter
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -24,6 +26,7 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
+import java.util.LinkedList
 
 class PassParser(val context: Context? = null) {
 
@@ -91,6 +94,7 @@ class PassParser(val context: Context? = null) {
             hasFooter = bitmaps.footer != null,
             addedAt = addedAt,
             relevantDate = parseRelevantDate(passJson),
+            relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
             authToken = passJson.stringOrNull("authenticationToken"),
@@ -116,6 +120,35 @@ class PassParser(val context: Context? = null) {
             Log.w(TAG, "Failed parsing relevantDate: $e")
             null
         }
+    }
+
+    private fun parseRelevantDates(passJson: JSONObject): List<PassRelevantDate> {
+        return try {
+            if (passJson.has("relevantDates")) {
+                passJson.getJSONArray("relevantDates")
+                    .map { relevantDateJson ->
+                        parseRelevantDateElement(relevantDateJson)
+                    }.filterNotNull()
+            } else {
+                listOf()
+            }
+        } catch (e: JSONException) {
+            Log.w(TAG, "Failed parsing relevantDates: $e")
+            listOf()
+        }
+    }
+
+    private fun parseRelevantDateElement(relevantDateJson: JSONObject) : PassRelevantDate? {
+        return if (relevantDateJson.has("startDate") && relevantDateJson.has("endDate")) {
+            PassRelevantDate.DateInterval(
+                ZonedDateTime.parse(relevantDateJson.getString("startDate")),
+                ZonedDateTime.parse(relevantDateJson.getString("endDate"))
+            )
+        } else if (relevantDateJson.has("date")) {
+            PassRelevantDate.Date(
+                ZonedDateTime.parse(relevantDateJson.getString("date"))
+            )
+        } else null
     }
 
     private fun parseExpiration(passJson: JSONObject): ZonedDateTime? {

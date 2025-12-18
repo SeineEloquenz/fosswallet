@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
@@ -14,6 +15,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
+import java.util.LinkedList
 import java.util.UUID
 
 class TypeConverters {
@@ -26,6 +28,37 @@ class TypeConverters {
     @TypeConverter
     fun toZonedDateTime(dateTime: String) : ZonedDateTime {
         return ZonedDateTime.parse(dateTime)
+    }
+
+    @TypeConverter
+    fun fromRelevantDates(relevantDates: List<PassRelevantDate>): String {
+        val json = JSONArray()
+        relevantDates.forEach {
+            val dJson = JSONObject()
+            if (it is PassRelevantDate.Date) {
+                dJson.put("date", it.date.toString())
+            } else if (it is PassRelevantDate.DateInterval) {
+                dJson.put("startDate", it.startDate.toString())
+                dJson.put("endDate", it.endDate.toString())
+            }
+            json.put(dJson)
+        }
+        return json.toString()
+    }
+
+    @TypeConverter
+    fun toRelevantDates(str: String): List<PassRelevantDate> {
+        return JSONArray(str).map {
+            if (it.has("date"))
+                PassRelevantDate.Date(
+                    ZonedDateTime.parse(it.getString("date"))
+                )
+            else
+                PassRelevantDate.DateInterval(
+                    ZonedDateTime.parse(it.getString("startDate")),
+                    ZonedDateTime.parse(it.getString("endDate"))
+                )
+        }
     }
 
     @TypeConverter

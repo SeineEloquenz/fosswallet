@@ -16,12 +16,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.screens.pass.HeaderFieldsView
 import java.io.File
+import java.util.Calendar
 
 @Composable
 fun HeaderRow(
@@ -80,7 +82,25 @@ fun DateLocationRow(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (pass.relevantDate != null) {
+        if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
+            val interval: PassRelevantDate.DateInterval = pass.relevantDates.filter {
+                it is PassRelevantDate.DateInterval
+            }[0] as PassRelevantDate.DateInterval
+            CalendarButton(
+                title = pass.description,
+                start = interval.startDate,
+                end = interval.endDate
+            )
+        } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
+            val date: PassRelevantDate.Date = pass.relevantDates.filter {
+                it is PassRelevantDate.Date
+            }[0] as PassRelevantDate.Date
+            CalendarButton(
+                title = pass.description,
+                start = date.date,
+                end = pass.expirationDate
+            )
+        } else if (pass.relevantDate != null) {
             CalendarButton(
                 title = pass.description,
                 start = pass.relevantDate,

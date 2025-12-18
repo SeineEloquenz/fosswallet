@@ -50,6 +50,7 @@ data class Pass(
     val colors: PassColors? = null,
     val groupId: Long? = null,
     val relevantDate: ZonedDateTime? = null,
+    val relevantDates: List<PassRelevantDate> = LinkedList(),
     val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,
     val authToken: String? = null,
