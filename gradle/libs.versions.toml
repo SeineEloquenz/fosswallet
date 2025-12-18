@@ -2,7 +2,7 @@
 aboutLibraries = "13.1.0"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.12.1"
-androidGradlePlugin = "8.13.1"
+androidGradlePlugin = "8.13.2"
 coil = "2.7.0"
 composeBom = "2025.12.00"
 #noinspection NewerVersionAvailable
