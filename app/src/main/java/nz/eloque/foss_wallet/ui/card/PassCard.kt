@@ -26,15 +26,7 @@ import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import nz.eloque.foss_wallet.utils.darken
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 
 
 @Composable
@@ -43,6 +35,8 @@ fun ShortPassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
+    increaseBrightness: Boolean = false,
+    barcodePosition: BarcodePosition,
     toned: Boolean = false
 ) {
     val cardColors = passCardColors(pass.colors, toned)
@@ -71,30 +65,20 @@ fun ShortPassCard(
         }
     }
 
-    if (showBarcode) {
-        Raise(onDismiss = { showBarcode = false }) {
-            pass.barCodes.firstOrNull()?.let { barcode ->
-                UpdateBrightness()
-                val image = barcode.encodeAsBitmap(
-                    if (barcode.is1d()) 3000 else 1000,
-                    1000,
-                    pass.renderLegacy && barcode.hasLegacyRepresentation()
-                )
-                Column(
-                    verticalArrangement = BarcodePosition.Center.arrangement,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Image(
-                        bitmap = image.asImageBitmap(),
-                        contentDescription = stringResource(R.string.image),
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
-            }
-        }
+    pass.barCodes.firstOrNull()?.let { barcode ->
+        val image = barcode.encodeAsBitmap(
+            if (barcode.is1d()) 3000 else 1000,
+            1000,
+            pass.renderLegacy && barcode.hasLegacyRepresentation()
+        )
+
+        FullscreenBarcode(
+            image = image,
+            barcodePosition = barcodePosition,
+            increaseBrightness = increaseBrightness,
+            isFullscreen = showBarcode,
+            onDismiss = { showBarcode = !showBarcode },
+        )
     }
 }
 

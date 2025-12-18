@@ -141,7 +141,9 @@ fun WalletView(
                     onClick = {
                         navController.navigate("pass/${pass.id}")
                     },
-                    selected = selectedPasses.contains(pass)
+                    selected = selectedPasses.contains(pass),
+                    barcodePosition = passViewModel.barcodePosition(),
+                    increaseBrightness = passViewModel.increasePassViewBrightness()
                 )
             }
         }
