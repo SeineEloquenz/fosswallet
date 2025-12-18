@@ -1,0 +1,9 @@
+* Add iOS WebView for downloading passes
+* Add initial pass creation functionality. Note: these passes can not be exported for now
+* Support long-clicking passes to directly open the barcode in full screen
+* Support attributed values in pass fields
+* Support for relevantDates field
+* Group passes imported from .pkpasses by default
+* Update translations
+
+* Fix issue with importing some .pkpasses files

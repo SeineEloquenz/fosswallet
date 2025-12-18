@@ -6,7 +6,7 @@ I tried to recreate the necessary functionality in Material Design 3 and with mo
 technologies.
 
 Features (non-exhaustive):
-* Store and share passes (.pkpass/.pkpasses)
+* Store, create, download and share passes (.pkpass/.pkpasses)
 * Display pass information and barcodes
 * Manual pass updates
 * Optional automatic pass updates (pull-based, with notifications)
