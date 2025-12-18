@@ -23,7 +23,6 @@ import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.screens.pass.HeaderFieldsView
 import java.io.File
-import java.util.Calendar
 
 @Composable
 fun HeaderRow(
@@ -99,12 +98,6 @@ fun DateLocationRow(
                 title = pass.description,
                 start = date.date,
                 end = pass.expirationDate
-            )
-        } else if (pass.relevantDate != null) {
-            CalendarButton(
-                title = pass.description,
-                start = pass.relevantDate,
-                end = pass.expirationDate,
             )
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }

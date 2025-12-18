@@ -17,7 +17,6 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
-import nz.eloque.foss_wallet.utils.filter
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -26,7 +25,6 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
-import java.util.LinkedList
 
 class PassParser(val context: Context? = null) {
 
@@ -93,7 +91,6 @@ class PassParser(val context: Context? = null) {
             hasThumbnail = bitmaps.thumbnail != null,
             hasFooter = bitmaps.footer != null,
             addedAt = addedAt,
-            relevantDate = parseRelevantDate(passJson),
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
@@ -109,10 +106,10 @@ class PassParser(val context: Context? = null) {
         )
     }
 
-    private fun parseRelevantDate(passJson: JSONObject): ZonedDateTime? {
+    private fun parseRelevantDate(passJson: JSONObject): PassRelevantDate? {
         return try {
             if (passJson.has("relevantDate")) {
-                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }
+                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }?.let { PassRelevantDate.Date(it) }
             } else {
                 null
             }
@@ -123,7 +120,7 @@ class PassParser(val context: Context? = null) {
     }
 
     private fun parseRelevantDates(passJson: JSONObject): List<PassRelevantDate> {
-        return try {
+        val relevantDates = try {
             if (passJson.has("relevantDates")) {
                 passJson.getJSONArray("relevantDates")
                     .map { relevantDateJson ->
@@ -135,6 +132,10 @@ class PassParser(val context: Context? = null) {
         } catch (e: JSONException) {
             Log.w(TAG, "Failed parsing relevantDates: $e")
             listOf()
+        }
+
+        return relevantDates.ifEmpty {
+            parseRelevantDate(passJson)?.let { listOf(it) } ?: listOf()
         }
     }
 
