@@ -13,6 +13,7 @@ import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.migrations.M14_15
 import nz.eloque.foss_wallet.persistence.migrations.M_18_19
 import nz.eloque.foss_wallet.persistence.migrations.M_17_18
+import nz.eloque.foss_wallet.persistence.migrations.M_19_20
 import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 
@@ -20,10 +21,11 @@ fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.ja
         .addMigrations(M_9_10)
         .addMigrations(M_17_18)
         .addMigrations(M_18_19)
+    .addMigrations(M_19_20)
         .build()
 
 @Database(
-    version = 19,
+    version = 20,
     entities = [Pass::class, PassLocalization::class, PassGroup::class],
     autoMigrations = [
         AutoMigration (from = 4, to = 5),
