@@ -59,7 +59,7 @@ fun ShortPassCard(
                     }
                 )
         ) {
-            DisableSelection(ShortPassContent(pass, cardColors))
+            DisableSelection{ ShortPassContent(pass, cardColors) }
         }
         if (selected) {
             SelectionIndicator(Modifier.align(Alignment.TopEnd))
