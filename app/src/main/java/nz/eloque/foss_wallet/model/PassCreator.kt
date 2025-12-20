@@ -10,7 +10,13 @@ object PassCreator {
     const val FORMAT_VERSION = 1
     const val ORGANIZATION = "nz.eloque.foss_wallet"
 
-    fun create(name: String, type: PassType, barCode: BarCode): Pass {
+    fun create(name: String, type: PassType, barCode: BarCode): Pass? {
+        try {
+            barCode.encodeAsBitmap(100, 100, false)
+        } catch (_: IllegalArgumentException) {
+            return null
+        }
+
         val id = Hash.sha256(barCode.toString())
 
         val nameField = PassField(

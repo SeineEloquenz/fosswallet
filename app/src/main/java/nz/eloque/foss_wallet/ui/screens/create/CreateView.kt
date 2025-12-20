@@ -55,8 +55,16 @@ fun CreateView(
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
     var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
 
+    val barCode = BarCode(
+        format = format,
+        message = message,
+        encoding = Charsets.UTF_8,
+        altText = message
+    )
+    val pass = PassCreator.create(name, type, barCode)
+
     val nameValid = name.length in 1..<30
-    val messageValid = message.isNotEmpty()
+    val messageValid = message.isNotEmpty() && pass != null
     val createValid = nameValid && messageValid
 
     val context = LocalContext.current
@@ -102,7 +110,12 @@ fun CreateView(
                 value = message,
                 onValueChange = { message = it },
                 modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                isError = !messageValid
+                isError = !messageValid,
+                supportingText = {
+                    if (!messageValid) {
+                        Text(stringResource(R.string.barcode_value_invalid, format.toString()))
+                    }
+                }
             )
             IconButton(
                 onClick = {
@@ -139,19 +152,12 @@ fun CreateView(
         ElevatedButton(
             enabled = createValid,
             onClick = {
-                val barCode = BarCode(
-                    format = format,
-                    message = message,
-                    encoding = Charsets.UTF_8,
-                    altText = message
-                )
-                val pass = PassCreator.create(name, type, barCode)
 
                 coroutineScope.launch(Dispatchers.IO) {
-                    createViewModel.addPass(pass)
+                    createViewModel.addPass(pass!!)
                 }
                 navController.popBackStack()
-                navController.navigate("pass/${pass.id}")
+                navController.navigate("pass/${pass!!.id}")
             }
         ) {
             Text(stringResource(R.string.create_pass))

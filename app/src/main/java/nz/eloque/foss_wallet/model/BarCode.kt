@@ -8,7 +8,6 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import org.json.JSONObject
 import java.nio.charset.Charset
-import java.util.Locale
 
 data class BarCode(
     private val format: BarcodeFormat,
@@ -101,13 +100,10 @@ data class BarCode(
         }
 
         fun formatFromString(format: String): BarcodeFormat {
-            return when {
-                format.contains("417") -> BarcodeFormat.PDF_417
-                format.uppercase(Locale.ENGLISH).contains("AZTEC") -> return BarcodeFormat.AZTEC
-                format.uppercase(Locale.ENGLISH).contains("128") -> return BarcodeFormat.CODE_128
-                format.uppercase(Locale.ENGLISH).contains("39") -> return BarcodeFormat.CODE_39
-                format.uppercase(Locale.ENGLISH).contains("93") -> return BarcodeFormat.CODE_93
-                else -> BarcodeFormat.QR_CODE
+            return try {
+                BarcodeFormat.valueOf(format)
+            } catch (_: IllegalArgumentException) {
+                BarcodeFormat.QR_CODE
             }
         }
     }
