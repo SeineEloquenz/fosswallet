@@ -80,4 +80,5 @@
     <string name="barcode_format">Barcode format</string>
     <string name="no_url_in_clipboard">No URL in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
+    <string name="help_translate">Help translate</string>
 </resources>
