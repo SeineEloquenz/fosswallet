@@ -78,4 +78,6 @@
     <string name="store_card">Kartička obchodu</string>
     <string name="barcode_format">Formát čárového kódu</string>
     <string name="no_url_in_clipboard">Ve schránce se nenachází žádná adresa URL</string>
+    <string name="barcode_value_invalid">Zadaná hodnota není platný kód %1$s</string>
+    <string name="help_translate">Pomozte s překladem</string>
 </resources>
