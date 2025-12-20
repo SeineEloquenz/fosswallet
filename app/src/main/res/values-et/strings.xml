@@ -78,4 +78,6 @@
     <string name="store_card">Kliendikaart</string>
     <string name="barcode_format">Triipkoodi vorming</string>
     <string name="no_url_in_clipboard">Lõikelaual pole ühtegi võrguaadressi</string>
+    <string name="barcode_value_invalid">Antud väärtus pole korrektne %1$s kood</string>
+    <string name="help_translate">Aita tõlkida</string>
 </resources>

@@ -78,4 +78,6 @@
     <string name="barcode_format">Streepjescodeformaat</string>
     <string name="barcode_value">Streepjescodewaarde</string>
     <string name="pass_name">Naam van de pas</string>
+    <string name="help_translate">Help met vertalen</string>
+    <string name="barcode_value_invalid">De opgegeven waarde is geen geldige %1$s-code</string>
 </resources>

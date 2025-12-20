@@ -78,4 +78,5 @@
     <string name="event">Biglietto per l’evento</string>
     <string name="boarding_pass">Carta d\'imbarco</string>
     <string name="store_card">La carta fedeltà</string>
+    <string name="help_translate">Aiutaci a tradurre</string>
 </resources>

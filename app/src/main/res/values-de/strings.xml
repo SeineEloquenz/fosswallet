@@ -78,4 +78,6 @@
     <string name="store_card">Kundenkarte</string>
     <string name="barcode_format">Strichcode-Format</string>
     <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
+    <string name="barcode_value_invalid">Der Wert is kein valider %1$s Code</string>
+    <string name="help_translate">Hilf übersetzen</string>
 </resources>
