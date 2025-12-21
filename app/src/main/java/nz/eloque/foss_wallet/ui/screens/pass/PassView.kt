@@ -31,6 +31,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.components.DisableTextScaling
 import nz.eloque.foss_wallet.ui.effects.ForceOrientation
 import nz.eloque.foss_wallet.ui.effects.Orientation
 import java.time.Instant
@@ -55,18 +56,20 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(25.dp)
-            ) {
-                barCode?.let {
-                    AsyncPassImage(model = pass.footerFile(context))
-                    BarcodesView(
-                        legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
-                        barcode = it,
-                        barcodePosition = barcodePosition,
-                        increaseBrightness = increaseBrightness
-                    )
+        DisableTextScaling {
+            PassCard(pass) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(25.dp)
+                ) {
+                    barCode?.let {
+                        AsyncPassImage(model = pass.footerFile(context))
+                        BarcodesView(
+                            legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
+                            barcode = it,
+                            barcodePosition = barcodePosition,
+                            increaseBrightness = increaseBrightness
+                        )
+                    }
                 }
             }
         }
