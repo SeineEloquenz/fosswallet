@@ -9,6 +9,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  read-changelog:
+    name: Read changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read versionCode and versionName from Gradle
+        id: version
+        run: |
+          VERSION_CODE=$(grep -m1 'versionCode\s*=' app/build.gradle.kts | sed 's/[^0-9]*//g')
+          VERSION_NAME=$(grep -m1 'versionName\s*=' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+
   build-apk:
     name: Build Release Apk
     runs-on: ubuntu-latest
@@ -75,7 +88,9 @@ jobs:
 
   release:
     name: Release Apk
-    needs: build-apk
+    needs:
+      - build-apk
+      - read-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
@@ -88,10 +103,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: apk/app-release.apk
+          body-path: fastlane/metadata/android/en-US/changelogs/${{ steps.version.outputs.version_code }}.txt
 
   release-play:
     name: Release App on Google Play
-    needs: build-bundle
+    needs:
+      - build-bundle
+      - read-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Download aab from build
