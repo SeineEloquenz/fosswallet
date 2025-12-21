@@ -60,4 +60,9 @@
     <string name="shortcut_exists">快捷方式已存在！</string>
     <string name="ungroup">取消分组卡片</string>
     <string name="group">分组卡片</string>
+    <string name="made_with_love">德国匠心制作❤</string>
+    <string name="pass_updated">卡片已更新</string>
+    <string name="pass_updates_channel">卡片更新</string>
+    <string name="invalid_pass_toast">无法加载卡片。您确定这是有效的 .pkpass 文件吗？</string>
+    <string name="no_barcode_format_given">未指定条码格式！默认将使用二维码。此代码可能无法正确扫描。</string>
 </resources>

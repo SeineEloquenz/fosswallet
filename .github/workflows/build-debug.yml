@@ -16,12 +16,12 @@ jobs:
   validation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: gradle/wrapper-validation-action@v3
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload Apk
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: apk
           path: app/build/outputs/apk/debug

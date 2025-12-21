@@ -5,10 +5,12 @@ import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
@@ -53,15 +55,15 @@ class PassParser(val context: Context? = null) {
         }
         val serialNumber = passJson.getString("serialNumber")
         val type = when {
-            passJson.has(PassType.EVENT) -> PassType.Event()
+            passJson.has(PassType.EVENT) -> PassType.Event
             passJson.has(PassType.BOARDING) -> {
                 val boardingJson = passJson.getJSONObject(PassType.BOARDING)
                 val transitType = if (boardingJson.has("transitType")) { TransitType.fromName(boardingJson.getString("transitType")) } else { TransitType.GENERIC }
                 PassType.Boarding(transitType)
             }
-            passJson.has(PassType.COUPON) -> PassType.Coupon()
-            passJson.has(PassType.STORE_CARD) -> PassType.StoreCard()
-            else -> PassType.Generic()
+            passJson.has(PassType.COUPON) -> PassType.Coupon
+            passJson.has(PassType.STORE_CARD) -> PassType.StoreCard
+            else -> PassType.Generic
         }
 
         val locations = if (passJson.has("locations")) {
@@ -89,7 +91,7 @@ class PassParser(val context: Context? = null) {
             hasThumbnail = bitmaps.thumbnail != null,
             hasFooter = bitmaps.footer != null,
             addedAt = addedAt,
-            relevantDate = parseRelevantDate(passJson),
+            relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
             authToken = passJson.stringOrNull("authenticationToken"),
@@ -106,10 +108,10 @@ class PassParser(val context: Context? = null) {
         )
     }
 
-    private fun parseRelevantDate(passJson: JSONObject): Long? {
+    private fun parseRelevantDate(passJson: JSONObject): PassRelevantDate? {
         return try {
             if (passJson.has("relevantDate")) {
-                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }?.toEpochSecond()
+                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }?.let { PassRelevantDate.Date(it) }
             } else {
                 null
             }
@@ -119,10 +121,43 @@ class PassParser(val context: Context? = null) {
         }
     }
 
-    private fun parseExpiration(passJson: JSONObject): Long? {
+    private fun parseRelevantDates(passJson: JSONObject): List<PassRelevantDate> {
+        val relevantDates = try {
+            if (passJson.has("relevantDates")) {
+                passJson.getJSONArray("relevantDates")
+                    .map { relevantDateJson ->
+                        parseRelevantDateElement(relevantDateJson)
+                    }.filterNotNull()
+            } else {
+                listOf()
+            }
+        } catch (e: JSONException) {
+            Log.w(TAG, "Failed parsing relevantDates: $e")
+            listOf()
+        }
+
+        return relevantDates.ifEmpty {
+            parseRelevantDate(passJson)?.let { listOf(it) } ?: listOf()
+        }
+    }
+
+    private fun parseRelevantDateElement(relevantDateJson: JSONObject) : PassRelevantDate? {
+        return if (relevantDateJson.has("startDate") && relevantDateJson.has("endDate")) {
+            PassRelevantDate.DateInterval(
+                ZonedDateTime.parse(relevantDateJson.getString("startDate")),
+                ZonedDateTime.parse(relevantDateJson.getString("endDate"))
+            )
+        } else if (relevantDateJson.has("date")) {
+            PassRelevantDate.Date(
+                ZonedDateTime.parse(relevantDateJson.getString("date"))
+            )
+        } else null
+    }
+
+    private fun parseExpiration(passJson: JSONObject): ZonedDateTime? {
         return try {
             if (passJson.has("expirationDate")) {
-                passJson.stringOrNull("expirationDate")?.let { ZonedDateTime.parse(it) }?.toEpochSecond()
+                passJson.stringOrNull("expirationDate")?.let { ZonedDateTime.parse(it) }
             } else {
                 null
             }
@@ -183,7 +218,11 @@ class PassParser(val context: Context? = null) {
                 val (red, green, blue, alpha) = regexResult.destructured
                 val parsedAlpha = alpha.ifEmpty { "1.0" }.toDoubleOrNull() ?: return null
                 return Color(red.toInt(), green.toInt(), blue.toInt(), (parsedAlpha * 255.0).toInt())
-            } else null
+            } else try {
+                Color(representation.toColorInt())
+            } catch (_: IllegalArgumentException) {
+                null
+            }
         } else null
     }
 
@@ -206,6 +245,5 @@ class PassParser(val context: Context? = null) {
 
     companion object {
         private const val TAG = "PassParser"
-        private const val EPOCH = "1970-01-01T00:00:00Z"
     }
 }

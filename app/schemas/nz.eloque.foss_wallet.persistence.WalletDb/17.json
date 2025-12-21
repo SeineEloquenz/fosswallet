@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 17,
-    "identityHash": "c5221d3ecd477a9be0ab3c9835830b3c",
+    "identityHash": "38caca10666bf23b5a9b0b6f268f3491",
     "entities": [
       {
         "tableName": "Pass",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL DEFAULT 0, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL DEFAULT '2b767e5b-75fd-4bec-89d7-188e832b2dc3', `colors` TEXT, `groupId` INTEGER, `relevantDate` INTEGER, `expirationDate` INTEGER, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `archived` INTEGER NOT NULL DEFAULT 0, `hidden` INTEGER NOT NULL DEFAULT 0, `pinned` INTEGER NOT NULL DEFAULT 0, `renderLegacy` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL DEFAULT 0, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL DEFAULT '2b767e5b-75fd-4bec-89d7-188e832b2dc3', `colors` TEXT, `groupId` INTEGER, `relevantDate` TEXT, `expirationDate` TEXT, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `archived` INTEGER NOT NULL DEFAULT 0, `renderLegacy` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -101,12 +101,12 @@
           {
             "fieldPath": "relevantDate",
             "columnName": "relevantDate",
-            "affinity": "INTEGER"
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "expirationDate",
             "columnName": "expirationDate",
-            "affinity": "INTEGER"
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "logoText",
@@ -172,24 +172,11 @@
             "defaultValue": "0"
           },
           {
-            "fieldPath": "hidden",
-            "columnName": "hidden",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
-          },
-          {
-            "fieldPath": "pinned",
-            "columnName": "pinned",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
-          },
-          {
             "fieldPath": "renderLegacy",
             "columnName": "renderLegacy",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -295,7 +282,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5221d3ecd477a9be0ab3c9835830b3c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '38caca10666bf23b5a9b0b6f268f3491')"
     ]
   }
 }

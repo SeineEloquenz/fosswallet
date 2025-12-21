@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.persistence
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -12,6 +13,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
@@ -21,19 +23,26 @@ import java.util.Locale
 
 class PassStore @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val transactionalExecutor: TransactionalExecutor,
     private val notificationService: NotificationService,
     private val passRepository: PassRepository,
     private val localizationRepository: PassLocalizationRepository,
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses(authStatus: Boolean) = passRepository.all(authStatus)
+    fun allPasses(authStatus: Boolean) = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun passById(id: String) = passRepository.findById(id)
 
     fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus)
     
     fun passFlowById(id: String) = passRepository.flowById(id)
+
+    fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+
+    fun create(pass: Pass, bitmaps: PassBitmaps) {
+        passRepository.insert(pass, bitmaps, null)
+    }
 
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
@@ -50,7 +59,15 @@ class PassStore @Inject constructor(
     suspend fun update(pass: Pass): UpdateResult {
         val updated = PassbookApi.getUpdated(pass)
         return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
-            insert(updated.content.result)
+            val updatedWithCustomSettings = updated.content.result.copy(
+                pass = updated.content.result.pass.copy(
+                    pass = updated.content.result.pass.pass.copy(
+                        archived = pass.archived,
+                        renderLegacy = pass.renderLegacy
+                    )
+                )
+            )
+            insert(updatedWithCustomSettings)
             notificationService.createNotificationChannel()
             val localizedPass = updated.content.result.pass.applyLocalization(Locale.getDefault().language)
             localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
@@ -84,9 +101,11 @@ class PassStore @Inject constructor(
     }
 
     private fun insert(loadResult: PassLoadResult) {
-        val passWithLocalization = loadResult.pass
-        passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
-        passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        transactionalExecutor.runTransactionally {
+            val passWithLocalization = loadResult.pass
+            passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
+            passWithLocalization.localizations.map { it.copy(passId = passWithLocalization.pass.id) }.forEach { localizationRepository.insert(it) }
+        }
     }
 
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)

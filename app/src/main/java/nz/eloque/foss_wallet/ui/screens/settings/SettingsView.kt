@@ -18,29 +18,32 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.share
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsView(
-    passViewModel: PassViewModel,
     settingsViewModel: SettingsViewModel,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
+    val passFlow = settingsViewModel.passFlow
+    val passes by remember(passFlow) { passFlow }.map { it }.collectAsState(listOf())
 
     Column(
         modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
@@ -99,7 +102,7 @@ fun SettingsView(
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        share(passViewModel.uiState.value.passes, context)
+                        share(passes, context)
                     }
                 }
             )

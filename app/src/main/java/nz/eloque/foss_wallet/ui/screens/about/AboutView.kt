@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Source
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -44,7 +45,7 @@ fun AboutView(
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(30.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -83,6 +84,11 @@ fun AboutView(
             icon = Icons.Default.PrivacyTip,
             text = stringResource(R.string.privacy),
             uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/PRIVACY.md"
+        )
+        UriButton(
+            icon = Icons.Default.Translate,
+            text = stringResource(R.string.help_translate),
+            uri = "https://hosted.weblate.org/projects/fosswallet/"
         )
         LicensesButton(navController)
         Spacer(Modifier.imePadding())

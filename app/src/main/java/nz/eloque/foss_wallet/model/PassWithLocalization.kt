@@ -42,7 +42,7 @@ data class PassWithLocalization(
 
     private fun PassContent.applyLocalization(mapping: Map<String, PassLocalization>): PassContent {
         return if (this is PassContent.Plain && mapping.containsKey(this.text)) {
-            PassContent.Plain(mapping[this.text]!!.text);
+            PassContent.Plain(mapping[this.text]!!.text)
         } else {
             this
         }

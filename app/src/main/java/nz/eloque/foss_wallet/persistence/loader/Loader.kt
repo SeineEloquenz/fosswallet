@@ -84,6 +84,9 @@ class Loader(val context: Context) {
             return LoaderResult.Single(id)
         } else {
             loadResults.forEach { result -> passViewModel.add(result) }
+
+            passViewModel.group(loadResults.map { it.pass.pass }.toSet())
+
             coroutineScope.launch(Dispatchers.Main) {
                 Toast.makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)
                     .show()

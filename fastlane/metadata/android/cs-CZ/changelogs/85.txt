@@ -1,0 +1,3 @@
+* Přidána podpora pozadí lístků zadaných jako HEX
+* Přidána lotyština
+* Opraven pád při řazení

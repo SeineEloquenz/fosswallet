@@ -44,6 +44,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.LabelAlign
 import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
 import nz.eloque.foss_wallet.ui.card.PlainPassLabel
+import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 import nz.eloque.foss_wallet.ui.components.Raise
 import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
@@ -75,7 +76,7 @@ fun BarcodesView(
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    val image = barcode.encodeAsBitmap(1000, 1000, legacyRendering)
+    val image = barcode.encodeAsBitmap(if (barcode.is1d()) 3000 else 1000, 1000, legacyRendering)
 
     Box(
         modifier = Modifier
@@ -97,7 +98,7 @@ fun BarcodesView(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .heightIn(max = 150.dp)
-                        .widthIn(max = 150.dp)
+                        .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
                         .clickable { fullscreen = !fullscreen }
                 )
                 barcode.altText?.let {
@@ -114,20 +115,17 @@ fun BarcodesView(
         }
     }
 
-    if (fullscreen) {
-        Raise(onDismiss = { fullscreen = !fullscreen }) {
-            UpdateBrightness()
-            PassImage(
-                bitmap = image,
-                barcodePosition = barcodePosition,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
+    FullscreenBarcode(
+        image = image,
+        barcodePosition = barcodePosition,
+        increaseBrightness = increaseBrightness,
+        isFullscreen = fullscreen,
+        onDismiss = { fullscreen = !fullscreen}
+    )
 }
 
 @Composable
-private fun PassImage(
+fun PassImage(
     bitmap: Bitmap?,
     modifier: Modifier = Modifier,
     barcodePosition: BarcodePosition

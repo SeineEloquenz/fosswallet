@@ -55,12 +55,12 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass) { cardColors ->
+        PassCard(pass) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                AsyncPassImage(model = pass.footerFile(context))
                 barCode?.let {
+                    AsyncPassImage(model = pass.footerFile(context))
                     BarcodesView(
                         legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
                         barcode = it,
@@ -113,14 +113,13 @@ private fun PassPreview() {
         1,
         "KSC",
         "serial",
-        PassType.Generic(),
+        PassType.Generic,
         HashSet(),
-        Instant.ofEpochMilli(0),
+        Instant.ofEpochSecond(0),
         hasLogo = false,
         hasStrip = false,
         hasThumbnail = false,
         hasFooter = false,
-        relevantDate = 1800000000L,
         headerFields = mutableListOf(
             PassField("block", "Block", PassContent.Plain("S1")),
             PassField("seat", "Seat", PassContent.Plain("47")),

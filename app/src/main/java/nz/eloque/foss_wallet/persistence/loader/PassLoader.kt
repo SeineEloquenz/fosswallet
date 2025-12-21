@@ -25,7 +25,7 @@ data class PassLoadResult(
     val originalPass: OriginalPass
 )
 
-class PassBitmaps(
+data class PassBitmaps(
     val icon: Bitmap,
     val logo: Bitmap?,
     val strip: Bitmap?,
