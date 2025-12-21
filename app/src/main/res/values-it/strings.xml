@@ -78,5 +78,6 @@
     <string name="event">Biglietto per l’evento</string>
     <string name="boarding_pass">Carta d\'imbarco</string>
     <string name="store_card">La carta fedeltà</string>
-    <string name="help_translate">Aiutaci a tradurre</string>
+    <string name="help_translate">Aiuta a tradurre</string>
+    <string name="barcode_value_invalid">Il valore fornito non è un codice %1$s valido</string>
 </resources>
