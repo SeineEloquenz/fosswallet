@@ -13,6 +13,7 @@ jobs:
     name: Read changelog
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
       - name: Read versionCode and versionName from Gradle
         id: version
         run: |
