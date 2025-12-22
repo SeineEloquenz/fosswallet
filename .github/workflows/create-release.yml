@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  read-changelog:
-    name: Read changelog
+  read-version:
+    name: Read version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -20,8 +20,38 @@ jobs:
           VERSION_CODE=$(grep -m1 'versionCode\s*=' app/build.gradle.kts | sed 's/[^0-9]*//g')
           VERSION_NAME=$(grep -m1 'versionName\s*=' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
 
+          echo "$VERSION_CODE"
+          echo "$VERSION_NAME"
+
           echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+
+  prepare-play-releasenotes:
+    name: Prepare Play Release Notes
+    needs:
+      - read-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare Google Play release notes
+        run: |
+          mkdir -p whatsnew
+          for locale_dir in fastlane/metadata/android/*; do
+            locale=$(basename "$locale_dir")
+
+            changelog_file="$locale_dir/changelogs/{{ steps.version.outputs.version_code }}.txt"
+            if [ -f "$changelog_file" ]; then
+              cp "$changelog_file" "whatsnew/whatsnew-$locale"
+              echo "Prepared changelog for $locale"
+            else
+              echo "No changelog for $locale, skipping"
+            fi
+          done
+      - name: Upload Whats new
+        uses: actions/upload-artifact@v6
+        with:
+          name: whatsnew
+          path: whatsnew
 
   build-apk:
     name: Build Release Apk
@@ -91,7 +121,7 @@ jobs:
     name: Release Apk
     needs:
       - build-apk
-      - read-changelog
+      - read-version
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
@@ -110,7 +140,7 @@ jobs:
     name: Release App on Google Play
     needs:
       - build-bundle
-      - read-changelog
+      - prepare-play-releasenotes
     runs-on: ubuntu-latest
     steps:
       - name: Download aab from build
@@ -119,20 +149,11 @@ jobs:
           name: aab
           path: aab
 
-      - name: Prepare Google Play release notes
-        run: |
-          mkdir -p whatsnew
-          for locale_dir in fastlane/metadata/android/*; do
-            locale=$(basename "$locale_dir")
-
-            changelog_file="$locale_dir/changelogs/{{ steps.version.outputs.version_code }}.txt"
-            if [ -f "$changelog_file" ]; then
-              cp "$changelog_file" "whatsnew/whatsnew-$locale"
-              echo "Prepared changelog for $locale"
-            else
-              echo "No changelog for $locale, skipping"
-            fi
-          done
+      - name: Download whatsnew
+        uses: actions/download-artifact@v7
+        with:
+          name: whatsnew
+          path: whatsnew
 
       - name: Publish on Play
         uses: r0adkll/upload-google-play@v1
