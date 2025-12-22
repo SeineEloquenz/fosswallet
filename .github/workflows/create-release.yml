@@ -39,7 +39,7 @@ jobs:
           for locale_dir in fastlane/metadata/android/*; do
             locale=$(basename "$locale_dir")
 
-            changelog_file="$locale_dir/changelogs/{{ steps.version.outputs.version_code }}.txt"
+            changelog_file="$locale_dir/changelogs/${{ steps.version.outputs.version_code }}.txt"
             if [ -f "$changelog_file" ]; then
               cp "$changelog_file" "whatsnew/whatsnew-$locale"
               echo "Prepared changelog for $locale"
