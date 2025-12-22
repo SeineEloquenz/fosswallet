@@ -29,6 +29,23 @@ jobs:
           echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
 
+  prepare-changelog:
+    name: Prepare Changelog
+    needs:
+      - read-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare Changelog
+        run: |
+          mkdir -p changelog
+          cp fastlane/metadata/android/en-US/changelogs/${{ needs.read-version.outputs.version_code }}.txt changelog/changelog.txt
+      - name: Upload Changelog
+        uses: actions/upload-artifact@v6
+        with:
+          name: changelog
+          path: changelog
+
   prepare-release-notes:
     name: Prepare Release Notes
     needs:
@@ -36,15 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Upload Changelog
-        uses: actions/upload-artifact@v6
-        with:
-          name: changelog
-          path: fastlane/metadata/android/en-US/changelogs/${{ needs.read-version.outputs.version_code }}.txt
-      - name: Prepare Changelog
-        run: |
-          mkdir -p changelog
-          cp fastlane/metadata/android/en-US/changelogs/${{ needs.read-version.outputs.version_code }}.txt changelog/changelog.txt
       - name: Prepare Google Play release notes
         run: |
           mkdir -p whatsnew
@@ -133,7 +141,7 @@ jobs:
     name: Release Apk
     needs:
       - build-apk
-      - prepare-release-notes
+      - prepare-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
