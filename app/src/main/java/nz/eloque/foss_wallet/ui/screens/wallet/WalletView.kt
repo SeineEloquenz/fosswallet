@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -43,9 +44,11 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.components.ChipSelector
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SelectionMenu
@@ -66,6 +69,8 @@ fun WalletView(
     val context = LocalContext.current
     val passFlow = passViewModel.filteredPasses
     val passes: List<Pass> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.archived } }.collectAsState(listOf())
+
+    val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
@@ -93,6 +98,15 @@ fun WalletView(
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             item {
+                ChipSelector(
+                    options = PassType.all(),
+                    selectedOptions = passTypesToShow,
+                    onOptionSelected = { passTypesToShow.add(it) },
+                    onOptionDeselected = { passTypesToShow.remove(it) },
+                    optionLabel = { context.getString(it.label) }
+                )
+            }
+            item {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -113,7 +127,10 @@ fun WalletView(
                     )
                 }
             }
-            val sortedPasses = passes.sortedWith(sortOption.value.comparator).groupBy { it.groupId }.toList()
+            val sortedPasses = passes
+                .filter { passTypesToShow.contains(it.type) }
+                .sortedWith(sortOption.value.comparator)
+                .groupBy { it.groupId }.toList()
             val groups = sortedPasses.filter { it.first != null }
             val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
             items(groups) { (groupId, passes) ->

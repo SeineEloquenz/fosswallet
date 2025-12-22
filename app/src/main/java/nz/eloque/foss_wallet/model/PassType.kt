@@ -24,5 +24,13 @@ sealed class PassType(val jsonKey: String, @param:StringRes val label:  Int) {
         const val COUPON = "coupon"
         const val BOARDING = "boardingPass"
         const val STORE_CARD = "storeCard"
+
+        fun all(): List<PassType> = listOf(
+            Generic,
+            Event,
+            Coupon,
+            Boarding(TransitType.GENERIC),
+            StoreCard
+        )
     }
 }
