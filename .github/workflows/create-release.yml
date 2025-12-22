@@ -44,7 +44,7 @@ jobs:
               cp "$changelog_file" "whatsnew/whatsnew-$locale"
               echo "Prepared changelog for $locale"
             else
-              echo "No changelog for $locale, skipping"
+              echo "Changelog file $changelog_file for $locale not found, skipping"
             fi
           done
       - name: Upload Whats new
