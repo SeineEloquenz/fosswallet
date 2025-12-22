@@ -117,6 +117,22 @@ jobs:
         with:
           name: aab
           path: aab
+
+      - name: Prepare Google Play release notes
+        run: |
+          mkdir -p whatsnew
+          for locale_dir in fastlane/metadata/android/*; do
+            locale=$(basename "$locale_dir")
+
+            changelog_file="$locale_dir/changelogs/{{ steps.version.outputs.version_code }}.txt"
+            if [ -f "$changelog_file" ]; then
+              cp "$changelog_file" "whatsnew/whatsnew-$locale"
+              echo "Prepared changelog for $locale"
+            else
+              echo "No changelog for $locale, skipping"
+            fi
+          done
+
       - name: Publish on Play
         uses: r0adkll/upload-google-play@v1
         with:
@@ -125,3 +141,4 @@ jobs:
           releaseFiles: aab/*.aab
           track: production
           status: completed
+          whatsNewDirectory: whatsnew
