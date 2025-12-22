@@ -22,11 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.ui.components.Raise
-import nz.eloque.foss_wallet.ui.components.SelectionIndicator
-import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
-import nz.eloque.foss_wallet.utils.darken
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
+import nz.eloque.foss_wallet.ui.components.SelectionIndicator
+import nz.eloque.foss_wallet.utils.darken
 
 
 @Composable
@@ -112,9 +110,9 @@ fun PassCard(
 fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors {
     val untonedPassColors = passColors?.toCardColors()
         ?: CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.38f),
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.38f),
             disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         )
     return if (toned) CardDefaults.elevatedCardColors(
