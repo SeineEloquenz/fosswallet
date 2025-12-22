@@ -70,7 +70,7 @@ fun WalletView(
     val passFlow = passViewModel.filteredPasses
     val passes: List<Pass> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.archived } }.collectAsState(listOf())
 
-    val selectedOptions = remember { PassType.all().toMutableStateList() }
+    val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
@@ -100,9 +100,9 @@ fun WalletView(
             item {
                 ChipSelector(
                     options = PassType.all(),
-                    selectedOptions = selectedOptions,
-                    onOptionSelected = { selectedOptions.add(it) },
-                    onOptionDeselected = { selectedOptions.remove(it) },
+                    selectedOptions = passTypesToShow,
+                    onOptionSelected = { passTypesToShow.add(it) },
+                    onOptionDeselected = { passTypesToShow.remove(it) },
                     optionLabel = { context.getString(it.label) }
                 )
             }
@@ -128,7 +128,7 @@ fun WalletView(
                 }
             }
             val sortedPasses = passes
-                .filter { selectedOptions.contains(it.type) }
+                .filter { passTypesToShow.contains(it.type) }
                 .sortedWith(sortOption.value.comparator)
                 .groupBy { it.groupId }.toList()
             val groups = sortedPasses.filter { it.first != null }
