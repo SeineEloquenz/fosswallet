@@ -80,4 +80,6 @@
     <string name="store_card">La carta fedeltà</string>
     <string name="help_translate">Aiuta a tradurre</string>
     <string name="barcode_value_invalid">Il valore fornito non è un codice %1$s valido</string>
+    <string name="clear_selection">Cancella selezione</string>
+    <string name="choose_image">Scegli immagine</string>
 </resources>

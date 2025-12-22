@@ -1,0 +1,4 @@
+* Verbesserung der Barcode-Validierung im Erstellungsmodus
+* Türkinische Übersetzung hinzugefügt
+* Übersetzungen aktualisiert
+* Fehler behoben, durch den einige Barcodes nicht gerendert wurden

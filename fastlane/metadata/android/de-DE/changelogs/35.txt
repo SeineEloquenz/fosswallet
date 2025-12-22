@@ -1,0 +1,4 @@
+* Widget zum Filtern der Passliste hinzugefügt
+* Datumsformatierung verbessert
+* Original-Passdateien werden im App-Speicher abgelegt und können erneut exportiert werden
+* Problem behoben, dass die Karte in der Passansicht anklickbar war
