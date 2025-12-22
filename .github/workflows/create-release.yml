@@ -159,7 +159,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: apk/app-release.apk
-          body-path: changelog/changelog.txt
+          body_path: changelog/changelog.txt
 
   release-play:
     name: Release App on Google Play
