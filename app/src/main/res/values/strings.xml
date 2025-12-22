@@ -81,4 +81,6 @@
     <string name="no_url_in_clipboard">No URL in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
     <string name="help_translate">Help translate</string>
+    <string name="choose_image">Choose image</string>
+    <string name="clear_selection">Clear selection</string>
 </resources>

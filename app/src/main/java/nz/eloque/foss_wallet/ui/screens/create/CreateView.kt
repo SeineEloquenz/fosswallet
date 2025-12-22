@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -50,6 +52,7 @@ fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
 ) {
+    var logoUrl by remember { mutableStateOf<Uri?>(null) }
     var name by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
@@ -92,6 +95,13 @@ fun CreateView(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        ImagePicker(
+            imageUrl = logoUrl,
+            onClear = { logoUrl = null },
+            onChoose = { logoUrl = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         OutlinedTextField(
             label = { Text(stringResource(R.string.pass_name)) },
             value = name,
@@ -154,7 +164,11 @@ fun CreateView(
             onClick = {
 
                 coroutineScope.launch(Dispatchers.IO) {
-                    createViewModel.addPass(pass!!)
+                    createViewModel.addPass(
+                        pass = pass!!,
+                        iconUrl = logoUrl,
+                        logoUrl = logoUrl,
+                    )
                 }
                 navController.popBackStack()
                 navController.navigate("pass/${pass!!.id}")
