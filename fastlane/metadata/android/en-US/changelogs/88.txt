@@ -1,0 +1,5 @@
+* Add chips to wallet view to filter passes by type
+* Add icon/logo chooser to pass creator
+* Slightly change default pass background color
+* Update translations
+* Fix scroll position in wallet view on back navigation
