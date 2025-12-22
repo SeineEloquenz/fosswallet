@@ -34,11 +34,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run tests
-        run: ./gradlew testDebugUnitTest
-
-      - name: Build
-        run: ./gradlew assembleDebug
+      - name: Test and Build
+        run: ./gradlew testDebugUnitTest assembleDebug
 
       - name: Upload Apk
         uses: actions/upload-artifact@v6

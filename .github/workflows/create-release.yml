@@ -91,10 +91,8 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Run tests
-        run: ./gradlew testReleaseUnitTest
-      - name: Assemble Release
-        run: ./gradlew assembleRelease
+      - name: Test and Assemble Release
+        run: ./gradlew testReleaseUnitTest assembleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -123,10 +121,8 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Test
-        run: ./gradlew testReleaseUnitTest
-      - name: Bundle Release
-        run: ./gradlew bundleRelease
+      - name: Test and Bundle Release
+        run: ./gradlew testReleaseUnitTest bundleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
