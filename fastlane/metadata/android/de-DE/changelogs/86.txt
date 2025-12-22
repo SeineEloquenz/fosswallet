@@ -1,0 +1,9 @@
+* iOS WebView zum Herunterladen von Passes hinzugefügt
+* Funktion zum Erstellen von Pässen hinzugefügt. Hinweis: Diese Pässe können derzeit nicht exportiert werden.
+* Pässe können per langem Klick direkt im Vollbild geöffnet werden
+* Unterstützung für "attributedValue" in Pass-Feldern
+* Unterstützung für das Feld „relevantDates“
+* Aus .pkpasses importierte Pässe werden standardmäßig gruppiert
+* Übersetzungen aktualisiert
+
+* Problem beim Importieren einiger .pkpasses-Dateien behoben

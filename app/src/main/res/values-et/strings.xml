@@ -80,4 +80,6 @@
     <string name="no_url_in_clipboard">Lõikelaual pole ühtegi võrguaadressi</string>
     <string name="barcode_value_invalid">Antud väärtus pole korrektne %1$s kood</string>
     <string name="help_translate">Aita tõlkida</string>
+    <string name="choose_image">Vali pilt</string>
+    <string name="clear_selection">Tühjenda valik</string>
 </resources>
