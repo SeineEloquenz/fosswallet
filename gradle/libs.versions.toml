@@ -1,11 +1,9 @@
 [versions]
 aboutLibraries = "13.2.1"
 accompanistPermissions = "0.37.3"
-activityCompose = "1.11.0"
-androidGradlePlugin = "8.11.2"
-biometric = "1.2.0-alpha05"
 activityCompose = "1.12.2"
 androidGradlePlugin = "8.13.2"
+biometric = "1.2.0-alpha05"
 coil = "2.7.0"
 composeBom = "2025.12.01"
 #noinspection NewerVersionAvailable
