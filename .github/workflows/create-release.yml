@@ -9,6 +9,70 @@ on:
   workflow_dispatch:
 
 jobs:
+  read-version:
+    name: Read version
+    runs-on: ubuntu-latest
+    outputs:
+      version_code: ${{ steps.version.outputs.version_code }}
+      version_name: ${{ steps.version.outputs.version_name }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Read versionCode and versionName from Gradle
+        id: version
+        run: |
+          VERSION_CODE=$(grep -m1 'versionCode\s*=' app/build.gradle.kts | sed 's/[^0-9]*//g')
+          VERSION_NAME=$(grep -m1 'versionName\s*=' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+
+          echo "$VERSION_CODE"
+          echo "$VERSION_NAME"
+
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+
+  prepare-changelog:
+    name: Prepare Changelog
+    needs:
+      - read-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare Changelog
+        run: |
+          mkdir -p changelog
+          cp fastlane/metadata/android/en-US/changelogs/${{ needs.read-version.outputs.version_code }}.txt changelog/changelog.txt
+      - name: Upload Changelog
+        uses: actions/upload-artifact@v6
+        with:
+          name: changelog
+          path: changelog
+
+  prepare-release-notes:
+    name: Prepare Release Notes
+    needs:
+      - read-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare Google Play release notes
+        run: |
+          mkdir -p whatsnew
+          for locale_dir in fastlane/metadata/android/*; do
+            locale=$(basename "$locale_dir")
+
+            changelog_file="$locale_dir/changelogs/${{ needs.read-version.outputs.version_code }}.txt"
+            if [ -f "$changelog_file" ]; then
+              cp "$changelog_file" "whatsnew/whatsnew-$locale"
+              echo "Prepared changelog for $locale"
+            else
+              echo "Changelog file $changelog_file for $locale not found, skipping"
+            fi
+          done
+      - name: Upload Whats new
+        uses: actions/upload-artifact@v6
+        with:
+          name: whatsnew
+          path: whatsnew
+
   build-apk:
     name: Build Release Apk
     runs-on: ubuntu-latest
@@ -27,10 +91,8 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Run tests
-        run: ./gradlew testReleaseUnitTest
-      - name: Assemble Release
-        run: ./gradlew assembleRelease
+      - name: Test and Assemble Release
+        run: ./gradlew testReleaseUnitTest assembleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -59,10 +121,8 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Test
-        run: ./gradlew testReleaseUnitTest
-      - name: Bundle Release
-        run: ./gradlew bundleRelease
+      - name: Test and Bundle Release
+        run: ./gradlew testReleaseUnitTest bundleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -75,7 +135,9 @@ jobs:
 
   release:
     name: Release Apk
-    needs: build-apk
+    needs:
+      - build-apk
+      - prepare-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
@@ -83,15 +145,23 @@ jobs:
         with:
           name: apk
           path: apk
+      - name: Download Changelog
+        uses: actions/download-artifact@v7
+        with:
+          name: changelog
+          path: changelog
       - name: Create Release
         id: create-release
         uses: softprops/action-gh-release@v2
         with:
           files: apk/app-release.apk
+          body_path: changelog/changelog.txt
 
   release-play:
     name: Release App on Google Play
-    needs: build-bundle
+    needs:
+      - build-bundle
+      - prepare-release-notes
     runs-on: ubuntu-latest
     steps:
       - name: Download aab from build
@@ -99,6 +169,13 @@ jobs:
         with:
           name: aab
           path: aab
+
+      - name: Download whatsnew
+        uses: actions/download-artifact@v7
+        with:
+          name: whatsnew
+          path: whatsnew
+
       - name: Publish on Play
         uses: r0adkll/upload-google-play@v1
         with:
@@ -107,3 +184,4 @@ jobs:
           releaseFiles: aab/*.aab
           track: production
           status: completed
+          whatsNewDirectory: whatsnew

@@ -1,0 +1,1 @@
+* Behebung des Absturzes der App beim manuellen Aktualisieren eines Passes ohne Netzwerkverbindung

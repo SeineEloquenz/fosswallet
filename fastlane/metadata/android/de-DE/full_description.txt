@@ -1,4 +1,5 @@
 FossWallet ist eine einfache "Material Design 3"-App für die Verwaltung von Pässen (.pkpass) basierend auf Jetpack Compose.
 
 Sie zeigt den Barcode und weitere im Pass enthaltene Daten an. 
-Die App unterstützt das Aktualisieren von Pässen über Anbieter-Server, ansonsten kann sie vollständig offline genutzt werden.
+Die App unterstützt das Aktualisieren von Pässen über Anbieterserver für unterstützte Pässe,
+ansonsten kann sie vollständig offline genutzt werden.

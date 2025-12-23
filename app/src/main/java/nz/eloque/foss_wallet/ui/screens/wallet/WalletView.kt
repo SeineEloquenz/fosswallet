@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -44,9 +45,11 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.components.ChipSelector
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SelectionMenu
@@ -70,6 +73,8 @@ fun WalletView(
     val passes: List<Pass> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.archived } }.collectAsState(listOf())
 
     val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
+    val passTypesToShow = remember { PassType.all().toMutableStateList() }
+
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
     if (passes.isEmpty()) {
@@ -85,73 +90,85 @@ fun WalletView(
                 alpha = 0.25f
             )
         }
-    }
-
-    LazyColumn(
-        state = listState,
-        verticalArrangement = Arrangement
-            .spacedBy(8.dp),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-        modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
-        item {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                FilterBar(
-                    onSearch = { passViewModel.filter(it, authStatus = uiState.isAuthenticated) },
-                    modifier = Modifier
-                        .padding(start = 6.dp, bottom = 6.dp)
-                        .weight(1f)
-                )
-                SelectionMenu(
-                    icon = Icons.AutoMirrored.Default.Sort,
-                    contentDescription = R.string.filter,
-                    options = SortOption.all(),
-                    selectedOption = sortOption.value,
-                    onOptionSelected = { sortOption.value = it },
-                    optionLabel = { context.getString(it.l18n) }
+    } else {
+        LazyColumn(
+            state = listState,
+            verticalArrangement = Arrangement
+                .spacedBy(8.dp),
+            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+            modifier = modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) {
+            item {
+                ChipSelector(
+                    options = PassType.all(),
+                    selectedOptions = passTypesToShow,
+                    onOptionSelected = { passTypesToShow.add(it) },
+                    onOptionDeselected = { passTypesToShow.remove(it) },
+                    optionLabel = { context.getString(it.label) }
                 )
             }
-        }
-        val sortedPasses = passes.sortedWith(sortOption.value.comparator).groupBy { it.groupId }.toList()
-        val groups = sortedPasses.filter { it.first != null }
-        val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
-        items(groups) { (groupId, passes) ->
-            GroupCard(
-                groupId!!,
-                passes,
-                onClick = {
-                    navController.navigate("pass/${it.id}")
-                },
-                passViewModel = passViewModel,
-                selectedPasses = selectedPasses
-            )
-        }
-        items(ungrouped) { pass ->
-            SwipeToDismiss(
-                leftSwipeIcon = Icons.Default.SelectAll,
-                allowRightSwipe = false,
-                onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
-                onRightSwipe = { },
-                modifier = Modifier.padding(2.dp)
-            ) {
-                ShortPassCard(
-                    pass = pass,
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    FilterBar(
+                        onSearch = { passViewModel.filter(it) },
+                        modifier = Modifier
+                            .padding(start = 6.dp, bottom = 6.dp)
+                            .weight(1f)
+                    )
+                    SelectionMenu(
+                        icon = Icons.AutoMirrored.Default.Sort,
+                        contentDescription = R.string.filter,
+                        options = SortOption.all(),
+                        selectedOption = sortOption.value,
+                        onOptionSelected = { sortOption.value = it },
+                        optionLabel = { context.getString(it.l18n) }
+                    )
+                }
+            }
+            val sortedPasses = passes
+                .filter { passTypesToShow.contains(it.type) }
+                .sortedWith(sortOption.value.comparator)
+                .groupBy { it.groupId }.toList()
+            val groups = sortedPasses.filter { it.first != null }
+            val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
+            items(groups) { (groupId, passes) ->
+                GroupCard(
+                    groupId!!,
+                    passes,
                     onClick = {
-                        navController.navigate("pass/${pass.id}")
+                        navController.navigate("pass/${it.id}")
                     },
-                    selected = selectedPasses.contains(pass),
-                    barcodePosition = passViewModel.barcodePosition(),
-                    increaseBrightness = passViewModel.increasePassViewBrightness()
+                    passViewModel = passViewModel,
+                    selectedPasses = selectedPasses
                 )
             }
-        }
-        item {
-            Spacer(modifier = Modifier.padding(4.dp))
+            items(ungrouped) { pass ->
+                SwipeToDismiss(
+                    leftSwipeIcon = Icons.Default.SelectAll,
+                    allowRightSwipe = false,
+                    onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
+                    onRightSwipe = { },
+                    modifier = Modifier.padding(2.dp)
+                ) {
+                    ShortPassCard(
+                        pass = pass,
+                        onClick = {
+                            navController.navigate("pass/${pass.id}")
+                        },
+                        selected = selectedPasses.contains(pass),
+                        barcodePosition = passViewModel.barcodePosition(),
+                        increaseBrightness = passViewModel.increasePassViewBrightness()
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.padding(4.dp))
+            }
         }
     }
 }

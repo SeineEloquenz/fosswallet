@@ -65,4 +65,17 @@
     <string name="pass_imported">Carte importée avec succès</string>
     <string name="selected">Sélectionnée</string>
     <string name="compatibility_mode">Mode compatibilité</string>
+    <string name="webview">Ouvrir l\'URL</string>
+    <string name="create_pass">Créer une carte</string>
+    <string name="pass_name">Nom de la carte</string>
+    <string name="barcode_value">Valeur du code-barre</string>
+    <string name="pass_type">Type de carte</string>
+    <string name="scan_barcode">Lire le code-barre</string>
+    <string name="generic_pass">Carte générique</string>
+    <string name="coupon">Bon d\'achat</string>
+    <string name="boarding_pass">Billet d\'embarquement</string>
+    <string name="store_card">Carte de fidélité</string>
+    <string name="barcode_format">Format du code-barre</string>
+    <string name="no_url_in_clipboard">Pas d\'URL dans le presse-papier</string>
+    <string name="help_translate">Aider à traduire</string>
 </resources>

@@ -1,0 +1,4 @@
+* Zlepšena validace čárového kódu při tvorbě
+* Přidána turečtina
+* Aktualizovány překlady
+* Opraveno nevykreslování některých čárových kódů
