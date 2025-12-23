@@ -128,7 +128,7 @@ fun WalletView(
                 }
             }
             val sortedPasses = passes
-                .filter { passTypesToShow.contains(it.type) }
+                .filter { pass -> passTypesToShow.any { pass.type.isSameType(it) } }
                 .sortedWith(sortOption.value.comparator)
                 .groupBy { it.groupId }.toList()
             val groups = sortedPasses.filter { it.first != null }
