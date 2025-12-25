@@ -1,0 +1,1 @@
+* Opravena chyba zabraňující správnému zobrazení některých lístků
