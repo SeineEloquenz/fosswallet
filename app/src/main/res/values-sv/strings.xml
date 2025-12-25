@@ -78,6 +78,8 @@
     <string name="store_card">Butikskort</string>
     <string name="barcode_format">Streckkodsformat</string>
     <string name="no_url_in_clipboard">Ingen URL i urklipp</string>
-    <string name="help_translate">Hjälp till att översätta</string>
+    <string name="help_translate">Översättning</string>
     <string name="barcode_value_invalid">Det angivna värdet är inte en giltig %1$s-kod</string>
+    <string name="choose_image">Välj bild</string>
+    <string name="clear_selection">Rensa urval</string>
 </resources>

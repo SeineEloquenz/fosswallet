@@ -1,0 +1,5 @@
+* Přidány pilulky do zobrazení peněženky pro filtrování lístků podle typu
+* Přidán výběr ikony/loga do nástroje pro vytváření lístků
+* Mírná změna výchozí barvy pozadí lístku
+* Aktualizace překladů
+* Oprava pozice posouvání v zobrazení peněženky při navigaci zpět
