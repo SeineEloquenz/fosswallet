@@ -36,10 +36,10 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import java.net.URLEncoder
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
+import java.net.URLEncoder
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,7 +123,13 @@ fun WalletScreen(
                             onClick = {
                                 coroutineScope.launch {
                                     val entry = clipboard.getClipEntry()
-                                    for(i in 0..<entry!!.clipData.itemCount) {
+
+                                    if (entry == null) {
+                                        Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
+                                        return@launch
+                                    }
+
+                                    for(i in 0..<entry.clipData.itemCount) {
                                         val item = entry.clipData.getItemAt(i);
                                         val string = item?.text.toString();
                                         if(string.startsWith("https://") || string.startsWith("http://")) {
