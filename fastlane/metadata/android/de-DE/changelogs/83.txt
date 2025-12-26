@@ -1,0 +1,6 @@
+* Kalender und Navigationsschaltflächen überarbeitet
+* Zeitzonenverwaltung überarbeitet (falsche Pässe müssen neu hinzugefügt werden, damit dies funktioniert)
+* Einstellungsbildschirm überarbeitet
+* Schwedische Übersetzung hinzugefügt
+* Zu häufiges Auslösen von Benachrichtigungen behoben
+* Absturz beim Löschen von Pässen behoben

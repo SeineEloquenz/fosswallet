@@ -57,8 +57,8 @@
     <string name="share_passes">Kartları paylaş</string>
     <string name="more_options">Daha fazla seçenek</string>
     <string name="date_added">Eklendiği tarih</string>
-    <string name="relevant_date_newest">En yeni alakalı tarih</string>
-    <string name="relevant_date_oldest">En eski alakalı tarih</string>
+    <string name="relevant_date_newest">En yeni ilgili tarih</string>
+    <string name="relevant_date_oldest">En eski ilgili tarih</string>
     <string name="selected">Seçildi</string>
     <string name="filter">Şuna göre sırala</string>
     <string name="libraries">Kütüphaneler</string>
@@ -78,4 +78,8 @@
     <string name="image">Görsel</string>
     <string name="no_barcode_format_given">Bir barkod formatı seçilmedi! Varsayılan olarak QR koda ayarlanıyor. Bu kod düzgün taranmayabilir.</string>
     <string name="to">Şuna</string>
+    <string name="help_translate">Çeviriye yardım et</string>
+    <string name="barcode_value_invalid">Belirtilen değer geçerli bir %1$s kodu değil</string>
+    <string name="choose_image">Resim seç</string>
+    <string name="clear_selection">Seçimi temizle</string>
 </resources>

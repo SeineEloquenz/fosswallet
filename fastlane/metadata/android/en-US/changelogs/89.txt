@@ -1,0 +1,1 @@
+* Fix regression preventing some boarding passes from being shown correctly

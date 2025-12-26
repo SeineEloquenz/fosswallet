@@ -65,4 +65,21 @@
     <string name="barcode_position_bottom">Внизу</string>
     <string name="pass_deleted">Пропуск удалён</string>
     <string name="pass_imported">Пропуск импортирован</string>
+    <string name="webview">Открыть ссылку</string>
+    <string name="create_pass">Создать пропуск</string>
+    <string name="pass_name">Название пропуска</string>
+    <string name="barcode_value">Значение штрихкода</string>
+    <string name="pass_type">Тип пропуска</string>
+    <string name="scan_barcode">Сканировать штрихкод</string>
+    <string name="generic_pass">Общий пропуск</string>
+    <string name="event">Билет на выступление</string>
+    <string name="coupon">Купон</string>
+    <string name="boarding_pass">Посадочный билет</string>
+    <string name="store_card">Карта магазина</string>
+    <string name="barcode_format">Формат штрихкода</string>
+    <string name="no_url_in_clipboard">Нет ссылки в буфере обмена</string>
+    <string name="barcode_value_invalid">Данное значение не является правильным кодом %1$s</string>
+    <string name="help_translate">Улучшите перевод</string>
+    <string name="choose_image">Выберите изображение</string>
+    <string name="clear_selection">Очистить выбор</string>
 </resources>
