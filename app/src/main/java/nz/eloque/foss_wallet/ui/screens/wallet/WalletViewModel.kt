@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
@@ -23,7 +26,11 @@ import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 
 data class QueryState(
-    val query: String = ""
+    var isAuthenticated: Boolean = false,
+    var isHidden: Boolean = false,
+    var isPinned: Boolean = false,
+    val query: String = "",
+    val passes: List<Pass> = ArrayList()
 )
 
 @HiltViewModel
@@ -44,7 +51,7 @@ class PassViewModel @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
-    fun filter(query: String) {
+    fun filter(query: String, authStatus: Boolean) {
         viewModelScope.launch {
             _queryState.value = _queryState.value.copy(query = query)
         }
@@ -62,6 +69,37 @@ class PassViewModel @Inject constructor(
 
     fun archive(pass: Pass) = passStore.archive(pass)
     fun unarchive(pass: Pass) = passStore.unarchive(pass)
+
+    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.hide(pass)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isHidden = true)
+        }
+    }
+    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.unhide(pass)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isHidden = false)
+        }
+    }
+    fun hidden(pass: Pass) { _uiState.value = _uiState.value.copy(isHidden = passStore.hidden(pass)) }
+
+    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.pin(pass)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isPinned = true)
+        }
+    }
+    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.unpin(pass)
+        withContext(Dispatchers.Main) {
+            _uiState.value = _uiState.value.copy(isPinned = false)
+        }
+    }
+    fun pinned(pass: Pass) { _uiState.value = _uiState.value.copy(isPinned = passStore.pinned(pass)) }
+
+    fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
+    fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
