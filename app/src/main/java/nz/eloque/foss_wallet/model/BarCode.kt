@@ -92,7 +92,7 @@ data class BarCode(
 
         fun fromJson(json: JSONObject): BarCode {
             return BarCode(
-                formatFromString(json.getString("format")),
+                BarcodeFormat.valueOf(json.getString("format")),
                 json.getString("message"),
                 Charset.forName(json.optString("messageEncoding", FALLBACK_CHARSET.toString())),
                 if (json.has("altText")) { json.getString("altText") } else { null }
@@ -100,10 +100,11 @@ data class BarCode(
         }
 
         fun formatFromString(format: String): BarcodeFormat {
-            return try {
-                BarcodeFormat.valueOf(format)
-            } catch (_: IllegalArgumentException) {
-                BarcodeFormat.QR_CODE
+            return when (format) {
+                "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
+                "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
+                "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
+                else -> BarcodeFormat.QR_CODE
             }
         }
     }
