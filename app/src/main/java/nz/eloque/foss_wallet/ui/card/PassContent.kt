@@ -24,6 +24,7 @@ fun ShortPassContent(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +54,8 @@ fun ShortPassContent(
         PassCardFooter(
             localizedPass = localizedPass,
             allTags = allTags,
-            onTagClick = onTagClick
+            onTagClick = onTagClick,
+            onTagAdd = onTagAdd,
         )
     }
 }
@@ -67,6 +69,7 @@ fun PassContent(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {}
@@ -98,7 +101,8 @@ fun PassContent(
         PassCardFooter(
             localizedPass = localizedPass,
             allTags = allTags,
-            onTagClick = onTagClick
+            onTagClick = onTagClick,
+            onTagAdd = onTagAdd,
         )
     }
 }

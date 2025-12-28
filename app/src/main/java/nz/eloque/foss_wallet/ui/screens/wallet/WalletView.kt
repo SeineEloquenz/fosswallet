@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
@@ -138,7 +139,7 @@ fun WalletView(
                     )
                     IconButton(
                         onClick = {
-                            coroutineScope.launch {
+                            coroutineScope.launch(Dispatchers.IO) {
                                 val tag = Tag("Test" + Random.nextInt(), Color(100, 100, 100))
                                 passViewModel.addTag(tag)
                             }
@@ -183,7 +184,8 @@ fun WalletView(
                     groupId = groupId!!,
                     passes = passes,
                     allTags = tags,
-                    onTagClick = { pass, tag -> passViewModel.untag(pass, tag) },
+                    onTagClick = { pass, tag -> coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(pass, tag) } },
+                    onTagAdd = { pass, tag -> coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(pass, tag) } },
                     onClick = {
                         navController.navigate("pass/${it.id}")
                     },
@@ -202,7 +204,8 @@ fun WalletView(
                     ShortPassCard(
                         pass = pass,
                         allTags = tags,
-                        onTagClick = { passViewModel.untag(pass.pass, it) },
+                        onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(pass.pass, it) } },
+                        onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(pass.pass, it) } },
                         onClick = {
                             navController.navigate("pass/${pass.pass.id}")
                         },

@@ -34,6 +34,7 @@ fun ShortPassCard(
     pass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -65,6 +66,7 @@ fun ShortPassCard(
                 cardColors = cardColors,
                 allTags = allTags,
                 onTagClick = onTagClick,
+                onTagAdd = onTagAdd,
             )
         }
         if (selected) {
@@ -94,6 +96,7 @@ fun PassCard(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -120,6 +123,7 @@ fun PassCard(
             cardColors = cardColors,
             allTags = allTags,
             onTagClick = onTagClick,
+            onTagAdd = onTagAdd,
             content = content,
         )
     }
@@ -149,5 +153,6 @@ private fun PasscardPreview() {
         localizedPass = LocalizedPassWithTags.placeholder(),
         allTags = setOf(Tag("Tag 1", Color(0, 0, 0)), Tag("Tag 2", Color(100, 100, 100))),
         onTagClick = {},
+        onTagAdd = {}
     ) {}
 }

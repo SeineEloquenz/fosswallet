@@ -44,6 +44,7 @@ fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
     onRenderingChange: () -> Unit,
@@ -66,6 +67,7 @@ fun PassView(
             localizedPass = localizedPass,
             allTags = allTags,
             onTagClick = onTagClick,
+            onTagAdd = onTagAdd,
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
@@ -156,6 +158,7 @@ private fun PassPreview() {
         localizedPass = LocalizedPassWithTags(pass, allTags),
         allTags = allTags,
         onTagClick = {},
+        onTagAdd = {},
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
         onRenderingChange = {}

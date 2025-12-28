@@ -80,9 +80,9 @@ class PassStore @Inject constructor(
 
     fun unarchive(pass: Pass) = passRepository.unarchive(pass)
 
-    fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
+    suspend fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
 
-    fun untag(pass: Pass, tag: Tag) = passRepository.untag(pass, tag)
+    suspend fun untag(pass: Pass, tag: Tag) = passRepository.untag(pass, tag)
 
     fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
 
