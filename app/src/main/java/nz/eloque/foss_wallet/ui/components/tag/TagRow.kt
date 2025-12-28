@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,7 +30,9 @@ import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 @Composable
 fun TagRow(
     tags: Set<Tag>,
-    tagsToShow: SnapshotStateList<Tag>,
+    selectedTag: Tag?,
+    onTagSelected: (Tag) -> Unit,
+    onTagDeselected: (Tag) -> Unit,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -47,9 +48,13 @@ fun TagRow(
     ) {
         ChipSelector(
             options = tags,
-            selectedOptions = tagsToShow,
-            onOptionSelected = { tagsToShow.add(it) },
-            onOptionDeselected = { tagsToShow.remove(it) },
+            selectedOptions = listOfNotNull(selectedTag),
+            onOptionSelected = { onTagSelected(it) },
+            onOptionDeselected = {
+                if (selectedTag == it) {
+                    onTagDeselected(it)
+                }
+            },
             optionLabel = { it.label },
             modifier = Modifier.weight(1f)
         )

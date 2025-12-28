@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -50,6 +51,7 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.ChipSelector
 import nz.eloque.foss_wallet.ui.components.FilterBar
@@ -79,7 +81,7 @@ fun WalletView(
     val tagFlow = passViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
-    val tagsToShow = remember { tags.toMutableStateList() }
+    val tagsToHide = remember { listOf<Tag>().toMutableStateList() }
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
@@ -99,6 +101,7 @@ fun WalletView(
             )
         }
     } else {
+        var tagToFilterFor by remember { mutableStateOf<Tag?>(null) }
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement
@@ -115,14 +118,6 @@ fun WalletView(
                     onOptionSelected = { passTypesToShow.add(it) },
                     onOptionDeselected = { passTypesToShow.remove(it) },
                     optionLabel = { context.getString(it.label) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item {
-                TagRow(
-                    tags = tags,
-                    tagsToShow = tagsToShow,
-                    passViewModel = passViewModel,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -147,8 +142,20 @@ fun WalletView(
                     )
                 }
             }
+
+            item {
+                TagRow(
+                    tags = tags,
+                    selectedTag = tagToFilterFor,
+                    onTagSelected = { tagToFilterFor = it },
+                    onTagDeselected = { tagToFilterFor = null },
+                    passViewModel = passViewModel,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             val sortedPasses = passes
                 .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
+                .filter { localizedPass -> tagToFilterFor == null || localizedPass.tags.contains(tagToFilterFor) }
                 .sortedWith(sortOption.value.comparator)
                 .groupBy { it.pass.groupId }.toList()
             val groups = sortedPasses.filter { it.first != null }
