@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithLocalization
 
 @Dao
@@ -54,6 +55,9 @@ interface PassDao {
             associate(pass.id, groupId)
         }
     }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun tag(crossRef: PassTagCrossRef)
 
     @Transaction
     fun dissociate(pass: Pass, groupId: Long) {

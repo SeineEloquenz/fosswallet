@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 
 class PassRepository @Inject constructor(
@@ -33,6 +35,8 @@ class PassRepository @Inject constructor(
     fun findById(id: String): PassWithLocalization? = passDao.findById(id)
 
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
+
+    fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
 
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {
         val id = pass.id
