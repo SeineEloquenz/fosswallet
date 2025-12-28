@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -29,7 +30,7 @@ import nz.eloque.foss_wallet.utils.darken
 
 @Composable
 fun ShortPassCard(
-    pass: Pass,
+    pass: LocalizedPassWithTags,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -37,7 +38,7 @@ fun ShortPassCard(
     barcodePosition: BarcodePosition,
     toned: Boolean = false
 ) {
-    val cardColors = passCardColors(pass.colors, toned)
+    val cardColors = passCardColors(pass.pass.colors, toned)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
     var showBarcode by remember { mutableStateOf(false) }
 
@@ -52,22 +53,22 @@ fun ShortPassCard(
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = {
-                        pass.barCodes.firstOrNull()?.let { showBarcode = true }
+                        pass.pass.barCodes.firstOrNull()?.let { showBarcode = true }
                     }
                 )
         ) {
-            ShortPassContent(pass, cardColors)
+            ShortPassContent(pass.pass, cardColors)
         }
         if (selected) {
             SelectionIndicator(Modifier.align(Alignment.TopEnd))
         }
     }
 
-    pass.barCodes.firstOrNull()?.let { barcode ->
+    pass.pass.barCodes.firstOrNull()?.let { barcode ->
         val image = barcode.encodeAsBitmap(
             if (barcode.is1d()) 3000 else 1000,
             1000,
-            pass.renderLegacy && barcode.hasLegacyRepresentation()
+            pass.pass.renderLegacy && barcode.hasLegacyRepresentation()
         )
 
         FullscreenBarcode(

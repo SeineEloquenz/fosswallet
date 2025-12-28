@@ -9,20 +9,20 @@ const val TIME_ADDED = "TimeAdded"
 const val RELEVANT_DATE_NEWEST = "RelevantDateNewest"
 const val RELEVANT_DATE_OLDEST = "RelevantDateOldest"
 
-private val oldestFirst = Comparator.comparing<Pass, ZonedDateTime?>(
-    { it.relevantDates.firstOrNull()?.startDate() },
+private val oldestFirst = Comparator.comparing<LocalizedPassWithTags, ZonedDateTime?>(
+    { it.pass.relevantDates.firstOrNull()?.startDate() },
     Comparator.nullsLast(Comparator.naturalOrder())
 )
 
-private val newestFirst = Comparator.comparing<Pass, ZonedDateTime?>(
-    { it.relevantDates.firstOrNull()?.startDate() },
+private val newestFirst = Comparator.comparing<LocalizedPassWithTags, ZonedDateTime?>(
+    { it.pass.relevantDates.firstOrNull()?.startDate() },
     Comparator.nullsLast(Comparator.reverseOrder())
 )
 
 
-sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val comparator: Comparator<Pass>) {
+sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val comparator: Comparator<LocalizedPassWithTags>) {
     object TimeAdded : SortOption(TIME_ADDED, R.string.date_added, Comparator { left, right ->
-        -left.addedAt.compareTo(right.addedAt)
+        -left.pass.addedAt.compareTo(right.pass.addedAt)
     })
     object RelevantDateNewest : SortOption(RELEVANT_DATE_NEWEST, R.string.relevant_date_newest, newestFirst)
     object RelevantDateOldest : SortOption(RELEVANT_DATE_OLDEST, R.string.relevant_date_oldest, oldestFirst)

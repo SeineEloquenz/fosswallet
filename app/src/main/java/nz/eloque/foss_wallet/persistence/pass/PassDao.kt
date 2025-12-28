@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassTagCrossRef
-import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
 
 @Dao
 interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass")
-    fun all(): Flow<List<PassWithLocalization>>
+    fun all(): Flow<List<PassWithTagsAndLocalization>>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
@@ -25,11 +25,11 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun flowById(id: String): Flow<PassWithLocalization?>
+    fun flowById(id: String): Flow<PassWithTagsAndLocalization?>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun findById(id: String): PassWithLocalization?
+    fun findById(id: String): PassWithTagsAndLocalization?
 
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
     fun associate(passId: String, groupId: Long)

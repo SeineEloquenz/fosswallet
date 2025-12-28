@@ -26,14 +26,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @Composable
 fun SelectionActions(
     isArchive: Boolean,
-    selectedPasses: SnapshotStateSet<Pass>,
+    selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
     passViewModel: PassViewModel,
 ) {
@@ -47,7 +47,7 @@ fun SelectionActions(
             containerColor = MaterialTheme.colorScheme.error,
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    selectedPasses.forEach { passViewModel.delete(it) }
+                    selectedPasses.forEach { passViewModel.delete(it.pass) }
                     selectedPasses.clear()
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
@@ -61,7 +61,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.unarchive(it) }
+                        selectedPasses.forEach { passViewModel.unarchive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -72,7 +72,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.archive(it) }
+                        selectedPasses.forEach { passViewModel.archive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -83,7 +83,7 @@ fun SelectionActions(
         FloatingActionButton(
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    share(selectedPasses, context)
+                    share(selectedPasses.map { it.pass }, context)
                 }
             },
         ) {
@@ -95,7 +95,7 @@ fun SelectionActions(
             expanded = listState.isScrollingUp(),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    passViewModel.group(selectedPasses.toSet())
+                    passViewModel.group(selectedPasses.map { it.pass }.toSet())
                     selectedPasses.clear()
                 }
             },

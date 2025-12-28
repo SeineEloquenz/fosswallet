@@ -51,7 +51,6 @@ import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.utils.asString
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +60,7 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
+    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.pass ?: Pass.placeholder() }
     val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
 
     AllowOnLockscreen {

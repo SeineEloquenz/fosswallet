@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
@@ -64,11 +64,11 @@ fun WalletView(
     archive: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-    selectedPasses: SnapshotStateSet<Pass>,
+    selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val context = LocalContext.current
     val passFlow = passViewModel.filteredPasses
-    val passes: List<Pass> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.archived } }.collectAsState(listOf())
+    val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
@@ -128,9 +128,9 @@ fun WalletView(
                 }
             }
             val sortedPasses = passes
-                .filter { pass -> passTypesToShow.any { pass.type.isSameType(it) } }
+                .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
                 .sortedWith(sortOption.value.comparator)
-                .groupBy { it.groupId }.toList()
+                .groupBy { it.pass.groupId }.toList()
             val groups = sortedPasses.filter { it.first != null }
             val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
             items(groups) { (groupId, passes) ->
@@ -155,7 +155,7 @@ fun WalletView(
                     ShortPassCard(
                         pass = pass,
                         onClick = {
-                            navController.navigate("pass/${pass.id}")
+                            navController.navigate("pass/${pass.pass.id}")
                         },
                         selected = selectedPasses.contains(pass),
                         barcodePosition = passViewModel.barcodePosition(),

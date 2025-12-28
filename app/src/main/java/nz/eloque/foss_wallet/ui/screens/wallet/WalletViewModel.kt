@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassWithLocalization
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
@@ -38,7 +36,7 @@ class PassViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
-    fun passFlowById(id: String): Flow<PassWithLocalization?> = passStore.passFlowById(id)
+    fun passFlowById(id: String) = passStore.passFlowById(id)
 
     fun group(passes: Set<Pass>) = passStore.group(passes)
 
