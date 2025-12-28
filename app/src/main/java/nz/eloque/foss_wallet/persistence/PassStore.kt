@@ -11,6 +11,7 @@ import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
@@ -78,6 +79,8 @@ class PassStore @Inject constructor(
     fun archive(pass: Pass) = passRepository.archive(pass)
 
     fun unarchive(pass: Pass) = passRepository.unarchive(pass)
+
+    fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
 
     fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
 

@@ -39,12 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
@@ -60,26 +61,26 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.pass ?: Pass.placeholder() }
-    val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
+    val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
+    val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
             snackbarHostState = snackbarHostState,
             navController = navController,
-            title = pass.description,
+            title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(pass, navController, snackbarHostState, passViewModel)
+                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
             },
         ) { scrollBehavior ->
             PassView(
-                pass = pass,
+                localizedPass = localizedPass,
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
-                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(pass) } },
+                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(localizedPass.pass) } },
             )
         }
     }

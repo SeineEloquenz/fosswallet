@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassContent
@@ -38,13 +39,15 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassView(
-    pass: Pass,
+    localizedPass: LocalizedPassWithTags,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
     onRenderingChange: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
+    val pass = localizedPass.pass
+
     val barCode = pass.barCodes.firstOrNull()
     val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
     val context = LocalContext.current
@@ -55,7 +58,7 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass) {
+        PassCard(localizedPass) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
@@ -138,7 +141,7 @@ private fun PassPreview() {
         ),
     )
     PassView(
-        pass = pass,
+        localizedPass = LocalizedPassWithTags(pass, setOf()),
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
         onRenderingChange = {})

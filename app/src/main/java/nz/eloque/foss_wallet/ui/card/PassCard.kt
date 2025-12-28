@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
@@ -57,7 +56,7 @@ fun ShortPassCard(
                     }
                 )
         ) {
-            ShortPassContent(pass.pass, cardColors)
+            ShortPassContent(pass, cardColors)
         }
         if (selected) {
             SelectionIndicator(Modifier.align(Alignment.TopEnd))
@@ -83,12 +82,14 @@ fun ShortPassCard(
 
 @Composable
 fun PassCard(
-    pass: Pass,
+    localizedPass: LocalizedPassWithTags,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
     content: @Composable () -> Unit = {}
 ) {
+    val pass = localizedPass.pass
+
     val cardColors = passCardColors(pass.colors)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
@@ -103,7 +104,7 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(pass, cardColors, Modifier, content)
+        PassContent(localizedPass, cardColors, Modifier, content)
     }
 }
 
@@ -128,6 +129,6 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
 @Composable
 private fun PasscardPreview() {
     PassCard(
-        pass = Pass.placeholder(),
+        localizedPass = LocalizedPassWithTags.placeholder(),
     ) {}
 }

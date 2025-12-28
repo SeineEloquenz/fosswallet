@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
@@ -20,11 +20,13 @@ import nz.eloque.foss_wallet.ui.screens.pass.AsyncPassImage
 
 @Composable
 fun ShortPassContent(
-    pass: Pass,
+    localizedPass: LocalizedPassWithTags,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+
+    val pass = localizedPass.pass
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = modifier
@@ -45,7 +47,7 @@ fun ShortPassContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        DateLocationRow(pass)
+        PassCardFooter(localizedPass)
     }
 }
 
@@ -55,12 +57,13 @@ private fun List<PassField>.empty(): Boolean {
 
 @Composable
 fun PassContent(
-    pass: Pass,
+    localizedPass: LocalizedPassWithTags,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val pass = localizedPass.pass
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -83,6 +86,6 @@ fun PassContent(
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
         content()
-        DateLocationRow(pass)
+        PassCardFooter(localizedPass)
     }
 }
