@@ -139,6 +139,8 @@
         <service
             android:name=".quick_settings.WalletTileService"
             android:exported="true"
+            android:label="@string/app_name"
+            android:icon="@drawable/qs_icon"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
 
             <intent-filter>
