@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.components
+package nz.eloque.foss_wallet.ui.components.tag
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,8 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.ui.card.TagChooser
-import nz.eloque.foss_wallet.ui.card.TagCreator
+import nz.eloque.foss_wallet.ui.components.ChipSelector
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

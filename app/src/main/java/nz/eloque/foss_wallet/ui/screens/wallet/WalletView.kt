@@ -56,7 +56,7 @@ import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
-import nz.eloque.foss_wallet.ui.components.TagRow
+import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

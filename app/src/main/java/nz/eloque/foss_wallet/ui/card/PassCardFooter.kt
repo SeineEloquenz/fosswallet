@@ -27,6 +27,7 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
+import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 
 
 @OptIn(ExperimentalMaterial3Api::class)
