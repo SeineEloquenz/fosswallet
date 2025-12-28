@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +21,7 @@ fun TagChooser(
         modifier = modifier,
     ) {
         tags.forEach { tag ->
-            ElevatedButton(onClick = {
+            Button(onClick = {
                 onSelected(tag)
             }) {
                 Text(

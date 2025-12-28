@@ -96,7 +96,8 @@ fun PassCardFooter(
                     onSelected = {
                         onTagAdd(it)
                         tagChooserShown = false
-                    }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
