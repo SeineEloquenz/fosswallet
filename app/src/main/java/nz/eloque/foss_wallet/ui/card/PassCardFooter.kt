@@ -52,8 +52,6 @@ fun PassCardFooter(
 
         var tagChooserShown by remember { mutableStateOf(false) }
 
-        Spacer(modifier = Modifier.width(8.dp))
-
         if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
             val interval: PassRelevantDate.DateInterval = pass.relevantDates.filter {
                 it is PassRelevantDate.DateInterval
@@ -74,6 +72,8 @@ fun PassCardFooter(
             )
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
+
+        Spacer(modifier = Modifier.width(8.dp))
 
         val chipColors = FilterChipDefaults.filterChipColors()
         ChipRow(
