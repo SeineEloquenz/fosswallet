@@ -23,6 +23,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
+import nz.eloque.foss_wallet.ui.components.PinIndicator
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 import nz.eloque.foss_wallet.utils.darken
 
@@ -58,9 +59,8 @@ fun ShortPassCard(
         ) {
             ShortPassContent(pass, cardColors)
         }
-        if (selected) {
-            SelectionIndicator(Modifier.align(Alignment.TopEnd))
-        }
+        if (pass.pinned) { PinIndicator(Modifier.align(Alignment.TopStart)) }
+        if (selected) { SelectionIndicator(Modifier.align(Alignment.TopEnd)) }
     }
 
     pass.barCodes.firstOrNull()?.let { barcode ->
