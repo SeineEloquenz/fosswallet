@@ -1,8 +1,15 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,9 +24,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -101,7 +112,9 @@ fun WalletView(
             )
         }
     } else {
+        var filtersShown by remember { mutableStateOf(false) }
         var tagToFilterFor by remember { mutableStateOf<Tag?>(null) }
+
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement
@@ -112,20 +125,11 @@ fun WalletView(
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             item {
-                ChipSelector(
-                    options = PassType.all(),
-                    selectedOptions = passTypesToShow,
-                    onOptionSelected = { passTypesToShow.add(it) },
-                    onOptionDeselected = { passTypesToShow.remove(it) },
-                    optionLabel = { context.getString(it.label) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+
                     FilterBar(
                         onSearch = { passViewModel.filter(it) },
                         modifier = Modifier
@@ -140,19 +144,52 @@ fun WalletView(
                         onOptionSelected = { sortOption.value = it },
                         optionLabel = { context.getString(it.l18n) }
                     )
+                    IconButton(onClick = {
+                        filtersShown = !filtersShown
+                    }) {
+                        if (filtersShown) {
+                            Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.collapse))
+                        } else {
+                            Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.expand))
+                        }
+                    }
+                }
+            }
+            item {
+                AnimatedVisibility(
+                    visible = filtersShown,
+                    enter = expandVertically(
+                        animationSpec = tween(durationMillis = 300)
+                    ) + fadeIn(animationSpec = tween(300)),
+                    exit = shrinkVertically(
+                        animationSpec = tween(durationMillis = 300)
+                    ) + fadeOut(animationSpec = tween(300))
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ChipSelector(
+                            options = PassType.all(),
+                            selectedOptions = passTypesToShow,
+                            onOptionSelected = { passTypesToShow.add(it) },
+                            onOptionDeselected = { passTypesToShow.remove(it) },
+                            optionLabel = { context.getString(it.label) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        TagRow(
+                            tags = tags,
+                            selectedTag = tagToFilterFor,
+                            onTagSelected = { tagToFilterFor = it },
+                            onTagDeselected = { tagToFilterFor = null },
+                            passViewModel = passViewModel,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
 
-            item {
-                TagRow(
-                    tags = tags,
-                    selectedTag = tagToFilterFor,
-                    onTagSelected = { tagToFilterFor = it },
-                    onTagDeselected = { tagToFilterFor = null },
-                    passViewModel = passViewModel,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
             val sortedPasses = passes
                 .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
                 .filter { localizedPass -> tagToFilterFor == null || localizedPass.tags.contains(tagToFilterFor) }
