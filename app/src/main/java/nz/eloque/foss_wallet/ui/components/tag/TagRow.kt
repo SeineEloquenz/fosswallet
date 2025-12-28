@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -56,7 +57,8 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            selectedIcon = Icons.Default.FilterAlt,
         )
         IconButton(
             onClick = {
