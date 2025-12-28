@@ -18,9 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
@@ -30,6 +32,8 @@ import nz.eloque.foss_wallet.utils.darken
 @Composable
 fun ShortPassCard(
     pass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -56,7 +60,12 @@ fun ShortPassCard(
                     }
                 )
         ) {
-            ShortPassContent(pass, cardColors)
+            ShortPassContent(
+                localizedPass = pass,
+                cardColors = cardColors,
+                allTags = allTags,
+                onTagClick = onTagClick,
+            )
         }
         if (selected) {
             SelectionIndicator(Modifier.align(Alignment.TopEnd))
@@ -83,6 +92,8 @@ fun ShortPassCard(
 @Composable
 fun PassCard(
     localizedPass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -104,7 +115,13 @@ fun PassCard(
                 onClick = onClick
             )
     ) {
-        PassContent(localizedPass, cardColors, Modifier, content)
+        PassContent(
+            localizedPass = localizedPass,
+            cardColors = cardColors,
+            allTags = allTags,
+            onTagClick = onTagClick,
+            content = content,
+        )
     }
 }
 
@@ -130,5 +147,7 @@ fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors 
 private fun PasscardPreview() {
     PassCard(
         localizedPass = LocalizedPassWithTags.placeholder(),
+        allTags = setOf(Tag("Tag 1", Color(0, 0, 0)), Tag("Tag 2", Color(100, 100, 100))),
+        onTagClick = {},
     ) {}
 }

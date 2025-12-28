@@ -59,6 +59,9 @@ interface PassDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun tag(crossRef: PassTagCrossRef)
 
+    @Delete
+    fun untag(crossRef: PassTagCrossRef)
+
     @Transaction
     fun dissociate(pass: Pass, groupId: Long) {
         dissociate(pass.id)

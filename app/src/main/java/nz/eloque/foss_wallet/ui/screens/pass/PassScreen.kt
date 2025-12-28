@@ -64,6 +64,9 @@ fun PassScreen(
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
+    val tagFlow = passViewModel.allTags
+    val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
+
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
@@ -77,6 +80,8 @@ fun PassScreen(
         ) { scrollBehavior ->
             PassView(
                 localizedPass = localizedPass,
+                allTags = allTags,
+                onTagClick = { passViewModel.untag(localizedPass.pass, it) },
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),

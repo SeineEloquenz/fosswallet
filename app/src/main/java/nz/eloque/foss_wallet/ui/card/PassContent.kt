@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.card.primary.AirlineBoardingPrimary
@@ -21,6 +22,8 @@ import nz.eloque.foss_wallet.ui.screens.pass.AsyncPassImage
 @Composable
 fun ShortPassContent(
     localizedPass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
 ) {
@@ -47,7 +50,11 @@ fun ShortPassContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        PassCardFooter(localizedPass)
+        PassCardFooter(
+            localizedPass = localizedPass,
+            allTags = allTags,
+            onTagClick = onTagClick
+        )
     }
 }
 
@@ -58,6 +65,8 @@ private fun List<PassField>.empty(): Boolean {
 @Composable
 fun PassContent(
     localizedPass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {}
@@ -86,6 +95,10 @@ fun PassContent(
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)
         content()
-        PassCardFooter(localizedPass)
+        PassCardFooter(
+            localizedPass = localizedPass,
+            allTags = allTags,
+            onTagClick = onTagClick
+        )
     }
 }

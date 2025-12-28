@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
@@ -49,6 +50,8 @@ import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 fun GroupCard(
     groupId: Long,
     passes: List<LocalizedPassWithTags>,
+    allTags: Set<Tag>,
+    onTagClick: (Pass, Tag) -> Unit,
     selectedPasses: MutableSet<LocalizedPassWithTags>,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
@@ -75,6 +78,8 @@ fun GroupCard(
                 val item = passes[index]
                 ShortPassCard(
                     pass = item,
+                    allTags = allTags,
+                    onTagClick = { onTagClick(item.pass, it) },
                     onClick = { onClick.invoke(item.pass) },
                     toned = true,
                     barcodePosition = passViewModel.barcodePosition(),

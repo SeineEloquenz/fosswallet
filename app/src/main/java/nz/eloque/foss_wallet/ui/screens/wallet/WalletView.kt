@@ -81,7 +81,7 @@ fun WalletView(
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
     val tagFlow = passViewModel.allTags
-    val tags by tagFlow.collectAsState(listOf())
+    val tags by tagFlow.collectAsState(setOf())
 
     val tagsToShow = remember { tags.toMutableStateList() }
 
@@ -180,8 +180,10 @@ fun WalletView(
             val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
             items(groups) { (groupId, passes) ->
                 GroupCard(
-                    groupId!!,
-                    passes,
+                    groupId = groupId!!,
+                    passes = passes,
+                    allTags = tags,
+                    onTagClick = { pass, tag -> passViewModel.untag(pass, tag) },
                     onClick = {
                         navController.navigate("pass/${it.id}")
                     },
@@ -199,6 +201,8 @@ fun WalletView(
                 ) {
                     ShortPassCard(
                         pass = pass,
+                        allTags = tags,
+                        onTagClick = { passViewModel.untag(pass.pass, it) },
                         onClick = {
                             navController.navigate("pass/${pass.pass.id}")
                         },

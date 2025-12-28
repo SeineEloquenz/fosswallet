@@ -40,6 +40,8 @@ class PassRepository @Inject constructor(
 
     fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
 
+    fun untag(pass: Pass, tag: Tag) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
+
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {
         val id = pass.id
         passDao.insert(pass)

@@ -17,8 +17,8 @@ import nz.eloque.foss_wallet.R
 
 @Composable
 fun <T> ChipSelector(
-    options: List<T>,
-    selectedOptions: List<T>,
+    options: Collection<T>,
+    selectedOptions: Collection<T>,
     onOptionSelected: (T) -> Unit,
     onOptionDeselected: (T) -> Unit,
     optionLabel: (T) -> String,

@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -28,6 +29,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -40,6 +42,8 @@ import java.time.Instant
 @Composable
 fun PassView(
     localizedPass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
     onRenderingChange: () -> Unit,
@@ -58,7 +62,11 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(localizedPass) {
+        PassCard(
+            localizedPass = localizedPass,
+            allTags = allTags,
+            onTagClick = onTagClick,
+        ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
@@ -110,6 +118,10 @@ fun PassView(
 @Preview
 @Composable
 private fun PassPreview() {
+    val kscTag = Tag("KSC", Color.Blue)
+    val gameTag = Tag("Spiel", Color.Red)
+    val allTags = setOf(kscTag, gameTag)
+
     val pass = Pass(
         "",
         "KSC - SV Elversberg",
@@ -141,8 +153,11 @@ private fun PassPreview() {
         ),
     )
     PassView(
-        localizedPass = LocalizedPassWithTags(pass, setOf()),
+        localizedPass = LocalizedPassWithTags(pass, allTags),
+        allTags = allTags,
+        onTagClick = {},
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
-        onRenderingChange = {})
+        onRenderingChange = {}
+    )
 }
