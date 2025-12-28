@@ -57,6 +57,8 @@ class PassViewModel @Inject constructor(
 
     suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
 
+    suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
+
     suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
 
     suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)

@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.persistence.tag
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -17,4 +18,7 @@ interface TagDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tag: Tag)
+
+    @Delete
+    suspend fun remove(tag: Tag)
 }
