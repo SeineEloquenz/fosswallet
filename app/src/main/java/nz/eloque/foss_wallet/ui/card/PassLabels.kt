@@ -136,15 +136,13 @@ private fun PassLabelContents(
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
-            SelectionContainer {
-                val contentString = content.prettyPrint().sanitize()
-                Text(
-                    text = if (contentString.isNotEmpty()) {
-                        AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = labelAlign.textAlign,
-                )
-            }
+            val contentString = content.prettyPrint().sanitize()
+            Text(
+                text = if (contentString.isNotEmpty()) {
+                    AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = labelAlign.textAlign,
+            )
         }
     }
 }
