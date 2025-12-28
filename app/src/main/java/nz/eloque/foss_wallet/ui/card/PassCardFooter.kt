@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -18,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
@@ -71,10 +74,19 @@ fun PassCardFooter(
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
 
+        val chipColors = FilterChipDefaults.filterChipColors()
         ChipRow(
             options = tags,
             onOptionClick = { onTagClick(it) },
             optionLabel = { it.label },
+            optionColors = {
+                val contentColor = readableTextColor(it.color)
+                chipColors.copy(
+                    containerColor = it.color,
+                    labelColor = contentColor,
+                    leadingIconColor = contentColor
+                )
+            },
             modifier = Modifier.weight(1f)
         )
 
@@ -102,4 +114,8 @@ fun PassCardFooter(
             }
         }
     }
+}
+
+fun readableTextColor(background: Color): Color {
+    return if (background.luminance() > 0.5f) Color.Black else Color.White
 }
