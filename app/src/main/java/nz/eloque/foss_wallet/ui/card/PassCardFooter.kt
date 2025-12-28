@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -85,6 +86,13 @@ fun PassCardFooter(
                     containerColor = it.color,
                     labelColor = contentColor,
                     leadingIconColor = contentColor
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.remove_tag),
+                    tint = readableTextColor(it.color)
                 )
             },
             modifier = Modifier.weight(1f)

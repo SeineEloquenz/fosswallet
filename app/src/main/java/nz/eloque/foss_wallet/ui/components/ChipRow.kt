@@ -17,8 +17,8 @@ fun <T> ChipRow(
     onOptionClick: (T) -> Unit,
     optionLabel: (T) -> String,
     optionColors: (T) -> SelectableChipColors,
-    leadingIcon: @Composable () -> Unit = {},
-    trailingIcon: @Composable () -> Unit = {},
+    leadingIcon: @Composable (T) -> Unit = {},
+    trailingIcon: @Composable (T) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -29,8 +29,8 @@ fun <T> ChipRow(
         options.forEach { option ->
             FilterChip(
                 selected = false,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
+                leadingIcon = { leadingIcon(option) },
+                trailingIcon = { trailingIcon(option) },
                 onClick = { onOptionClick(option) },
                 label = { Text(optionLabel(option)) },
                 colors = optionColors(option)
