@@ -16,5 +16,5 @@ interface TagDao {
     fun all(): Flow<List<Tag>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(tag: Tag)
+    suspend fun insert(tag: Tag)
 }

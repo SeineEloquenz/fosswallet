@@ -9,5 +9,6 @@ class TagRepository @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val tagDao: TagDao
 ) {
-    fun insert(tag: Tag) = tagDao.insert(tag)
+    fun all() = tagDao.all()
+    suspend fun insert(tag: Tag) = tagDao.insert(tag)
 }

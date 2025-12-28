@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.components
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -22,13 +21,13 @@ fun <T> ChipSelector(
     selectedOptions: List<T>,
     onOptionSelected: (T) -> Unit,
     onOptionDeselected: (T) -> Unit,
-    optionLabel: (T) -> String
+    optionLabel: (T) -> String,
+    modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
+        modifier = modifier
             .horizontalScroll(rememberScrollState())
-            .fillMaxWidth()
     ) {
         options.forEach { option ->
             val selected = selectedOptions.contains(option)

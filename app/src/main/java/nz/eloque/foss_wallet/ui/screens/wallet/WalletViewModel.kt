@@ -15,10 +15,12 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
+import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 data class QueryState(
     val query: String = ""
@@ -28,13 +30,16 @@ data class QueryState(
 class PassViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
+    private val tagRepository: TagRepository,
     private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
     private val _queryState = MutableStateFlow(QueryState())
-    val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
+    private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
+
+    val allTags = tagRepository.all()
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
 
@@ -49,6 +54,8 @@ class PassViewModel @Inject constructor(
     }
 
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
+
+    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
 

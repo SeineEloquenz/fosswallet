@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -28,11 +31,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,17 +47,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.ChipSelector
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,8 +75,15 @@ fun WalletView(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     val passFlow = passViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
+
+    val tagFlow = passViewModel.allTags
+    val tags by tagFlow.collectAsState(listOf())
+
+    val tagsToShow = remember { tags.toMutableStateList() }
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
@@ -103,8 +118,38 @@ fun WalletView(
                     selectedOptions = passTypesToShow,
                     onOptionSelected = { passTypesToShow.add(it) },
                     onOptionDeselected = { passTypesToShow.remove(it) },
-                    optionLabel = { context.getString(it.label) }
+                    optionLabel = { context.getString(it.label) },
+                    modifier = Modifier.fillMaxWidth()
                 )
+            }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ChipSelector(
+                        options = tags,
+                        selectedOptions = tagsToShow,
+                        onOptionSelected = { tagsToShow.add(it) },
+                        onOptionDeselected = { tagsToShow.remove(it) },
+                        optionLabel = { it.label },
+                        modifier = Modifier.fillMaxWidth(0.87f)
+                    )
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                val tag = Tag("Test" + Random.nextInt(), Color(100, 100, 100))
+                                passViewModel.addTag(tag)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.add_tag)
+                        )
+                    }
+                }
             }
             item {
                 Row(
