@@ -135,7 +135,7 @@ fun WalletView(
                         onOptionSelected = { tagsToShow.add(it) },
                         onOptionDeselected = { tagsToShow.remove(it) },
                         optionLabel = { it.label },
-                        modifier = Modifier.fillMaxWidth(0.87f)
+                        modifier = Modifier.weight(1f)
                     )
                     IconButton(
                         onClick = {

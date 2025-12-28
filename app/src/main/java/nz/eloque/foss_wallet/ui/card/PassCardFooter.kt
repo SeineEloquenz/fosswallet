@@ -74,9 +74,8 @@ fun PassCardFooter(
             options = tags,
             onOptionClick = { onTagClick(it) },
             optionLabel = { it.label },
+            modifier = Modifier.weight(1f)
         )
-
-        Spacer(modifier = Modifier.weight(1f))
 
         IconButton(onClick = {
             tagChooserShown = true
