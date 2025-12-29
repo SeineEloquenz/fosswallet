@@ -70,7 +70,7 @@ fun WalletScreen(
     val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val loading = remember { mutableStateOf(false) }
-    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by passViewModel.queryState.collectAsStateWithLifecycle()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
         println("selected file URI $uris")
@@ -168,7 +168,7 @@ fun WalletScreen(
                                         return@launch
                                     }
 
-                                    for(i in 0..<entry.clipData.itemCount) {
+                                    for(i in 0 until entry.clipData.itemCount) {
                                         val item = entry.clipData.getItemAt(i);
                                         val string = item?.text.toString();
                                         if(string.startsWith("https://") || string.startsWith("http://")) {
