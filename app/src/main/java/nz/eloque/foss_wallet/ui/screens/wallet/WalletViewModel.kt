@@ -26,9 +26,9 @@ import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 
 data class QueryState(
-    var isAuthenticated: Boolean = false,
-    var isHidden: Boolean = false,
-    var isPinned: Boolean = false,
+    val isAuthenticated: Boolean = false,
+    val isHidden: Boolean = false,
+    val isPinned: Boolean = false,
     val query: String = "",
     val passes: List<Pass> = ArrayList()
 )
@@ -43,7 +43,7 @@ class PassViewModel @Inject constructor(
     private val _queryState = MutableStateFlow(QueryState())
     val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
-    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
+    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query, it.isAuthenticated) }
 
     fun passFlowById(id: String): Flow<PassWithLocalization?> = passStore.passFlowById(id)
 
@@ -52,8 +52,8 @@ class PassViewModel @Inject constructor(
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
     fun filter(query: String, authStatus: Boolean) {
-        viewModelScope.launch {
-            _queryState.value = _queryState.value.copy(query = query)
+        viewModelScope.launch { 
+            _queryState.value = _queryState.value.copy(query = query, isAuthenticated = authStatus)
         }
     }
 
