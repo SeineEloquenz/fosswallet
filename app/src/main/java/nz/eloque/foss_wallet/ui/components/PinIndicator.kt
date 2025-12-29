@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -29,7 +29,7 @@ fun PinIndicator(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector = Icons.Default.Star,
+            imageVector = Icons.Default.PushPin,
             contentDescription = stringResource(R.string.pinned),
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.size(16.dp)
