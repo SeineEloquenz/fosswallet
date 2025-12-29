@@ -120,7 +120,7 @@ fun Actions(
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
-    val uiState by passViewModel.QueryState.collectAsStateWithLifecycle()
+    val queryState by passViewModel.QueryState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -134,7 +134,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (uiState.isPinned) {
+            if (queryState.isPinned) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unpin)) },
                     leadingIcon = {
@@ -209,7 +209,7 @@ fun Actions(
                 }
             }
 
-            if (uiState.isHidden) {
+            if (queryState.isHidden) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unhide)) },
                     leadingIcon = {
@@ -219,7 +219,7 @@ fun Actions(
                         )
                     },
                     onClick = {
-                        if (uiState.isAuthenticated) {
+                        if (queryState.isAuthenticated) {
                             passViewModel.unhide(pass)
                         } else {
                             biometric.prompt(
@@ -239,7 +239,7 @@ fun Actions(
                         )
                     },
                     onClick = {
-                        if (uiState.isAuthenticated) {
+                        if (queryState.isAuthenticated) {
                             passViewModel.hide(pass)
                         } else {
                             biometric.prompt(
