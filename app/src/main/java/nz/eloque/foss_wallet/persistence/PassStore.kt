@@ -38,7 +38,7 @@ class PassStore @Inject constructor(
     
     fun passFlowById(id: String) = passRepository.flowById(id)
 
-    fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun create(pass: Pass, bitmaps: PassBitmaps) {
         passRepository.insert(pass, bitmaps, null)
