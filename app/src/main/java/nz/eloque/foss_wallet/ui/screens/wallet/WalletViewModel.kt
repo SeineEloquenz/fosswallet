@@ -73,33 +73,33 @@ class PassViewModel @Inject constructor(
     fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.hide(pass)
         withContext(Dispatchers.Main) {
-            _uiState.value = _uiState.value.copy(isHidden = true)
+            _queryState.value = _queryState.value.copy(isHidden = true)
         }
     }
     fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unhide(pass)
         withContext(Dispatchers.Main) {
-            _uiState.value = _uiState.value.copy(isHidden = false)
+            _queryState.value = _queryState.value.copy(isHidden = false)
         }
     }
-    fun hidden(pass: Pass) { _uiState.value = _uiState.value.copy(isHidden = passStore.hidden(pass)) }
+    fun hidden(pass: Pass) { _queryState.value = _queryState.value.copy(isHidden = passStore.hidden(pass)) }
 
     fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)
         withContext(Dispatchers.Main) {
-            _uiState.value = _uiState.value.copy(isPinned = true)
+            _queryState.value = _queryState.value.copy(isPinned = true)
         }
     }
     fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unpin(pass)
         withContext(Dispatchers.Main) {
-            _uiState.value = _uiState.value.copy(isPinned = false)
+            _queryState.value = _queryState.value.copy(isPinned = false)
         }
     }
-    fun pinned(pass: Pass) { _uiState.value = _uiState.value.copy(isPinned = passStore.pinned(pass)) }
+    fun pinned(pass: Pass) { _queryState.value = _queryState.value.copy(isPinned = passStore.pinned(pass)) }
 
-    fun reveal() { _uiState.value = _uiState.value.copy(isAuthenticated = true) }
-    fun conceal() { _uiState.value = _uiState.value.copy(isAuthenticated = false) }
+    fun reveal() { _queryState.value = _queryState.value.copy(isAuthenticated = true) }
+    fun conceal() { _queryState.value = _queryState.value.copy(isAuthenticated = false) }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
