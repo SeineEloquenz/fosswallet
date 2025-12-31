@@ -17,9 +17,9 @@ fun <T> ChipRow(
     onOptionClick: (T) -> Unit,
     optionLabel: (T) -> String,
     optionColors: (T) -> SelectableChipColors,
+    modifier: Modifier = Modifier,
     leadingIcon: @Composable (T) -> Unit = {},
     trailingIcon: @Composable (T) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
