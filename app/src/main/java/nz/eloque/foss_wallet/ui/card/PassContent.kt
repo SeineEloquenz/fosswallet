@@ -54,8 +54,7 @@ fun ShortPassContent(
         PassCardFooter(
             localizedPass = localizedPass,
             allTags = allTags,
-            onTagClick = onTagClick,
-            onTagAdd = onTagAdd,
+            readOnly = true,
         )
     }
 }

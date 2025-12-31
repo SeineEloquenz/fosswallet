@@ -39,8 +39,9 @@ import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 fun PassCardFooter(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
-    onTagClick: (Tag) -> Unit,
-    onTagAdd: (Tag) -> Unit,
+    onTagClick: (Tag) -> Unit = {},
+    onTagAdd: (Tag) -> Unit = {},
+    readOnly: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +79,11 @@ fun PassCardFooter(
         val chipColors = FilterChipDefaults.filterChipColors()
         ChipRow(
             options = tags,
-            onOptionClick = { onTagClick(it) },
+            onOptionClick = {
+                if (!readOnly) {
+                    onTagClick(it)
+                }
+            },
             optionLabel = { it.label },
             optionColors = {
                 val contentColor = readableTextColor(it.color)
@@ -89,22 +94,26 @@ fun PassCardFooter(
                 )
             },
             trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.remove_tag),
-                    tint = readableTextColor(it.color)
-                )
+                if (!readOnly) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.remove_tag),
+                        tint = readableTextColor(it.color)
+                    )
+                }
             },
             modifier = Modifier.weight(1f)
         )
 
-        IconButton(onClick = {
-            tagChooserShown = true
-        }) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.add_tag)
-            )
+        if (!readOnly) {
+            IconButton(onClick = {
+                tagChooserShown = true
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.add_tag)
+                )
+            }
         }
 
         if (tagChooserShown) {
