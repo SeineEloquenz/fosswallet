@@ -20,8 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
@@ -87,7 +85,7 @@ fun PassCardFooter(
             },
             optionLabel = { it.label },
             optionColors = {
-                val contentColor = readableTextColor(it.color)
+                val contentColor = it.contentColor()
                 chipColors.copy(
                     containerColor = it.color,
                     labelColor = contentColor,
@@ -99,7 +97,7 @@ fun PassCardFooter(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.remove_tag),
-                        tint = readableTextColor(it.color)
+                        tint = it.contentColor()
                     )
                 }
             },
@@ -133,8 +131,4 @@ fun PassCardFooter(
             }
         }
     }
-}
-
-fun readableTextColor(background: Color): Color {
-    return if (background.luminance() > 0.5f) Color.Black else Color.White
 }
