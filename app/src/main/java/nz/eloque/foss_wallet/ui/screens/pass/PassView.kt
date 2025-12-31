@@ -19,14 +19,17 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -38,13 +41,19 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassView(
-    pass: Pass,
+    localizedPass: LocalizedPassWithTags,
+    allTags: Set<Tag>,
+    onTagClick: (Tag) -> Unit,
+    onTagAdd: (Tag) -> Unit,
+    onTagCreate: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
     onRenderingChange: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
+    val pass = localizedPass.pass
+
     val barCode = pass.barCodes.firstOrNull()
     val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
     val context = LocalContext.current
@@ -55,7 +64,13 @@ fun PassView(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
     ) {
-        PassCard(pass) {
+        PassCard(
+            localizedPass = localizedPass,
+            allTags = allTags,
+            onTagClick = onTagClick,
+            onTagAdd = onTagAdd,
+            onTagCreate = onTagCreate
+        ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
@@ -107,6 +122,10 @@ fun PassView(
 @Preview
 @Composable
 private fun PassPreview() {
+    val kscTag = Tag("KSC", Color.Blue)
+    val gameTag = Tag("Spiel", Color.Red)
+    val allTags = setOf(kscTag, gameTag)
+
     val pass = Pass(
         "",
         "KSC - SV Elversberg",
@@ -138,8 +157,13 @@ private fun PassPreview() {
         ),
     )
     PassView(
-        pass = pass,
+        localizedPass = LocalizedPassWithTags(pass, allTags),
+        allTags = allTags,
+        onTagClick = {},
+        onTagAdd = {},
+        onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
-        onRenderingChange = {})
+        onRenderingChange = {}
+    )
 }

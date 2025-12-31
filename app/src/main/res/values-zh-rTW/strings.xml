@@ -65,4 +65,17 @@
     <string name="barcode_position_bottom">底部</string>
     <string name="pass_deleted">成功刪除通行證</string>
     <string name="pass_imported">成功匯入通行證</string>
+    <string name="webview">開啟網址</string>
+    <string name="create_pass">建立 Pass</string>
+    <string name="pass_name">Pass 名稱</string>
+    <string name="barcode_value">條碼內容</string>
+    <string name="pass_type">Pass 類型</string>
+    <string name="scan_barcode">掃描條碼</string>
+    <string name="generic_pass">通用 Pass</string>
+    <string name="event">活動票券</string>
+    <string name="coupon">優惠券</string>
+    <string name="boarding_pass">登機證</string>
+    <string name="store_card">會員卡</string>
+    <string name="barcode_format">條碼格式</string>
+    <string name="no_url_in_clipboard">剪貼簿中沒有網址</string>
 </resources>

@@ -1,0 +1,5 @@
+* Chips zur Wallet-Ansicht hinzugefügt, um Pässe nach Typ zu filtern
+* Symbol-/Logo-Auswahl zum Pass-Ersteller hinzugefügt
+* Standard-Hintergrundfarbe für Pässe leicht geändert
+* Übersetzungen aktualisiert
+* Scrollposition in der Wallet-Ansicht bei Zurück-Navigation korrigiert

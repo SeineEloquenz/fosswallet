@@ -17,6 +17,8 @@ import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
+import nz.eloque.foss_wallet.persistence.tag.TagDao
+import nz.eloque.foss_wallet.persistence.tag.TagRepository
 import java.util.concurrent.Callable
 
 
@@ -32,6 +34,11 @@ object AppModule {
     @Provides
     fun providePassRepository(@ApplicationContext context: Context, passDao: PassDao): PassRepository {
         return PassRepository(context, passDao)
+    }
+
+    @Provides
+    fun provideTagRepository(@ApplicationContext context: Context, tagDao: TagDao): TagRepository {
+        return TagRepository(context, tagDao)
     }
 
     @Provides
@@ -56,6 +63,11 @@ object AppModule {
     @Provides
     fun provideLocalizationDAo(walletDb: WalletDb): PassLocalizationDao {
         return walletDb.localizationDao()
+    }
+
+    @Provides
+    fun provideTagDao(walletDb: WalletDb): TagDao {
+        return walletDb.tagDao()
     }
 
     @Provides

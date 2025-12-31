@@ -1,0 +1,9 @@
+* Přidán iOS WebView pro stahování lístků
+* Přidána základní funkce tvorby lístků. Upozornění: tyto lístky nemohou být zatím exportovány
+* Podpora dlouhého podržení lístků pro otevření čárového kódu na celé obrazovce
+* Podpora atribuovaných hodnot v polích lístků
+* Podpora pole relevantDates
+* Automatické seskupení lístků importovaných z .pkpasses
+* Aktualizovány překlady
+
+* Opraven problém s importováním některých souborů .pkpasses

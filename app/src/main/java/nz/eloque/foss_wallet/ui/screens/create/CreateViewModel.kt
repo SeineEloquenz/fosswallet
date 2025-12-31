@@ -5,8 +5,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import coil.size.Precision
+import coil.size.Scale
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
@@ -23,10 +29,14 @@ class CreateViewModel @Inject constructor(
     private val passStore: PassStore,
 ) : AndroidViewModel(application) {
 
-    fun addPass(pass: Pass) {
+    suspend fun addPass(
+        pass: Pass,
+        iconUrl: Uri?,
+        logoUrl: Uri?,
+    ) {
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
-        val icon = drawableToBitmap(drawable, 64, 64)
-        val logo = drawableToBitmap(drawable, 256, 256)
+        val icon = loadBitmapFromUrl(context, iconUrl) ?: drawableToBitmap(drawable, 64, 64)
+        val logo = loadBitmapFromUrl(context, logoUrl) ?: drawableToBitmap(drawable, 256, 256)
 
         passStore.create(
             pass = pass.copy(hasLogo = true),
@@ -39,6 +49,28 @@ class CreateViewModel @Inject constructor(
             )
         )
     }
+
+    suspend fun loadBitmapFromUrl(
+        context: Context,
+        imageUrl: Uri?,
+    ): Bitmap? {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .precision(Precision.INEXACT)
+            .scale(Scale.FIT)
+            .size(256)
+            .data(imageUrl)
+            .allowHardware(false) // IMPORTANT for Bitmap
+            .build()
+
+        val result = loader.execute(request)
+        return if (result is SuccessResult) {
+            (result.drawable as android.graphics.drawable.BitmapDrawable).bitmap
+        } else {
+            null
+        }
+    }
+
 
     private fun drawableToBitmap(drawable: Drawable, width: Int, height: Int): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)

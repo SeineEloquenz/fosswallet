@@ -39,19 +39,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.utils.asString
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,26 +61,33 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
-    val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
+    val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
+    val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
+
+    val tagFlow = passViewModel.allTags
+    val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
             snackbarHostState = snackbarHostState,
             navController = navController,
-            title = pass.description,
+            title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(pass, navController, snackbarHostState, passViewModel)
+                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
             },
         ) { scrollBehavior ->
             PassView(
-                pass = pass,
+                localizedPass = localizedPass,
+                allTags = allTags,
+                onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(localizedPass.pass, it) } },
+                onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(localizedPass.pass, it) } },
+                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) } },
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
-                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(pass) } },
+                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(localizedPass.pass) } },
             )
         }
     }

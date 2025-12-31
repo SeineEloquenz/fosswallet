@@ -1,0 +1,1 @@
+* Oprava pádu při otevření WebView s prázdnou schránkou

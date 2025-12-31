@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -50,13 +52,22 @@ fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
 ) {
+    var logoUrl by remember { mutableStateOf<Uri?>(null) }
     var name by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
     var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
 
+    val barCode = BarCode(
+        format = format,
+        message = message,
+        encoding = Charsets.UTF_8,
+        altText = message
+    )
+    val pass = PassCreator.create(name, type, barCode)
+
     val nameValid = name.length in 1..<30
-    val messageValid = message.isNotEmpty()
+    val messageValid = message.isNotEmpty() && pass != null
     val createValid = nameValid && messageValid
 
     val context = LocalContext.current
@@ -84,6 +95,13 @@ fun CreateView(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        ImagePicker(
+            imageUrl = logoUrl,
+            onClear = { logoUrl = null },
+            onChoose = { logoUrl = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         OutlinedTextField(
             label = { Text(stringResource(R.string.pass_name)) },
             value = name,
@@ -102,7 +120,12 @@ fun CreateView(
                 value = message,
                 onValueChange = { message = it },
                 modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                isError = !messageValid
+                isError = !messageValid,
+                supportingText = {
+                    if (!messageValid) {
+                        Text(stringResource(R.string.barcode_value_invalid, format.toString()))
+                    }
+                }
             )
             IconButton(
                 onClick = {
@@ -139,19 +162,16 @@ fun CreateView(
         ElevatedButton(
             enabled = createValid,
             onClick = {
-                val barCode = BarCode(
-                    format = format,
-                    message = message,
-                    encoding = Charsets.UTF_8,
-                    altText = message
-                )
-                val pass = PassCreator.create(name, type, barCode)
 
                 coroutineScope.launch(Dispatchers.IO) {
-                    createViewModel.addPass(pass)
+                    createViewModel.addPass(
+                        pass = pass!!,
+                        iconUrl = logoUrl,
+                        logoUrl = logoUrl,
+                    )
                 }
                 navController.popBackStack()
-                navController.navigate("pass/${pass.id}")
+                navController.navigate("pass/${pass!!.id}")
             }
         ) {
             Text(stringResource(R.string.create_pass))
