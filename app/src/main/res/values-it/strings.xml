@@ -82,4 +82,6 @@
     <string name="barcode_value_invalid">Il valore fornito non è un codice %1$s valido</string>
     <string name="clear_selection">Cancella selezione</string>
     <string name="choose_image">Scegli immagine</string>
+    <string name="expand">Espandi</string>
+    <string name="collapse">Collasso</string>
 </resources>

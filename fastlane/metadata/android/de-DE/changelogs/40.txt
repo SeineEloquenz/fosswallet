@@ -1,0 +1,8 @@
+* Darstellung von html in Pass Feldern
+* Anzeigen von Tooltips beim hovern über einen abgekürzten Text
+* Generische Ansicht für Boarding Pässe hinzugefügt
+* Korrekte Darstellung von Datums und Währungsfeldern
+* Behebung einer Absturzursache beim fehlerhaften Berechnen einiger Barcodes
+* Behebung einer Absturzursache beim Import leerer Pass Dateien
+* Behebt das Problem, dass einige Pässe fehlerhaft als Duplikate angesehen werden.
+* Abhängigkeiten aktualisiert
