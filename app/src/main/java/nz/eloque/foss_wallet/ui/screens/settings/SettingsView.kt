@@ -102,7 +102,7 @@ fun SettingsView(
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        share(passes, context)
+                        share(passes.map { it.pass }, context)
                     }
                 }
             )

@@ -83,4 +83,10 @@
     <string name="help_translate">Help translate</string>
     <string name="choose_image">Choose image</string>
     <string name="clear_selection">Clear selection</string>
+    <string name="add_tag">Add tag</string>
+    <string name="remove_tag">Remove tag</string>
+    <string name="color">Color</string>
+    <string name="tag_label">Tag label</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
 </resources>

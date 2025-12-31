@@ -15,7 +15,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.LinkedList
 import java.util.UUID
 
 class TypeConverters {
@@ -72,15 +71,21 @@ class TypeConverters {
     }
 
     @TypeConverter
-    fun fromColor(colors: PassColors): String {
+    fun fromColors(colors: PassColors): String {
         return "${colors.background.toArgb()},${colors.foreground.toArgb()},${colors.label.toArgb()}"
     }
 
     @TypeConverter
-    fun toColor(colors: String): PassColors {
+    fun toColors(colors: String): PassColors {
         val split = colors.split(",")
         return PassColors(Color(split[0].toInt()), Color(split[1].toInt()), Color(split[2].toInt()))
     }
+
+    @TypeConverter
+    fun fromColor(color: Color): String = color.toArgb().toString()
+
+    @TypeConverter
+    fun toColor(color: String): Color = Color(color.toInt())
 
     @TypeConverter
     fun fromUuid(uuid: UUID): String = uuid.toString()

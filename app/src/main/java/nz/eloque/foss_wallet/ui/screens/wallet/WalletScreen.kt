@@ -31,7 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
@@ -83,7 +83,7 @@ fun WalletScreen(
             loading.value = false
         }
     }
-    val selectedPasses = remember { mutableStateSetOf<Pass>() }
+    val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
 
     WalletScaffold(
         navController = navController,
