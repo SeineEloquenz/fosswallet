@@ -1,0 +1,2 @@
+* Korrektur: Das Schnelleinstellungs Icon war nicht korrekt angezeigt
+* Korrektur: Regression beim Laden von Barcodes

@@ -82,4 +82,6 @@
     <string name="barcode_value_invalid">De opgegeven waarde is geen geldige %1$s-code</string>
     <string name="choose_image">Afbeelding kiezen</string>
     <string name="clear_selection">Selectie wissen</string>
+    <string name="expand">Uitklappen</string>
+    <string name="collapse">Inklappen</string>
 </resources>

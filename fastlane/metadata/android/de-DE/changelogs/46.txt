@@ -1,0 +1,1 @@
+* Überspringt leere Primärfelder bei generischen Pässen

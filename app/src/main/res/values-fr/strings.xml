@@ -78,4 +78,7 @@
     <string name="barcode_format">Format du code-barre</string>
     <string name="no_url_in_clipboard">Pas d\'URL dans le presse-papier</string>
     <string name="help_translate">Aider à traduire</string>
+    <string name="clear_selection">Effacer la sélection</string>
+    <string name="barcode_value_invalid">Cette valeur n\'est pas un code %1$s valide</string>
+    <string name="choose_image">Choisir une image</string>
 </resources>

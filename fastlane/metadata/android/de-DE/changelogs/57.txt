@@ -1,0 +1,4 @@
+* Niederländische Übersetzung hinzugefügt
+* Verbesserte Informationen, wenn Pässe nicht aktualisiert werden konnten
+* Übersetzungen aktualisierte
+* Behebung einer Absturzursache beim Anschauen von Pässen die nicht aktualisiert werden konnten
