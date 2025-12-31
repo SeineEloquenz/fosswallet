@@ -113,6 +113,8 @@ fun PassCardFooter(
                     contentDescription = stringResource(R.string.add_tag)
                 )
             }
+        } else {
+            Spacer(Modifier.width(12.dp))
         }
 
         if (tagChooserShown) {
