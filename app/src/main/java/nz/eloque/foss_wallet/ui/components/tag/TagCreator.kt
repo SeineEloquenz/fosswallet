@@ -76,7 +76,7 @@ fun TagCreator(
 
         Button(
             onClick = {
-                val tag = Tag(label, color)
+                val tag = Tag(label.trim(), color)
                 onCreate(tag)
             },
             enabled = valid
