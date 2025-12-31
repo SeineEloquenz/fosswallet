@@ -107,6 +107,7 @@ fun TagRow(
             TagChooser(
                 tags = tags,
                 onSelected = { coroutineScope.launch(Dispatchers.IO) { passViewModel.removeTag(it) }},
+                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) }},
                 modifier = Modifier.fillMaxWidth()
             )
         }

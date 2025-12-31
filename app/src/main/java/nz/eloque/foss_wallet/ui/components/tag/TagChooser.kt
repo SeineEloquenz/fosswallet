@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.components.tag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import nz.eloque.foss_wallet.model.Tag
 fun TagChooser(
     tags: Set<Tag>,
     onSelected: (Tag) -> Unit,
+    onTagCreate: (Tag) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -31,6 +33,14 @@ fun TagChooser(
                     )
                 }
             }
+        }
+
+        item { HorizontalDivider() }
+
+        item {
+            TagCreator(
+                onCreate = onTagCreate,
+            )
         }
     }
 }

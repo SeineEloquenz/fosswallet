@@ -39,7 +39,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateSet
@@ -54,9 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
@@ -84,15 +81,12 @@ fun WalletView(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     val passFlow = passViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
     val tagFlow = passViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
-
-    val tagsToHide = remember { listOf<Tag>().toMutableStateList() }
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
@@ -202,8 +196,6 @@ fun WalletView(
                     groupId = groupId!!,
                     passes = passes,
                     allTags = tags,
-                    onTagClick = { pass, tag -> coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(pass, tag) } },
-                    onTagAdd = { pass, tag -> coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(pass, tag) } },
                     onClick = {
                         navController.navigate("pass/${it.id}")
                     },
@@ -222,8 +214,6 @@ fun WalletView(
                     ShortPassCard(
                         pass = pass,
                         allTags = tags,
-                        onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(pass.pass, it) } },
-                        onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(pass.pass, it) } },
                         onClick = {
                             navController.navigate("pass/${pass.pass.id}")
                         },

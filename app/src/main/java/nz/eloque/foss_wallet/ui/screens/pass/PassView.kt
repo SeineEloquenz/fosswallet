@@ -45,6 +45,7 @@ fun PassView(
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
+    onTagCreate: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
     onRenderingChange: () -> Unit,
@@ -68,6 +69,7 @@ fun PassView(
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
+            onTagCreate = onTagCreate
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
@@ -159,6 +161,7 @@ private fun PassPreview() {
         allTags = allTags,
         onTagClick = {},
         onTagAdd = {},
+        onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
         onRenderingChange = {}

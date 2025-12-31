@@ -23,8 +23,6 @@ import nz.eloque.foss_wallet.ui.screens.pass.AsyncPassImage
 fun ShortPassContent(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
-    onTagClick: (Tag) -> Unit,
-    onTagAdd: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
 ) {
@@ -69,6 +67,7 @@ fun PassContent(
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
+    onTagCreate: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {}
@@ -102,6 +101,7 @@ fun PassContent(
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
+            onTagCreate = onTagCreate,
         )
     }
 }

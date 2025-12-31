@@ -41,6 +41,7 @@ fun PassCardFooter(
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit = {},
     onTagAdd: (Tag) -> Unit = {},
+    onTagCreate: (Tag) -> Unit = {},
     readOnly: Boolean = false,
 ) {
     Row(
@@ -126,6 +127,7 @@ fun PassCardFooter(
                         onTagAdd(it)
                         tagChooserShown = false
                     },
+                    onTagCreate = onTagCreate,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -51,8 +51,6 @@ fun GroupCard(
     groupId: Long,
     passes: List<LocalizedPassWithTags>,
     allTags: Set<Tag>,
-    onTagClick: (Pass, Tag) -> Unit,
-    onTagAdd: (Pass, Tag) -> Unit,
     selectedPasses: MutableSet<LocalizedPassWithTags>,
     passViewModel: PassViewModel,
     modifier: Modifier = Modifier,
@@ -80,8 +78,6 @@ fun GroupCard(
                 ShortPassCard(
                     pass = item,
                     allTags = allTags,
-                    onTagClick = { onTagClick(item.pass, it) },
-                    onTagAdd = { onTagAdd(item.pass, it) },
                     onClick = { onClick.invoke(item.pass) },
                     toned = true,
                     barcodePosition = passViewModel.barcodePosition(),

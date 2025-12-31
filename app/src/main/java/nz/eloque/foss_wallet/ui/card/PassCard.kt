@@ -33,8 +33,6 @@ import nz.eloque.foss_wallet.utils.darken
 fun ShortPassCard(
     pass: LocalizedPassWithTags,
     allTags: Set<Tag>,
-    onTagClick: (Tag) -> Unit,
-    onTagAdd: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -65,8 +63,6 @@ fun ShortPassCard(
                 localizedPass = pass,
                 cardColors = cardColors,
                 allTags = allTags,
-                onTagClick = onTagClick,
-                onTagAdd = onTagAdd,
             )
         }
         if (selected) {
@@ -97,6 +93,7 @@ fun PassCard(
     allTags: Set<Tag>,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
+    onTagCreate: (Tag) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
@@ -124,6 +121,7 @@ fun PassCard(
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
+            onTagCreate = onTagCreate,
             content = content,
         )
     }
@@ -153,6 +151,7 @@ private fun PasscardPreview() {
         localizedPass = LocalizedPassWithTags.placeholder(),
         allTags = setOf(Tag("Tag 1", Color(0, 0, 0)), Tag("Tag 2", Color(100, 100, 100))),
         onTagClick = {},
-        onTagAdd = {}
+        onTagAdd = {},
+        onTagCreate = {}
     ) {}
 }
