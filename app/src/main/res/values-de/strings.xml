@@ -82,4 +82,10 @@
     <string name="help_translate">Hilf übersetzen</string>
     <string name="choose_image">Bild auswählen</string>
     <string name="clear_selection">Auswahl leeren</string>
+    <string name="add_tag">Tag hinzufügen</string>
+    <string name="remove_tag">Tag entfernen</string>
+    <string name="color">Farbe</string>
+    <string name="tag_label">Tag Label</string>
+    <string name="collapse">Einklappen</string>
+    <string name="expand">Erweitern</string>
 </resources>

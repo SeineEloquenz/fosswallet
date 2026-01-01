@@ -7,7 +7,6 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import nz.eloque.foss_wallet.persistence.PassStore
-import java.util.Locale
 
 @HiltWorker
 class UpdateWorker @AssistedInject constructor(
@@ -19,7 +18,7 @@ class UpdateWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val pass = passStore.passById(inputData.getString("id")!!)
-        val result = pass?.let { passStore.update(it.applyLocalization(Locale.getDefault().language)) }
+        val result = pass?.let { passStore.update(it.pass) }
         return if (result is UpdateResult.Success || result is UpdateResult.NotUpdated) {
             Result.success()
         } else {

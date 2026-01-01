@@ -5,11 +5,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
-import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.model.PassTagCrossRef
+import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import java.util.Locale
 
 class PassRepository @Inject constructor(
     @param:ApplicationContext private val context: Context,
@@ -28,11 +32,15 @@ class PassRepository @Inject constructor(
             result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 
-    fun flowById(id: String): Flow<PassWithLocalization?> = passDao.flowById(id)
+    fun flowById(id: String): Flow<LocalizedPassWithTags?> = passDao.flowById(id).map { it?.applyLocalization(Locale.getDefault().language) }
 
-    fun findById(id: String): PassWithLocalization? = passDao.findById(id)
+    fun findById(id: String): LocalizedPassWithTags? = passDao.findById(id)?.applyLocalization(Locale.getDefault().language)
 
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
+
+    suspend fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
+
+    suspend fun untag(pass: Pass, tag: Tag) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
 
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {
         val id = pass.id

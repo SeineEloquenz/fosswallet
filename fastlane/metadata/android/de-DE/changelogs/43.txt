@@ -1,0 +1,5 @@
+* Vass-Löschung vom Wischen ins FAB-Menü verschoben
+* Haptischem Feedback zur Pass-Auswahl hinzugefügt
+* Build-Informationen zur Info-Seite hinzugefügt
+* Problem behoben, dass die Tastatur beim Filtern nicht verschwindet, wenn „Fertig“ gedrückt wird
+* Problem behoben, dass Ecken abgeschnitten werden, wenn Pässe in einer Gruppe gewischt werden

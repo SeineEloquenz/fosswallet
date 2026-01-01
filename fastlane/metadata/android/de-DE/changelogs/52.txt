@@ -1,0 +1,3 @@
+* Übersetzungen aktualisiert
+* Entwicklung auf das Android 16 SDK umgestellt
+* Individuelle Sprachauswahl für die App hinzugefügt
