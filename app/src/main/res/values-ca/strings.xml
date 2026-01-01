@@ -24,4 +24,20 @@
     <string name="details">Detalls</string>
     <string name="copy">Copiar</string>
     <string name="open">Obrir FossWallet</string>
+    <string name="coupon">Cupó</string>
+    <string name="color">Color</string>
+    <string name="boarding_pass">Tarjeta d\'embarcament</string>
+    <string name="barcode_position_top">Dalt</string>
+    <string name="barcode_position_center">Centre</string>
+    <string name="barcode_position_bottom">Baix</string>
+    <string name="no_url_in_clipboard">No hi ha cap URL al porta-retalls</string>
+    <string name="date_added">Data d\'afegiment</string>
+    <string name="more_options">Més opcions</string>
+    <string name="relevant_date_newest">Data rellevant més recent</string>
+    <string name="relevant_date_oldest">Data rellevant més antiga</string>
+    <string name="selected">Seleccionat</string>
+    <string name="barcode_value_invalid">El valor proporcionat no és un codi %1$s vàlid</string>
+    <string name="libraries">Biblioteques</string>
+    <string name="filter">Ordena per</string>
+    <string name="event">Entrada per a l\'esdeveniment</string>
 </resources>

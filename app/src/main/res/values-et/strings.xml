@@ -82,4 +82,10 @@
     <string name="help_translate">Aita tõlkida</string>
     <string name="choose_image">Vali pilt</string>
     <string name="clear_selection">Tühjenda valik</string>
+    <string name="add_tag">Lisa silt</string>
+    <string name="remove_tag">Eemalda silt</string>
+    <string name="color">Värv</string>
+    <string name="tag_label">Sildi sisu</string>
+    <string name="collapse">Ahenda vaadet</string>
+    <string name="expand">Laienda vaadet</string>
 </resources>
