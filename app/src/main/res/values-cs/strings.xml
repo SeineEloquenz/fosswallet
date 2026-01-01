@@ -82,4 +82,10 @@
     <string name="help_translate">Pomozte s překladem</string>
     <string name="choose_image">Vybrat obrázek</string>
     <string name="clear_selection">Vymazat výběr</string>
+    <string name="add_tag">Přidat štítek</string>
+    <string name="remove_tag">Odebrat štítek</string>
+    <string name="color">Barva</string>
+    <string name="tag_label">Název štítku</string>
+    <string name="collapse">Sbalit</string>
+    <string name="expand">Rozbalit</string>
 </resources>

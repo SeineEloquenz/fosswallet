@@ -84,4 +84,8 @@
     <string name="clear_selection">Selectie wissen</string>
     <string name="expand">Uitklappen</string>
     <string name="collapse">Inklappen</string>
+    <string name="color">Kleur</string>
+    <string name="add_tag">Tags toevoegen</string>
+    <string name="remove_tag">Tags verwijderen</string>
+    <string name="tag_label">Label van de tag</string>
 </resources>

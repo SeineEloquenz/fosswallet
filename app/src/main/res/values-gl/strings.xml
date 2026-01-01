@@ -59,4 +59,6 @@
     <string name="relevant_date_oldest">Data relevante máis vella</string>
     <string name="selected">Seleccionado</string>
     <string name="filter">Ordenar por</string>
+    <string name="color">Cor</string>
+    <string name="coupon">Cupón</string>
 </resources>
