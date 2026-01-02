@@ -65,4 +65,5 @@
     <string name="pass_updates_channel">卡片更新</string>
     <string name="invalid_pass_toast">无法加载卡片。您确定这是有效的 .pkpass 文件吗？</string>
     <string name="no_barcode_format_given">未指定条码格式！默认将使用二维码。此代码可能无法正确扫描。</string>
+    <string name="color">颜色</string>
 </resources>

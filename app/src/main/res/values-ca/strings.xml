@@ -40,4 +40,11 @@
     <string name="libraries">Biblioteques</string>
     <string name="filter">Ordena per</string>
     <string name="event">Entrada per a l\'esdeveniment</string>
+    <string name="pass_view_brightness">Augmentar la brillantor</string>
+    <string name="help_translate">Ajuda a traduir</string>
+    <string name="webview">Obre l\'URL</string>
+    <string name="choose_image">Tria imatge</string>
+    <string name="compatibility_mode">Mode de compatibilitat</string>
+    <string name="barcode_position">Posició del codi de barres en pantalla completa</string>
+    <string name="barcode_format">Format del codi de barres</string>
 </resources>
