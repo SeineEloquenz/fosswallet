@@ -1,0 +1,3 @@
+* Support tagging of passes
+* Restructure the search/filter UI
+* Fix a bug making the search bar disappear until app restart
