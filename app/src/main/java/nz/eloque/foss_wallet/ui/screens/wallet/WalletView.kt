@@ -74,7 +74,13 @@ fun WalletView(
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
-    if (passes.isEmpty()) {
+    val sortedPasses = passes
+        .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
+        .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
+        .sortedWith(sortOption.value.comparator)
+        .groupBy { it.pass.groupId }.toList()
+
+    if (sortedPasses.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -98,11 +104,6 @@ fun WalletView(
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        val sortedPasses = passes
-            .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-            .sortedWith(sortOption.value.comparator)
-            .groupBy { it.pass.groupId }.toList()
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
 
