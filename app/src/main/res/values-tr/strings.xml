@@ -82,4 +82,5 @@
     <string name="barcode_value_invalid">Belirtilen değer geçerli bir %1$s kodu değil</string>
     <string name="choose_image">Resim seç</string>
     <string name="clear_selection">Seçimi temizle</string>
+    <string name="color">Renk</string>
 </resources>

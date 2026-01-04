@@ -50,4 +50,6 @@
     <string name="permission_rationale">Bez šīs(-m) atļaujas(-ām) FossWallet nedarbosies korekti</string>
     <string name="organization">Organizācija</string>
     <string name="no_barcode_format_given">Nav norādīts svītrkoda formāts! Izmanto QR kodu. Iespējams, ka šis kods var tikt nepareizi nolasīts.</string>
+    <string name="color">Krāsa</string>
+    <string name="coupon">Kupons</string>
 </resources>

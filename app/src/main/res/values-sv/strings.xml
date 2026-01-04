@@ -82,4 +82,10 @@
     <string name="barcode_value_invalid">Det angivna värdet är inte en giltig %1$s-kod</string>
     <string name="choose_image">Välj bild</string>
     <string name="clear_selection">Rensa urval</string>
+    <string name="color">Färg</string>
+    <string name="add_tag">Lägg till tagg</string>
+    <string name="remove_tag">Ta bort tagg</string>
+    <string name="tag_label">Tagg-etikett</string>
+    <string name="expand">Expandera</string>
+    <string name="collapse">Dra ihop</string>
 </resources>
