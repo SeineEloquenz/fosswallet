@@ -1,16 +1,8 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -23,14 +15,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -40,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -49,7 +35,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -61,12 +46,8 @@ import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
-import nz.eloque.foss_wallet.ui.components.ChipSelector
-import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.GroupCard
-import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
-import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,8 +61,7 @@ fun WalletView(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
-    val context = LocalContext.current
-
+    val emptyState = rememberLazyListState()
     val passFlow = passViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
@@ -91,6 +71,8 @@ fun WalletView(
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
+
+    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
     if (passes.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(),
@@ -105,127 +87,69 @@ fun WalletView(
                 alpha = 0.25f
             )
         }
-    } else {
-        var filtersShown by remember { mutableStateOf(false) }
-        var tagToFilterFor by remember { mutableStateOf<Tag?>(null) }
+    }
 
-        LazyColumn(
-            state = listState,
-            verticalArrangement = Arrangement
-                .spacedBy(8.dp),
-            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-            modifier = modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-        ) {
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+    LazyColumn(
+        state = if (passes.isEmpty()) emptyState else listState,
+        verticalArrangement = Arrangement
+            .spacedBy(8.dp),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) {
+        val sortedPasses = passes
+            .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
+            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
+            .sortedWith(sortOption.value.comparator)
+            .groupBy { it.pass.groupId }.toList()
+        val groups = sortedPasses.filter { it.first != null }
+        val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
 
-                    FilterBar(
-                        onSearch = { passViewModel.filter(it) },
-                        modifier = Modifier
-                            .padding(start = 6.dp, bottom = 6.dp)
-                            .weight(1f)
-                    )
-                    SelectionMenu(
-                        icon = Icons.AutoMirrored.Default.Sort,
-                        contentDescription = R.string.filter,
-                        options = SortOption.all(),
-                        selectedOption = sortOption.value,
-                        onOptionSelected = { sortOption.value = it },
-                        optionLabel = { context.getString(it.l18n) }
-                    )
-                    IconButton(onClick = {
-                        filtersShown = !filtersShown
-                    }) {
-                        if (filtersShown) {
-                            Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.collapse))
-                        } else {
-                            Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.expand))
-                        }
-                    }
-                }
-            }
-            item {
-                AnimatedVisibility(
-                    visible = filtersShown,
-                    enter = expandVertically(
-                        animationSpec = tween(durationMillis = 300)
-                    ) + fadeIn(animationSpec = tween(300)),
-                    exit = shrinkVertically(
-                        animationSpec = tween(durationMillis = 300)
-                    ) + fadeOut(animationSpec = tween(300))
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ChipSelector(
-                            options = PassType.all(),
-                            selectedOptions = passTypesToShow,
-                            onOptionSelected = { passTypesToShow.add(it) },
-                            onOptionDeselected = { passTypesToShow.remove(it) },
-                            optionLabel = { context.getString(it.label) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        TagRow(
-                            tags = tags,
-                            selectedTag = tagToFilterFor,
-                            onTagSelected = { tagToFilterFor = it },
-                            onTagDeselected = { tagToFilterFor = null },
-                            passViewModel = passViewModel,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }
+        item {
+            FilterBlock(
+                passViewModel = passViewModel,
+                sortOption = sortOption,
+                passTypesToShow = passTypesToShow,
+                tags = tags,
+                tagToFilterFor = tagToFilterFor
+            )
+        }
 
-            val sortedPasses = passes
-                .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-                .filter { localizedPass -> tagToFilterFor == null || localizedPass.tags.contains(tagToFilterFor) }
-                .sortedWith(sortOption.value.comparator)
-                .groupBy { it.pass.groupId }.toList()
-            val groups = sortedPasses.filter { it.first != null }
-            val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
-            items(groups) { (groupId, passes) ->
-                GroupCard(
-                    groupId = groupId!!,
-                    passes = passes,
+        items(groups) { (groupId, passes) ->
+            GroupCard(
+                groupId = groupId!!,
+                passes = passes,
+                allTags = tags,
+                onClick = {
+                    navController.navigate("pass/${it.id}")
+                },
+                passViewModel = passViewModel,
+                selectedPasses = selectedPasses
+            )
+        }
+        items(ungrouped) { pass ->
+            SwipeToDismiss(
+                leftSwipeIcon = Icons.Default.SelectAll,
+                allowRightSwipe = false,
+                onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
+                onRightSwipe = { },
+                modifier = Modifier.padding(2.dp)
+            ) {
+                ShortPassCard(
+                    pass = pass,
                     allTags = tags,
                     onClick = {
-                        navController.navigate("pass/${it.id}")
+                        navController.navigate("pass/${pass.pass.id}")
                     },
-                    passViewModel = passViewModel,
-                    selectedPasses = selectedPasses
+                    selected = selectedPasses.contains(pass),
+                    barcodePosition = passViewModel.barcodePosition(),
+                    increaseBrightness = passViewModel.increasePassViewBrightness()
                 )
             }
-            items(ungrouped) { pass ->
-                SwipeToDismiss(
-                    leftSwipeIcon = Icons.Default.SelectAll,
-                    allowRightSwipe = false,
-                    onLeftSwipe = { if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass) },
-                    onRightSwipe = { },
-                    modifier = Modifier.padding(2.dp)
-                ) {
-                    ShortPassCard(
-                        pass = pass,
-                        allTags = tags,
-                        onClick = {
-                            navController.navigate("pass/${pass.pass.id}")
-                        },
-                        selected = selectedPasses.contains(pass),
-                        barcodePosition = passViewModel.barcodePosition(),
-                        increaseBrightness = passViewModel.increasePassViewBrightness()
-                    )
-                }
-            }
-            item {
-                Spacer(modifier = Modifier.padding(4.dp))
-            }
+        }
+        item {
+            Spacer(modifier = Modifier.padding(4.dp))
         }
     }
 }
