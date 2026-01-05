@@ -86,6 +86,6 @@
     <string name="add_tag">Lägg till tagg</string>
     <string name="remove_tag">Ta bort tagg</string>
     <string name="tag_label">Tagg-etikett</string>
-    <string name="expand">Expandera</string>
-    <string name="collapse">Dra ihop</string>
+    <string name="expand">Utvidga</string>
+    <string name="collapse">Krymp</string>
 </resources>
