@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaTile
+import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import nz.eloque.foss_wallet.R
@@ -42,6 +43,8 @@ fun TagCreator(
     ) {
         var label by remember { mutableStateOf("") }
         var color by remember { mutableStateOf(Color.White) }
+        var colorEnvelope by remember { mutableStateOf<ColorEnvelope?>(null) }
+
 
         val valid = !label.isEmpty() && label.length < 30
 
@@ -60,17 +63,27 @@ fun TagCreator(
             HsvColorPicker(
                 controller = controller,
                 initialColor = color,
-                onColorChanged = { color = it.color },
+                onColorChanged = { envelope ->
+                    colorEnvelope = envelope
+                    color = envelope.color },
                 modifier = Modifier
                     .width(150.dp)
                     .height(150.dp)
             )
-            AlphaTile(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(6.dp)),
-                controller = controller,
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AlphaTile(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(6.dp)),
+                    controller = controller,
+                )
+
+                Text(
+                    text = colorEnvelope?.let { "#${it.hexCode}" } ?: ""
+                )
+            }
         }
 
 
