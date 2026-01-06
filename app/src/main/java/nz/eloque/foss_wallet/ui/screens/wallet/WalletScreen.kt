@@ -129,10 +129,10 @@ fun WalletScreen(
                                         return@launch
                                     }
 
-                                    for(i in 0..<entry.clipData.itemCount) {
-                                        val item = entry.clipData.getItemAt(i);
-                                        val string = item?.text.toString();
-                                        if(string.startsWith("https://") || string.startsWith("http://")) {
+                                    for (i in 0 until entry.clipData.itemCount) {
+                                        val item = entry.clipData.getItemAt(i)
+                                        val string = item?.text.toString()
+                                        if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
                                                 navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
                                             }
@@ -140,7 +140,7 @@ fun WalletScreen(
                                         }
                                     }
 
-                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                 }
                             }
                         ),
