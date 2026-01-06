@@ -90,7 +90,7 @@ fun WalletView(
     val tagFlow = passViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
-    val uiState by passViewModel.uiState.collectAsStateWithLifecycle()
+    val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }

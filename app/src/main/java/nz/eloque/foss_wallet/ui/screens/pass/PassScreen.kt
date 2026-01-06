@@ -71,9 +71,9 @@ fun PassScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 //    val pass = remember { mutableStateOf(Pass.placeholder())}
-    val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
-    val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
-    //val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
+    //val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
+    //val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
+    val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
     val tagFlow = passViewModel.allTags
@@ -81,10 +81,10 @@ fun PassScreen(
 
     LaunchedEffect(passId) {
         withContext(Dispatchers.IO) {
-//            pass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
+            //localizedPass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
 
-            passViewModel.pinned(pass)
-            passViewModel.hidden(pass)
+            passViewModel.pinned(localizedPass)
+            passViewModel.hidden(localizedPass)
         }
     }
 
@@ -192,7 +192,7 @@ fun Actions(
                         when (result) {
                             is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
                                 snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.update_successful),
+                                    message =  stringResource(R.string.update_successful),
                                     duration = SnackbarDuration.Short
                                 )
                             }
@@ -240,7 +240,7 @@ fun Actions(
                 )
             } else {
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.hide)) },
+                    text = { Text(context.getString(R.string.hide)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.VisibilityOff,
@@ -252,7 +252,7 @@ fun Actions(
                             passViewModel.hide(pass)
                         } else {
                             biometric.prompt(
-                                description = context.getString(R.string.hide),
+                                description =  context.getString(R.string.hide),
                                 onSuccess = { passViewModel.hide(pass) }
                             )
                         }

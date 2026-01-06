@@ -41,7 +41,7 @@ class PassViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private val _queryState = MutableStateFlow(QueryState())
-    private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
+    val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query, it.isAuthenticated) }
 
@@ -92,7 +92,7 @@ class PassViewModel @Inject constructor(
             _queryState.value = _queryState.value.copy(isHidden = false)
         }
     }
-    fun hidden(pass: Pass) { _queryState.value = _queryState.value.copy(isHidden = passStore.hidden(pass)) }
+    fun hidden(localizedPass: LocalizedPass) { _queryState.value = _queryState.value.copy(isHidden = passStore.hidden(localizedPass)) }
 
     fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)
