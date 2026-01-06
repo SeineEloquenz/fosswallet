@@ -17,13 +17,13 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass ORDER BY pinned DESC")
-    fun allInternal(): Flow<List<PassWithLocalization>>
+    fun allInternal(): Flow<List<PassWithTagsAndLocalization>>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE hidden = 0 ORDER BY pinned DESC")
-    fun allVisibleInternal(): Flow<List<PassWithLocalization>>
+    fun allVisibleInternal(): Flow<List<PassWithTagsAndLocalization>>
 
-    fun all(authStatus: Boolean): Flow<List<PassWithLocalization>> {
+    fun all(authStatus: Boolean): Flow<List<PassWithTagsAndLocalization>> {
         return if (authStatus) {
             allInternal()
         } else {
