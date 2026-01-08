@@ -57,15 +57,13 @@ fun MainLabel(
                 style = MaterialTheme.typography.headlineSmall,
             )
         }
-        SelectionContainer {
-            val contentString = content.prettyPrint()
-            Text(
-                text = contentString,
-                minLines = 2,
-                maxLines = 2,
-                style = MaterialTheme.typography.headlineLarge
-            )
-        }
+        val contentString = content.prettyPrint()
+        Text(
+            text = contentString,
+            minLines = 2,
+            maxLines = 2,
+            style = MaterialTheme.typography.headlineLarge
+        )
     }
 }
 
@@ -136,13 +134,15 @@ private fun PassLabelContents(
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
-            val contentString = content.prettyPrint().sanitize()
-            Text(
-                text = if (contentString.isNotEmpty()) {
-                    AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = labelAlign.textAlign,
-            )
+            SelectionContainer {
+                val contentString = content.prettyPrint().sanitize()
+                Text(
+                    text = if (contentString.isNotEmpty()) {
+                        AnnotatedString.fromHtml(contentString, linkStyle) } else { AnnotatedString("-") },
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = labelAlign.textAlign,
+                )
+            }
         }
     }
 }
