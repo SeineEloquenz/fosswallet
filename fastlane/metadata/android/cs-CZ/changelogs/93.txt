@@ -1,0 +1,2 @@
+* Povolení prázdných hodnot v importovaných polích
+* Zobrazení vyskakovacího okna s názvem letiště při dlouhém podržení kódu letiště

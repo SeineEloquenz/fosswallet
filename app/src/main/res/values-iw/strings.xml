@@ -83,4 +83,9 @@
     <string name="relevant_date_newest">התאריך הרלוונטי החדש ביותר</string>
     <string name="relevant_date_oldest">התאריך הרלוונטי הישן ביותר</string>
     <string name="color">צבע</string>
+    <string name="add_tag">הוסף תג</string>
+    <string name="remove_tag">להסיר תג</string>
+    <string name="tag_label">תווית התג</string>
+    <string name="collapse">צמצם</string>
+    <string name="expand">הרחב</string>
 </resources>
