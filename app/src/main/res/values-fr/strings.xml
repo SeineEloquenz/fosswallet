@@ -82,9 +82,10 @@
     <string name="barcode_value_invalid">Cette valeur n\'est pas un code %1$s valide</string>
     <string name="choose_image">Choisir une image</string>
     <string name="event">Billet d\'Événement</string>
-    <string name="add_tag">Ajouter un tag</string>
-    <string name="remove_tag">Retirer un tag</string>
+    <string name="add_tag">Ajouter un mot-clé</string>
+    <string name="remove_tag">Retirer un mot-clé</string>
     <string name="color">Couleur</string>
     <string name="collapse">Replier</string>
     <string name="expand">Déplier</string>
+    <string name="tag_label">Mot-clé</string>
 </resources>
