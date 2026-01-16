@@ -82,4 +82,5 @@
     <string name="help_translate">Улучшите перевод</string>
     <string name="choose_image">Выберите изображение</string>
     <string name="clear_selection">Очистить выбор</string>
+    <string name="color">Цвет</string>
 </resources>

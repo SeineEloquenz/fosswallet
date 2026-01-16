@@ -168,7 +168,7 @@ fun WalletScreen(
                                     for (i in 0 until entry.clipData.itemCount) {
                                         val item = entry.clipData.getItemAt(i)
                                         val string = item?.text.toString()
-                                        if(string.startsWith("https://") || string.startsWith("http://")) {
+                                        if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
                                                 navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
                                             }
