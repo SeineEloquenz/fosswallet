@@ -37,7 +37,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
@@ -61,7 +60,6 @@ fun WalletView(
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
-    authState: Boolean = false
 ) {
     val emptyState = rememberLazyListState()
     val passFlow = passViewModel.filteredPasses
@@ -73,7 +71,6 @@ fun WalletView(
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
-    val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 

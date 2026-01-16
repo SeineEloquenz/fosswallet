@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
@@ -48,6 +49,8 @@ fun FilterBlock(
 ) {
     val context = LocalContext.current
 
+    val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
+
     var filtersShown by remember { mutableStateOf(false) }
 
     Column {
@@ -59,7 +62,7 @@ fun FilterBlock(
         ) {
 
             FilterBar(
-                onSearch = { passViewModel.filter(it, true) },//NEEDS TO BE CHANGED!!
+                onSearch = { passViewModel.filter(it, authStatus = queryState.isAuthenticated) },
                 modifier = Modifier
                     .padding(start = 6.dp, bottom = 6.dp)
                     .weight(1f)

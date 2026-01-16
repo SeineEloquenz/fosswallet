@@ -71,6 +71,7 @@
     <string name="reveal">Reveal hidden passes</string>
     <string name="pin">Pin pass on top</string>
     <string name="unpin">Unpin pass</string>
+    <string name="pinned">Pinned pass</string>
     <string name="auth">Authentication</string>
     <string name="auth_by">using the biometrics/password/pattern/PIN of your device</string>
     <string name="libraries">Libraries</string>
