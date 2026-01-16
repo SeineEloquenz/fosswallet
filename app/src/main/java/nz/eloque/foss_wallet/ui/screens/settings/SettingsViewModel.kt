@@ -33,7 +33,7 @@ class SettingsViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
-    val passFlow = passStore.allPasses()
+    val passFlow = passStore.allPasses(true)
 
     init {
         update()

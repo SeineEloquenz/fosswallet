@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 16,
-    "identityHash": "caa35c97d7f6ef042db22498e75ae8f0",
+    "version": 23,
+    "identityHash": "d28d3534fe24c2c3313797080d3000ab",
     "entities": [
       {
         "tableName": "Pass",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL DEFAULT 0, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL DEFAULT '2b767e5b-75fd-4bec-89d7-188e832b2dc3', `colors` TEXT, `groupId` INTEGER, `relevantDate` INTEGER, `expirationDate` INTEGER, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `archived` INTEGER NOT NULL DEFAULT 0, `renderLegacy` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL DEFAULT 0, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL DEFAULT '2b767e5b-75fd-4bec-89d7-188e832b2dc3', `colors` TEXT, `groupId` INTEGER, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `archived` INTEGER NOT NULL DEFAULT 0, `hidden` INTEGER NOT NULL DEFAULT 0, `pinned` INTEGER NOT NULL DEFAULT 0, `renderLegacy` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -99,14 +99,15 @@
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "relevantDate",
-            "columnName": "relevantDate",
-            "affinity": "INTEGER"
+            "fieldPath": "relevantDates",
+            "columnName": "relevantDates",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "expirationDate",
             "columnName": "expirationDate",
-            "affinity": "INTEGER"
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "logoText",
@@ -172,11 +173,24 @@
             "defaultValue": "0"
           },
           {
-            "fieldPath": "renderLegacy",
-            "columnName": "renderLegacy",
+            "fieldPath": "hidden",
+            "columnName": "hidden",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
+          },
+          {
+            "fieldPath": "pinned",
+            "columnName": "pinned",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "renderLegacy",
+            "columnName": "renderLegacy",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -278,11 +292,104 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "tag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `color` TEXT NOT NULL, PRIMARY KEY(`label`))",
+        "fields": [
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "label"
+          ]
+        }
+      },
+      {
+        "tableName": "PassTag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`passId` TEXT NOT NULL, `tagLabel` TEXT NOT NULL, PRIMARY KEY(`passId`, `tagLabel`), FOREIGN KEY(`passId`) REFERENCES `Pass`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagLabel`) REFERENCES `tag`(`label`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "passId",
+            "columnName": "passId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tagLabel",
+            "columnName": "tagLabel",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "passId",
+            "tagLabel"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_PassTag_passId",
+            "unique": false,
+            "columnNames": [
+              "passId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PassTag_passId` ON `${TABLE_NAME}` (`passId`)"
+          },
+          {
+            "name": "index_PassTag_tagLabel",
+            "unique": false,
+            "columnNames": [
+              "tagLabel"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PassTag_tagLabel` ON `${TABLE_NAME}` (`tagLabel`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Pass",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "passId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tag",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tagLabel"
+            ],
+            "referencedColumns": [
+              "label"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'caa35c97d7f6ef042db22498e75ae8f0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd28d3534fe24c2c3313797080d3000ab')"
     ]
   }
 }

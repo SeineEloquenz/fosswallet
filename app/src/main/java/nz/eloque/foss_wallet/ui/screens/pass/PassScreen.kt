@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +29,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,14 +38,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -51,6 +60,7 @@ import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.utils.Biometric
 import nz.eloque.foss_wallet.utils.asString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,9 +73,17 @@ fun PassScreen(
     val coroutineScope = rememberCoroutineScope()
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
+    val pass = localizedPass.pass
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
+
+    LaunchedEffect(passId) {
+        withContext(Dispatchers.IO) {
+            passViewModel.pinned(pass)
+            passViewModel.hidden(pass)
+        }
+    }
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -101,10 +119,16 @@ fun Actions(
     passViewModel: PassViewModel
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
+
+    val activity = remember(context) { context as FragmentActivity }
     val coroutineScope = rememberCoroutineScope()
+
+    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
+    val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -118,6 +142,30 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
+            if (queryState.isPinned) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unpin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.PushPin,
+                            contentDescription = stringResource(R.string.unpin)
+                        )
+                    },
+                    onClick = { passViewModel.unpin(pass) }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.pin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.PushPin,
+                            contentDescription = stringResource(R.string.pin)
+                        )
+                    },
+                    onClick = { passViewModel.pin(pass) }
+                )
+            }
+
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
                 leadingIcon =  {
@@ -143,18 +191,18 @@ fun Actions(
                         when (result) {
                             is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
                                 snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.update_successful),
+                                    message =  resources.getString(R.string.update_successful),
                                     duration = SnackbarDuration.Short
                                 )
                             }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
                             is UpdateResult.Failed -> {
                                 val snackResult = snackbarHostState.showSnackbar(
                                     message = when (result.reason) {
-                                        is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
-                                        else -> context.getString(result.reason.messageId)
+                                        is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
+                                        else -> resources.getString(result.reason.messageId)
                                     },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                    actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
                                     duration = SnackbarDuration.Short
                                 )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
@@ -169,6 +217,48 @@ fun Actions(
                 }
             }
 
+            if (queryState.isHidden) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unhide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = stringResource(R.string.unhide)
+                        )
+                    },
+                    onClick = {
+                        if (queryState.isAuthenticated) {
+                            passViewModel.unhide(pass)
+                        } else {
+                            biometric.prompt(
+                                description = resources.getString(R.string.unhide),
+                                onSuccess = { passViewModel.unhide(pass) }
+                            )
+                        }
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(resources.getString(R.string.hide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = stringResource(R.string.hide)
+                        )
+                    },
+                    onClick = {
+                        if (queryState.isAuthenticated) {
+                            passViewModel.hide(pass)
+                        } else {
+                            biometric.prompt(
+                                description =  resources.getString(R.string.hide),
+                                onSuccess = { passViewModel.hide(pass) }
+                            )
+                        }
+                    }
+                )
+            }
+
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
                 leadingIcon =  {
@@ -177,7 +267,7 @@ fun Actions(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
-                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }
