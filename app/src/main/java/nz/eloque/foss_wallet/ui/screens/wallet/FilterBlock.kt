@@ -27,6 +27,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +48,7 @@ fun FilterBlock(
     tags: Set<Tag>,
     tagToFilterFor: MutableState<Tag?>,
 ) {
+    val resources = LocalResources.current
     val context = LocalContext.current
 
     val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
@@ -73,7 +75,7 @@ fun FilterBlock(
                 options = SortOption.all(),
                 selectedOption = sortOption.value,
                 onOptionSelected = { sortOption.value = it },
-                optionLabel = { context.getString(it.l18n) }
+                optionLabel = { resources.getString(it.l18n) }
             )
             IconButton(onClick = {
                 filtersShown = !filtersShown
@@ -105,7 +107,7 @@ fun FilterBlock(
                     selectedOptions = passTypesToShow,
                     onOptionSelected = { passTypesToShow.add(it) },
                     onOptionDeselected = { passTypesToShow.remove(it) },
-                    optionLabel = { context.getString(it.label) },
+                    optionLabel = { resources.getString(it.label) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 TagRow(
