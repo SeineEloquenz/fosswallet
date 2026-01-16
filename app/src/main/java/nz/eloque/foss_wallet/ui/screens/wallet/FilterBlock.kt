@@ -59,7 +59,7 @@ fun FilterBlock(
         ) {
 
             FilterBar(
-                onSearch = { passViewModel.filter(it) },
+                onSearch = { passViewModel.filter(it, true) },//NEEDS TO BE CHANGED!!
                 modifier = Modifier
                     .padding(start = 6.dp, bottom = 6.dp)
                     .weight(1f)

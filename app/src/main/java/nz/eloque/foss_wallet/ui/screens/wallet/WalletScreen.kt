@@ -203,7 +203,7 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authStatus = queryState.isAuthenticated)
+        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authState = queryState.isAuthenticated)
 
         if (loading.value) {
             Box(
