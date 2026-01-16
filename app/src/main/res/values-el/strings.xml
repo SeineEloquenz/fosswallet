@@ -65,4 +65,6 @@
     <string name="libraries">Βιβλιοθήκες</string>
     <string name="compatibility_mode">Λειτουργία Συμβατότητας</string>
     <string name="barcode_position_bottom">Κάτω μέρος</string>
+    <string name="color">χρώμα</string>
+    <string name="coupon">Κουπόνι</string>
 </resources>

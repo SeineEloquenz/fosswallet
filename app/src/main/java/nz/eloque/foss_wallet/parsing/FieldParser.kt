@@ -13,8 +13,10 @@ object FieldParser {
         val label = field.stringOrNull("label")
         val value = if (field.has("attributedValue")) {
             field.getString("attributedValue")
-        } else {
+        } else if (field.has("value")) {
             field.getString("value")
+        } else {
+            "-"
         }
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 

@@ -75,7 +75,7 @@
     <string name="coupon">Buono sconto</string>
     <string name="barcode_format">Formato del codice a barre</string>
     <string name="scan_barcode">Scansiona codice a barre</string>
-    <string name="event">Biglietto per l’evento</string>
+    <string name="event">Biglietto per l\'evento</string>
     <string name="boarding_pass">Carta d\'imbarco</string>
     <string name="store_card">La carta fedeltà</string>
     <string name="help_translate">Aiuta a tradurre</string>
@@ -84,4 +84,8 @@
     <string name="choose_image">Scegli immagine</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Collasso</string>
+    <string name="color">Colore</string>
+    <string name="add_tag">Aggiungi tag</string>
+    <string name="remove_tag">Rimuovi tag</string>
+    <string name="tag_label">Etichetta del tag</string>
 </resources>

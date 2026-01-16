@@ -62,4 +62,6 @@
     <string name="libraries">Biblioteki</string>
     <string name="wallet">Portfel</string>
     <string name="compatibility_mode">Tryb kompatybilności</string>
+    <string name="color">Kolor</string>
+    <string name="coupon">Kupon</string>
 </resources>

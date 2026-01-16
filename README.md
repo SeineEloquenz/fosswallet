@@ -16,6 +16,7 @@ Features (non-exhaustive):
 * Import/export to .pkpasses
 * Compatibility mode for legacy scanners
 * Multiple sort options (incl. by date)
+* Attach tags to passes
 
 ## Installation
 
