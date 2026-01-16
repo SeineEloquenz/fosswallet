@@ -67,7 +67,7 @@ fun WalletScreen(
     val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val loading = remember { mutableStateOf(false) }
-    val uiState by passViewModel.queryState.collectAsStateWithLifecycle()
+    val queryState by passViewModel.queryState.collectAsStateWithLifecycle()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
         println("selected file URI $uris")

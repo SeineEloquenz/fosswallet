@@ -66,7 +66,7 @@ fun ShortPassCard(
                 allTags = allTags,
             )
         }
-        if (pass.pinned) { PinIndicator(Modifier.align(Alignment.TopStart)) }
+        if (pass.pass.pinned) { PinIndicator(Modifier.align(Alignment.TopStart)) }
         if (selected) { SelectionIndicator(Modifier.align(Alignment.TopEnd)) }
     }
 
