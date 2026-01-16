@@ -92,7 +92,7 @@ class PassViewModel @Inject constructor(
             _queryState.value = _queryState.value.copy(isHidden = false)
         }
     }
-    fun hidden(localizedPass: LocalizedPass) { _queryState.value = _queryState.value.copy(isHidden = passStore.hidden(localizedPass)) }
+    fun hidden(pass: Pass) { _queryState.value = _queryState.value.copy(isHidden = passStore.hidden(pass)) }
 
     fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)

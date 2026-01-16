@@ -70,21 +70,18 @@ fun PassScreen(
     passViewModel: PassViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-//    val pass = remember { mutableStateOf(Pass.placeholder())}
-    //val passFlow: Flow<Pass> = passViewModel.passFlowById(passId).map { it?.applyLocalization(Locale.getDefault().language) ?: Pass.placeholder() }
-    //val pass by remember(passFlow) { passFlow }.collectAsState(initial = Pass.placeholder())
+
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
+    val pass = localizedPass.pass
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
     LaunchedEffect(passId) {
         withContext(Dispatchers.IO) {
-            //localizedPass = passViewModel.passById(passId).applyLocalization(Locale.getDefault().language)
-
-            passViewModel.pinned(localizedPass)
-            passViewModel.hidden(localizedPass)
+            passViewModel.pinned(pass)
+            passViewModel.hidden(pass)
         }
     }
 

@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +44,6 @@ import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.Biometric
-import nz.eloque.foss_wallet.utils.isScrollingUp
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
@@ -103,7 +101,7 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
-            if (uiState.isAuthenticated) {
+            if (queryState.isAuthenticated) {
                 IconButton(onClick = { passViewModel.conceal() }) {
                     Icon(
                         imageVector = Icons.Default.VisibilityOff,
@@ -167,9 +165,9 @@ fun WalletScreen(
                                         return@launch
                                     }
 
-                                    for(i in 0 until entry.clipData.itemCount) {
-                                        val item = entry.clipData.getItemAt(i);
-                                        val string = item?.text.toString();
+                                    for (i in 0 until entry.clipData.itemCount) {
+                                        val item = entry.clipData.getItemAt(i)
+                                        val string = item?.text.toString()
                                         if(string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
                                                 navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
@@ -178,7 +176,7 @@ fun WalletScreen(
                                         }
                                     }
 
-                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                 }
                             }
                         ),
@@ -205,7 +203,7 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authStatus = uiState.isAuthenticated)
+        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses, authStatus = queryState.isAuthenticated)
 
         if (loading.value) {
             Box(

@@ -31,15 +31,13 @@ class PassStore @Inject constructor(
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses(authStatus: Boolean) = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+    fun allPasses(authStatus: Boolean) = passRepository.all(authStatus).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun passById(id: String) = passRepository.findById(id)
-
-    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus)
     
     fun passFlowById(id: String) = passRepository.flowById(id)
 
-    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun create(pass: Pass, bitmaps: PassBitmaps) {
         passRepository.insert(pass, bitmaps, null)
