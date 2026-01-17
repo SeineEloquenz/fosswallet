@@ -150,7 +150,10 @@ private fun PassLabelContents(
 }
 
 private fun String.sanitize(): String {
-    return this.replace("\r", "").replace("\n", "<br>")
+    return this
+        .replace("\r", "")
+        .replace("\\r", "")
+        .replace("\n", "<br>")
 }
 
 @Preview
