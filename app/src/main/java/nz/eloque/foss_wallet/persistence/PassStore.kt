@@ -31,13 +31,13 @@ class PassStore @Inject constructor(
     private val updateScheduler: UpdateScheduler,
 ) {
 
-    fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+    fun allPasses(authStatus: Boolean) = passRepository.all(authStatus).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun passById(id: String) = passRepository.findById(id)
-
+    
     fun passFlowById(id: String) = passRepository.flowById(id)
 
-    fun filtered(query: String) = passRepository.filtered(query).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+    fun filtered(query: String, authStatus: Boolean) = passRepository.filtered(query, authStatus).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
     fun create(pass: Pass, bitmaps: PassBitmaps) {
         passRepository.insert(pass, bitmaps, null)
@@ -114,4 +114,14 @@ class PassStore @Inject constructor(
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
+
+    suspend fun hide(pass: Pass) = passRepository.hide(pass)
+    suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
+
+    fun hidden(pass: Pass) = passRepository.hidden(pass)
+
+    suspend fun pin(pass: Pass) = passRepository.pin(pass)
+    suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
+
+    fun pinned(pass: Pass) = passRepository.pinned(pass)
 }
