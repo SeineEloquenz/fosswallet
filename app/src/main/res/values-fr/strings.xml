@@ -43,7 +43,7 @@
     <string name="filter">Trier par</string>
     <string name="sync_interval">Intervalle de mise à jour des cartes (min)</string>
     <string name="add_shortcut">Ajouter un raccourci</string>
-    <string name="shortcut_exists">Le raccourci existe déjà  !</string>
+    <string name="shortcut_exists">Le raccourci existe déjà !</string>
     <string name="privacy">Confidentialité</string>
     <string name="timeout">Temps d’attente dépassé en contactant le serveur de mise à jour</string>
     <string name="exception">Une erreur est survenue lors de l\'appel au serveur de mise à jour</string>
