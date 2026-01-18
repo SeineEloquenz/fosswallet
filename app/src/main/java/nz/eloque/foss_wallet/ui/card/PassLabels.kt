@@ -57,15 +57,13 @@ fun MainLabel(
                 style = MaterialTheme.typography.headlineSmall,
             )
         }
-        SelectionContainer {
-            val contentString = content.prettyPrint()
-            Text(
-                text = contentString,
-                minLines = 2,
-                maxLines = 2,
-                style = MaterialTheme.typography.headlineLarge
-            )
-        }
+        val contentString = content.prettyPrint()
+        Text(
+            text = contentString,
+            minLines = 2,
+            maxLines = 2,
+            style = MaterialTheme.typography.headlineLarge
+        )
     }
 }
 
