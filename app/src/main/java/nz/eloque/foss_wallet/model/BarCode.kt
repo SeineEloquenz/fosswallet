@@ -104,6 +104,8 @@ data class BarCode(
                 "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
                 "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
                 "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
+                "PKBarcodeFormatCode39" -> BarcodeFormat.CODE_39
+                "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
                 else -> BarcodeFormat.QR_CODE
             }
         }
