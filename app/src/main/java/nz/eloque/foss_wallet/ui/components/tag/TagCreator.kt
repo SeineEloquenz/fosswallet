@@ -79,7 +79,7 @@ fun TagCreator(
                     controller = controller,
                 )
 
-                Text(text = colorEnvelope.let { "#${it.hexCode}" })
+                Text(text = colorEnvelope.let { "#${it.hexCode.drop(2)}" })
             }
         }
 
