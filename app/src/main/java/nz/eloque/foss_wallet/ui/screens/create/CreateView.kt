@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,14 +38,17 @@ import androidx.navigation.NavHostController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
+
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,6 +92,24 @@ fun CreateView(
             }
         }
     )
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { pickedUri ->
+            // Decode QR in background
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = ImageScanner.scanFrom(context.contentResolver, pickedUri)
+                withContext(Dispatchers.Main) {
+                    if (result != null && result.text != null) {
+                        message = result.text
+                        format = result.barcodeFormat
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -127,6 +150,17 @@ fun CreateView(
                     }
                 }
             )
+
+            IconButton(
+                onClick = {
+                    pickImageLauncher.launch("image/*")
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ImageSearch,
+                    contentDescription = stringResource(R.string.select_image_with_barcode)
+                )
+            }
             IconButton(
                 onClick = {
                     scanLauncher.launch(ScanOptions())
