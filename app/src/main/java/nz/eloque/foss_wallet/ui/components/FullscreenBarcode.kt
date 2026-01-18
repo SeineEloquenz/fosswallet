@@ -13,7 +13,6 @@ import nz.eloque.foss_wallet.ui.screens.pass.PassImage
 fun FullscreenBarcode(
     image: Bitmap,
     barcodePosition: BarcodePosition,
-    increaseBrightness: Boolean,
     isFullscreen: Boolean,
     onDismiss: () -> Unit,
 ) {
@@ -21,9 +20,6 @@ fun FullscreenBarcode(
 
     if (isFullscreen) {
         Raise(onDismiss = onDismiss) {
-            if (increaseBrightness) {
-                UpdateBrightness()
-            }
             PassImage(
                 bitmap = image,
                 barcodePosition = barcodePosition,

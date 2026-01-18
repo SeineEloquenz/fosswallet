@@ -118,7 +118,6 @@ fun BarcodesView(
     FullscreenBarcode(
         image = image,
         barcodePosition = barcodePosition,
-        increaseBrightness = increaseBrightness,
         isFullscreen = fullscreen,
         onDismiss = { fullscreen = !fullscreen}
     )
