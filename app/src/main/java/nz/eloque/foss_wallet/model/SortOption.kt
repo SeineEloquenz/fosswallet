@@ -9,9 +9,10 @@ const val TIME_ADDED = "TimeAdded"
 const val RELEVANT_DATE_NEWEST = "RelevantDateNewest"
 const val RELEVANT_DATE_OLDEST = "RelevantDateOldest"
 
-private val timeAdded = Comparator.comparing<LocalizedPassWithTags, ZonedDateTime?>(
-    { it.pass.addedAt }
-).reversed()
+private val timeAdded = Comparator.comparing<LocalizedPassWithTags, Instant?>(
+    { it.pass.addedAt },
+    Comparator.reverseOrder()
+)
 
 private val newestFirst = Comparator.comparing<LocalizedPassWithTags, ZonedDateTime?>(
     { it.pass.relevantDates.firstOrNull()?.startDate() },
