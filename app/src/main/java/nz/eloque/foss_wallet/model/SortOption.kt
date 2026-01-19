@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.model
 import androidx.annotation.StringRes
 import androidx.compose.runtime.saveable.Saver
 import nz.eloque.foss_wallet.R
+import java.time.Instant
 import java.time.ZonedDateTime
 
 const val TIME_ADDED = "TimeAdded"
