@@ -30,7 +30,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
 
-val INITIAL_ENVELOPE: ColorEnvelope = ColorEnvelope(Color.White, "ffffff", false)
+val INITIAL_ENVELOPE: ColorEnvelope = ColorEnvelope(Color.White, "ffffffff", false)
 
 @Composable
 fun TagCreator(
