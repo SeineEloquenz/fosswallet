@@ -42,6 +42,7 @@ import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
