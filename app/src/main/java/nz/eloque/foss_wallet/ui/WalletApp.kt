@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.ContentPasteGo
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
@@ -63,7 +62,6 @@ fun WalletApp(
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Surface(
         modifier = modifier
@@ -91,7 +89,7 @@ fun WalletApp(
                 arguments = listOf(navArgument("url") { type = NavType.StringType })
             ) { backStackEntry ->
                 var url = backStackEntry.arguments?.getString("url")!!
-                url = URLDecoder.decode(url);
+                url = URLDecoder.decode(url)
                 WebviewScreen(navController, passViewModel, url)
             }
             composable(Screen.Settings.route) {

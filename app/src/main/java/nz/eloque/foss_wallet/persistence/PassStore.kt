@@ -62,6 +62,8 @@ class PassStore @Inject constructor(
                 pass = updated.content.result.pass.copy(
                     pass = updated.content.result.pass.pass.copy(
                         archived = pass.archived,
+                        hidden = pass.hidden,
+                        pinned = pass.pinned,
                         renderLegacy = pass.renderLegacy
                     )
                 )
@@ -118,10 +120,10 @@ class PassStore @Inject constructor(
     suspend fun hide(pass: Pass) = passRepository.hide(pass)
     suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
 
-    fun hidden(pass: Pass) = passRepository.hidden(pass)
+    fun isHidden(pass: Pass) = passRepository.isHidden(pass)
 
     suspend fun pin(pass: Pass) = passRepository.pin(pass)
     suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
 
-    fun pinned(pass: Pass) = passRepository.pinned(pass)
+    fun isPinned(pass: Pass) = passRepository.isPinned(pass)
 }

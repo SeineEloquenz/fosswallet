@@ -77,7 +77,11 @@ fun WalletView(
     val sortedPasses = passes
         .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
         .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-        .sortedWith(sortOption.value.comparator)
+        .filter { localizedPass -> !localizedPass.pass.hidden || passViewModel.isAuthenticated }
+        .sortedWith(
+            compareBy<LocalizedPassWithTags> { !it.pass.pinned }
+                .then(sortOption.value.comparator)
+        )
         .groupBy { it.pass.groupId }.toList()
 
     if (sortedPasses.isEmpty()) {

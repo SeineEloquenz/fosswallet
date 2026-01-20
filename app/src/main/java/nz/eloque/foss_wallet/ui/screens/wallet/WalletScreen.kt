@@ -31,8 +31,6 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-//import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,8 +52,7 @@ import java.net.URLEncoder
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    passViewModel: PassViewModel,
-    snackbarHostState: SnackbarHostState
+    passViewModel: PassViewModel
 ) {
     val context = LocalContext.current
     val clipboard = LocalClipboard.current
@@ -64,6 +61,7 @@ fun WalletScreen(
 
     val listState = rememberLazyListState()
     val activity = remember(context) { context as FragmentActivity }
+    val snackbarHostState = remember { SnackbarHostState() }
     val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val loading = remember { mutableStateOf(false) }
@@ -101,7 +99,7 @@ fun WalletScreen(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
-            if (queryState.isAuthenticated) {
+            if (passViewModel.isAuthenticated) {
                 IconButton(onClick = { passViewModel.conceal() }) {
                     Icon(
                         imageVector = Icons.Default.VisibilityOff,

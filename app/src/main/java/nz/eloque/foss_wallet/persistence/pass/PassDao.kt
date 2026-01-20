@@ -16,20 +16,8 @@ import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
 interface PassDao {
 
     @Transaction
-    @Query("SELECT * FROM pass ORDER BY pinned DESC")
-    fun allInternal(): Flow<List<PassWithTagsAndLocalization>>
-
-    @Transaction
-    @Query("SELECT * FROM pass WHERE hidden = 0 ORDER BY pinned DESC")
-    fun allVisibleInternal(): Flow<List<PassWithTagsAndLocalization>>
-
-    fun all(authStatus: Boolean): Flow<List<PassWithTagsAndLocalization>> {
-        return if (authStatus) {
-            allInternal()
-        } else {
-            allVisibleInternal()
-        }
-    }
+    @Query("SELECT * FROM pass WHERE hidden = 0")
+    fun all(): Flow<List<PassWithTagsAndLocalization>>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
@@ -102,7 +90,7 @@ interface PassDao {
     suspend fun unhide(passId: String)
 
     @Query("SELECT hidden = 1 FROM Pass WHERE id = :passId")
-    fun hidden(passId: String): Boolean
+    fun isHidden(passId: String): Boolean
 
     @Query("UPDATE pass SET pinned = 1 WHERE id = :passId")
     suspend fun pin(passId: String)
@@ -111,7 +99,8 @@ interface PassDao {
     suspend fun unpin(passId: String)
 
     @Query("SELECT pinned = 1 FROM Pass WHERE id = :passId")
-    fun pinned(passId: String): Boolean
+    fun isPinned(passId: String): Boolean
+
     @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
     fun setLegacyRendering(passId: String, renderLegacy: Boolean)
 }
