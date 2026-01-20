@@ -20,15 +20,15 @@ class PassRepository @Inject constructor(
     private val passDao: PassDao
 ) {
 
-    fun all(authStatus: Boolean): Flow<List<PassWithTagsAndLocalization>> = passDao.all(authStatus)
+    fun all(): Flow<List<PassWithTagsAndLocalization>> = passDao.all()
 
     fun updatable(): List<Pass> = passDao.updatable()
 
-    fun filtered(query: String, authStatus: Boolean): Flow<List<PassWithTagsAndLocalization>> {
+    fun filtered(query: String): Flow<List<PassWithTagsAndLocalization>> {
         return if (query.isEmpty()) {
-            all(authStatus)
+            all()
         } else {
-            val result = all(authStatus)
+            val result = all()
             result.map { passes -> passes.filter { it.pass.contains(query) } } }
     }
 

@@ -48,7 +48,7 @@ class PassViewModel @Inject constructor(
     private val _queryState = MutableStateFlow(QueryState())
     val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
-    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query, it.isAuthenticated) }
+    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
     val allTags = tagRepository.all()
 

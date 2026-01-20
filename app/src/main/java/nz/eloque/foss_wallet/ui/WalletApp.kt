@@ -16,9 +16,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,7 +74,7 @@ fun WalletApp(
             popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, passViewModel, snackbarHostState)
+                WalletScreen(navController, passViewModel)
             }
             composable(Screen.Archive.route) {
                 ArchiveScreen(navController, passViewModel)

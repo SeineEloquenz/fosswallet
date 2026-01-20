@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ fun PinIndicator(
     Box(
         modifier = modifier
             .size(32.dp)
+            .offset(x = (-16).dp, y = (-16).dp)
             .background(
                 color = Orange300,
                 shape = CircleShape
