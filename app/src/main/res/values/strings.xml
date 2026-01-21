@@ -91,4 +91,6 @@
     <string name="expand">Expand</string>
     <string name="select_image_with_barcode">Select image with barcode</string>
     <string name="no_barcode_found">No barcode found</string>
+    <string name="no_map_app_found">No map app found</string>
+    <string name="no_calendar_app_found">No calendar app found</string>
 </resources>
