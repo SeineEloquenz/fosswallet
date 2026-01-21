@@ -134,7 +134,7 @@ fun WalletScreen(
                                         val string = item?.text.toString()
                                         if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
-                                                navController.navigate("${Screen.Web.route}/${Uri.encode(string)}")}")
+                                                navController.navigate("${Screen.Web.route}/${Uri.encode(string)}")
                                             }
                                             return@launch
                                         }
