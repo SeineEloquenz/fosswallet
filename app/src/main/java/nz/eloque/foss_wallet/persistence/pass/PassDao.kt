@@ -16,7 +16,7 @@ import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
 interface PassDao {
 
     @Transaction
-    @Query("SELECT * FROM pass WHERE hidden = 0")
+    @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithTagsAndLocalization>>
 
     @Transaction

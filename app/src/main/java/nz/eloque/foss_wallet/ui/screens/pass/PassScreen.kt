@@ -72,15 +72,19 @@ fun PassScreen(
     val coroutineScope = rememberCoroutineScope()
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
-    val pass = localizedPass.pass
+//    val pass = localizedPass.pass
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
-    LaunchedEffect(passId) {
+    val isPinned by passViewModel.isPinned.collectAsState()
+    val isHidden by passViewModel.isHidden.collectAsState()
+    val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
+
+    LaunchedEffect(localizedPass.pass.id) {
         withContext(Dispatchers.IO) {
-            passViewModel.pinned(pass)
-            passViewModel.hidden(pass)
+            passViewModel.pinned(localizedPass.pass)
+            passViewModel.hidden(localizedPass.pass)
         }
     }
 
@@ -92,7 +96,7 @@ fun PassScreen(
             title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
+                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel, isPinned = isPinned, isHidden = isHidden, isAuthenticated = isAuthenticated)
             },
         ) { scrollBehavior ->
             PassView(
@@ -115,7 +119,10 @@ fun Actions(
     pass: Pass,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    passViewModel: PassViewModel
+    passViewModel: PassViewModel,
+    isAuthenticated: Boolean,
+    isPinned: Boolean,
+    isHidden: Boolean,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -140,7 +147,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (passViewModel.isPinned) {
+            if (isPinned) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unpin)) },
                     leadingIcon = {
@@ -215,7 +222,7 @@ fun Actions(
                 }
             }
 
-            if (passViewModel.isHidden) {
+            if (isHidden) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unhide)) },
                     leadingIcon = {
@@ -225,7 +232,7 @@ fun Actions(
                         )
                     },
                     onClick = {
-                        if (passViewModel.isAuthenticated) {
+                        if (isAuthenticated) {
                             passViewModel.unhide(pass)
                         } else {
                             biometric.prompt(
@@ -245,7 +252,7 @@ fun Actions(
                         )
                     },
                     onClick = {
-                        if (passViewModel.isAuthenticated) {
+                        if (isAuthenticated) {
                             passViewModel.hide(pass)
                         } else {
                             biometric.prompt(

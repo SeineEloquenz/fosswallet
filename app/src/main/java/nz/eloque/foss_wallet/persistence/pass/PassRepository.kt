@@ -39,7 +39,6 @@ class PassRepository @Inject constructor(
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
     suspend fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
-
     suspend fun untag(pass: Pass, tag: Tag) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
 
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {

@@ -59,7 +59,7 @@ fun FilterBlock(
         ) {
 
             FilterBar(
-                onSearch = { passViewModel.filter(it, authStatus = passViewModel.isAuthenticated) },
+                onSearch = { passViewModel.filter(it) },
                 modifier = Modifier
                     .padding(start = 6.dp, bottom = 6.dp)
                     .weight(1f)

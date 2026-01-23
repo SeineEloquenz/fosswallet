@@ -25,8 +25,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 data class QueryState(
-    val query: String = "",
-    val passes: List<Pass> = ArrayList()
+    val query: String = ""
 )
 
 @HiltViewModel
@@ -38,15 +37,16 @@ class PassViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private val _isAuthenticated = MutableStateFlow(false)
-    val isAuthenticated: Boolean = false
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
 
     private val _isHidden = MutableStateFlow(false)
-    val isHidden: Boolean = false
+    val isHidden: StateFlow<Boolean> = _isHidden.asStateFlow()
 
     private val _isPinned = MutableStateFlow(false)
-    val isPinned: Boolean = false
+    val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
+
     private val _queryState = MutableStateFlow(QueryState())
-    val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
+    private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
@@ -58,21 +58,14 @@ class PassViewModel @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
-    fun filter(query: String, authStatus: Boolean) {
-        viewModelScope.launch {
-            _queryState.value = _queryState.value.copy(query = query)
-            _isAuthenticated.value = authStatus
-        }
-    }
+    fun filter(query: String) { viewModelScope.launch { _queryState.value = _queryState.value.copy(query = query) } }
 
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
     suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-
     suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
 
     suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
-
     suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
@@ -88,29 +81,21 @@ class PassViewModel @Inject constructor(
 
     fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.hide(pass)
-        withContext(Dispatchers.Main) {
-            _isHidden.value = false
-        }
+        withContext(Dispatchers.Main) { _isHidden.value = true }
     }
     fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unhide(pass)
-        withContext(Dispatchers.Main) {
-            _isHidden.value = true
-        }
+        withContext(Dispatchers.Main) { _isHidden.value = false }
     }
     fun hidden(pass: Pass) { _isHidden.value = passStore.isHidden(pass) }
 
     fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.pin(pass)
-        withContext(Dispatchers.Main) {
-            _isPinned.value = true
-        }
+        withContext(Dispatchers.Main) { _isPinned.value = true }
     }
     fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
         passStore.unpin(pass)
-        withContext(Dispatchers.Main) {
-            _isPinned.value = false
-        }
+        withContext(Dispatchers.Main) { _isPinned.value = false }
     }
     fun pinned(pass: Pass) { _isPinned.value = passStore.isPinned(pass) }
 
@@ -120,5 +105,6 @@ class PassViewModel @Inject constructor(
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+
     fun toggleLegacyRendering(pass: Pass) = passStore.toggleLegacyRendering(pass)
 }
