@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
@@ -25,6 +26,8 @@ fun LocationButton(
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     
     IconButton(
         onClick = {
