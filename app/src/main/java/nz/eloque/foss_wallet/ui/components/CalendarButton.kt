@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.components
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ fun CalendarButton(
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
+            Log.e("DateView", "No calendar app found!", e)
             scope.launch {
                 snackbarHostState.showSnackbar(message = resources.getString(R.string.no_calendar_app_found))
             }
