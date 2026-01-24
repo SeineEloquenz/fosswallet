@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
@@ -79,7 +80,10 @@ fun TagCreator(
                     controller = controller,
                 )
 
-                Text(text = colorEnvelope.let { "#${it.hexCode}" })
+                Text(
+                    text = colorEnvelope.let { "#${it.hexCode.drop(2)}" },
+                    fontFamily = FontFamily.Monospace
+                )
             }
         }
 
