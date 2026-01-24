@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.components
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.location.Location
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
@@ -36,6 +37,7 @@ fun LocationButton(
                     it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
                 })
             } catch (e: ActivityNotFoundException) {
+                Log.e("LocationButton", "No map app found!", e)
                 scope.launch {
                     snackbarHostState.showSnackbar(message = resources.getString(R.string.no_calendar_app_found))
                 }
