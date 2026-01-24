@@ -1,0 +1,5 @@
+* Přidáno skenování obrazových souborů do nástroje pro vytváření lístků
+* Zobrazení hexadecimálního kódu barvy v nástroji pro vytváření značek
+* Přidána podpora pro čárové kódy Code 39 a Code 93
+* Oprava zvýšení jasu po opuštění zobrazení čárového kódu na celou obrazovku
+* Oprava výskytu znaků konce řádku v průkazech Eurostar

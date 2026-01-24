@@ -88,4 +88,6 @@
     <string name="tag_label">תווית התג</string>
     <string name="collapse">צמצם</string>
     <string name="expand">הרחב</string>
+    <string name="select_image_with_barcode">בחר תמונה עם ברקוד</string>
+    <string name="no_barcode_found">ברקוד לא נמצא</string>
 </resources>
