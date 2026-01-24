@@ -88,4 +88,6 @@
     <string name="collapse">Replier</string>
     <string name="expand">Déplier</string>
     <string name="tag_label">Mot-clé</string>
+    <string name="no_barcode_found">Pas de code-barre trouvé</string>
+    <string name="select_image_with_barcode">Choisir une image avec un code-barre</string>
 </resources>

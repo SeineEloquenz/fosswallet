@@ -88,4 +88,6 @@
     <string name="tag_label">Sildi sisu</string>
     <string name="collapse">Ahenda vaadet</string>
     <string name="expand">Laienda vaadet</string>
+    <string name="select_image_with_barcode">Vali triipkoodiga pilt</string>
+    <string name="no_barcode_found">Mitte mingisugust triipkoodi ei leidu</string>
 </resources>

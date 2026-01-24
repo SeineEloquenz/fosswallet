@@ -47,4 +47,5 @@
     <string name="compatibility_mode">Mode de compatibilitat</string>
     <string name="barcode_position">Posició del codi de barres en pantalla completa</string>
     <string name="barcode_format">Format del codi de barres</string>
+    <string name="store_card">Targeta de botiga</string>
 </resources>

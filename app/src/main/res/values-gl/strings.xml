@@ -61,4 +61,7 @@
     <string name="filter">Ordenar por</string>
     <string name="color">Cor</string>
     <string name="coupon">Cupón</string>
+    <string name="libraries">Bibliotecas</string>
+    <string name="no_url_in_clipboard">Non hai URL no portapapeis</string>
+    <string name="barcode_position_bottom">Abaixo</string>
 </resources>

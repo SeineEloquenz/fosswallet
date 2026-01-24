@@ -1,0 +1,5 @@
+FossWallet 是采用 Jetpack Compose 构建、遵循 Material Design 3 设计规范的轻量级 Passbook（.pkpass）钱包。
+
+它可显示凭证内包含的条码及其他数据。
+本应用支持从供应商服务器更新支持的凭证，
+也可完全离线使用。

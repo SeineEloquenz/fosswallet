@@ -52,4 +52,7 @@
     <string name="no_barcode_format_given">Nav norādīts svītrkoda formāts! Izmanto QR kodu. Iespējams, ka šis kods var tikt nepareizi nolasīts.</string>
     <string name="color">Krāsa</string>
     <string name="coupon">Kupons</string>
+    <string name="details">Sīkāka informācija</string>
+    <string name="libraries">Bibliotēkas</string>
+    <string name="event">Pasākuma biļete</string>
 </resources>

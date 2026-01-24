@@ -88,4 +88,6 @@
     <string name="tag_label">Název štítku</string>
     <string name="collapse">Sbalit</string>
     <string name="expand">Rozbalit</string>
+    <string name="select_image_with_barcode">Vyberte obrázek s čárovým kódem</string>
+    <string name="no_barcode_found">Nenalezen žádný čárový kód</string>
 </resources>

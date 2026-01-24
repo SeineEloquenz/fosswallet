@@ -88,4 +88,6 @@
     <string name="tag_label">Tag Label</string>
     <string name="collapse">Einklappen</string>
     <string name="expand">Erweitern</string>
+    <string name="no_barcode_found">Keinen Barcode gefunden</string>
+    <string name="select_image_with_barcode">Wähle ein Bild mit einem Barcode aus</string>
 </resources>

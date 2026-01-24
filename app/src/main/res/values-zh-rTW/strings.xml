@@ -88,4 +88,6 @@
     <string name="tag_label">標籤名稱</string>
     <string name="collapse">收合</string>
     <string name="expand">展開</string>
+    <string name="select_image_with_barcode">選擇包含條碼的圖片</string>
+    <string name="no_barcode_found">未找到條碼</string>
 </resources>
