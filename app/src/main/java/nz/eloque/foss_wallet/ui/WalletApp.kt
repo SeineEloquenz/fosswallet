@@ -2,7 +2,6 @@
 
 package nz.eloque.foss_wallet.ui
 
-import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
@@ -27,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import java.net.URLDecoder
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
@@ -86,7 +86,7 @@ fun WalletApp(
                 arguments = listOf(navArgument("url") { type = NavType.StringType })
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
-                val url = Uri.decode(rawUrl)
+                val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
                 WebviewScreen(navController, passViewModel, url)
             }
             composable(Screen.Settings.route) {
