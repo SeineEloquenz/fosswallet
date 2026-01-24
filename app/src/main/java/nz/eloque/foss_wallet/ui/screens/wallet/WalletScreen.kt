@@ -75,7 +75,7 @@ fun WalletScreen(
                 if (uris.size == 1) {
                     if (result is LoaderResult.Single) {
                         withContext(Dispatchers.Main) {
-                            navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
+                            navController.navigate("pass/${result.passId}")
                         }
                     }
                 }
@@ -134,7 +134,7 @@ fun WalletScreen(
                                         val string = item?.text.toString()
                                         if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
-                                                navController.navigate("${Screen.W}")
+                                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
                                             }
                                             return@launch
                                         }
