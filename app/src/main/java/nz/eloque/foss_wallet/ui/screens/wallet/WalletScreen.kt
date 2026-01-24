@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +27,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,7 +75,7 @@ fun WalletScreen(
                 if (uris.size == 1) {
                     if (result is LoaderResult.Single) {
                         withContext(Dispatchers.Main) {
-                            navController.navigate("pass/${result.passId}")
+                            navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
                         }
                     }
                 }
@@ -134,7 +134,7 @@ fun WalletScreen(
                                         val string = item?.text.toString()
                                         if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
-                                                navController.navigate("${Screen.Web.route}/${Uri.encode(string)}")
+                                                navController.navigate("${Screen.W}")
                                             }
                                             return@launch
                                         }
