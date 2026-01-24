@@ -31,7 +31,7 @@
     <string name="enable">Attiva</string>
     <string name="search">Cerca</string>
     <string name="add_shortcut">Aggiungi scorciatoia</string>
-    <string name="shortcut_exists">Già esiste la scorciatoia!</string>
+    <string name="shortcut_exists">La scorciatoia esiste già!</string>
     <string name="made_with_love">Fatto con ❤ in Germania</string>
     <string name="privacy">Privacy</string>
     <string name="details">Dettagli</string>
@@ -41,7 +41,7 @@
     <string name="exception">Si è verificata un\'eccezione durante la chiamata al server dell\'aggiornamento</string>
     <string name="status_forbidden">Il server non ha permesso l\'accesso al biglietto. Forse il biglietto è già scaduto?</string>
     <string name="status_not_updated">Il tuo biglietto è già aggiornato</string>
-    <string name="barcode_position">Posizione del codice a schermo intero</string>
+    <string name="barcode_position">Posizione del codice a barre a schermo intero</string>
     <string name="open">Apri</string>
     <string name="barcode_position_top">Alto</string>
     <string name="barcode_position_center">Centro</string>
@@ -59,8 +59,8 @@
     <string name="relevant_date_newest">La più recente data rilevante</string>
     <string name="relevant_date_oldest">La più vecchia data rilevante</string>
     <string name="selected">Selezionati</string>
-    <string name="libraries">Biblioteche</string>
-    <string name="wallet">Portabiglietti</string>
+    <string name="libraries">Librerie</string>
+    <string name="wallet">Porta tessere</string>
     <string name="compatibility_mode">Modalità compatibilità</string>
     <string name="barcode_position_bottom">Fondo</string>
     <string name="pass_imported">Biglietto importato con successo</string>
@@ -77,15 +77,17 @@
     <string name="scan_barcode">Scansiona codice a barre</string>
     <string name="event">Biglietto per l\'evento</string>
     <string name="boarding_pass">Carta d\'imbarco</string>
-    <string name="store_card">La carta fedeltà</string>
+    <string name="store_card">Carta fedeltà</string>
     <string name="help_translate">Aiuta a tradurre</string>
     <string name="barcode_value_invalid">Il valore fornito non è un codice %1$s valido</string>
     <string name="clear_selection">Cancella selezione</string>
     <string name="choose_image">Scegli immagine</string>
     <string name="expand">Espandi</string>
-    <string name="collapse">Collasso</string>
+    <string name="collapse">Riduci</string>
     <string name="color">Colore</string>
     <string name="add_tag">Aggiungi tag</string>
     <string name="remove_tag">Rimuovi tag</string>
     <string name="tag_label">Etichetta del tag</string>
+    <string name="no_barcode_found">Nessun codice a barre trovato</string>
+    <string name="select_image_with_barcode">Seleziona l’immagine con il codice</string>
 </resources>

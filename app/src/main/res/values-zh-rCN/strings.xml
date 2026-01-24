@@ -15,7 +15,7 @@
     <string name="organization">组织</string>
     <string name="date">日期</string>
     <string name="copy">复制</string>
-    <string name="license">许可证</string>
+    <string name="license">许可</string>
     <string name="status_code">服务器返回状态 %1$s</string>
     <string name="enable">启用</string>
     <string name="privacy">隐私</string>
@@ -88,4 +88,6 @@
     <string name="barcode_value_invalid">提供的值不是有效的 %1$s 码</string>
     <string name="choose_image">选择图片</string>
     <string name="tag_label">标签名称</string>
+    <string name="select_image_with_barcode">选择带有条码的图片</string>
+    <string name="no_barcode_found">未找到条码</string>
 </resources>

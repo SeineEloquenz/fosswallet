@@ -64,4 +64,8 @@
     <string name="compatibility_mode">Tryb kompatybilności</string>
     <string name="color">Kolor</string>
     <string name="coupon">Kupon</string>
+    <string name="barcode_position_bottom">Dół</string>
+    <string name="barcode_value">Wartość kodu kreskowego</string>
+    <string name="barcode_format">Format kodu kreskowego</string>
+    <string name="no_url_in_clipboard">Brak adresu URL w schowku</string>
 </resources>

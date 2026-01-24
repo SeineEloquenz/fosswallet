@@ -88,4 +88,6 @@
     <string name="tag_label">Tagg-etikett</string>
     <string name="expand">Utvidga</string>
     <string name="collapse">Krymp</string>
+    <string name="select_image_with_barcode">Välj bild med streckkod</string>
+    <string name="no_barcode_found">Ingen streckkod hittades</string>
 </resources>
