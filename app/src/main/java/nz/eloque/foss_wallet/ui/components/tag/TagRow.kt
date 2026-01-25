@@ -34,7 +34,7 @@ fun TagRow(
     selectedTag: Tag?,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -91,7 +91,7 @@ fun TagRow(
             TagCreator(
                 onCreate = {
                     tagCreatorShown = false
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) }
+                    coroutineScope.launch(Dispatchers.IO) { walletViewModel.addTag(it) }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -106,8 +106,8 @@ fun TagRow(
             modifier = Modifier.fillMaxWidth()) {
             TagChooser(
                 tags = tags,
-                onSelected = { coroutineScope.launch(Dispatchers.IO) { passViewModel.removeTag(it) }},
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) }},
+                onSelected = { coroutineScope.launch(Dispatchers.IO) { walletViewModel.removeTag(it) }},
+                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { walletViewModel.addTag(it) }},
                 modifier = Modifier.fillMaxWidth()
             )
         }
