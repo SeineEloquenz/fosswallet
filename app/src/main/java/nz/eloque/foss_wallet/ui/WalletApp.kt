@@ -76,7 +76,7 @@ fun WalletApp(
             popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, walletViewModel)
+                WalletScreen(navController, walletViewModel, passViewModel)
             }
             composable(Screen.Archive.route) {
                 ArchiveScreen(navController, walletViewModel)
