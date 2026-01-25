@@ -59,6 +59,7 @@ fun WalletApp(
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
+    walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
 ) {
     Surface(
@@ -74,10 +75,10 @@ fun WalletApp(
             popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, passViewModel)
+                WalletScreen(navController, walletViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, passViewModel)
+                ArchiveScreen(navController, walletViewModel)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
