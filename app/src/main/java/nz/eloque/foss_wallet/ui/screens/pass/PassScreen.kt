@@ -50,7 +50,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screen.pass.PassWalletScreen
+import nz.eloque.foss_wallet.ui.screens.pass.PassWalletModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.asString
 
