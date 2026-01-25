@@ -126,6 +126,7 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${it.id}")
                 },
+                passViewModel = PassViewModel,
                 walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses
             )
