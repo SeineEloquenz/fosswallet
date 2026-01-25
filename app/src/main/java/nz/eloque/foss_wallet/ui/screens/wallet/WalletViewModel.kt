@@ -30,7 +30,6 @@ class WalletViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
     private val tagRepository: TagRepository,
-    private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
     private val _queryState = MutableStateFlow(QueryState())
