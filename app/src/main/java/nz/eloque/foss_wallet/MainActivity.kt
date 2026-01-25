@@ -30,6 +30,7 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val passViewModel: PassViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
 
     @OptIn(ExperimentalPermissionsApi::class)
