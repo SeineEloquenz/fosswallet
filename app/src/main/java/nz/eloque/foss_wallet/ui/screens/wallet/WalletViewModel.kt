@@ -54,14 +54,11 @@ class WalletViewModel @Inject constructor(
 
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
-    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-    suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
-
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
     
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
-    fun archive(pass: Pass) = passStore.archive(pass)
-    fun unarchive(pass: Pass) = passStore.unarchive(pass)
+    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
+    suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
 }
