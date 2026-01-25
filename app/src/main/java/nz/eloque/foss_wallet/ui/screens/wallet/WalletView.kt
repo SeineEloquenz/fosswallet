@@ -53,7 +53,7 @@ import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 @Composable
 fun WalletView(
     navController: NavController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
     archive: Boolean = false,
@@ -62,10 +62,10 @@ fun WalletView(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val emptyState = rememberLazyListState()
-    val passFlow = passViewModel.filteredPasses
+    val passFlow = walletViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
-    val tagFlow = passViewModel.allTags
+    val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
@@ -109,7 +109,7 @@ fun WalletView(
 
         item {
             FilterBlock(
-                passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 sortOption = sortOption,
                 passTypesToShow = passTypesToShow,
                 tags = tags,
@@ -125,7 +125,7 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${it.id}")
                 },
-                passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses
             )
         }
