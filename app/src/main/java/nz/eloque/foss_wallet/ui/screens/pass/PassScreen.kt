@@ -85,7 +85,7 @@ fun PassScreen(
                 allTags = allTags,
                 onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(localizedPass.pass, it) } },
                 onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(localizedPass.pass, it) } },
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) } },
+                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { walletViewModel.addTag(it) } },
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
