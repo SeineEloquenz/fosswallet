@@ -45,7 +45,7 @@ fun WebviewView(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             webViewClient =
-                CustomWebViewClient(context, passViewModel, coroutineScope, navController)
+                CustomWebViewClient(context, walletViewModel, coroutineScope, navController)
             loadUrl(url)
         }
 
