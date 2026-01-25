@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(dataUri) {
                 if (Shortcut.SCHEME != dataUri?.scheme) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        val result = dataUri?.handleIntent(passViewModel, coroutineScope)
+                        val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
                         if (result is LoaderResult.Single) {
                             withContext(Dispatchers.Main) {
                                 navController.navigate("pass/${result.passId}")
