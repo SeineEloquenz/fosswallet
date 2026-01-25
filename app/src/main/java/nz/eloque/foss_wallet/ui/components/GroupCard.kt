@@ -44,6 +44,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @Composable
@@ -52,7 +53,8 @@ fun GroupCard(
     passes: List<LocalizedPassWithTags>,
     allTags: Set<Tag>,
     selectedPasses: MutableSet<LocalizedPassWithTags>,
-    walletViewModel: PassViewModel,
+    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     onClick: (Pass) -> Unit = {},
 ) {
@@ -103,7 +105,7 @@ fun GroupCard(
                     }
                     IconButton(onClick = {
                         val selectedPass = passes[pagerState.currentPage]
-                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dissociate(selectedPass.pass, groupId) } }
+                        coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.dissociate(selectedPass.pass, groupId) } }
                     }) {
                         Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
                     }
@@ -127,7 +129,7 @@ fun GroupCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ungroup)) },
                                 leadingIcon = { Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup)) },
-                                onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
+                                onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.deleteGroup(it) } } }
                             )
                         }
                     }
