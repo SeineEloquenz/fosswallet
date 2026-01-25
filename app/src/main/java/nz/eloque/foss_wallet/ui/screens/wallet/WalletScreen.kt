@@ -46,6 +46,7 @@ import java.net.URLEncoder
 @Composable
 fun WalletScreen(
     navController: NavHostController,
+    passViewModel: PassViewModel,
     walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
