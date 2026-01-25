@@ -44,7 +44,8 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.share.share
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @Composable
 fun GroupCard(
@@ -53,6 +54,7 @@ fun GroupCard(
     allTags: Set<Tag>,
     selectedPasses: MutableSet<LocalizedPassWithTags>,
     passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     onClick: (Pass) -> Unit = {},
 ) {
@@ -95,7 +97,7 @@ fun GroupCard(
                 ) {
                     if (selectedPasses.isNotEmpty()) {
                         IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let {
-                            passViewModel.associate(groupId, selectedPasses.map { it.pass }.toSet())
+                            walletViewModel.associate(groupId, selectedPasses.map { it.pass }.toSet())
                             selectedPasses.clear()
                         } } }) {
                             Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
@@ -103,7 +105,7 @@ fun GroupCard(
                     }
                     IconButton(onClick = {
                         val selectedPass = passes[pagerState.currentPage]
-                        coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.dissociate(selectedPass.pass, groupId) } }
+                        coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.dissociate(selectedPass.pass, groupId) } }
                     }) {
                         Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
                     }
@@ -127,7 +129,7 @@ fun GroupCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ungroup)) },
                                 leadingIcon = { Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup)) },
-                                onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { passViewModel.deleteGroup(it) } } }
+                                onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.deleteGroup(it) } } }
                             )
                         }
                     }

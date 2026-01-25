@@ -40,7 +40,7 @@ import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @Composable
 fun FilterBlock(
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     sortOption: MutableState<SortOption>,
     passTypesToShow: SnapshotStateList<PassType>,
     tags: Set<Tag>,
@@ -59,7 +59,7 @@ fun FilterBlock(
         ) {
 
             FilterBar(
-                onSearch = { passViewModel.filter(it) },
+                onSearch = { walletViewModel.filter(it) },
                 modifier = Modifier
                     .padding(start = 6.dp, bottom = 6.dp)
                     .weight(1f)
@@ -110,7 +110,7 @@ fun FilterBlock(
                     selectedTag = tagToFilterFor.value,
                     onTagSelected = { tagToFilterFor.value = it },
                     onTagDeselected = { tagToFilterFor.value = null },
-                    passViewModel = passViewModel,
+                    walletViewModel = walletViewModel,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

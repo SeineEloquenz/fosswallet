@@ -12,7 +12,8 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 
@@ -21,6 +22,7 @@ import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 fun ArchiveScreen(
     navController: NavHostController,
     passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val listState = rememberLazyListState()
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
@@ -35,7 +37,8 @@ fun ArchiveScreen(
                     true,
                     selectedPasses,
                     listState,
-                    passViewModel
+                    passViewModel,
+                    walletViewModel,
                 )
             }
         },
@@ -43,6 +46,7 @@ fun ArchiveScreen(
         WalletView(
             navController,
             passViewModel,
+            walletViewModel,
             archive = true,
             emptyIcon = Icons.Default.Archive,
             listState = listState,
