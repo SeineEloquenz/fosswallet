@@ -79,7 +79,7 @@ fun WalletApp(
                 WalletScreen(navController, passViewModel, walletViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, walletViewModel)
+                ArchiveScreen(navController, passViewModel, walletViewModel)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
