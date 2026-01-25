@@ -46,8 +46,8 @@ import java.net.URLEncoder
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    walletViewModel: WalletViewModel,
     passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
     val clipboard = LocalClipboard.current
@@ -168,7 +168,7 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, walletViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+        WalletView(navController, passViewModel, walletViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
 
         if (loading.value) {
             Box(
