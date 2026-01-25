@@ -27,7 +27,7 @@ data class QueryState(
 )
 
 @HiltViewModel
-class PassViewModel @Inject constructor(
+class WalletViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
     private val tagRepository: TagRepository,
@@ -36,6 +36,7 @@ class PassViewModel @Inject constructor(
 
     private val _queryState = MutableStateFlow(QueryState())
     private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
+    
     @OptIn(ExperimentalCoroutinesApi::class)
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
@@ -56,11 +57,9 @@ class PassViewModel @Inject constructor(
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
     suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-
     suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
 
     suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
-
     suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
