@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
             it?.let {
                 return Loader(this@MainActivity).handleInputStream(
                     it,
-                    passViewModel,
+                    walletViewModel,
                     coroutineScope
                 )
             }
