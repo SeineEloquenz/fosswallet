@@ -32,6 +32,7 @@ class PassViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
+    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
 
     suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
     suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)
@@ -39,11 +40,14 @@ class PassViewModel @Inject constructor(
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
     fun delete(pass: Pass) = passStore.delete(pass)
 
-    fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
+    fun archive(pass: Pass) = passStore.archive(pass)
+    fun unarchive(pass: Pass) = passStore.unarchive(pass)
+
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+    
     fun toggleLegacyRendering(pass: Pass) = passStore.toggleLegacyRendering(pass)
 }
