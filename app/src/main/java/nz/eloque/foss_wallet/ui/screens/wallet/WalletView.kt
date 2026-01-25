@@ -53,6 +53,7 @@ import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 @Composable
 fun WalletView(
     navController: NavController,
+    passViewModel: PassViewModel,
     walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
