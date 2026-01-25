@@ -66,7 +66,7 @@ fun PassScreen(
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
-    val tagFlow = passViewModel.allTags
+    val tagFlow = walletViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
     AllowOnLockscreen {
