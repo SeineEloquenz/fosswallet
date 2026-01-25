@@ -23,6 +23,7 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
