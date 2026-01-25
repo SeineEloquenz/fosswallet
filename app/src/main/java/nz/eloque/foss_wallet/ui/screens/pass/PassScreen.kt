@@ -50,7 +50,8 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screen.pass.PassWalletScreen
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.asString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +59,8 @@ import nz.eloque.foss_wallet.utils.asString
 fun PassScreen(
     passId: String,
     navController: NavHostController,
-    passViewModel: PassViewModel
+    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
