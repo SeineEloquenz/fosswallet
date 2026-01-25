@@ -59,7 +59,7 @@ fun FilterBlock(
         ) {
 
             FilterBar(
-                onSearch = { passViewModel.filter(it) },
+                onSearch = { walletViewModel.filter(it) },
                 modifier = Modifier
                     .padding(start = 6.dp, bottom = 6.dp)
                     .weight(1f)
