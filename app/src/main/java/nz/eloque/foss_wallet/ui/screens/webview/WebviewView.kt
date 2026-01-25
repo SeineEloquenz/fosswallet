@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -31,7 +31,7 @@ import java.io.ByteArrayInputStream
 @Composable
 fun WebviewView(
     navController: NavHostController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     url: String,
 ) {
     val context = LocalContext.current
@@ -60,7 +60,7 @@ fun WebviewView(
 
 class CustomWebViewClient(
     val context: Context,
-    val passViewModel: PassViewModel,
+    val walletViewModel: WalletViewModel,
     val coroutineScope: CoroutineScope,
     val navController: NavController
 ) : WebViewClient() {
@@ -105,7 +105,7 @@ class CustomWebViewClient(
             withContext(Dispatchers.IO) {
                 val result = Loader(context).handleInputStream(
                     ByteArrayInputStream(bytes),
-                    passViewModel,
+                    walletViewModel,
                     coroutineScope
                 )
                 if (result is LoaderResult.Single) {
