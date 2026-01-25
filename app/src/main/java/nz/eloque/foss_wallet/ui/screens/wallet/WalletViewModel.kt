@@ -18,7 +18,6 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
-import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
@@ -57,20 +56,12 @@ class WalletViewModel @Inject constructor(
 
     suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
     suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
-    
-    suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
-
-    fun delete(pass: Pass) = passStore.delete(pass)
 
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
+    
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
     fun archive(pass: Pass) = passStore.archive(pass)
     fun unarchive(pass: Pass) = passStore.unarchive(pass)
-
-    fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
-
-    fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
-    fun toggleLegacyRendering(pass: Pass) = passStore.toggleLegacyRendering(pass)
 }
