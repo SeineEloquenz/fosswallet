@@ -109,7 +109,7 @@ fun WalletApp(
                 arguments = listOf(navArgument("passId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                PassScreen(passId, navController, passViewModel, walletViewScreen)
             }
             composable(
                 route = "updateFailure/{reason}/{rationale}",
