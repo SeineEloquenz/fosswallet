@@ -90,4 +90,6 @@
     <string name="expand">Laienda vaadet</string>
     <string name="select_image_with_barcode">Vali triipkoodiga pilt</string>
     <string name="no_barcode_found">Mitte mingisugust triipkoodi ei leidu</string>
+    <string name="no_map_app_found">Ühtegi kaardirakendust ei leidu</string>
+    <string name="no_calendar_app_found">Ühtegi kalendrirakendust ei leidu</string>
 </resources>

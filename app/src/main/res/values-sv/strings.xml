@@ -90,4 +90,6 @@
     <string name="collapse">Krymp</string>
     <string name="select_image_with_barcode">Välj bild med streckkod</string>
     <string name="no_barcode_found">Ingen streckkod hittades</string>
+    <string name="no_calendar_app_found">Ingen kalenderapp hittades</string>
+    <string name="no_map_app_found">Ingen kartapp hittades</string>
 </resources>

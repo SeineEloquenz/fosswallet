@@ -90,4 +90,6 @@
     <string name="tag_label">Etichetta del tag</string>
     <string name="no_barcode_found">Nessun codice a barre trovato</string>
     <string name="select_image_with_barcode">Seleziona l’immagine con il codice</string>
+    <string name="no_map_app_found">Nessuna app mappe trovata</string>
+    <string name="no_calendar_app_found">Nessuna app calendario trovata</string>
 </resources>
