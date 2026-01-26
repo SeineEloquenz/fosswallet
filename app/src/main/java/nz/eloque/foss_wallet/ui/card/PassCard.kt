@@ -25,6 +25,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
+import nz.eloque.foss_wallet.ui.components.PinIndicator
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import nz.eloque.foss_wallet.utils.darken
@@ -48,6 +49,9 @@ fun ShortPassCard(
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
+        if (pass.pass.pinned) { PinIndicator(Modifier.align(Alignment.TopStart)) }
+        if (selected) { SelectionIndicator(Modifier.align(Alignment.TopEnd)) }
+
         ElevatedCard(
             colors = cardColors,
             modifier = modifier
@@ -65,9 +69,6 @@ fun ShortPassCard(
                 cardColors = cardColors,
                 allTags = allTags,
             )
-        }
-        if (selected) {
-            SelectionIndicator(Modifier.align(Alignment.TopEnd))
         }
     }
 

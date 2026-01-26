@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,13 +9,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -25,7 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,12 +42,12 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.utils.Biometric
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import java.net.URLEncoder
 
-@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
@@ -49,11 +55,16 @@ fun WalletScreen(
     passViewModel: PassViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val clipboard = LocalClipboard.current
+
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
 
     val listState = rememberLazyListState()
+    val activity = remember(context) { context as FragmentActivity }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val loading = remember { mutableStateOf(false) }
 
@@ -84,11 +95,36 @@ fun WalletScreen(
         }
     }
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
+    val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
 
     WalletScaffold(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
+        snackbarHostState = snackbarHostState,
         actions = {
+            if (isAuthenticated) {
+                IconButton(onClick = { passViewModel.conceal() }) {
+                    Icon(
+                        imageVector = Icons.Default.VisibilityOff,
+                        contentDescription = stringResource(R.string.conceal)
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = {
+                        biometric.prompt(
+                            description = resources.getString(R.string.reveal),
+                            onSuccess = { passViewModel.reveal() }
+                        )
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = stringResource(R.string.reveal)
+                    )
+                }
+            }
+
             IconButton(onClick = {
                 navController.navigate(Screen.Archive.route)
             }) {
@@ -97,6 +133,7 @@ fun WalletScreen(
                     contentDescription = stringResource(R.string.archive)
                 )
             }
+
             IconButton(onClick = {
                 navController.navigate(Screen.Settings.route)
             }) {
@@ -125,7 +162,7 @@ fun WalletScreen(
                                     val entry = clipboard.getClipEntry()
 
                                     if (entry == null) {
-                                        Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, resources.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                         return@launch
                                     }
 
@@ -140,7 +177,7 @@ fun WalletScreen(
                                         }
                                     }
 
-                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, resources.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                 }
                             }
                         ),
