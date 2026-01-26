@@ -90,4 +90,6 @@
     <string name="expand">展開</string>
     <string name="select_image_with_barcode">選擇包含條碼的圖片</string>
     <string name="no_barcode_found">未找到條碼</string>
+    <string name="no_map_app_found">找不到地圖應用程式</string>
+    <string name="no_calendar_app_found">找不到行事曆應用程式</string>
 </resources>

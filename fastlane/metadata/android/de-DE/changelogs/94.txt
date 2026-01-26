@@ -1,0 +1,5 @@
+* Scannen von Bilddateien zum Pass-Ersteller hinzugefügt
+* Farb-Hexadezimalwert im Tag-Ersteller anzeigen
+* Unterstützung für Barcodes der Codes 39 und 93 hinzugefügt
+* Problem behoben, bei dem die Helligkeit nach Verlassen der Vollbildansicht des Barcodes zu stark anstieg
+* Problem behoben, bei dem Zeilenumbrüche in Eurostar-Pässen angezeigt wurden
