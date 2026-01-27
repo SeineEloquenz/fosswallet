@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,7 +40,6 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
-import java.net.URLEncoder
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +134,7 @@ fun WalletScreen(
                                         val string = item?.text.toString()
                                         if (string.startsWith("https://") || string.startsWith("http://")) {
                                             withContext(Dispatchers.Main) {
-                                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8.name())}")
+                                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(string, Charsets.UTF_8)}")
                                             }
                                             return@launch
                                         }
