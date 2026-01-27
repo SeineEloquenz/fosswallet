@@ -90,4 +90,6 @@
     <string name="tag_label">Label van de tag</string>
     <string name="no_barcode_found">Geen streepjescode gevonden</string>
     <string name="select_image_with_barcode">Selecteer de afbeelding met de streepjescode</string>
+    <string name="no_calendar_app_found">Geen kalenderapp gevonden</string>
+    <string name="no_map_app_found">Geen kaartapp gevonden</string>
 </resources>
