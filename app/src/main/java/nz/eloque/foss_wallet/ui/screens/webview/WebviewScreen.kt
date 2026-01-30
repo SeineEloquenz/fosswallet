@@ -7,13 +7,13 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewView
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebviewScreen(
     navController: NavHostController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     url: String,
 ) {
     WalletScaffold(
@@ -21,6 +21,6 @@ fun WebviewScreen(
         toolWindow = true,
         title = stringResource(id = R.string.webview)
     ) {
-        WebviewView(navController, passViewModel, url)
+        WebviewView(navController, walletViewModel, url)
     }
 }
