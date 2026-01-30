@@ -65,13 +65,13 @@ class Biometric(
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
-                    showErrorSnackbar("Authentication error. Please try again.")
+                    showErrorSnackbar("Authentication error." + activity.getString(R.string.try_again))
                     resultChannel.trySend(BiometricResult.AuthenticationError(errString.toString()))
                 }
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    showErrorSnackbar("Authentication failed. Please try again.")
+                    showErrorSnackbar("Authentication failed." + activity.getString(R.string.try_again))
                     resultChannel.trySend(BiometricResult.AuthenticationFailed)
                 }
 

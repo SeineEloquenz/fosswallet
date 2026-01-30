@@ -29,7 +29,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -72,7 +70,6 @@ fun PassScreen(
     val coroutineScope = rememberCoroutineScope()
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
-//    val pass = localizedPass.pass
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
@@ -80,13 +77,6 @@ fun PassScreen(
     val isPinned by passViewModel.isPinned.collectAsState()
     val isHidden by passViewModel.isHidden.collectAsState()
     val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
-
-    LaunchedEffect(localizedPass.pass.id) {
-        withContext(Dispatchers.IO) {
-            passViewModel.pinned(localizedPass.pass)
-            passViewModel.hidden(localizedPass.pass)
-        }
-    }
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }

@@ -49,9 +49,6 @@ fun ShortPassCard(
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        if (pass.pass.pinned) { PinIndicator(Modifier.align(Alignment.TopStart)) }
-        if (selected) { SelectionIndicator(Modifier.align(Alignment.TopEnd)) }
-
         ElevatedCard(
             colors = cardColors,
             modifier = modifier
@@ -70,6 +67,8 @@ fun ShortPassCard(
                 allTags = allTags,
             )
         }
+        if (pass.pass.pinned) { PinIndicator(Modifier.align(Alignment.TopEnd), selected) }
+        if (selected) { SelectionIndicator(Modifier.align(Alignment.TopEnd)) }
     }
 
     pass.pass.barCodes.firstOrNull()?.let { barcode ->

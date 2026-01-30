@@ -19,12 +19,13 @@ import nz.eloque.foss_wallet.ui.theme.Orange300
 
 @Composable
 fun PinIndicator(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selected: Boolean
 ) {
     Box(
         modifier = modifier
             .size(32.dp)
-            .offset(x = (-16).dp, y = (-16).dp)
+            .offset(x = if (selected) 0.dp else 16.dp, y = if (selected) 28.dp else (-8).dp)
             .background(
                 color = Orange300,
                 shape = CircleShape
