@@ -37,8 +37,7 @@ fun ArchiveScreen(
                     true,
                     selectedPasses,
                     listState,
-                    passViewModel,
-                    walletViewModel,
+                    passViewModel
                 )
             }
         },

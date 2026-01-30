@@ -37,7 +37,6 @@ fun SelectionActions(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
     passViewModel: PassViewModel,
-    walletViewModel: WalletViewModel
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -97,7 +96,7 @@ fun SelectionActions(
             expanded = listState.isScrollingUp(),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    walletViewModel.group(selectedPasses.map { it.pass }.toSet())
+                    passViewModel.group(selectedPasses.map { it.pass }.toSet())
                     selectedPasses.clear()
                 }
             },

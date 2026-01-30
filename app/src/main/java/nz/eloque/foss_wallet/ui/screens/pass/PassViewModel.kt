@@ -28,6 +28,8 @@ class PassViewModel @Inject constructor(
     fun passFlowById(id: String) = passStore.passFlowById(id)
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
 
+    fun group(passes: Set<Pass>) = passStore.group(passes)
+
     suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
     suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)
 

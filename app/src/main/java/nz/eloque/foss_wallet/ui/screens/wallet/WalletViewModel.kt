@@ -38,7 +38,6 @@ class WalletViewModel @Inject constructor(
 
     val allTags = tagRepository.all()
 
-    fun group(passes: Set<Pass>) = passStore.group(passes)
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
     fun filter(query: String) {
@@ -50,7 +49,9 @@ class WalletViewModel @Inject constructor(
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
     fun load(context: Context, bytes: ByteArray): ImportResult = passStore.load(context, bytes)
-    
+
+    fun group(passes: Set<Pass>) = passStore.group(passes)
+
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 

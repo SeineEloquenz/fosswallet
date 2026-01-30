@@ -114,8 +114,7 @@ fun WalletScreen(
                     false,
                     selectedPasses,
                     listState,
-                    passViewModel,
-                    walletViewModel
+                    passViewModel
                 )
             } else {
                 FabMenu(
