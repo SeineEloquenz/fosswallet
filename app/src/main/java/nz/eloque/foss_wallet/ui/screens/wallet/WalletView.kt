@@ -48,6 +48,7 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +71,9 @@ fun WalletView(
     val tags by tagFlow.collectAsState(setOf())
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
+
+    val barcodePosition = passViewModel.barcodePosition()
+    val increaseBrightness = passViewModel.increasePassViewBrightness()
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
@@ -146,8 +150,8 @@ fun WalletView(
                         navController.navigate("pass/${pass.pass.id}")
                     },
                     selected = selectedPasses.contains(pass),
-                    barcodePosition = passViewModel.barcodePosition(),
-                    increaseBrightness = passViewModel.increasePassViewBrightness()
+                    barcodePosition = barcodePosition,
+                    increaseBrightness = increaseBrightness
                 )
             }
         }
