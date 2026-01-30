@@ -13,10 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
-import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
@@ -39,8 +37,6 @@ class WalletViewModel @Inject constructor(
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
     val allTags = tagRepository.all()
-
-    fun passFlowById(id: String) = passStore.passFlowById(id)
 
     fun group(passes: Set<Pass>) = passStore.group(passes)
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)

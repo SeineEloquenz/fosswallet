@@ -23,14 +23,11 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
-import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val passViewModel: PassViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
 
     @OptIn(ExperimentalPermissionsApi::class)
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= 33) {
                 val permissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
                 LaunchedEffect("Permissions") {
                     coroutineScope.launch(Dispatchers.IO) { permissionState.launchPermissionRequest() }
