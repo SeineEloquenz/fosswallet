@@ -33,11 +33,12 @@ height="80">](https://play.google.com/store/apps/details?id=nz.eloque.foss_walle
 ### Verification
 To verify the authenticity of a FossWallet apk, use the following fingerprint (SHA256):
 
+
 `BF:8A:F6:D8:9E:55:95:D9:5F:4D:22:9E:C0:FD:97:1A:3C:75:2F:DB:AB:E8:33:77:23:0E:F9:2C:70:44:43:05`
 
 > [!NOTE]
 > The Google Play releases are signed by Google and use a different signing key.
-Prefer using builds from GitHub or F-Droid if possible.
+> Prefer using builds from GitHub or F-Droid if possible.
 
 ## Translations
 FossWallet can be translated via [Weblate](https://hosted.weblate.org/projects/fosswallet/app/).
