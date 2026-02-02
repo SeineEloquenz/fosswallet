@@ -1,5 +1,3 @@
-FossWallet is a simple Material Design 3 Passbook (.pkpass) Wallet built with Jetpack Compose.
+FossWallet это простой Passbook (.pkpass) кошелек для хранения электронных пропусков: билеты на концерты, посадочные билеты и т.д.
 
-It shows the Barcode and the other data contained in the pass.
-The app supports updating passes from vendor servers for supported passes,
-but can otherwise be used fully offline.
+Приложение показывает штрих-код и другую информацию билета. А также может обновить информацию, если электронный билет это поддерживает.
