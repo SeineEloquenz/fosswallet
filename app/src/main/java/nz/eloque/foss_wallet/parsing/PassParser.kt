@@ -17,6 +17,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.LinkifyUrls
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -100,9 +101,9 @@ class PassParser(val context: Context? = null) {
             locations = locations,
             headerFields = fieldContainer?.collectFields("headerFields")?:listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields")?:listOf(),
-            secondaryFields = fieldContainer?.collectFields("secondaryFields")?:listOf(),
-            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields")?:listOf(),
-            backFields = fieldContainer?.collectFields("backFields")?:listOf()
+            secondaryFields = fieldContainer?.collectFields("secondaryFields").let { linkifyUrls(it) }?:listOf(),
+            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields").let { linkifyUrls(it) }?:listOf(),
+            backFields = fieldContainer?.collectFields("backFields").let { linkifyUrls(it) }?:listOf()
         )
     }
 
