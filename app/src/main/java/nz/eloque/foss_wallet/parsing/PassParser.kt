@@ -101,9 +101,9 @@ class PassParser(val context: Context? = null) {
             locations = locations,
             headerFields = fieldContainer?.collectFields("headerFields")?:listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields")?:listOf(),
-            secondaryFields = fieldContainer?.collectFields("secondaryFields").let { linkifyUrls(it) }?:listOf(),
-            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields").let { linkifyUrls(it) }?:listOf(),
-            backFields = fieldContainer?.collectFields("backFields").let { linkifyUrls(it) }?:listOf()
+            secondaryFields = fieldContainer?.collectFields("secondaryFields").map { linkifyUrls(it) }?:listOf(),
+            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields").map { linkifyUrls(it) }?:listOf(),
+            backFields = fieldContainer?.collectFields("backFields").map { linkifyUrls(it) }?:listOf()
         )
     }
 
