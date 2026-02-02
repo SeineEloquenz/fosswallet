@@ -8,6 +8,6 @@ fun linkifyUrls(text: String): String {
     
     return urlPattern.replace(text) { matchResult ->
         val url = matchResult.value
-        """<a href="$url">$url</a>"""
+        """<a href="$url" data-linkified="true">$url</a>"""
     }
 }
