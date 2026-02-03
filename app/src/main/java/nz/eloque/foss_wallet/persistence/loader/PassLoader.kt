@@ -131,7 +131,7 @@ class PassLoader(
     operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
     private fun loadImage(baos: ByteArrayOutputStream): Bitmap? {
-        val array = baos.toByteArray()
+        val array = baos.readBytes()
         val image = BitmapFactory.decodeByteArray(array, 0, array.size)
         return if (image == null) {
             Log.w(TAG, "Failed parsing image from pkpass! Is it missing?")
@@ -142,7 +142,7 @@ class PassLoader(
     }
 
     private fun parseLocalization(lang: String, baos: ByteArrayOutputStream): Set<PassLocalization> {
-        val bytes = baos.toByteArray()
+        val bytes = baos.readBytes()
         val content = bytes.toString(detectEncoding(bytes))
         return LocalizationParser.parseStrings(lang, content)
     }
