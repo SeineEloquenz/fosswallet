@@ -89,7 +89,7 @@ class CustomWebViewClient(
 
             val contentType = response.headers["content-type"]?.split(";")?.first()
 
-            if(PkpassMimeTypes.contains(contentType)) {
+            if (PkpassMimeTypes.contains(contentType)) {
                 return handlePkPassResponse(response)
             } else {
                 WebResourceResponse(contentType, "UTF-8", response.body.byteStream(), )
@@ -113,7 +113,7 @@ class CustomWebViewClient(
                         navController.popBackStack()
                         navController.navigate("pass/${result.passId}")
                     }
-                } else if(result is LoaderResult.Multiple) {
+                } else if (result is LoaderResult.Multiple) {
                     withContext(Dispatchers.Main) {
                         navController.popBackStack()
                     }
