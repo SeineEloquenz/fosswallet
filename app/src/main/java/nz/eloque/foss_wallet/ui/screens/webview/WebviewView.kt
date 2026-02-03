@@ -100,7 +100,7 @@ class CustomWebViewClient(
     }
 
     private fun handlePkPassResponse(response: Response): WebResourceResponse {
-        val bytes = response.body.byteStream().readBytes();
+        val bytes = response.body.byteStream().readBytes()
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 val result = Loader(context).handleInputStream(
@@ -121,6 +121,6 @@ class CustomWebViewClient(
             }
         }
 
-        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()));
+        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".readBytes()))
     }
 }
