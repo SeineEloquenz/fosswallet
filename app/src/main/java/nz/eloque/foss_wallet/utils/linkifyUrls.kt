@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.utils
 
 fun linkifyUrls(text: String): String {
     val urlPattern = Regex(
-        """(?<!["'>])https?://[^\s<>"']+(?<![\.,;:!?\)])""",
+        """(?<!["'>])https?://[^\s<>"']+(?<![.,;:!?)])""",
         RegexOption.IGNORE_CASE
     )
     
