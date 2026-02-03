@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -23,23 +22,18 @@ import java.util.LinkedList
 
 fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
     val list: MutableList<T> = LinkedList()
-    this.forEach { list.add(action.invoke(it)) }
+    this.forEach { list.add(action(it)) }
     return list
 }
 
 fun JSONArray.filter(predicate: (JSONObject) -> Boolean): JSONArray {
     val result = JSONArray()
-    this.forEach { if (predicate.invoke(it)) result.put(it) }
+    this.forEach { if (predicate(it)) result.put(it) }
     return result
 }
 
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
-    var i = 0
-    while (i < this.length()) {
-        val element = this.getJSONObject(i)
-        action.invoke(element)
-        i++
-    }
+    for (i in 0 until this.length()) { action(this.getJSONObject(i)) }
 }
 
 fun ZonedDateTime.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
@@ -77,16 +71,7 @@ fun Color.darken(factor: Float = 0.3f): Color {
     )
 }
 
-fun InputStream.toByteArray(): ByteArray {
-    val baos = ByteArrayOutputStream()
-    val buffer = ByteArray(1024)
-    var len: Int
-    while ((this.read(buffer).also { len = it }) > -1) {
-        baos.write(buffer, 0, len)
-    }
-    baos.flush()
-    return baos.toByteArray()
-}
+fun InputStream.toByteArray(): ByteArray = this.readBytes()
 
 fun JSONObject.stringOrNull(key: String): String? {
     return if (this.has(key)) this.getString(key) else null
