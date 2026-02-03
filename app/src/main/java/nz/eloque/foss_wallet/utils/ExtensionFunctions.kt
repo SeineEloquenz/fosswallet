@@ -71,8 +71,6 @@ fun Color.darken(factor: Float = 0.3f): Color {
     )
 }
 
-fun InputStream.toByteArray(): ByteArray = this.readBytes()
-
 fun JSONObject.stringOrNull(key: String): String? {
     return if (this.has(key)) this.getString(key) else null
 }
