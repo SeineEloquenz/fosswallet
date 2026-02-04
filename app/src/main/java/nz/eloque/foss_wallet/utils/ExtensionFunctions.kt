@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -69,6 +70,17 @@ fun Color.darken(factor: Float = 0.3f): Color {
         blue = blue * factor,
         alpha = alpha
     )
+}
+
+fun InputStream.toByteArray(): ByteArray {
+    val baos = ByteArrayOutputStream()
+    val buffer = ByteArray(1024)
+    var len: Int
+    while ((this.read(buffer).also { len = it }) > -1) {
+        baos.write(buffer, 0, len)
+    }
+    baos.flush()
+    return baos.toByteArray()
 }
 
 fun JSONObject.stringOrNull(key: String): String? {
