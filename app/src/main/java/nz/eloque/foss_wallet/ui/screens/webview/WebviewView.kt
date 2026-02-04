@@ -81,7 +81,7 @@ class CustomWebViewClient(
             val okHttpRequest = Request.Builder().also {
                 it.url(request?.url.toString())
                 for (header in request!!.requestHeaders) {
-                    if (header.key.startsWith("sec-ch-ua")) continue;
+                    if (header.key.startsWith("sec-ch-ua")) continue
                     it.addHeader(header.key, header.value)
                 }
             }
@@ -121,6 +121,6 @@ class CustomWebViewClient(
             }
         }
 
-        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".readBytes()))
+        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
     }
 }
