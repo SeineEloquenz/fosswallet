@@ -48,12 +48,14 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletView(
     navController: NavController,
     passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
     archive: Boolean = false,
@@ -62,13 +64,16 @@ fun WalletView(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val emptyState = rememberLazyListState()
-    val passFlow = passViewModel.filteredPasses
+    val passFlow = walletViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
-    val tagFlow = passViewModel.allTags
+    val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
+
+    val barcodePosition = passViewModel.barcodePosition()
+    val increaseBrightness = passViewModel.increasePassViewBrightness()
 
     val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
 
@@ -109,7 +114,7 @@ fun WalletView(
 
         item {
             FilterBlock(
-                passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 sortOption = sortOption,
                 passTypesToShow = passTypesToShow,
                 tags = tags,
@@ -126,6 +131,7 @@ fun WalletView(
                     navController.navigate("pass/${it.id}")
                 },
                 passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses
             )
         }
@@ -144,8 +150,8 @@ fun WalletView(
                         navController.navigate("pass/${pass.pass.id}")
                     },
                     selected = selectedPasses.contains(pass),
-                    barcodePosition = passViewModel.barcodePosition(),
-                    increaseBrightness = passViewModel.increasePassViewBrightness()
+                    barcodePosition = barcodePosition,
+                    increaseBrightness = increaseBrightness
                 )
             }
         }
