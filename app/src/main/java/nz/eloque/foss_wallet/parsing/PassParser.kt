@@ -13,10 +13,12 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.linkifyUrls
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -100,9 +102,15 @@ class PassParser(val context: Context? = null) {
             locations = locations,
             headerFields = fieldContainer?.collectFields("headerFields")?:listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields")?:listOf(),
-            secondaryFields = fieldContainer?.collectFields("secondaryFields")?:listOf(),
-            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields")?:listOf(),
-            backFields = fieldContainer?.collectFields("backFields")?:listOf()
+            secondaryFields = fieldContainer?.collectFields("secondaryFields")?.map { field ->
+                field.copy(content = PassContent.deserialize(linkifyUrls(text = field.content.serialize())))
+            } ?: listOf(),
+            auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields")?.map { field ->
+                field.copy(content = PassContent.deserialize(linkifyUrls(text = field.content.serialize())))
+            } ?: listOf(),
+            backFields = fieldContainer?.collectFields("backFields")?.map { field ->
+                field.copy(content = PassContent.deserialize(linkifyUrls(text = field.content.serialize())))
+            } ?: listOf()
         )
     }
 
