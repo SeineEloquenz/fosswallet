@@ -19,7 +19,7 @@ enum class TransitType(val jsonKey: String, val icon: ImageVector) {
     AIR(AIR_KEY, Icons.AutoMirrored.Default.FlightTakeoff),
     BOAT(BOAT_KEY, Icons.Default.DirectionsBoat),
     BUS(BUS_KEY, Icons.Default.DirectionsBus),
-    TRAIN(TRAIN_KEY, Icons.Default.DirectionsTransit)
+    TRAIN(TRAIN_KEY, Icons.Default.DirectionsTransit);
 
     companion object {
 
