@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.persistence.loader
 
-import nz.eloque.foss_wallet.utils.toByteArray
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -15,7 +14,7 @@ class PassesLoader(val passLoader: PassLoader) {
                 var entry: ZipEntry? = zip.nextEntry
                 while (entry != null) {
                     if (!entry.isDirectory && entry.name.endsWith(".pkpass", ignoreCase = true)) {
-                        val passBytes = zip.toByteArray()
+                        val passBytes = zip.readBytes()
                         val result = passLoader.load(passBytes)
                         results.add(result)
                     }
