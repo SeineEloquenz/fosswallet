@@ -23,23 +23,18 @@ import java.util.LinkedList
 
 fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
     val list: MutableList<T> = LinkedList()
-    this.forEach { list.add(action.invoke(it)) }
+    this.forEach { list.add(action(it)) }
     return list
 }
 
 fun JSONArray.filter(predicate: (JSONObject) -> Boolean): JSONArray {
     val result = JSONArray()
-    this.forEach { if (predicate.invoke(it)) result.put(it) }
+    this.forEach { if (predicate(it)) result.put(it) }
     return result
 }
 
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
-    var i = 0
-    while (i < this.length()) {
-        val element = this.getJSONObject(i)
-        action.invoke(element)
-        i++
-    }
+    for (i in 0 until this.length()) { action(this.getJSONObject(i)) }
 }
 
 fun ZonedDateTime.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
