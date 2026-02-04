@@ -95,7 +95,7 @@ fun SettingsView(
             )
         }
         SettingsSection(
-            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share),
+            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
         ) {
             SettingsButton(
                 title = stringResource(R.string.export) + " (.pkpasses)",
