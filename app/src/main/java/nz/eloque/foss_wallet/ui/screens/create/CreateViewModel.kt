@@ -74,8 +74,8 @@ class CreateViewModel @Inject constructor(
         )
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
-        val iconBitmap = loadBitmapFromUrl(context, iconUrl) ?: drawableToBitmap(drawable, 64, 64)
-        val logoBitmap = loadBitmapFromUrl(context, logoUrl)
+        val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawableToBitmap(drawable, 64, 64)
+        val logoBitmap = loadBitmapFromUrl(context, logoUrl, LOGO_SIZE)
 
         val finalLogo = when {
             existingPass != null -> logoBitmap
@@ -87,9 +87,9 @@ class CreateViewModel @Inject constructor(
         val bitmaps = PassBitmaps(
             icon = iconBitmap,
             logo = finalLogo,
-            strip = loadBitmapFromUrl(context, stripUrl),
-            thumbnail = loadBitmapFromUrl(context, thumbnailUrl),
-            footer = loadBitmapFromUrl(context, footerUrl),
+            strip = loadBitmapFromUrl(context, stripUrl, STRIP_SIZE),
+            thumbnail = loadBitmapFromUrl(context, thumbnailUrl, THUMBNAIL_SIZE),
+            footer = loadBitmapFromUrl(context, footerUrl, FOOTER_SIZE),
         )
 
         passStore.create(
@@ -136,6 +136,7 @@ class CreateViewModel @Inject constructor(
     private suspend fun loadBitmapFromUrl(
         context: Context,
         imageUrl: Uri?,
+        targetSize: Int,
     ): Bitmap? {
         if (imageUrl == null) return null
 
@@ -147,9 +148,9 @@ class CreateViewModel @Inject constructor(
         val request = ImageRequest.Builder(context)
             .precision(Precision.INEXACT)
             .scale(Scale.FIT)
-            .size(1024)
+            .size(targetSize)
             .data(imageUrl)
-            .allowHardware(false)
+            .allowHardware(false) // IMPORTANT for Bitmap
             .build()
 
         val result = loader.execute(request)
@@ -166,5 +167,13 @@ class CreateViewModel @Inject constructor(
         drawable.setBounds(0, 0, width, height)
         drawable.draw(canvas)
         return bitmap
+    }
+
+    companion object {
+        private const val ICON_SIZE = 64
+        private const val LOGO_SIZE = 512
+        private const val STRIP_SIZE = 1024
+        private const val THUMBNAIL_SIZE = 512
+        private const val FOOTER_SIZE = 768
     }
 }
