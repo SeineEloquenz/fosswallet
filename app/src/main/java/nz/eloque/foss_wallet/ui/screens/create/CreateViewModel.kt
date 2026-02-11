@@ -3,7 +3,9 @@ package nz.eloque.foss_wallet.ui.screens.create
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.core.content.res.ResourcesCompat
@@ -13,14 +15,19 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
 import coil.size.Scale
+import com.google.zxing.BarcodeFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassCreator
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
-
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
@@ -29,57 +36,135 @@ class CreateViewModel @Inject constructor(
     private val passStore: PassStore,
 ) : AndroidViewModel(application) {
 
-    suspend fun addPass(
-        pass: Pass,
-        iconUrl: Uri?,
-        logoUrl: Uri?,
-    ) {
-        val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
-        val icon = loadBitmapFromUrl(context, iconUrl) ?: drawableToBitmap(drawable, 64, 64)
-        val logo = loadBitmapFromUrl(context, logoUrl) ?: drawableToBitmap(drawable, 256, 256)
-
-        passStore.create(
-            pass = pass.copy(hasLogo = true),
-            bitmaps = PassBitmaps(
-                icon = icon,
-                logo = logo,
-                strip = null,
-                thumbnail = null,
-                footer = null
-            )
-        )
+    fun passFlowById(passId: String): Flow<Pass?> {
+        return passStore.passFlowById(passId).map { it?.pass }
     }
 
-    suspend fun loadBitmapFromUrl(
+    suspend fun savePass(
+        existingPass: Pass?,
+        name: String,
+        organization: String,
+        serialNumber: String,
+        type: PassType,
+        format: BarcodeFormat,
+        barcodeValue: String,
+        barcodeAltText: String,
+        logoText: String,
+        iconUrl: Uri?,
+        logoUrl: Uri?,
+        stripUrl: Uri?,
+        thumbnailUrl: Uri?,
+        footerUrl: Uri?,
+    ): String {
+        val barCode = BarCode(
+            format = format,
+            message = barcodeValue,
+            encoding = Charsets.UTF_8,
+            altText = barcodeAltText.ifBlank { null }
+        )
+
+        val pass = createPass(
+            existingPass = existingPass,
+            name = name,
+            organization = organization,
+            serialNumber = serialNumber,
+            type = type,
+            barCode = barCode,
+            logoText = logoText,
+        )
+
+        val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
+        val iconBitmap = loadBitmapFromUrl(context, iconUrl) ?: drawableToBitmap(drawable, 64, 64)
+        val logoBitmap = loadBitmapFromUrl(context, logoUrl)
+
+        val finalLogo = when {
+            existingPass != null -> logoBitmap
+            logoBitmap != null -> logoBitmap
+            iconUrl != null -> iconBitmap
+            else -> drawableToBitmap(drawable, 256, 256)
+        }
+
+        val bitmaps = PassBitmaps(
+            icon = iconBitmap,
+            logo = finalLogo,
+            strip = loadBitmapFromUrl(context, stripUrl),
+            thumbnail = loadBitmapFromUrl(context, thumbnailUrl),
+            footer = loadBitmapFromUrl(context, footerUrl),
+        )
+
+        passStore.create(
+            pass = pass.copy(
+                hasLogo = bitmaps.logo != null,
+                hasStrip = bitmaps.strip != null,
+                hasThumbnail = bitmaps.thumbnail != null,
+                hasFooter = bitmaps.footer != null,
+            ),
+            bitmaps = bitmaps
+        )
+
+        return pass.id
+    }
+
+    private fun createPass(
+        existingPass: Pass?,
+        name: String,
+        organization: String,
+        serialNumber: String,
+        type: PassType,
+        barCode: BarCode,
+        logoText: String,
+    ): Pass {
+        return if (existingPass == null) {
+            val created = PassCreator.create(name, type, barCode)!!
+            created.copy(
+                organization = organization.ifBlank { created.organization },
+                serialNumber = serialNumber.ifBlank { created.serialNumber },
+                logoText = logoText.ifBlank { null },
+            )
+        } else {
+            existingPass.copy(
+                description = name,
+                organization = organization,
+                serialNumber = serialNumber,
+                type = type,
+                barCodes = setOf(barCode),
+                logoText = logoText.ifBlank { null },
+            )
+        }
+    }
+
+    private suspend fun loadBitmapFromUrl(
         context: Context,
         imageUrl: Uri?,
     ): Bitmap? {
+        if (imageUrl == null) return null
+
+        if (imageUrl.scheme == "file") {
+            return BitmapFactory.decodeFile(imageUrl.path)
+        }
+
         val loader = ImageLoader(context)
         val request = ImageRequest.Builder(context)
             .precision(Precision.INEXACT)
             .scale(Scale.FIT)
-            .size(256)
+            .size(1024)
             .data(imageUrl)
-            .allowHardware(false) // IMPORTANT for Bitmap
+            .allowHardware(false)
             .build()
 
         val result = loader.execute(request)
         return if (result is SuccessResult) {
-            (result.drawable as android.graphics.drawable.BitmapDrawable).bitmap
+            (result.drawable as? BitmapDrawable)?.bitmap
         } else {
             null
         }
     }
 
-
     private fun drawableToBitmap(drawable: Drawable, width: Int, height: Int): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-
         drawable.setBounds(0, 0, width, height)
         drawable.draw(canvas)
-
         return bitmap
     }
-
 }

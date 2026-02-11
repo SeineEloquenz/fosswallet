@@ -16,6 +16,10 @@ data class BarCode(
     val altText: String?,
 ) {
 
+    fun message(): String = message
+
+    fun format(): BarcodeFormat = format
+
     fun toJson(): JSONObject {
         return JSONObject().also {
             it.put("format", format.toString())
