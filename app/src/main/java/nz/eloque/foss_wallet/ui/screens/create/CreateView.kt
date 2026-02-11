@@ -116,10 +116,19 @@ fun CreateView(
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
     var logoText by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-    var altText by remember { mutableStateOf("") }
+    var barcodes by remember {
+        mutableStateOf(
+            listOf(
+                BarcodeDraft(
+                    message = "",
+                    altText = "",
+                    format = BarcodeFormat.QR_CODE,
+                )
+            )
+        )
+    }
+    var activeBarcodeIndex by remember { mutableStateOf(0) }
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
-    var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
 
     var location by remember { mutableStateOf<Location?>(null) }
     var relevantStart by remember { mutableStateOf<ZonedDateTime?>(null) }
@@ -147,10 +156,24 @@ fun CreateView(
         logoText = pass.logoText ?: ""
         type = pass.type
 
-        val barCode = pass.barCodes.firstOrNull()
-        message = barCode?.message() ?: ""
-        altText = barCode?.altText ?: message
-        format = barCode?.format() ?: BarcodeFormat.QR_CODE
+        barcodes = pass.barCodes
+            .map {
+                BarcodeDraft(
+                    message = it.message(),
+                    altText = it.altText ?: it.message(),
+                    format = it.format(),
+                )
+            }
+            .ifEmpty {
+                listOf(
+                    BarcodeDraft(
+                        message = "",
+                        altText = "",
+                        format = BarcodeFormat.QR_CODE,
+                    )
+                )
+            }
+        activeBarcodeIndex = 0
 
         location = pass.locations.firstOrNull()
 
@@ -182,16 +205,18 @@ fun CreateView(
         footerUrl = pass.footerFile(context)?.asUri()
     }
 
-    val barCode = BarCode(
-        format = format,
-        message = message,
-        encoding = Charsets.UTF_8,
-        altText = altText.ifBlank { message }
-    )
-
     val nameValid = name.length in 1..<30
     val showNameError = nameTouched && !nameValid
-    val messageValid = message.isNotEmpty() && barcodeValid(barCode)
+    val messageValid = barcodes.all {
+        it.message.isNotEmpty() && barcodeValid(
+            BarCode(
+                format = it.format,
+                message = it.message,
+                encoding = Charsets.UTF_8,
+                altText = it.altText.ifBlank { it.message }
+            )
+        )
+    }
     val datesValid = relevantEnd == null || relevantStart != null
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
@@ -202,12 +227,25 @@ fun CreateView(
         contract = ScanContract(),
         onResult = { result ->
             if (result != null && result.contents != null) {
-                message = result.contents
-                altText = result.contents
+                if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
+                barcodes = barcodes.mapIndexed { index, barcode ->
+                    if (index != activeBarcodeIndex) {
+                        barcode
+                    } else {
+                        barcode.copy(
+                            message = result.contents,
+                            altText = result.contents,
+                            format = try {
+                                BarcodeFormat.valueOf(result.formatName)
+                            } catch (_: IllegalArgumentException) {
+                                BarcodeFormat.QR_CODE
+                            }
+                        )
+                    }
+                }
                 try {
-                    format = BarcodeFormat.valueOf(result.formatName)
+                    BarcodeFormat.valueOf(result.formatName)
                 } catch (_: IllegalArgumentException) {
-                    format = BarcodeFormat.QR_CODE
                     Toast.makeText(context, context.getString(R.string.no_barcode_format_given), Toast.LENGTH_SHORT).show()
                 }
             }
@@ -222,9 +260,18 @@ fun CreateView(
                 val result = ImageScanner.scanFrom(context.contentResolver, pickedUri)
                 withContext(Dispatchers.Main) {
                     if (result != null && result.text != null) {
-                        message = result.text
-                        altText = result.text
-                        format = result.barcodeFormat
+                        if (activeBarcodeIndex !in barcodes.indices) return@withContext
+                        barcodes = barcodes.mapIndexed { index, barcode ->
+                            if (index != activeBarcodeIndex) {
+                                barcode
+                            } else {
+                                barcode.copy(
+                                    message = result.text,
+                                    altText = result.text,
+                                    format = result.barcodeFormat,
+                                )
+                            }
+                        }
                     } else {
                         Toast.makeText(context, context.getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                     }
@@ -297,45 +344,101 @@ fun CreateView(
             isError = showNameError
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            OutlinedTextField(
-                label = { Text(stringResource(R.string.barcode_value)) },
-                value = message,
-                onValueChange = { message = it },
-                modifier = Modifier.fillMaxWidth(fraction = 0.8f),
-                isError = !messageValid,
-                supportingText = {
-                    if (!messageValid) {
-                        Text(stringResource(R.string.barcode_value_invalid, format.toString()))
-                    }
+        barcodes.forEachIndexed { index, barcode ->
+            Text(text = "${stringResource(R.string.barcode)} ${index + 1}")
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.barcode_value)) },
+                    value = barcode.message,
+                    onValueChange = { value ->
+                        barcodes = barcodes.mapIndexed { i, item ->
+                            if (i == index) item.copy(message = value) else item
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(fraction = 0.72f),
+                    isError = barcode.message.isNotEmpty() && !barcodeValid(
+                        BarCode(
+                            format = barcode.format,
+                            message = barcode.message,
+                            encoding = Charsets.UTF_8,
+                            altText = barcode.altText.ifBlank { barcode.message },
+                        )
+                    ),
+                )
+
+                IconButton(onClick = {
+                    activeBarcodeIndex = index
+                    pickImageLauncher.launch("image/*")
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ImageSearch,
+                        contentDescription = stringResource(R.string.select_image_with_barcode)
+                    )
                 }
+                IconButton(onClick = {
+                    activeBarcodeIndex = index
+                    scanLauncher.launch(ScanOptions())
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.QrCodeScanner,
+                        contentDescription = stringResource(R.string.scan_barcode)
+                    )
+                }
+                IconButton(
+                    enabled = barcodes.size > 1,
+                    onClick = {
+                        barcodes = barcodes.filterIndexed { i, _ -> i != index }
+                        activeBarcodeIndex = activeBarcodeIndex.coerceAtMost(barcodes.lastIndex.coerceAtLeast(0))
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = stringResource(R.string.delete)
+                    )
+                }
+            }
+
+            OutlinedTextField(
+                label = { Text(stringResource(R.string.barcode_alt_text)) },
+                value = barcode.altText,
+                onValueChange = { value ->
+                    barcodes = barcodes.mapIndexed { i, item ->
+                        if (i == index) item.copy(altText = value) else item
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
             )
 
-            IconButton(onClick = { pickImageLauncher.launch("image/*") }) {
-                Icon(
-                    imageVector = Icons.Default.ImageSearch,
-                    contentDescription = stringResource(R.string.select_image_with_barcode)
-                )
-            }
-            IconButton(onClick = { scanLauncher.launch(ScanOptions()) }) {
-                Icon(
-                    imageVector = Icons.Default.QrCodeScanner,
-                    contentDescription = stringResource(R.string.scan_barcode)
-                )
-            }
+            ComboBox(
+                title = stringResource(R.string.barcode_format),
+                options = BarcodeFormat.entries,
+                selectedOption = barcode.format,
+                onOptionSelected = { selected ->
+                    barcodes = barcodes.mapIndexed { i, item ->
+                        if (i == index) item.copy(format = selected) else item
+                    }
+                },
+                optionLabel = { it.name },
+            )
         }
 
-        ComboBox(
-            title = stringResource(R.string.barcode_format),
-            options = BarcodeFormat.entries,
-            selectedOption = format,
-            onOptionSelected = { format = it },
-            optionLabel = { it.name },
-        )
+        ElevatedButton(
+            onClick = {
+                barcodes = barcodes + BarcodeDraft(
+                    message = "",
+                    altText = "",
+                    format = BarcodeFormat.QR_CODE,
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(stringResource(R.string.add_another_barcode))
+        }
 
         ComboBox(
             title = stringResource(R.string.pass_type),
@@ -421,13 +524,6 @@ fun CreateView(
                     label = { Text(stringResource(R.string.logo_text)) },
                     value = logoText,
                     onValueChange = { logoText = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.barcode_alt_text)) },
-                    value = altText,
-                    onValueChange = { altText = it },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
@@ -521,9 +617,14 @@ fun CreateView(
                         organization = organization,
                         serialNumber = serialNumber,
                         type = type,
-                        format = format,
-                        barcodeValue = message,
-                        barcodeAltText = altText,
+                        barCodes = barcodes.map {
+                            BarCode(
+                                format = it.format,
+                                message = it.message,
+                                encoding = Charsets.UTF_8,
+                                altText = it.altText.ifBlank { it.message },
+                            )
+                        },
                         logoText = logoText,
                         colors = colors,
                         location = location,
@@ -549,6 +650,12 @@ fun CreateView(
         Spacer(modifier = Modifier.imePadding())
     }
 }
+
+private data class BarcodeDraft(
+    val message: String,
+    val altText: String,
+    val format: BarcodeFormat,
+)
 
 @Composable
 private fun PickableOutlinedField(

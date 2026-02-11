@@ -151,6 +151,7 @@ class TypeConverters {
 
     @TypeConverter
     fun toBarcodes(str: String): Set<BarCode> {
+        // Preserve barcode order from JSON so first barcode remains stable in UI/edit flows.
         return JSONArray(str)
             .map { BarCode.fromJson(it) }
             .toCollection(LinkedHashSet())

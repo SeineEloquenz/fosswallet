@@ -68,15 +68,14 @@ fun HeaderFieldsView(
 @Composable
 fun BarcodesView(
     legacyRendering: Boolean,
-    barcode: BarCode,
+    barcodes: List<BarCode>,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
 ) {
-    var fullscreen by remember { mutableStateOf(false) }
+    var fullscreenIndex by remember { mutableStateOf<Int?>(null) }
     if (increaseBrightness) {
         UpdateBrightness()
     }
-    val image = barcode.encodeAsBitmap(if (barcode.is1d()) 3000 else 1000, 1000, legacyRendering)
 
     Box(
         modifier = Modifier
@@ -92,35 +91,51 @@ fun BarcodesView(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    bitmap = image.asImageBitmap(),
-                    contentDescription = stringResource(R.string.image),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .heightIn(max = 150.dp)
-                        .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
-                        .clickable { fullscreen = !fullscreen }
-                )
-                barcode.altText?.let {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = it,
-                        color = Color.Black,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.width(150.dp)
+                barcodes.forEachIndexed { index, barcode ->
+                    val image =
+                        barcode.encodeAsBitmap(if (barcode.is1d()) 3000 else 1000, 1000, legacyRendering)
+
+                    Image(
+                        bitmap = image.asImageBitmap(),
+                        contentDescription = stringResource(R.string.image),
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .heightIn(max = 150.dp)
+                            .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
+                            .clickable { fullscreenIndex = index }
                     )
+                    barcode.altText?.let {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = it,
+                            color = Color.Black,
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(150.dp)
+                        )
+                    }
+                    if (index < barcodes.lastIndex) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
             }
         }
     }
 
-    FullscreenBarcode(
-        image = image,
-        barcodePosition = barcodePosition,
-        isFullscreen = fullscreen,
-        onDismiss = { fullscreen = !fullscreen}
-    )
+    fullscreenIndex?.let { index ->
+        val fullscreenBarcode = barcodes.getOrNull(index) ?: return@let
+        val fullscreenImage = fullscreenBarcode.encodeAsBitmap(
+            if (fullscreenBarcode.is1d()) 3000 else 1000,
+            1000,
+            legacyRendering
+        )
+        FullscreenBarcode(
+            image = fullscreenImage,
+            barcodePosition = barcodePosition,
+            isFullscreen = true,
+            onDismiss = { fullscreenIndex = null }
+        )
+    }
 }
 
 @Composable

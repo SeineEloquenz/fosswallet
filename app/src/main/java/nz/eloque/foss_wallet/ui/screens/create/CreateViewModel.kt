@@ -33,6 +33,7 @@ import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import java.time.ZonedDateTime
+import java.util.LinkedHashSet
 import java.util.Locale
 
 @HiltViewModel
@@ -58,9 +59,7 @@ class CreateViewModel @Inject constructor(
         organization: String,
         serialNumber: String,
         type: PassType,
-        format: BarcodeFormat,
-        barcodeValue: String,
-        barcodeAltText: String,
+        barCodes: List<BarCode>,
         logoText: String,
         colors: PassColors?,
         location: Location?,
@@ -72,20 +71,13 @@ class CreateViewModel @Inject constructor(
         thumbnailUrl: Uri?,
         footerUrl: Uri?,
     ): String {
-        val barCode = BarCode(
-            format = format,
-            message = barcodeValue,
-            encoding = Charsets.UTF_8,
-            altText = barcodeAltText.ifBlank { null }
-        )
-
         val pass = createPass(
             existingPass = existingPass,
             name = name,
             organization = organization,
             serialNumber = serialNumber,
             type = type,
-            barCode = barCode,
+            barCodes = barCodes,
             logoText = logoText,
             colors = colors,
             location = location,
@@ -131,7 +123,7 @@ class CreateViewModel @Inject constructor(
         organization: String,
         serialNumber: String,
         type: PassType,
-        barCode: BarCode,
+        barCodes: List<BarCode>,
         logoText: String,
         colors: PassColors?,
         location: Location?,
@@ -139,23 +131,25 @@ class CreateViewModel @Inject constructor(
         expirationDate: ZonedDateTime?,
     ): Pass {
         return if (existingPass == null) {
-            val created = PassCreator.create(name, type, barCode)!!
-            created.copy(
-                organization = organization.ifBlank { created.organization },
-                serialNumber = serialNumber.ifBlank { created.serialNumber },
+            PassCreator.create(
+                name = name,
+                type = type,
+                barCodes = barCodes,
+                organization = organization.ifBlank { PassCreator.ORGANIZATION },
+                serialNumber = serialNumber.ifBlank { null },
                 logoText = logoText.ifBlank { null },
                 colors = colors,
-                locations = location?.let { listOf(it) } ?: emptyList(),
+                location = location,
                 relevantDates = relevantDates,
                 expirationDate = expirationDate,
-            )
+            )!!
         } else {
             existingPass.copy(
                 description = name,
                 organization = organization,
                 serialNumber = serialNumber,
                 type = type,
-                barCodes = setOf(barCode),
+                barCodes = LinkedHashSet(barCodes),
                 logoText = logoText.ifBlank { null },
                 colors = colors,
                 locations = location?.let { listOf(it) } ?: emptyList(),

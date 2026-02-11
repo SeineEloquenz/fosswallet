@@ -1,23 +1,46 @@
 package nz.eloque.foss_wallet.model
 
+import android.location.Location
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
 import java.time.Instant
+import java.time.ZonedDateTime
 
 object PassCreator {
 
     const val FORMAT_VERSION = 1
     const val ORGANIZATION = "nz.eloque.foss_wallet"
 
-    fun create(name: String, type: PassType, barCode: BarCode): Pass? {
-        try {
-            barCode.encodeAsBitmap(100, 100, false)
-        } catch (_: IllegalArgumentException) {
+    fun create(
+        name: String,
+        type: PassType,
+        barCodes: List<BarCode>,
+        organization: String = ORGANIZATION,
+        serialNumber: String? = null,
+        logoText: String? = null,
+        colors: PassColors? = null,
+        location: Location? = null,
+        relevantDates: List<PassRelevantDate> = emptyList(),
+        expirationDate: ZonedDateTime? = null,
+    ): Pass? {
+        if (barCodes.isEmpty()) {
             return null
         }
 
-        val id = Hash.sha256(barCode.toString())
+        if (barCodes.any {
+                try {
+                    it.encodeAsBitmap(100, 100, false)
+                    false
+                } catch (_: IllegalArgumentException) {
+                    true
+                }
+            }
+        ) {
+            return null
+        }
+
+        val id = Hash.sha256(barCodes.joinToString("|") { it.toString() })
 
         val nameField = PassField(
             key = "main",
@@ -29,12 +52,17 @@ object PassCreator {
             id = id,
             description = name,
             formatVersion = FORMAT_VERSION,
-            organization = ORGANIZATION,
-            serialNumber = id,
+            organization = organization,
+            serialNumber = serialNumber ?: id,
             type = type,
-            barCodes = setOf(barCode),
+            barCodes = LinkedHashSet(barCodes),
             addedAt = Instant.now(),
-            primaryFields = listOf(nameField)
+            logoText = logoText,
+            colors = colors,
+            locations = location?.let { listOf(it) } ?: emptyList(),
+            relevantDates = relevantDates,
+            expirationDate = expirationDate,
+            primaryFields = listOf(nameField),
         )
     }
 }
