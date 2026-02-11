@@ -103,7 +103,6 @@
     <string name="selected_location">Selected: %1$s</string>
     <string name="open_in_map_app">Open in map app</string>
     <string name="brightness">Brightness</string>
-    <string name="transparency">Transparency</string>
     <string name="pass_relevant_start">Start</string>
     <string name="pass_relevant_end">End</string>
     <string name="pass_expiration_date">Expiration</string>
