@@ -99,6 +99,13 @@ fun WalletApp(
                 CreateScreen(navController, createViewModel)
             }
             composable(
+                route = "edit/{passId}",
+                arguments = listOf(navArgument("passId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val passId = backStackEntry.arguments?.getString("passId")!!
+                CreateScreen(navController, createViewModel, passId)
+            }
+            composable(
                 route = "pass/{passId}",
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "${Shortcut.BASE_URI}/{passId}"
