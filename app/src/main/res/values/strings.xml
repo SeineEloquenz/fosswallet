@@ -58,6 +58,8 @@
     <string name="pass_deleted">Pass successfully deleted</string>
     <string name="pass_imported">Pass successfully imported</string>
     <string name="edit_pass">Edit pass</string>
+    <string name="edit_persistence_only_warning">Changes are saved in the app, but cannot be exported to the original .pkpass.</string>
+    <string name="continue_editing">Continue editing</string>
     <string name="save_changes">Save changes</string>
     <string name="export">Export</string>
     <string name="share_passes">Share passes</string>

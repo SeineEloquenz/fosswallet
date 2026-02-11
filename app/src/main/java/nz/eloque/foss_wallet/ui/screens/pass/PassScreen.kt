@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -106,6 +108,7 @@ fun Actions(
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
+    val showEditWarningDialog = remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -140,7 +143,12 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Edit, contentDescription = stringResource(R.string.edit_pass))
                 },
                 onClick = {
-                    navController.navigate("edit/${pass.id}")
+                    expanded.value = false
+                    if (passFile != null) {
+                        showEditWarningDialog.value = true
+                    } else {
+                        navController.navigate("edit/${pass.id}")
+                    }
                 }
             )
             
@@ -192,6 +200,29 @@ fun Actions(
                 }
             )
         }
+    }
+
+    if (showEditWarningDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showEditWarningDialog.value = false },
+            title = { Text(stringResource(R.string.edit_pass)) },
+            text = { Text(stringResource(R.string.edit_persistence_only_warning)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showEditWarningDialog.value = false
+                        navController.navigate("edit/${pass.id}")
+                    }
+                ) {
+                    Text(stringResource(R.string.continue_editing))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditWarningDialog.value = false }) {
+                    Text(stringResource(R.string.back))
+                }
+            }
+        )
     }
 }
 
