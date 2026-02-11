@@ -93,7 +93,7 @@ fun CreateView(
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
     var format by remember { mutableStateOf(BarcodeFormat.QR_CODE) }
     var isSaving by remember { mutableStateOf(false) }
-    var advancedExpanded by remember(passId) { mutableStateOf(passId == null) }
+    var advancedExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(existingPass?.id) {
         val pass = existingPass ?: return@LaunchedEffect
@@ -252,18 +252,16 @@ fun CreateView(
             optionLabel = { context.getString(it.label) },
         )
 
-        if (passId != null) {
-            ElevatedButton(
-                onClick = { advancedExpanded = !advancedExpanded },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(stringResource(R.string.additional_fields))
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
-                )
-            }
+        ElevatedButton(
+            onClick = { advancedExpanded = !advancedExpanded },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(stringResource(R.string.additional_fields))
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
+            )
         }
 
         AnimatedVisibility(
