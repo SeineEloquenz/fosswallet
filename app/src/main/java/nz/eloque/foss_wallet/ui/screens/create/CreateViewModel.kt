@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
 import coil.ImageLoader
@@ -34,6 +35,8 @@ import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import java.time.ZonedDateTime
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
@@ -213,7 +216,26 @@ class CreateViewModel @Inject constructor(
         if (query.isBlank()) return emptyList()
 
         val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocationName(query, 6) ?: emptyList()
+        val addresses = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            suspendCancellableCoroutine { continuation ->
+                geocoder.getFromLocationName(query, 6, object : Geocoder.GeocodeListener {
+                    override fun onGeocode(addresses: MutableList<android.location.Address>) {
+                        if (continuation.isActive) {
+                            continuation.resume(addresses)
+                        }
+                    }
+
+                    override fun onError(errorMessage: String?) {
+                        if (continuation.isActive) {
+                            continuation.resume(emptyList())
+                        }
+                    }
+                })
+            }
+        } else {
+            geocoder.getFromLocationName(query, 6) ?: emptyList()
+        }
+
         return addresses.map {
             val firstAddressLine = it.getAddressLine(0)
             GeocodeResult(

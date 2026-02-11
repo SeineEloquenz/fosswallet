@@ -62,9 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
-import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
@@ -262,9 +260,9 @@ fun CreateView(
             onDismiss = { colorPickerTarget = null },
             onConfirm = { selected ->
                 when (target) {
-                    ColorTarget.Background -> backgroundColor = selected
-                    ColorTarget.Foreground -> foregroundColor = selected
-                    ColorTarget.Label -> labelColor = selected
+                    ColorTarget.Background -> backgroundColor = selected.opaque()
+                    ColorTarget.Foreground -> foregroundColor = selected.opaque()
+                    ColorTarget.Label -> labelColor = selected.opaque()
                 }
                 colorPickerTarget = null
             }
@@ -508,10 +506,11 @@ fun CreateView(
                         null
                     } else {
                         val existingColors = existingPass?.colors
+                        val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
                         PassColors(
-                            background = backgroundColor ?: existingColors?.background ?: Color.White,
-                            foreground = foregroundColor ?: existingColors?.foreground ?: Color.White,
-                            label = labelColor ?: existingColors?.label ?: Color.White,
+                            background = backgroundColor ?: existingColors?.background ?: fallbackColor,
+                            foreground = foregroundColor ?: existingColors?.foreground ?: fallbackColor,
+                            label = labelColor ?: existingColors?.label ?: fallbackColor,
                         )
                     }
 
@@ -637,12 +636,12 @@ private fun ColorPickerDialog(
     onConfirm: (Color) -> Unit,
 ) {
     var envelope by remember {
-        mutableStateOf(ColorEnvelope(initialColor, initialColor.toHexColor().drop(1), false))
+        mutableStateOf(ColorEnvelope(initialColor.opaque(), initialColor.opaque().toHexColor().drop(1), false))
     }
     val controller = rememberColorPickerController()
 
     LaunchedEffect(initialColor) {
-        controller.selectByColor(initialColor, fromUser = false)
+        controller.selectByColor(initialColor.opaque(), fromUser = false)
     }
 
     AlertDialog(
@@ -669,22 +668,6 @@ private fun ColorPickerDialog(
                         .width(220.dp)
                         .size(width = 220.dp, height = 28.dp)
                         .padding(horizontal = 4.dp)
-                )
-
-                Text(stringResource(R.string.transparency))
-                AlphaSlider(
-                    controller = controller,
-                    modifier = Modifier
-                        .width(220.dp)
-                        .size(width = 220.dp, height = 28.dp)
-                        .padding(horizontal = 4.dp)
-                )
-
-                AlphaTile(
-                    modifier = Modifier
-                        .size(42.dp)
-                        .clip(RoundedCornerShape(6.dp)),
-                    controller = controller,
                 )
 
                 Text("#${envelope.hexCode}", fontFamily = FontFamily.Monospace)
@@ -786,7 +769,12 @@ private fun LocationPickerDialog(
                         } else {
                             Uri.parse("geo:0,0?q=${Uri.encode(query)}")
                         }
-                        context.startActivity(Intent(Intent.ACTION_VIEW, geoUri))
+                        val intent = Intent(Intent.ACTION_VIEW, geoUri)
+                        if (intent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(intent)
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.no_map_app_found), Toast.LENGTH_SHORT).show()
+                        }
                     },
                     enabled = query.isNotBlank() || selected != null,
                 ) {
@@ -906,4 +894,6 @@ private fun barcodeValid(barCode: BarCode): Boolean {
 
 private fun Double.formatCoord(): String = String.format("%.6f", this)
 
-private fun Color.toHexColor(): String = String.format("#%08X", this.toArgb())
+private fun Color.toHexColor(): String = String.format("#%06X", this.toArgb() and 0x00FFFFFF)
+
+private fun Color.opaque(): Color = this.copy(alpha = 1f)

@@ -9,6 +9,13 @@ data class PassColors(
     val label: Color,
 ) {
     fun toCardColors(): CardColors {
-        return CardColors(background, foreground, background.copy(alpha = 0.38f), foreground.copy(alpha = 0.38f))
+        val opaqueBackground = background.copy(alpha = 1f)
+        val opaqueForeground = foreground.copy(alpha = 1f)
+        return CardColors(
+            opaqueBackground,
+            opaqueForeground,
+            opaqueBackground.copy(alpha = 0.38f),
+            opaqueForeground.copy(alpha = 0.38f)
+        )
     }
 }
