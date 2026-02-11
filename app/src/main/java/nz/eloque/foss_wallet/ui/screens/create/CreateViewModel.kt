@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.location.Geocoder
+import android.location.Location
 import android.net.Uri
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
@@ -24,10 +26,14 @@ import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
+import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import java.time.ZonedDateTime
+import java.util.Locale
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
@@ -35,6 +41,12 @@ class CreateViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val passStore: PassStore,
 ) : AndroidViewModel(application) {
+
+    data class GeocodeResult(
+        val displayName: String,
+        val latitude: Double,
+        val longitude: Double,
+    )
 
     fun passFlowById(passId: String): Flow<Pass?> {
         return passStore.passFlowById(passId).map { it?.pass }
@@ -50,6 +62,10 @@ class CreateViewModel @Inject constructor(
         barcodeValue: String,
         barcodeAltText: String,
         logoText: String,
+        colors: PassColors?,
+        location: Location?,
+        relevantDates: List<PassRelevantDate>,
+        expirationDate: ZonedDateTime?,
         iconUrl: Uri?,
         logoUrl: Uri?,
         stripUrl: Uri?,
@@ -71,6 +87,10 @@ class CreateViewModel @Inject constructor(
             type = type,
             barCode = barCode,
             logoText = logoText,
+            colors = colors,
+            location = location,
+            relevantDates = relevantDates,
+            expirationDate = expirationDate,
         )
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
@@ -113,6 +133,10 @@ class CreateViewModel @Inject constructor(
         type: PassType,
         barCode: BarCode,
         logoText: String,
+        colors: PassColors?,
+        location: Location?,
+        relevantDates: List<PassRelevantDate>,
+        expirationDate: ZonedDateTime?,
     ): Pass {
         return if (existingPass == null) {
             val created = PassCreator.create(name, type, barCode)!!
@@ -120,6 +144,10 @@ class CreateViewModel @Inject constructor(
                 organization = organization.ifBlank { created.organization },
                 serialNumber = serialNumber.ifBlank { created.serialNumber },
                 logoText = logoText.ifBlank { null },
+                colors = colors,
+                locations = location?.let { listOf(it) } ?: emptyList(),
+                relevantDates = relevantDates,
+                expirationDate = expirationDate,
             )
         } else {
             existingPass.copy(
@@ -129,6 +157,10 @@ class CreateViewModel @Inject constructor(
                 type = type,
                 barCodes = setOf(barCode),
                 logoText = logoText.ifBlank { null },
+                colors = colors,
+                locations = location?.let { listOf(it) } ?: emptyList(),
+                relevantDates = relevantDates,
+                expirationDate = expirationDate,
             )
         }
     }
@@ -175,5 +207,22 @@ class CreateViewModel @Inject constructor(
         private const val STRIP_SIZE = 1024
         private const val THUMBNAIL_SIZE = 512
         private const val FOOTER_SIZE = 768
+    }
+
+    suspend fun geocode(query: String): List<GeocodeResult> {
+        if (query.isBlank()) return emptyList()
+
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocationName(query, 6) ?: emptyList()
+        return addresses.map {
+            val firstAddressLine = it.getAddressLine(0)
+            GeocodeResult(
+                displayName = firstAddressLine ?: listOfNotNull(it.featureName, it.locality, it.countryName)
+                    .joinToString(", ")
+                    .ifBlank { "Unknown" },
+                latitude = it.latitude,
+                longitude = it.longitude,
+            )
+        }
     }
 }
