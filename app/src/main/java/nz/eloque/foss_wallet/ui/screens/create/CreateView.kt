@@ -112,7 +112,6 @@ fun CreateView(
     var footerUrl by remember { mutableStateOf<Uri?>(null) }
 
     var name by remember { mutableStateOf("") }
-    var nameTouched by remember { mutableStateOf(false) }
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
     var logoText by remember { mutableStateOf("") }
@@ -205,8 +204,8 @@ fun CreateView(
         footerUrl = pass.footerFile(context)?.asUri()
     }
 
-    val nameValid = name.length in 1..<30
-    val showNameError = nameTouched && !nameValid
+    val nameValid = name.isNotEmpty()
+    val showNameError = !nameValid
     val messageValid = barcodes.all {
         it.message.isNotEmpty() && barcodeValid(
             BarCode(
@@ -337,7 +336,6 @@ fun CreateView(
             label = { Text(stringResource(R.string.pass_name)) },
             value = name,
             onValueChange = {
-                nameTouched = true
                 name = it
             },
             modifier = Modifier.fillMaxWidth(),
