@@ -95,11 +95,8 @@
     <string name="clear_selection">Clear selection</string>
     <string name="add_tag">Add tag</string>
     <string name="additional_fields">Additional fields</string>
-    <string name="pass_location_latitude">Location latitude</string>
-    <string name="pass_location_longitude">Location longitude</string>
     <string name="pass_location">Location</string>
     <string name="not_set">Not set</string>
-    <string name="pick">Pick</string>
     <string name="location_search_query">Search place</string>
     <string name="no_search_results">No search results</string>
     <string name="searching">Searching…</string>
@@ -113,7 +110,6 @@
     <string name="pass_background_color">Background color</string>
     <string name="pass_foreground_color">Foreground color</string>
     <string name="pass_label_color">Label color</string>
-    <string name="pass_colors_must_be_all_or_none">Set all three pass colors or leave all unset.</string>
     <string name="remove_tag">Remove tag</string>
     <string name="color">Color</string>
     <string name="tag_label">Tag label</string>
