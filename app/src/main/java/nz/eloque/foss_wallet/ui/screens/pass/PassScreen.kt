@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.DropdownMenu
@@ -133,16 +132,6 @@ fun Actions(
             if (passFile != null) {
                 PassShareButton(passFile)
             }
-
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.edit_pass)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = stringResource(R.string.edit_pass))
-                },
-                onClick = {
-                    navController.navigate("edit/${pass.id}")
-                }
-            )
             
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current

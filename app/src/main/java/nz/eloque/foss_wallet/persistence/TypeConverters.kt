@@ -15,7 +15,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.LinkedHashSet
 import java.util.UUID
 
 class TypeConverters {
@@ -151,9 +150,7 @@ class TypeConverters {
 
     @TypeConverter
     fun toBarcodes(str: String): Set<BarCode> {
-        return JSONArray(str)
-            .map { BarCode.fromJson(it) }
-            .toCollection(LinkedHashSet())
+        return JSONArray(str).map { BarCode.fromJson(it) }.toSet()
     }
 
     @TypeConverter

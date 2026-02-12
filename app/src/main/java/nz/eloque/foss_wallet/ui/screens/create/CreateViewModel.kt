@@ -22,8 +22,6 @@ import com.google.zxing.BarcodeFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
@@ -51,12 +49,7 @@ class CreateViewModel @Inject constructor(
         val longitude: Double,
     )
 
-    fun passFlowById(passId: String): Flow<Pass?> {
-        return passStore.passFlowById(passId).map { it?.pass }
-    }
-
     suspend fun savePass(
-        existingPass: Pass?,
         name: String,
         organization: String,
         serialNumber: String,
@@ -83,7 +76,6 @@ class CreateViewModel @Inject constructor(
         )
 
         val pass = createPass(
-            existingPass = existingPass,
             name = name,
             organization = organization,
             serialNumber = serialNumber,
@@ -101,7 +93,6 @@ class CreateViewModel @Inject constructor(
         val logoBitmap = loadBitmapFromUrl(context, logoUrl, LOGO_SIZE)
 
         val finalLogo = when {
-            existingPass != null -> logoBitmap
             logoBitmap != null -> logoBitmap
             iconUrl != null -> iconBitmap
             else -> drawableToBitmap(drawable, 256, 256)
@@ -129,7 +120,6 @@ class CreateViewModel @Inject constructor(
     }
 
     private fun createPass(
-        existingPass: Pass?,
         name: String,
         organization: String,
         serialNumber: String,
@@ -141,31 +131,16 @@ class CreateViewModel @Inject constructor(
         relevantDates: List<PassRelevantDate>,
         expirationDate: ZonedDateTime?,
     ): Pass {
-        return if (existingPass == null) {
-            val created = PassCreator.create(name, type, barCode)!!
-            created.copy(
-                organization = organization.ifBlank { created.organization },
-                serialNumber = serialNumber.ifBlank { created.serialNumber },
-                logoText = logoText.ifBlank { null },
-                colors = colors,
-                locations = location?.let { listOf(it) } ?: emptyList(),
-                relevantDates = relevantDates,
-                expirationDate = expirationDate,
-            )
-        } else {
-            existingPass.copy(
-                description = name,
-                organization = organization,
-                serialNumber = serialNumber,
-                type = type,
-                barCodes = setOf(barCode),
-                logoText = logoText.ifBlank { null },
-                colors = colors,
-                locations = location?.let { listOf(it) } ?: emptyList(),
-                relevantDates = relevantDates,
-                expirationDate = expirationDate,
-            )
-        }
+        val created = PassCreator.create(name, type, barCode)!!
+        return created.copy(
+            organization = organization.ifBlank { created.organization },
+            serialNumber = serialNumber.ifBlank { created.serialNumber },
+            logoText = logoText.ifBlank { null },
+            colors = colors,
+            locations = location?.let { listOf(it) } ?: emptyList(),
+            relevantDates = relevantDates,
+            expirationDate = expirationDate,
+        )
     }
 
     private suspend fun loadBitmapFromUrl(

@@ -44,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,7 +66,6 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import java.io.File
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -90,18 +88,9 @@ import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
-    passId: String? = null,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    val existingPass = if (passId == null) {
-        null
-    } else {
-        createViewModel.passFlowById(passId).collectAsState(initial = null).value
-    }
-
-    var loadedPassId by remember { mutableStateOf<String?>(null) }
 
     var iconUrl by remember { mutableStateOf<Uri?>(null) }
     var logoUrl by remember { mutableStateOf<Uri?>(null) }
@@ -133,52 +122,6 @@ fun CreateView(
 
     var isSaving by remember { mutableStateOf(false) }
     var advancedExpanded by remember { mutableStateOf(false) }
-
-    LaunchedEffect(existingPass?.id) {
-        val pass = existingPass ?: return@LaunchedEffect
-        if (pass.id == loadedPassId) return@LaunchedEffect
-
-        loadedPassId = pass.id
-        name = pass.description
-        organization = pass.organization
-        serialNumber = pass.serialNumber
-        logoText = pass.logoText ?: ""
-        type = pass.type
-
-        val barCode = pass.barCodes.firstOrNull()
-        message = barCode?.message() ?: ""
-        altText = barCode?.altText ?: message
-        format = barCode?.format() ?: BarcodeFormat.QR_CODE
-
-        location = pass.locations.firstOrNull()
-
-        when (val firstRelevant = pass.relevantDates.firstOrNull()) {
-            is PassRelevantDate.Date -> {
-                relevantStart = firstRelevant.date
-                relevantEnd = null
-            }
-            is PassRelevantDate.DateInterval -> {
-                relevantStart = firstRelevant.startDate
-                relevantEnd = firstRelevant.endDate
-            }
-            null -> {
-                relevantStart = null
-                relevantEnd = null
-            }
-        }
-
-        expirationDate = pass.expirationDate
-
-        backgroundColor = pass.colors?.background
-        foregroundColor = pass.colors?.foreground
-        labelColor = pass.colors?.label
-
-        iconUrl = Uri.fromFile(pass.iconFile(context))
-        logoUrl = pass.logoFile(context)?.asUri()
-        stripUrl = pass.stripFile(context)?.asUri()
-        thumbnailUrl = pass.thumbnailFile(context)?.asUri()
-        footerUrl = pass.footerFile(context)?.asUri()
-    }
 
     val barCode = BarCode(
         format = format,
@@ -505,17 +448,15 @@ fun CreateView(
                     val colors = if (allColorsBlank) {
                         null
                     } else {
-                        val existingColors = existingPass?.colors
                         val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
                         PassColors(
-                            background = backgroundColor ?: existingColors?.background ?: fallbackColor,
-                            foreground = foregroundColor ?: existingColors?.foreground ?: fallbackColor,
-                            label = labelColor ?: existingColors?.label ?: fallbackColor,
+                            background = backgroundColor ?: fallbackColor,
+                            foreground = foregroundColor ?: fallbackColor,
+                            label = labelColor ?: fallbackColor,
                         )
                     }
 
                     val savedPassId = createViewModel.savePass(
-                        existingPass = existingPass,
                         name = name,
                         organization = organization,
                         serialNumber = serialNumber,
@@ -542,7 +483,7 @@ fun CreateView(
                 }
             }
         ) {
-            Text(stringResource(if (passId == null) R.string.create_pass else R.string.save_changes))
+            Text(stringResource(R.string.create_pass))
         }
 
         Spacer(modifier = Modifier.imePadding())
@@ -880,8 +821,6 @@ private enum class ColorTarget {
     Foreground,
     Label,
 }
-
-private fun File.asUri(): Uri = Uri.fromFile(this)
 
 private fun barcodeValid(barCode: BarCode): Boolean {
     return try {

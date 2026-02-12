@@ -10,9 +10,9 @@ import org.json.JSONObject
 import java.nio.charset.Charset
 
 data class BarCode(
-    val format: BarcodeFormat,
-    val message: String,
-    val encoding: Charset,
+    private val format: BarcodeFormat,
+    private val message: String,
+    private val encoding: Charset,
     val altText: String?,
 ) {
 

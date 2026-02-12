@@ -4,7 +4,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
@@ -13,13 +12,12 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 fun CreateScreen(
     navController: NavHostController,
     createViewModel: CreateViewModel,
-    passId: String? = null,
 ) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(if (passId == null) Screen.Create.resourceId else R.string.edit_pass)
+        title = stringResource(id = Screen.Create.resourceId)
     ) {
-        CreateView(navController, createViewModel, passId)
+        CreateView(navController, createViewModel)
     }
 }
