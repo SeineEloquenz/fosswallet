@@ -23,12 +23,12 @@ import nz.eloque.foss_wallet.R
 @Composable
 fun LocationButton(
     location: Location,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
     
     IconButton(
         onClick = {
