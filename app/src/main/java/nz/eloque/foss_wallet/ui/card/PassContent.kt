@@ -25,6 +25,7 @@ fun ShortPassContent(
     allTags: Set<Tag>,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
 
@@ -53,6 +54,7 @@ fun ShortPassContent(
             localizedPass = localizedPass,
             allTags = allTags,
             readOnly = true,
+            snackbarHostState: SnackbarHostState
         )
     }
 }
@@ -70,7 +72,8 @@ fun PassContent(
     onTagCreate: (Tag) -> Unit,
     cardColors: CardColors,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val pass = localizedPass.pass
@@ -102,6 +105,7 @@ fun PassContent(
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
+            snackbarHostStat = SnackbarHostState
         )
     }
 }
