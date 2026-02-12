@@ -41,6 +41,7 @@ fun PassCardFooter(
     onTagAdd: (Tag) -> Unit = {},
     onTagCreate: (Tag) -> Unit = {},
     readOnly: Boolean = false,
+    snackbarHostState: SnackbarHostState
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -59,7 +60,8 @@ fun PassCardFooter(
             CalendarButton(
                 title = pass.description,
                 start = interval.startDate,
-                end = interval.endDate
+                end = interval.endDate,
+                snackbarHostState = SnackbarHostState
             )
         } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
             val date: PassRelevantDate.Date = pass.relevantDates.filter {
@@ -68,7 +70,8 @@ fun PassCardFooter(
             CalendarButton(
                 title = pass.description,
                 start = date.date,
-                end = pass.expirationDate
+                end = pass.expirationDate,
+                snackbarHostState = SnackbarHostState,
             )
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
