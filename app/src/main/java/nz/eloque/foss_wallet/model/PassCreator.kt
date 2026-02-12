@@ -4,6 +4,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
 import java.time.Instant
+import java.util.LinkedHashSet
 
 object PassCreator {
 
@@ -11,13 +12,27 @@ object PassCreator {
     const val ORGANIZATION = "nz.eloque.foss_wallet"
 
     fun create(name: String, type: PassType, barCode: BarCode): Pass? {
-        try {
-            barCode.encodeAsBitmap(100, 100, false)
-        } catch (_: IllegalArgumentException) {
+        return create(name, type, listOf(barCode))
+    }
+
+    fun create(name: String, type: PassType, barCodes: List<BarCode>): Pass? {
+        if (barCodes.isEmpty()) {
             return null
         }
 
-        val id = Hash.sha256(barCode.toString())
+        if (barCodes.any {
+                try {
+                    it.encodeAsBitmap(100, 100, false)
+                    false
+                } catch (_: IllegalArgumentException) {
+                    true
+                }
+            }
+        ) {
+            return null
+        }
+
+        val id = Hash.sha256(barCodes.joinToString("|") { it.toString() })
 
         val nameField = PassField(
             key = "main",
@@ -32,7 +47,7 @@ object PassCreator {
             organization = ORGANIZATION,
             serialNumber = id,
             type = type,
-            barCodes = setOf(barCode),
+            barCodes = LinkedHashSet(barCodes),
             addedAt = Instant.now(),
             primaryFields = listOf(nameField)
         )
