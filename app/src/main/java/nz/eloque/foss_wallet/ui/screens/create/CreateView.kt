@@ -375,7 +375,7 @@ fun CreateView(
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_location),
                     value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
-                        ?: stringResource(R.string.not_set),
+                        ?: "",
                     onPick = { showLocationPicker = true },
                     onClear = { location = null },
                     clearEnabled = location != null,
@@ -384,7 +384,7 @@ fun CreateView(
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_relevant_start),
                     value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: stringResource(R.string.not_set),
+                        ?: "",
                     onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
                     onClear = { relevantStart = null },
                     clearEnabled = relevantStart != null,
@@ -393,7 +393,7 @@ fun CreateView(
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_relevant_end),
                     value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: stringResource(R.string.not_set),
+                        ?: "",
                     onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
                     onClear = { relevantEnd = null },
                     clearEnabled = relevantEnd != null,
@@ -402,7 +402,7 @@ fun CreateView(
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_expiration_date),
                     value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: stringResource(R.string.not_set),
+                        ?: "",
                     onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
                     onClear = { expirationDate = null },
                     clearEnabled = expirationDate != null,
@@ -539,7 +539,7 @@ private fun ColorPickerRow(
     ) {
         Box(modifier = Modifier.weight(1f)) {
             OutlinedTextField(
-                value = color?.toHexColor() ?: stringResource(R.string.not_set),
+                value = color?.toHexColor() ?: "",
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(label) },

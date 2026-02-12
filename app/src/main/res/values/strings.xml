@@ -57,7 +57,6 @@
     <string name="n_passes_imported">%1$d passes imported</string>
     <string name="pass_deleted">Pass successfully deleted</string>
     <string name="pass_imported">Pass successfully imported</string>
-    <string name="edit_pass">Edit pass</string>
     <string name="save_changes">Save changes</string>
     <string name="export">Export</string>
     <string name="share_passes">Share passes</string>
@@ -95,7 +94,6 @@
     <string name="add_tag">Add tag</string>
     <string name="additional_fields">Additional fields</string>
     <string name="pass_location">Location</string>
-    <string name="not_set">Not set</string>
     <string name="location_search_query">Search place</string>
     <string name="no_search_results">No search results</string>
     <string name="searching">Searching…</string>
