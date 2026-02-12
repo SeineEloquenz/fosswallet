@@ -25,13 +25,13 @@ fun CalendarButton(
     title: String,
     start: ZonedDateTime,
     end: ZonedDateTime?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
+    
     IconButton(onClick = {
         val intent = Intent(Intent.ACTION_EDIT).also {
             it.type = "vnd.android.cursor.item/event"
