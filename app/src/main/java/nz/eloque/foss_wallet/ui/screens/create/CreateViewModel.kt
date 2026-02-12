@@ -24,7 +24,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
@@ -75,18 +74,18 @@ class CreateViewModel @Inject constructor(
             altText = barcodeAltText.ifBlank { null }
         )
 
-        val pass = createPass(
+        val pass = PassCreator.create(
             name = name,
-            organization = organization,
-            serialNumber = serialNumber,
             type = type,
             barCode = barCode,
+            organization = organization,
+            serialNumber = serialNumber,
             logoText = logoText,
             colors = colors,
             location = location,
             relevantDates = relevantDates,
             expirationDate = expirationDate,
-        )
+        )!!
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
         val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawableToBitmap(drawable, 64, 64)
@@ -117,30 +116,6 @@ class CreateViewModel @Inject constructor(
         )
 
         return pass.id
-    }
-
-    private fun createPass(
-        name: String,
-        organization: String,
-        serialNumber: String,
-        type: PassType,
-        barCode: BarCode,
-        logoText: String,
-        colors: PassColors?,
-        location: Location?,
-        relevantDates: List<PassRelevantDate>,
-        expirationDate: ZonedDateTime?,
-    ): Pass {
-        val created = PassCreator.create(name, type, barCode)!!
-        return created.copy(
-            organization = organization.ifBlank { created.organization },
-            serialNumber = serialNumber.ifBlank { created.serialNumber },
-            logoText = logoText.ifBlank { null },
-            colors = colors,
-            locations = location?.let { listOf(it) } ?: emptyList(),
-            relevantDates = relevantDates,
-            expirationDate = expirationDate,
-        )
     }
 
     private suspend fun loadBitmapFromUrl(

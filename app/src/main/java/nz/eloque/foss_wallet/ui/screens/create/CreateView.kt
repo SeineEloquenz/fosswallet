@@ -615,7 +615,7 @@ private fun ColorPickerDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(envelope.color) }) { Text(stringResource(R.string.save_changes)) }
+            TextButton(onClick = { onConfirm(envelope.color) }) { Text(stringResource(R.string.save)) }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.back)) }
@@ -736,7 +736,7 @@ private fun LocationPickerDialog(
                 },
                 enabled = selected != null,
             ) {
-                Text(stringResource(R.string.save_changes))
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
