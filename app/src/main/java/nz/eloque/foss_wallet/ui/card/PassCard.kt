@@ -65,7 +65,7 @@ fun ShortPassCard(
                 localizedPass = pass,
                 cardColors = cardColors,
                 allTags = allTags,
-                snackbarHostState: SnackbarHostState
+                snackbarHostState = SnackbarHostState
             )
         }
         if (selected) {
@@ -104,7 +104,7 @@ fun PassCard(
     onClick: () -> Unit = {},
     selected: Boolean = false,
     content: @Composable () -> Unit = {},
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState = SnackbarHostState,
 ) {
     val pass = localizedPass.pass
 
