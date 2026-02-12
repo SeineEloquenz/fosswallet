@@ -26,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -42,8 +41,6 @@ import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.SortOption
-import nz.eloque.foss_wallet.model.SortOptionSaver
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
@@ -70,14 +67,14 @@ fun WalletView(
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
-    val sortOption = rememberSaveable(stateSaver = SortOptionSaver) { mutableStateOf(SortOption.TimeAdded) }
+    val sortOption = passViewModel.sortOptionState.collectAsState().value
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
     val sortedPasses = passes
         .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
         .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-        .sortedWith(sortOption.value.comparator)
+        .sortedWith(sortOption.comparator)
         .groupBy { it.pass.groupId }.toList()
 
     if (sortedPasses.isEmpty()) {
@@ -111,6 +108,7 @@ fun WalletView(
             FilterBlock(
                 passViewModel = passViewModel,
                 sortOption = sortOption,
+                onSortChange = { passViewModel.setSortOption(it) },
                 passTypesToShow = passTypesToShow,
                 tags = tags,
                 tagToFilterFor = tagToFilterFor

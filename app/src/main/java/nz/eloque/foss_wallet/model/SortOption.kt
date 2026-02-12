@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.model
 
 import androidx.annotation.StringRes
-import androidx.compose.runtime.saveable.Saver
 import nz.eloque.foss_wallet.R
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -37,7 +36,7 @@ sealed class SortOption(val name: String, @param:StringRes val l18n: Int, val co
     }
 }
 
-val SortOptionSaver: Saver<SortOption, String> = Saver(
-    save = { it.name },
-    restore = { SortOption.all().find { option -> option.name == it } }
-)
+object SortOptionSerializer {
+    fun serialize(sortOption: SortOption): String = sortOption.name
+    fun deserialize(sortOption: String): SortOption? = SortOption.all().find { option -> option.name == sortOption }
+}
