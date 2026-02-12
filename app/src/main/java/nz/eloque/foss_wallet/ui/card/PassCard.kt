@@ -39,7 +39,8 @@ fun ShortPassCard(
     selected: Boolean = false,
     increaseBrightness: Boolean = false,
     barcodePosition: BarcodePosition,
-    toned: Boolean = false
+    toned: Boolean = false,
+    snackbarHostState: SnackbarHostState
 ) {
     val cardColors = passCardColors(pass.pass.colors, toned)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
@@ -64,6 +65,7 @@ fun ShortPassCard(
                 localizedPass = pass,
                 cardColors = cardColors,
                 allTags = allTags,
+                snackbarHostState: SnackbarHostState
             )
         }
         if (selected) {
@@ -101,7 +103,8 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    snackbarHostState: SnackbarHostState,
 ) {
     val pass = localizedPass.pass
 
@@ -127,6 +130,7 @@ fun PassCard(
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
             content = content,
+            snackbarHostState: SnackbarHostState
         )
     }
 }
