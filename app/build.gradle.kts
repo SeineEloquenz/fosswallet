@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.plugin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
@@ -42,10 +41,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
-
     defaultConfig {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
@@ -77,18 +72,20 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
     androidResources {
         generateLocaleConfig = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
-    hilt {
-        enableAggregatingTask = true
-    }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+hilt {
+    enableAggregatingTask = true
 }
 
 dependencies {
@@ -125,7 +122,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.androidx.room.testing)

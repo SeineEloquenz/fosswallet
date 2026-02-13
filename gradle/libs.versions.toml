@@ -1,8 +1,8 @@
 [versions]
-aboutLibraries = "13.2.1"
+aboutLibraries = "14.0.0-b02"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.12.4"
-androidGradlePlugin = "9.0.0"
+androidGradlePlugin = "9.0.1"
 coil = "2.7.0"
 color-picker = "1.1.3"
 composeBom = "2026.02.00"
@@ -17,7 +17,7 @@ json = "20251224"
 json-sanitizer = "1.2.3"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-ksp = "2.3.2"
+ksp = "2.3.5"
 ktx = "1.17.0"
 material = "1.13.0"
 material3 = "1.5.0-alpha14"
@@ -75,7 +75,6 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlinAndroid" }
 jetbrains-kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrainsKotlinAndroid" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
