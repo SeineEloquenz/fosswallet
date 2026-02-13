@@ -33,6 +33,7 @@ import java.time.ZonedDateTime
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
+import androidx.core.graphics.createBitmap
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
@@ -137,7 +138,7 @@ class CreateViewModel @Inject constructor(
     }
 
     private fun drawableToBitmap(drawable: Drawable, width: Int, height: Int): Bitmap {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(width, height)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, width, height)
         drawable.draw(canvas)
@@ -173,6 +174,7 @@ class CreateViewModel @Inject constructor(
                 })
             }
         } else {
+            @Suppress("DEPRECATION") //This blocks but is called from a coroutine, so thats fine
             geocoder.getFromLocationName(query, 6) ?: emptyList()
         }
 

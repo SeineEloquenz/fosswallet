@@ -3,9 +3,11 @@ package nz.eloque.foss_wallet.ui.screens.create
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,7 +60,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
@@ -806,14 +810,14 @@ private fun LocationPickerDialog(
                 TextButton(
                     onClick = {
                         val geoUri = if (selected != null) {
-                            Uri.parse("geo:${selected!!.latitude},${selected!!.longitude}?q=${selected!!.latitude},${selected!!.longitude}")
+                            "geo:${selected!!.latitude},${selected!!.longitude}?q=${selected!!.latitude},${selected!!.longitude}".toUri()
                         } else {
-                            Uri.parse("geo:0,0?q=${Uri.encode(query)}")
+                            "geo:0,0?q=${Uri.encode(query)}".toUri()
                         }
                         val intent = Intent(Intent.ACTION_VIEW, geoUri)
-                        if (intent.resolveActivity(context.packageManager) != null) {
+                        try {
                             context.startActivity(intent)
-                        } else {
+                        } catch (_: ActivityNotFoundException) {
                             Toast.makeText(context, resources.getString(R.string.no_map_app_found), Toast.LENGTH_SHORT).show()
                         }
                     },
@@ -885,37 +889,6 @@ private fun openDateTimePicker(
     ).show()
 }
 
-private fun openDatePicker(
-    context: android.content.Context,
-    initial: ZonedDateTime?,
-    onPicked: (ZonedDateTime) -> Unit,
-) {
-    val seed = initial ?: ZonedDateTime.now()
-    val calendar = Calendar.getInstance().apply {
-        timeInMillis = seed.toInstant().toEpochMilli()
-    }
-
-    DatePickerDialog(
-        context,
-        { _, year, month, dayOfMonth ->
-            val picked = ZonedDateTime.of(
-                year,
-                month + 1,
-                dayOfMonth,
-                0,
-                0,
-                0,
-                0,
-                ZoneId.systemDefault()
-            )
-            onPicked(picked)
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    ).show()
-}
-
 private enum class ColorTarget {
     Background,
     Foreground,
@@ -937,7 +910,7 @@ private fun barcodeValid(barCode: BarCode): Boolean {
     }
 }
 
-private fun Double.formatCoord(): String = String.format("%.6f", this)
+private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 
 private fun Color.toHexColor(): String = String.format("#%06X", this.toArgb() and 0x00FFFFFF)
 
