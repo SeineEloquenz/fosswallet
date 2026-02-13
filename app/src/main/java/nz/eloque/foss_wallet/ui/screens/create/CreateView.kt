@@ -281,6 +281,19 @@ fun CreateView(
             isError = showNameError
         )
 
+        ComboBox(
+            title = stringResource(R.string.pass_type),
+            options = listOf(
+                PassType.Generic,
+                PassType.StoreCard,
+                PassType.Coupon,
+                PassType.Event
+            ),
+            selectedOption = type,
+            onOptionSelected = { type = it },
+            optionLabel = { resources.getString(it.label) },
+        )
+
         barcodes.forEachIndexed { index, barcode ->
             Text(text = "${resources.getString(R.string.barcode)} ${index + 1}")
 
@@ -389,19 +402,6 @@ fun CreateView(
         ) {
             Text(stringResource(R.string.add_another_barcode))
         }
-
-        ComboBox(
-            title = stringResource(R.string.pass_type),
-            options = listOf(
-                PassType.Generic,
-                PassType.StoreCard,
-                PassType.Coupon,
-                PassType.Event
-            ),
-            selectedOption = type,
-            onOptionSelected = { type = it },
-            optionLabel = { resources.getString(it.label) },
-        )
 
         ElevatedButton(
             onClick = { advancedExpanded = !advancedExpanded },
