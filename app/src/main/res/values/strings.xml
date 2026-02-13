@@ -79,7 +79,8 @@
     <string name="boarding_pass">Boarding pass</string>
     <string name="store_card">Store card</string>
     <string name="barcode_format">Barcode format</string>
-    <string name="barcode_alt_text">Barcode alt text</string>
+    <string name="barcode_alt_text">Alternative barcode text</string>
+    <string name="add_another_barcode">Add another barcode</string>
     <string name="logo_text">Logo text</string>
     <string name="icon">Icon</string>
     <string name="logo">Logo</string>

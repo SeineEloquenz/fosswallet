@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.core.content.edit
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.SortOption
+import nz.eloque.foss_wallet.model.SortOptionSerializer
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -14,6 +16,7 @@ private const val SYNC_INTERVAL = "syncInterval"
 private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
 private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
+private const val SORT_OPTION = "walletViewSortOption"
 
 sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String, @param:StringRes val label: Int) {
     object Top : BarcodePosition(Arrangement.Top, "TOP", R.string.barcode_position_top)
@@ -56,4 +59,8 @@ class SettingsStore @Inject constructor(
     fun barcodePosition(): BarcodePosition = BarcodePosition.of(prefs.getString(BARCODE_POSITION, BarcodePosition.Center.key)!!)
 
     fun setBarcodePosition(barcodePosition: BarcodePosition) = prefs.edit { putString(BARCODE_POSITION, barcodePosition.key) }
+
+    fun sortOption(): SortOption = SortOptionSerializer.deserialize(prefs.getString(SORT_OPTION, "")!!) ?: SortOption.TimeAdded
+
+    fun setSortOption(sortOption: SortOption) = prefs.edit { putString(SORT_OPTION, SortOptionSerializer.serialize(sortOption)) }
 }

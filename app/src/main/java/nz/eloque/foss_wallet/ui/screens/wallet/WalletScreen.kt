@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,6 +39,7 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
+import java.net.URLEncoder
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -167,7 +167,13 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+        WalletView(
+            navController = navController,
+            passViewModel = passViewModel,
+            listState = listState,
+            scrollBehavior = scrollBehavior,
+            selectedPasses = selectedPasses,
+        )
 
         if (loading.value) {
             Box(

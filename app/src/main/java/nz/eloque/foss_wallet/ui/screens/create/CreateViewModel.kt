@@ -18,7 +18,6 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
 import coil.size.Scale
-import com.google.zxing.BarcodeFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
@@ -53,9 +52,7 @@ class CreateViewModel @Inject constructor(
         organization: String,
         serialNumber: String,
         type: PassType,
-        format: BarcodeFormat,
-        barcodeValue: String,
-        barcodeAltText: String,
+        barcodes: List<BarCode>,
         logoText: String,
         colors: PassColors?,
         location: Location?,
@@ -67,17 +64,10 @@ class CreateViewModel @Inject constructor(
         thumbnailUrl: Uri?,
         footerUrl: Uri?,
     ): String {
-        val barCode = BarCode(
-            format = format,
-            message = barcodeValue,
-            encoding = Charsets.UTF_8,
-            altText = barcodeAltText.ifBlank { null }
-        )
-
         val pass = PassCreator.create(
             name = name,
             type = type,
-            barCode = barCode,
+            barCodes = barcodes,
             organization = organization,
             serialNumber = serialNumber,
             logoText = logoText,

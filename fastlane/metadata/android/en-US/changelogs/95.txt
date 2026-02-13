@@ -1,0 +1,4 @@
+* Color hex font in pass creator is now mono-space
+* Remove alpha channel from color hex in pass creator
+* Persist sort option setting
+* Show snackbar if no map/calendar app is installed
