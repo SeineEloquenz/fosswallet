@@ -28,11 +28,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -55,21 +55,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,6 +79,10 @@ import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,6 +92,7 @@ fun CreateView(
     createViewModel: CreateViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
 
     var iconUrl by remember { mutableStateOf<Uri?>(null) }
@@ -167,7 +169,7 @@ fun CreateView(
                         } catch (_: IllegalArgumentException) {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.no_barcode_format_given),
+                                resources.getString(R.string.no_barcode_format_given),
                                 Toast.LENGTH_SHORT,
                             ).show()
                             BarcodeFormat.QR_CODE
@@ -204,7 +206,7 @@ fun CreateView(
                             }
                         }
                     } else {
-                        Toast.makeText(context, context.getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, resources.getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -276,7 +278,7 @@ fun CreateView(
         )
 
         barcodes.forEachIndexed { index, barcode ->
-            Text(text = "${context.getString(R.string.barcode)} ${index + 1}")
+            Text(text = "${resources.getString(R.string.barcode)} ${index + 1}")
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -394,7 +396,7 @@ fun CreateView(
             ),
             selectedOption = type,
             onOptionSelected = { type = it },
-            optionLabel = { context.getString(it.label) },
+            optionLabel = { resources.getString(it.label) },
         )
 
         ElevatedButton(
@@ -728,6 +730,7 @@ private fun LocationPickerDialog(
     onConfirm: (Location) -> Unit,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
 
     var query by remember { mutableStateOf("") }
@@ -767,10 +770,10 @@ private fun LocationPickerDialog(
                                 try {
                                     results = createViewModel.geocode(query)
                                     if (results.isEmpty()) {
-                                        error = context.getString(R.string.no_search_results)
+                                        error = resources.getString(R.string.no_search_results)
                                     }
                                 } catch (e: Exception) {
-                                    error = e.message ?: context.getString(R.string.exception)
+                                    error = e.message ?: resources.getString(R.string.exception)
                                 } finally {
                                     isSearching = false
                                 }
@@ -811,7 +814,7 @@ private fun LocationPickerDialog(
                         if (intent.resolveActivity(context.packageManager) != null) {
                             context.startActivity(intent)
                         } else {
-                            Toast.makeText(context, context.getString(R.string.no_map_app_found), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, resources.getString(R.string.no_map_app_found), Toast.LENGTH_SHORT).show()
                         }
                     },
                     enabled = query.isNotBlank() || selected != null,

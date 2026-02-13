@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ fun SettingsView(
     settingsViewModel: SettingsViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
     val passFlow = settingsViewModel.passFlow
@@ -91,7 +93,7 @@ fun SettingsView(
                         )
                     }
                 },
-                optionLabel = { context.getString(it.label) }
+                optionLabel = { resources.getString(it.label) }
             )
         }
         SettingsSection(
