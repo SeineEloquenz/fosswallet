@@ -99,7 +99,8 @@ fun BarcodesView(
                 HorizontalPager(
                     state = pagerState,
                     pageSpacing = 10.dp,
-                    modifier = Modifier.width(320.dp)
+                    modifier = Modifier
+                        .widthIn(max = if (barcodes.any { it.is1d() }) 320.dp else 170.dp)
                 ) { index ->
                     val barcode = barcodes[index]
                     val image = barcode.encodeAsBitmap(
