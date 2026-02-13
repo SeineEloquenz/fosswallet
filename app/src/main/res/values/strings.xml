@@ -78,7 +78,7 @@
     <string name="boarding_pass">Boarding pass</string>
     <string name="store_card">Store card</string>
     <string name="barcode_format">Barcode format</string>
-    <string name="barcode_alt_text">Barcode alt text</string>
+    <string name="barcode_alt_text">Alternative barcode text</string>
     <string name="add_another_barcode">Add another barcode</string>
     <string name="no_url_in_clipboard">No URL in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
