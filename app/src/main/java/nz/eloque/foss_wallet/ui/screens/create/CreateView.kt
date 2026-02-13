@@ -418,36 +418,31 @@ fun CreateView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(stringResource(R.string.icon))
-                ImagePicker(
-                    imageUrl = iconUrl,
-                    onClear = { iconUrl = null },
-                    onChoose = { iconUrl = it },
-                    modifier = Modifier.fillMaxWidth()
+                PickableOutlinedField(
+                    label = stringResource(R.string.pass_relevant_start),
+                    value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                        ?: "",
+                    onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
+                    onClear = { relevantStart = null },
+                    clearEnabled = relevantStart != null,
                 )
 
-                Text(stringResource(R.string.strip))
-                ImagePicker(
-                    imageUrl = stripUrl,
-                    onClear = { stripUrl = null },
-                    onChoose = { stripUrl = it },
-                    modifier = Modifier.fillMaxWidth()
+                PickableOutlinedField(
+                    label = stringResource(R.string.pass_relevant_end),
+                    value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                        ?: "",
+                    onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
+                    onClear = { relevantEnd = null },
+                    clearEnabled = relevantEnd != null,
                 )
 
-                Text(stringResource(R.string.thumbnail))
-                ImagePicker(
-                    imageUrl = thumbnailUrl,
-                    onClear = { thumbnailUrl = null },
-                    onChoose = { thumbnailUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Text(stringResource(R.string.footer))
-                ImagePicker(
-                    imageUrl = footerUrl,
-                    onClear = { footerUrl = null },
-                    onChoose = { footerUrl = it },
-                    modifier = Modifier.fillMaxWidth()
+                PickableOutlinedField(
+                    label = stringResource(R.string.pass_expiration_date),
+                    value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                        ?: "",
+                    onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
+                    onClear = { expirationDate = null },
+                    clearEnabled = expirationDate != null,
                 )
 
                 OutlinedTextField(
@@ -480,33 +475,6 @@ fun CreateView(
                     clearEnabled = location != null,
                 )
 
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_relevant_start),
-                    value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
-                    onClear = { relevantStart = null },
-                    clearEnabled = relevantStart != null,
-                )
-
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_relevant_end),
-                    value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
-                    onClear = { relevantEnd = null },
-                    clearEnabled = relevantEnd != null,
-                )
-
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_expiration_date),
-                    value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
-                    onClear = { expirationDate = null },
-                    clearEnabled = expirationDate != null,
-                )
-
                 ColorPickerRow(
                     label = stringResource(R.string.pass_background_color),
                     color = backgroundColor,
@@ -526,6 +494,38 @@ fun CreateView(
                     color = labelColor,
                     onPick = { colorPickerTarget = ColorTarget.Label },
                     onClear = { labelColor = null }
+                )
+
+                Text(stringResource(R.string.icon))
+                ImagePicker(
+                    imageUrl = iconUrl,
+                    onClear = { iconUrl = null },
+                    onChoose = { iconUrl = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(stringResource(R.string.strip))
+                ImagePicker(
+                    imageUrl = stripUrl,
+                    onClear = { stripUrl = null },
+                    onChoose = { stripUrl = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(stringResource(R.string.thumbnail))
+                ImagePicker(
+                    imageUrl = thumbnailUrl,
+                    onClear = { thumbnailUrl = null },
+                    onChoose = { thumbnailUrl = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(stringResource(R.string.footer))
+                ImagePicker(
+                    imageUrl = footerUrl,
+                    onClear = { footerUrl = null },
+                    onChoose = { footerUrl = it },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
             }
