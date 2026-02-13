@@ -445,27 +445,6 @@ fun CreateView(
                     clearEnabled = expirationDate != null,
                 )
 
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.organization)) },
-                    value = organization,
-                    onValueChange = { organization = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.serial_number)) },
-                    value = serialNumber,
-                    onValueChange = { serialNumber = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.logo_text)) },
-                    value = logoText,
-                    onValueChange = { logoText = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_location),
                     value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
@@ -494,6 +473,27 @@ fun CreateView(
                     color = labelColor,
                     onPick = { colorPickerTarget = ColorTarget.Label },
                     onClear = { labelColor = null }
+                )
+
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.organization)) },
+                    value = organization,
+                    onValueChange = { organization = it },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.serial_number)) },
+                    value = serialNumber,
+                    onValueChange = { serialNumber = it },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.logo_text)) },
+                    value = logoText,
+                    onValueChange = { logoText = it },
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Text(stringResource(R.string.icon))
