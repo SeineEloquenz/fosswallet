@@ -18,6 +18,7 @@ import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
+import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 data class QueryState(
