@@ -3,8 +3,10 @@ package nz.eloque.foss_wallet.ui.screens.pass
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
