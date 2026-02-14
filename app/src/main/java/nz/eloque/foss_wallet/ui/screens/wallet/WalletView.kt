@@ -78,7 +78,7 @@ fun WalletView(
         .filter { localizedPass -> !localizedPass.pass.hidden || isAuthenticated }
         .sortedWith(
             compareBy<LocalizedPassWithTags> { !it.pass.pinned }
-                .then(sortOption.value.comparator)
+                .then(sortOption.comparator)
         )
         .groupBy { it.pass.groupId }.toList()
 
