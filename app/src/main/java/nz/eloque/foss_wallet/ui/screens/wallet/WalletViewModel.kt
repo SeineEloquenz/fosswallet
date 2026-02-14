@@ -75,6 +75,6 @@ class WalletViewModel @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
-    fun addTag(tag: Tag) { viewModelScope.launch { tagRepository.insert(tag) } }
-    fun removeTag(tag: Tag) { viewModelScope.launch { tagRepository.remove(tag) } }
+    fun addTag(tag: Tag) { viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) } }
+    fun removeTag(tag: Tag) { viewModelScope.launch(Dispatchers.IO) { tagRepository.remove(tag) } }
 }
