@@ -32,8 +32,8 @@ class PassViewModel @Inject constructor(
 
     fun group(passes: Set<Pass>) = passStore.group(passes)
 
-    fun tag(pass: Pass, tag: Tag) { viewModelScope.launch { passStore.tag(pass, tag) } }
-    fun untag(pass: Pass, tag: Tag) { viewModelScope.launch { passStore.untag(pass, tag) } }
+    fun tag(pass: Pass, tag: Tag) { viewModelScope.launch(Dispatchers.IO) { passStore.tag(pass, tag) } }
+    fun untag(pass: Pass, tag: Tag) { viewModelScope.launch(Dispatchers.IO) { passStore.untag(pass, tag) } }
 
     suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
     fun delete(pass: Pass) = passStore.delete(pass)
