@@ -29,6 +29,7 @@ data class QueryState(
 class WalletViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
+    private val settingsStore: SettingsStore,
     private val tagRepository: TagRepository,
 ) : AndroidViewModel(application) {
 
