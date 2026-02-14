@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -102,6 +103,7 @@ fun Actions(
     passViewModel: PassViewModel
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
 
     val expanded = remember { mutableStateOf(false) }
@@ -144,18 +146,18 @@ fun Actions(
                         when (result) {
                             is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
                                 snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.update_successful),
+                                    message = resources.getString(R.string.update_successful),
                                     duration = SnackbarDuration.Short
                                 )
                             }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
                             is UpdateResult.Failed -> {
                                 val snackResult = snackbarHostState.showSnackbar(
                                     message = when (result.reason) {
-                                        is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
-                                        else -> context.getString(result.reason.messageId)
+                                        is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
+                                        else -> resources.getString(result.reason.messageId)
                                     },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                    actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
                                     duration = SnackbarDuration.Short
                                 )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
@@ -178,7 +180,7 @@ fun Actions(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
                     navController.popBackStack()
-                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }

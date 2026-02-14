@@ -50,7 +50,7 @@ fun WebviewView(
         }
 
         webview.settings.userAgentString =
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1";
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"
         webview.settings.javaScriptEnabled = true
         webview
     }, update = {
@@ -81,7 +81,7 @@ class CustomWebViewClient(
             val okHttpRequest = Request.Builder().also {
                 it.url(request?.url.toString())
                 for (header in request!!.requestHeaders) {
-                    if (header.key.startsWith("sec-ch-ua")) continue;
+                    if (header.key.startsWith("sec-ch-ua")) continue
                     it.addHeader(header.key, header.value)
                 }
             }
@@ -89,10 +89,10 @@ class CustomWebViewClient(
 
             val contentType = response.headers["content-type"]?.split(";")?.first()
 
-            if(PkpassMimeTypes.contains(contentType)) {
+            if (PkpassMimeTypes.contains(contentType)) {
                 return handlePkPassResponse(response)
             } else {
-                WebResourceResponse(contentType, "UTF-8", response.body.byteStream(), )
+                WebResourceResponse(contentType, "UTF-8", response.body.byteStream())
             }
         } catch (_: Exception) {
             super.shouldInterceptRequest(webView, request)
@@ -100,7 +100,7 @@ class CustomWebViewClient(
     }
 
     private fun handlePkPassResponse(response: Response): WebResourceResponse {
-        val bytes = response.body.byteStream().readBytes();
+        val bytes = response.body.byteStream().readBytes()
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 val result = Loader(context).handleInputStream(
@@ -113,7 +113,7 @@ class CustomWebViewClient(
                         navController.popBackStack()
                         navController.navigate("pass/${result.passId}")
                     }
-                } else if(result is LoaderResult.Multiple) {
+                } else if (result is LoaderResult.Multiple) {
                     withContext(Dispatchers.Main) {
                         navController.popBackStack()
                     }
@@ -121,6 +121,6 @@ class CustomWebViewClient(
             }
         }
 
-        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()));
+        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
     }
 }

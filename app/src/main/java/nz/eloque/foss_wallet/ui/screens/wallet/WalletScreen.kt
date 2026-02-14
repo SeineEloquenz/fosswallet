@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,7 @@ fun WalletScreen(
     walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val clipboard = LocalClipboard.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
@@ -127,7 +129,7 @@ fun WalletScreen(
                                     val entry = clipboard.getClipEntry()
 
                                     if (entry == null) {
-                                        Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, resources.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                         return@launch
                                     }
 
@@ -142,7 +144,7 @@ fun WalletScreen(
                                         }
                                     }
 
-                                    Toast.makeText(context, context.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, resources.getString(R.string.no_url_in_clipboard), Toast.LENGTH_LONG).show()
                                 }
                             }
                         ),
@@ -169,7 +171,14 @@ fun WalletScreen(
             }
         },
     ) { scrollBehavior ->
-        WalletView(navController, passViewModel, walletViewModel, listState = listState, scrollBehavior = scrollBehavior, selectedPasses = selectedPasses)
+        WalletView(
+            navController = navController,
+            passViewModel = passViewModel,
+            walletViewModel = walletViewModel,
+            listState = listState,
+            scrollBehavior = scrollBehavior,
+            selectedPasses = selectedPasses,
+        )
 
         if (loading.value) {
             Box(

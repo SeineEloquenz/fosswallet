@@ -92,7 +92,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Test and Assemble Release
-        run: ./gradlew testReleaseUnitTest assembleRelease
+        run: ./gradlew testDebugUnitTest assembleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -122,7 +122,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Test and Bundle Release
-        run: ./gradlew testReleaseUnitTest bundleRelease
+        run: ./gradlew testDebugUnitTest bundleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}

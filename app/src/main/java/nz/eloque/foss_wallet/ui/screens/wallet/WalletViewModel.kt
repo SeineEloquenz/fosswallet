@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
@@ -38,6 +39,23 @@ class WalletViewModel @Inject constructor(
 
     val allTags = tagRepository.all()
 
+    private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
+    val sortOptionState = _sortOptionState.asStateFlow()
+
+    init {
+        update()
+    }
+
+    private fun update() {
+        viewModelScope.launch {
+            _sortOptionState.value = settingsStore.sortOption()
+        }
+    }
+
+    fun setSortOption(sortOption: SortOption) {
+        settingsStore.setSortOption(sortOption)
+        update()
+    }
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
     fun filter(query: String) {
