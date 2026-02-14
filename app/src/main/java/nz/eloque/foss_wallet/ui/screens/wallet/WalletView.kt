@@ -73,7 +73,7 @@ fun WalletView(
     val barcodePosition = passViewModel.barcodePosition()
     val increaseBrightness = passViewModel.increasePassViewBrightness()
     
-    val sortOption = passViewModel.sortOptionState.collectAsState().value
+    val sortOption = walletViewModel.sortOptionState.collectAsState().value
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
@@ -114,7 +114,7 @@ fun WalletView(
             FilterBlock(
                 walletViewModel = walletViewModel,
                 sortOption = sortOption,
-                onSortChange = { passViewModel.setSortOption(it) },
+                onSortChange = { walletViewModel.setSortOption(it) },
                 passTypesToShow = passTypesToShow,
                 tags = tags,
                 tagToFilterFor = tagToFilterFor
