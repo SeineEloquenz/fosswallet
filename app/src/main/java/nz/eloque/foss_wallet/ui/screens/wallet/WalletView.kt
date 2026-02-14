@@ -46,6 +46,7 @@ import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.FilterBlock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
