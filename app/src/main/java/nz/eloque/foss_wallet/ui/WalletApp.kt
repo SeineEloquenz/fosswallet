@@ -89,7 +89,7 @@ fun WalletApp(
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
                 val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, passViewModel, url)
+                WebviewScreen(navController, walletViewModel, url)
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, settingsViewModel)
