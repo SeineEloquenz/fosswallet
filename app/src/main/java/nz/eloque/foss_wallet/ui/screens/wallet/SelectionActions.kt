@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,7 @@ fun SelectionActions(
     passViewModel: PassViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -50,7 +52,7 @@ fun SelectionActions(
                     selectedPasses.forEach { passViewModel.delete(it.pass) }
                     selectedPasses.clear()
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                     }
                 }
             },

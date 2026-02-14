@@ -41,8 +41,8 @@ fun ArchiveScreen(
         },
     ) { scrollBehavior ->
         WalletView(
-            navController,
-            passViewModel,
+            navController = navController,
+            passViewModel = passViewModel,
             archive = true,
             emptyIcon = Icons.Default.Archive,
             listState = listState,

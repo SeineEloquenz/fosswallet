@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
@@ -51,6 +52,24 @@ class PassViewModel @Inject constructor(
     val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
     val allTags = tagRepository.all()
+
+    private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
+    val sortOptionState = _sortOptionState.asStateFlow()
+
+    init {
+        update()
+    }
+
+    private fun update() {
+        viewModelScope.launch {
+            _sortOptionState.value = settingsStore.sortOption()
+        }
+    }
+
+    fun setSortOption(sortOption: SortOption) {
+        settingsStore.setSortOption(sortOption)
+        update()
+    }
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
 

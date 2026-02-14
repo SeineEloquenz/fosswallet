@@ -90,4 +90,6 @@
     <string name="expand">Rozbalit</string>
     <string name="select_image_with_barcode">Vyberte obrázek s čárovým kódem</string>
     <string name="no_barcode_found">Nenalezen žádný čárový kód</string>
+    <string name="no_map_app_found">Nenalezena žádná mapová aplikace</string>
+    <string name="no_calendar_app_found">Nenalezena žádná aplikace kalendáře</string>
 </resources>

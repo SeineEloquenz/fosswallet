@@ -90,4 +90,6 @@
     <string name="tag_label">标签名称</string>
     <string name="select_image_with_barcode">选择带有条码的图片</string>
     <string name="no_barcode_found">未找到条码</string>
+    <string name="no_map_app_found">未找到地图应用</string>
+    <string name="no_calendar_app_found">未找到日历应用</string>
 </resources>

@@ -41,7 +41,8 @@ import nz.eloque.foss_wallet.ui.components.tag.TagRow
 @Composable
 fun FilterBlock(
     passViewModel: PassViewModel,
-    sortOption: MutableState<SortOption>,
+    sortOption: SortOption,
+    onSortChange: (SortOption) -> Unit,
     passTypesToShow: SnapshotStateList<PassType>,
     tags: Set<Tag>,
     tagToFilterFor: MutableState<Tag?>,
@@ -68,8 +69,8 @@ fun FilterBlock(
                 icon = Icons.AutoMirrored.Default.Sort,
                 contentDescription = R.string.filter,
                 options = SortOption.all(),
-                selectedOption = sortOption.value,
-                onOptionSelected = { sortOption.value = it },
+                selectedOption = sortOption,
+                onOptionSelected = onSortChange,
                 optionLabel = { resources.getString(it.l18n) }
             )
             IconButton(onClick = {
