@@ -48,4 +48,13 @@
     <string name="barcode_position">Posició del codi de barres en pantalla completa</string>
     <string name="barcode_format">Format del codi de barres</string>
     <string name="store_card">Targeta de botiga</string>
+    <string name="icon">Icona</string>
+    <string name="footer">Peu de pàgina</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="logo">Logotip</string>
+    <string name="logo_text">Text del logotip</string>
+    <string name="pass_background_color">Color de fons</string>
+    <string name="brightness">Brillantor</string>
+    <string name="pass_relevant_end">Fi</string>
+    <string name="pass_relevant_start">Inici</string>
 </resources>

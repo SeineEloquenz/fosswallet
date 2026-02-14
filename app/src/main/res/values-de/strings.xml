@@ -92,4 +92,24 @@
     <string name="select_image_with_barcode">Wähle ein Bild mit einem Barcode aus</string>
     <string name="no_map_app_found">Keine Kartenapp gefunden</string>
     <string name="no_calendar_app_found">Keine Kalendarapp gefunden</string>
+    <string name="add_another_barcode">Einen weiteren Barcode hinzufügen</string>
+    <string name="barcode_alt_text">Alternativer Barcode-Text</string>
+    <string name="save">Speichern</string>
+    <string name="additional_fields">Zusätzliche Felder</string>
+    <string name="brightness">Helligkeit</string>
+    <string name="pass_background_color">Hintergrundfarbe</string>
+    <string name="pass_relevant_end">Ende</string>
+    <string name="thumbnail">Vorschaubild</string>
+    <string name="footer">Fußzeile</string>
+    <string name="logo">Logo</string>
+    <string name="no_search_results">Keine Suchergebnisse</string>
+    <string name="logo_text">Logotext</string>
+    <string name="open_in_map_app">In einer Kartenapp öffnen</string>
+    <string name="selected_location">Ausgewählt: %1$s</string>
+    <string name="pass_label_color">Labelfarbe</string>
+    <string name="pass_relevant_start">Start</string>
+    <string name="location_search_query">Ort suchen</string>
+    <string name="icon">Icon</string>
+    <string name="searching">Suche…</string>
+    <string name="pass_foreground_color">Vordergrundfarbe</string>
 </resources>
