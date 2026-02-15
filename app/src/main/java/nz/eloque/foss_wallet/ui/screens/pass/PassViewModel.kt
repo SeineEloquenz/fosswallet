@@ -2,9 +2,12 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.UpdateResult
@@ -23,6 +26,9 @@ class PassViewModel @Inject constructor(
     private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
+    
     private val _isHidden = MutableStateFlow(false)
     val isHidden: StateFlow<Boolean> = _isHidden.asStateFlow()
 
@@ -60,6 +66,12 @@ class PassViewModel @Inject constructor(
         passStore.unpin(pass)
         withContext(Dispatchers.Main) { _isPinned.value = false }
     }
+
+    fun hidden(pass: Pass) { _isHidden.value = passStore.isHidden(pass) }
+    fun pinned(pass: Pass) { _isPinned.value = passStore.isPinned(pass) }
+
+    fun reveal() { _isAuthenticated.value = true }
+    fun conceal() { _isAuthenticated.value = false }
     
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
