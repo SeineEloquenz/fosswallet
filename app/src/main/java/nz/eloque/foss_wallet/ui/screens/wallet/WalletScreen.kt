@@ -103,7 +103,7 @@ fun WalletScreen(
         snackbarHostState = snackbarHostState,
         actions = {
             if (isAuthenticated) {
-                IconButton(onClick = { wallletViewModel.conceal() }) {
+                IconButton(onClick = { walletViewModel.conceal() }) {
                     Icon(
                         imageVector = Icons.Default.VisibilityOff,
                         contentDescription = stringResource(R.string.conceal)
