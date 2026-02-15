@@ -88,24 +88,7 @@ class WalletViewModel @Inject constructor(
     fun archive(pass: Pass) = passStore.archive(pass)
     fun unarchive(pass: Pass) = passStore.unarchive(pass)
 
-    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.hide(pass)
-        withContext(Dispatchers.Main) { _isHidden.value = true }
-    }
-    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.unhide(pass)
-        withContext(Dispatchers.Main) { _isHidden.value = false }
-    }
     fun hidden(pass: Pass) { _isHidden.value = passStore.isHidden(pass) }
-
-    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.pin(pass)
-        withContext(Dispatchers.Main) { _isPinned.value = true }
-    }
-    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.unpin(pass)
-        withContext(Dispatchers.Main) { _isPinned.value = false }
-    }
     fun pinned(pass: Pass) { _isPinned.value = passStore.isPinned(pass) }
 
     fun reveal() { _isAuthenticated.value = true }
