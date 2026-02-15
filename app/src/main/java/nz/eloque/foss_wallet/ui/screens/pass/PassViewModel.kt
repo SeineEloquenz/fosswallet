@@ -34,6 +34,24 @@ class PassViewModel @Inject constructor(
 
     fun delete(pass: Pass) = passStore.delete(pass)
 
+    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.hide(pass)
+        withContext(Dispatchers.Main) { _isHidden.value = true }
+    }
+    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.unhide(pass)
+        withContext(Dispatchers.Main) { _isHidden.value = false }
+    }
+    
+    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.pin(pass)
+        withContext(Dispatchers.Main) { _isPinned.value = true }
+    }
+    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
+        passStore.unpin(pass)
+        withContext(Dispatchers.Main) { _isPinned.value = false }
+    }
+    
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
