@@ -15,17 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.ChipSelector
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,11 +31,9 @@ fun TagRow(
     selectedTag: Tag?,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     var tagCreatorShown by remember { mutableStateOf(false) }
     var tagRemoverShown by remember { mutableStateOf(false) }
 
@@ -91,7 +86,7 @@ fun TagRow(
             TagCreator(
                 onCreate = {
                     tagCreatorShown = false
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) }
+                    walletViewModel.addTag(it)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -106,8 +101,8 @@ fun TagRow(
             modifier = Modifier.fillMaxWidth()) {
             TagChooser(
                 tags = tags,
-                onSelected = { coroutineScope.launch(Dispatchers.IO) { passViewModel.removeTag(it) }},
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) }},
+                onSelected = { walletViewModel.removeTag(it) },
+                onTagCreate = { walletViewModel.addTag(it) },
                 modifier = Modifier.fillMaxWidth()
             )
         }

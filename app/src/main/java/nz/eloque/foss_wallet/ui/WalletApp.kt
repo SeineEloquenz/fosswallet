@@ -36,10 +36,11 @@ import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 
 sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
@@ -58,6 +59,7 @@ fun WalletApp(
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
+    walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
 ) {
     Surface(
@@ -73,10 +75,10 @@ fun WalletApp(
             popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, passViewModel)
+                WalletScreen(navController, passViewModel, walletViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, passViewModel)
+                ArchiveScreen(navController, passViewModel, walletViewModel)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
@@ -87,7 +89,7 @@ fun WalletApp(
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
                 val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, passViewModel, url)
+                WebviewScreen(navController, walletViewModel, url)
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, settingsViewModel)
@@ -106,7 +108,7 @@ fun WalletApp(
                 arguments = listOf(navArgument("passId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                PassScreen(passId, navController, passViewModel, walletViewModel)
             }
             composable(
                 route = "updateFailure/{reason}/{rationale}",

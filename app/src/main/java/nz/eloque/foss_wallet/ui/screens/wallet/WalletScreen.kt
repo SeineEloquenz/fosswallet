@@ -39,6 +39,7 @@ import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import java.net.URLEncoder
 
@@ -48,6 +49,7 @@ import java.net.URLEncoder
 fun WalletScreen(
     navController: NavHostController,
     passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -69,7 +71,7 @@ fun WalletScreen(
                     contentResolver.openInputStream(uri)?.use {
                         result = Loader(context).handleInputStream(
                             it,
-                            passViewModel,
+                            walletViewModel,
                             coroutineScope
                         )
                     }
@@ -172,6 +174,7 @@ fun WalletScreen(
         WalletView(
             navController = navController,
             passViewModel = passViewModel,
+            walletViewModel = walletViewModel,
             listState = listState,
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
