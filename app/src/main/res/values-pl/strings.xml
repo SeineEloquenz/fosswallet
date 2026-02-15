@@ -68,4 +68,7 @@
     <string name="barcode_value">Wartość kodu kreskowego</string>
     <string name="barcode_format">Format kodu kreskowego</string>
     <string name="no_url_in_clipboard">Brak adresu URL w schowku</string>
+    <string name="footer">Stopka</string>
+    <string name="brightness">Jasność</string>
+    <string name="icon">Ikona</string>
 </resources>

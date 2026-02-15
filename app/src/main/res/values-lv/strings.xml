@@ -55,4 +55,9 @@
     <string name="details">Sīkāka informācija</string>
     <string name="libraries">Bibliotēkas</string>
     <string name="event">Pasākuma biļete</string>
+    <string name="no_search_results">Nav meklēšanas rezultātu</string>
+    <string name="brightness">Spilgtums</string>
+    <string name="pass_background_color">Fona krāsa</string>
+    <string name="pass_relevant_end">Beigas</string>
+    <string name="icon">Ikona</string>
 </resources>

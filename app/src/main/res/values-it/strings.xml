@@ -92,4 +92,24 @@
     <string name="select_image_with_barcode">Seleziona l’immagine con il codice</string>
     <string name="no_map_app_found">Nessuna app mappe trovata</string>
     <string name="no_calendar_app_found">Nessuna app calendario trovata</string>
+    <string name="save">Salva</string>
+    <string name="icon">Icona</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="footer">Piè di pagina</string>
+    <string name="brightness">Luminosità</string>
+    <string name="selected_location">Selezionato: %1$s</string>
+    <string name="additional_fields">Campi aggiuntivi</string>
+    <string name="logo">Logo</string>
+    <string name="logo_text">Testo del logo</string>
+    <string name="open_in_map_app">Apri nell\'app mappe</string>
+    <string name="pass_background_color">Colore di sfondo</string>
+    <string name="pass_location">Località</string>
+    <string name="barcode_alt_text">Testo alternativo del codice a barre</string>
+    <string name="add_another_barcode">Aggiungi un altro codice a barre</string>
+    <string name="searching">Ricerca…</string>
+    <string name="no_search_results">Nessun risultato di ricerca trovato</string>
+    <string name="pass_foreground_color">Colore di primo piano</string>
+    <string name="pass_relevant_start">Inizio</string>
+    <string name="pass_relevant_end">Fine</string>
+    <string name="location_search_query">Cerca luogo</string>
 </resources>
