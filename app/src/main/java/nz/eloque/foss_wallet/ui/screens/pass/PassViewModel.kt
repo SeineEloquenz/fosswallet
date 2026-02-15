@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
@@ -20,6 +23,12 @@ class PassViewModel @Inject constructor(
     private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
+    private val _isHidden = MutableStateFlow(false)
+    val isHidden: StateFlow<Boolean> = _isHidden.asStateFlow()
+
+    private val _isPinned = MutableStateFlow(false)
+    val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
+    
     val allTags = tagRepository.all()
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
