@@ -114,6 +114,16 @@
     <string name="expand">Expand</string>
     <string name="select_image_with_barcode">Select image with barcode</string>
     <string name="no_barcode_found">No barcode found</string>
+    <string name="hide">Hide pass</string>
+    <string name="unhide">Unhide pass</string>
+    <string name="conceal">Conceal hidden passes</string>
+    <string name="reveal">Reveal hidden passes</string>
+    <string name="pin">Pin pass on top</string>
+    <string name="unpin">Unpin pass</string>
+    <string name="pinned">Pinned pass</string>
+    <string name="auth">Authentication</string>
+    <string name="auth_by">using the biometrics/password/pattern/PIN of your device</string>
+    <string name="try_again">Please try again!</string>
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
 </resources>

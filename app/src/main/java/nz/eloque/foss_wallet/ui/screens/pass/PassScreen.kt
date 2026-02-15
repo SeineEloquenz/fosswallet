@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +41,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -52,6 +57,7 @@ import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.utils.Biometric
 import nz.eloque.foss_wallet.utils.asString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +74,10 @@ fun PassScreen(
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
+    val isPinned by passViewModel.isPinned.collectAsState()
+    val isHidden by passViewModel.isHidden.collectAsState()
+    val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
+
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
         WalletScaffold(
@@ -76,7 +86,7 @@ fun PassScreen(
             title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
+                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel, isPinned = isPinned, isHidden = isHidden, isAuthenticated = isAuthenticated)
             },
         ) { scrollBehavior ->
             PassView(
@@ -99,11 +109,18 @@ fun Actions(
     pass: Pass,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    passViewModel: PassViewModel
+    passViewModel: PassViewModel,
+    isAuthenticated: Boolean,
+    isPinned: Boolean,
+    isHidden: Boolean,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
+
+    val activity = remember(context) { context as FragmentActivity }
     val coroutineScope = rememberCoroutineScope()
+
+    val biometric = remember { Biometric(activity, snackbarHostState, coroutineScope) }
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
@@ -115,11 +132,35 @@ fun Actions(
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
-        
+
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
+            if (isPinned) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unpin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.PushPin,
+                            contentDescription = stringResource(R.string.unpin)
+                        )
+                    },
+                    onClick = { passViewModel.unpin(pass) }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.pin)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.PushPin,
+                            contentDescription = stringResource(R.string.pin)
+                        )
+                    },
+                    onClick = { passViewModel.pin(pass) }
+                )
+            }
+
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
                 leadingIcon =  {
@@ -134,7 +175,7 @@ fun Actions(
             if (passFile != null) {
                 PassShareButton(passFile)
             }
-            
+
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
@@ -169,6 +210,48 @@ fun Actions(
                         }
                     }
                 }
+            }
+
+            if (isHidden) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unhide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = stringResource(R.string.unhide)
+                        )
+                    },
+                    onClick = {
+                        if (isAuthenticated) {
+                            passViewModel.unhide(pass)
+                        } else {
+                            biometric.prompt(
+                                description = resources.getString(R.string.unhide),
+                                onSuccess = { passViewModel.unhide(pass) }
+                            )
+                        }
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(resources.getString(R.string.hide)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = stringResource(R.string.hide)
+                        )
+                    },
+                    onClick = {
+                        if (isAuthenticated) {
+                            passViewModel.hide(pass)
+                        } else {
+                            biometric.prompt(
+                                description =  resources.getString(R.string.hide),
+                                onSuccess = { passViewModel.hide(pass) }
+                            )
+                        }
+                    }
+                )
             }
 
             DropdownMenuItem(

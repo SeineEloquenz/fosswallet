@@ -29,7 +29,7 @@ fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.ja
         .build()
 
 @Database(
-    version = 22,
+    version = 23,
     entities = [Pass::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class],
     autoMigrations = [
         AutoMigration (from = 4, to = 5),
@@ -46,6 +46,7 @@ fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.ja
         AutoMigration (from = 16, to = 17),
         AutoMigration (from = 20, to = 21, spec = M20_21::class),
         AutoMigration (from = 21, to = 22),
+        AutoMigration (from = 22, to = 23),
     ],
     exportSchema = true
 )
