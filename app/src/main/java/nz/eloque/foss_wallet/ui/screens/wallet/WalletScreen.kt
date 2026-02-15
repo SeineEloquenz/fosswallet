@@ -95,7 +95,7 @@ fun WalletScreen(
         }
     }
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
-    val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
+    val isAuthenticated by walletViewModel.isAuthenticated.collectAsState()
 
     WalletScaffold(
         navController = navController,
@@ -103,7 +103,7 @@ fun WalletScreen(
         snackbarHostState = snackbarHostState,
         actions = {
             if (isAuthenticated) {
-                IconButton(onClick = { passViewModel.conceal() }) {
+                IconButton(onClick = { wallletViewModel.conceal() }) {
                     Icon(
                         imageVector = Icons.Default.VisibilityOff,
                         contentDescription = stringResource(R.string.conceal)
@@ -114,7 +114,7 @@ fun WalletScreen(
                     onClick = {
                         biometric.prompt(
                             description = resources.getString(R.string.reveal),
-                            onSuccess = { passViewModel.reveal() }
+                            onSuccess = { walletViewModel.reveal() }
                         )
                     }
                 ) {
