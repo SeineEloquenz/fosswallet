@@ -26,7 +26,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import java.net.URLDecoder
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
@@ -36,11 +35,13 @@ import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
+import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
+import java.net.URLDecoder
 
 sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
@@ -58,6 +59,7 @@ fun WalletApp(
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
+    walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
 ) {
     Surface(
@@ -73,10 +75,10 @@ fun WalletApp(
             popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) }
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, passViewModel)
+                WalletScreen(navController, walletViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, passViewModel)
+                ArchiveScreen(navController, walletViewModel)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
@@ -87,7 +89,7 @@ fun WalletApp(
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
                 val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, passViewModel, url)
+                WebviewScreen(navController, walletViewModel, url)
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, settingsViewModel)

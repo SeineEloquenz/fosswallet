@@ -48,7 +48,7 @@
     <string name="pass_view">Zobrazení lístku</string>
     <string name="pass_view_brightness">Zvýšit jas</string>
     <string name="pass_already_imported">Lístek již byl importován</string>
-    <string name="archive">Archivovat</string>
+    <string name="archive">Archiv</string>
     <string name="unarchive">Odebrat z archivu</string>
     <string name="n_passes_imported">Importováno %1$d lístků</string>
     <string name="export">Exportovat</string>
@@ -92,4 +92,27 @@
     <string name="no_barcode_found">Nenalezen žádný čárový kód</string>
     <string name="no_map_app_found">Nenalezena žádná mapová aplikace</string>
     <string name="no_calendar_app_found">Nenalezena žádná aplikace kalendáře</string>
+    <string name="barcode_alt_text">Alternativní text čárového kódu</string>
+    <string name="add_another_barcode">Přidat další čárový kód</string>
+    <string name="save">Uložit</string>
+    <string name="logo_text">Text loga</string>
+    <string name="icon">Ikona</string>
+    <string name="logo">Logo</string>
+    <string name="strip">Oříznout</string>
+    <string name="thumbnail">Náhled</string>
+    <string name="footer">Zápatí</string>
+    <string name="additional_fields">Další pole</string>
+    <string name="pass_location">Lokace</string>
+    <string name="location_search_query">Hledat místo</string>
+    <string name="no_search_results">Nenalezena žádná místa</string>
+    <string name="searching">Hledání…</string>
+    <string name="selected_location">Vybráno: %1$s</string>
+    <string name="open_in_map_app">Otevřít v mapové aplikaci</string>
+    <string name="brightness">Jas</string>
+    <string name="pass_relevant_start">Začátek</string>
+    <string name="pass_relevant_end">Konec</string>
+    <string name="pass_expiration_date">Expirace</string>
+    <string name="pass_background_color">Barva pozadí</string>
+    <string name="pass_foreground_color">Barva popředí</string>
+    <string name="pass_label_color">Barva popisku</string>
 </resources>

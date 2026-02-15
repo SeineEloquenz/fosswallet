@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.parsing.PassParser
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.zip.ZipInputStream
@@ -51,7 +51,7 @@ class Loader(val context: Context) {
     
     fun handleInputStream(
         inputStream: InputStream,
-        passViewModel: PassViewModel,
+        walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {
         val loadResults = try {
@@ -65,7 +65,7 @@ class Loader(val context: Context) {
         }
         if (loadResults.size == 1) {
             val loadResult = loadResults.first()
-            val importResult = passViewModel.add(loadResult)
+            val importResult = walletViewModel.add(loadResult)
             val id: String = loadResult.pass.pass.id
             coroutineScope.launch(Dispatchers.Main) {
                 when (importResult) {
@@ -83,9 +83,9 @@ class Loader(val context: Context) {
             }
             return LoaderResult.Single(id)
         } else {
-            loadResults.forEach { result -> passViewModel.add(result) }
+            loadResults.forEach { result -> walletViewModel.add(result) }
 
-            passViewModel.group(loadResults.map { it.pass.pass }.toSet())
+            walletViewModel.group(loadResults.map { it.pass.pass }.toSet())
 
             coroutineScope.launch(Dispatchers.Main) {
                 Toast.makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)

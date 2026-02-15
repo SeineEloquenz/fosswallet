@@ -92,4 +92,25 @@
     <string name="select_image_with_barcode">Selecteer de afbeelding met de streepjescode</string>
     <string name="no_calendar_app_found">Geen kalenderapp gevonden</string>
     <string name="no_map_app_found">Geen kaartapp gevonden</string>
+    <string name="logo">Logo</string>
+    <string name="thumbnail">Miniatuur</string>
+    <string name="footer">Voettekst</string>
+    <string name="location_search_query">Plaats zoeken</string>
+    <string name="no_search_results">Geen zoekresultaten</string>
+    <string name="brightness">Helderheid</string>
+    <string name="pass_background_color">Achtergrondkleur</string>
+    <string name="pass_foreground_color">Voorgrondkleur</string>
+    <string name="selected_location">Geselecteerd: %1$s</string>
+    <string name="save">Opslaan</string>
+    <string name="barcode_alt_text">Alternatieve strepjescodetekst</string>
+    <string name="icon">Icoon</string>
+    <string name="pass_location">Locatie</string>
+    <string name="searching">Zoeken…</string>
+    <string name="pass_relevant_end">End</string>
+    <string name="logo_text">Logotekst</string>
+    <string name="additional_fields">Aanvullende velden</string>
+    <string name="pass_relevant_start">Start</string>
+    <string name="pass_label_color">Labelkleur</string>
+    <string name="add_another_barcode">Nog een strepjescode toevoege</string>
+    <string name="open_in_map_app">Openen in kaartapp</string>
 </resources>

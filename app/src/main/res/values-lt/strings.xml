@@ -55,4 +55,10 @@
     <string name="open">Atverti</string>
     <string name="barcode_position">Brūkšninio kodo padėtis visame ekrane</string>
     <string name="pass_view">Paso peržiūra</string>
+    <string name="libraries">Bibliotekos</string>
+    <string name="coupon">Kuponas</string>
+    <string name="logo">Logotipas</string>
+    <string name="thumbnail">Miniatiūra</string>
+    <string name="brightness">Ryškumas</string>
+    <string name="pass_background_color">Fono spalva</string>
 </resources>

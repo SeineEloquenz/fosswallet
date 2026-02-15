@@ -50,7 +50,7 @@ import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 @Composable
 fun WalletView(
     navController: NavController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
     archive: Boolean = false,
@@ -59,15 +59,15 @@ fun WalletView(
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
 ) {
     val emptyState = rememberLazyListState()
-    val passFlow = passViewModel.filteredPasses
+    val passFlow = walletViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
 
-    val tagFlow = passViewModel.allTags
+    val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
 
-    val sortOption = passViewModel.sortOptionState.collectAsState().value
+    val sortOption = walletViewModel.sortOptionState.collectAsState().value
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
@@ -111,9 +111,9 @@ fun WalletView(
 
         item {
             FilterBlock(
-                passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 sortOption = sortOption,
-                onSortChange = { passViewModel.setSortOption(it) },
+                onSortChange = { walletViewModel.setSortOption(it) },
                 passTypesToShow = passTypesToShow,
                 tags = tags,
                 tagToFilterFor = tagToFilterFor
@@ -128,7 +128,7 @@ fun WalletView(
                 onClick = {
                     navController.navigate("pass/${it.id}")
                 },
-                passViewModel = passViewModel,
+                walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses
             )
         }
@@ -147,8 +147,8 @@ fun WalletView(
                         navController.navigate("pass/${pass.pass.id}")
                     },
                     selected = selectedPasses.contains(pass),
-                    barcodePosition = passViewModel.barcodePosition(),
-                    increaseBrightness = passViewModel.increasePassViewBrightness()
+                    barcodePosition = walletViewModel.barcodePosition(),
+                    increaseBrightness = walletViewModel.increasePassViewBrightness()
                 )
             }
         }
