@@ -71,7 +71,7 @@ fun WalletView(
 
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
-    val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
+    val isAuthenticated by walletViewModel.isAuthenticated.collectAsState()
     val sortedPasses = passes
         .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
         .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
