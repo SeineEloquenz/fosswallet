@@ -47,7 +47,7 @@ import java.net.URLEncoder
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -69,7 +69,7 @@ fun WalletScreen(
                     contentResolver.openInputStream(uri)?.use {
                         result = Loader(context).handleInputStream(
                             it,
-                            passViewModel,
+                            walletViewModel,
                             coroutineScope
                         )
                     }
@@ -114,7 +114,7 @@ fun WalletScreen(
                     false,
                     selectedPasses,
                     listState,
-                    passViewModel
+                    walletViewModel
                 )
             } else {
                 FabMenu(
@@ -171,7 +171,7 @@ fun WalletScreen(
     ) { scrollBehavior ->
         WalletView(
             navController = navController,
-            passViewModel = passViewModel,
+            walletViewModel = walletViewModel,
             listState = listState,
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,

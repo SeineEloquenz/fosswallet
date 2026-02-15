@@ -36,7 +36,7 @@ fun SelectionActions(
     isArchive: Boolean,
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -49,7 +49,7 @@ fun SelectionActions(
             containerColor = MaterialTheme.colorScheme.error,
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    selectedPasses.forEach { passViewModel.delete(it.pass) }
+                    selectedPasses.forEach { walletViewModel.delete(it.pass) }
                     selectedPasses.clear()
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
@@ -63,7 +63,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.unarchive(it.pass) }
+                        selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -74,7 +74,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.archive(it.pass) }
+                        selectedPasses.forEach { walletViewModel.archive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -97,7 +97,7 @@ fun SelectionActions(
             expanded = listState.isScrollingUp(),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    passViewModel.group(selectedPasses.map { it.pass }.toSet())
+                    walletViewModel.group(selectedPasses.map { it.pass }.toSet())
                     selectedPasses.clear()
                 }
             },

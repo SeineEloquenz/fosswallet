@@ -23,13 +23,13 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.WalletApp
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val passViewModel: PassViewModel by viewModels()
+    private val walletViewModel: WalletViewModel by viewModels()
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(dataUri) {
                 if (Shortcut.SCHEME != dataUri?.scheme) {
                     coroutineScope.launch(Dispatchers.IO) {
-                        val result = dataUri?.handleIntent(passViewModel, coroutineScope)
+                        val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
                         if (result is LoaderResult.Single) {
                             withContext(Dispatchers.Main) {
                                 navController.navigate("pass/${result.passId}")
@@ -74,12 +74,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun Uri.handleIntent(passViewModel: PassViewModel, coroutineScope: CoroutineScope): LoaderResult {
+    private fun Uri.handleIntent(walletViewModel: WalletViewModel, coroutineScope: CoroutineScope): LoaderResult {
         contentResolver.openInputStream(this).use {
             it?.let {
                 return Loader(this@MainActivity).handleInputStream(
                     it,
-                    passViewModel,
+                    walletViewModel,
                     coroutineScope
                 )
             }
