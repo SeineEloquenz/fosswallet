@@ -13,7 +13,6 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
-import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
