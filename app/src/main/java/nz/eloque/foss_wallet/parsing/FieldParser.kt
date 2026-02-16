@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.parsing
 
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.utils.linkifyUrls
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
 import java.time.format.FormatStyle
@@ -25,7 +26,7 @@ object FieldParser {
             field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(TimeParser.parse(value), chooseBetter(field.getDateStyle(), field.getTimeStyle()), field.ignoresTimezone(), field.isRelative())
             field.hasDateStyle() -> PassContent.Date(TimeParser.parse(value), field.getDateStyle(), field.ignoresTimezone(), field.isRelative())
             field.hasTimeStyle() -> PassContent.Time(TimeParser.parse(value), field.getTimeStyle(), field.ignoresTimezone(), field.isRelative())
-            else -> PassContent.Plain(value)
+            else -> PassContent.Plain(linkifyUrls(value))
         }
 
         return PassField(key, label, content, changeMessage)
