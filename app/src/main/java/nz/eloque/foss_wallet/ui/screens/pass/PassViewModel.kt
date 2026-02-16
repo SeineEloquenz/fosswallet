@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
@@ -44,23 +43,11 @@ class PassViewModel @Inject constructor(
 
     fun delete(pass: Pass) = passStore.delete(pass)
 
-    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.hide(pass)
-        withContext(Dispatchers.Main) { _isHidden.value = true }
-    }
-    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.unhide(pass)
-        withContext(Dispatchers.Main) { _isHidden.value = false }
-    }
+    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.hide(pass) }
+    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unhide(pass) }
     
-    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.pin(pass)
-        withContext(Dispatchers.Main) { _isPinned.value = true }
-    }
-    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) {
-        passStore.unpin(pass)
-        withContext(Dispatchers.Main) { _isPinned.value = false }
-    }
+    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.pin(pass) }
+    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unpin(pass) }
     
     fun reveal() { _isAuthenticated.value = true }
     fun conceal() { _isAuthenticated.value = false }
