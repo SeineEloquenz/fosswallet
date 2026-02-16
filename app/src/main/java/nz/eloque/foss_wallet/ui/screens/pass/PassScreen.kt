@@ -73,9 +73,7 @@ fun PassScreen(
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
-
-    val isPinned by passViewModel.isPinned.collectAsState()
-    val isHidden by passViewModel.isHidden.collectAsState()
+    
     val isAuthenticated by passViewModel.isAuthenticated.collectAsState()
 
     AllowOnLockscreen {
@@ -137,7 +135,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            if (isPinned) {
+            if (pass.pinned) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unpin)) },
                     leadingIcon = {
@@ -212,7 +210,7 @@ fun Actions(
                 }
             }
 
-            if (isHidden) {
+            if (pass.hidden) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unhide)) },
                     leadingIcon = {
