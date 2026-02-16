@@ -30,12 +30,6 @@ class PassViewModel @Inject constructor(
     private val _isAuthenticated = MutableStateFlow(false)
     val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
     
-    private val _isHidden = MutableStateFlow(false)
-    val isHidden: StateFlow<Boolean> = _isHidden.asStateFlow()
-
-    private val _isPinned = MutableStateFlow(false)
-    val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
-    
     val allTags = tagRepository.all()
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
@@ -67,10 +61,7 @@ class PassViewModel @Inject constructor(
         passStore.unpin(pass)
         withContext(Dispatchers.Main) { _isPinned.value = false }
     }
-
-    fun hidden(pass: Pass) { _isHidden.value = passStore.isHidden(pass) }
-    fun pinned(pass: Pass) { _isPinned.value = passStore.isPinned(pass) }
-
+    
     fun reveal() { _isAuthenticated.value = true }
     fun conceal() { _isAuthenticated.value = false }
     
