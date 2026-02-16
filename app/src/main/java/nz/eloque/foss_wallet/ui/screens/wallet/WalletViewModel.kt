@@ -9,10 +9,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.SortOption
@@ -37,12 +35,6 @@ class WalletViewModel @Inject constructor(
 
     private val _isAuthenticated = MutableStateFlow(false)
     val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
-
-    private val _isHidden = MutableStateFlow(false)
-    val isHidden: StateFlow<Boolean> = _isHidden.asStateFlow()
-
-    private val _isPinned = MutableStateFlow(false)
-    val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
 
     private val _queryState = MutableStateFlow(QueryState())
     private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
@@ -87,9 +79,6 @@ class WalletViewModel @Inject constructor(
 
     fun archive(pass: Pass) = passStore.archive(pass)
     fun unarchive(pass: Pass) = passStore.unarchive(pass)
-
-    fun hidden(pass: Pass) { _isHidden.value = passStore.isHidden(pass) }
-    fun pinned(pass: Pass) { _isPinned.value = passStore.isPinned(pass) }
 
     fun reveal() { _isAuthenticated.value = true }
     fun conceal() { _isAuthenticated.value = false }
