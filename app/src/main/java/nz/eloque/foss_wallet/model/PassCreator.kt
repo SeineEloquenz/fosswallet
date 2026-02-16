@@ -82,33 +82,27 @@ object PassCreator {
             null
         }
 
-        val primaryFields = if (bcbp != null) {
-            listOfNotNull(
-                plainField("from", "From", bcbp.fromAirport),
-                plainField("to", "To", bcbp.toAirport),
+        val parsedBcbpFields = bcbp?.let {
+            Triple(
+                listOfNotNull(
+                    plainField("from", "From", it.fromAirport),
+                    plainField("to", "To", it.toAirport),
+                ),
+                listOfNotNull(
+                    plainField("flight", "Flight", it.flightCode()),
+                    plainField("date", "Date", it.flightDate?.format(DateTimeFormatter.ISO_LOCAL_DATE).orEmpty()),
+                    plainField("class", "Class", it.travelClass),
+                ),
+                listOfNotNull(
+                    plainField("passenger", "Passenger", it.passengerName),
+                    plainField("seat", "Seat", it.seat),
+                ),
             )
-        } else {
-            emptyList()
-        }.ifEmpty { listOf(nameField) }
-
-        val secondaryFields = if (bcbp != null) {
-            listOfNotNull(
-                plainField("flight", "Flight", bcbp.flightCode()),
-                plainField("date", "Date", bcbp.flightDate?.format(DateTimeFormatter.ISO_LOCAL_DATE).orEmpty()),
-                plainField("class", "Class", bcbp.travelClass),
-            )
-        } else {
-            emptyList()
         }
 
-        val auxiliaryFields = if (bcbp != null) {
-            listOfNotNull(
-                plainField("passenger", "Passenger", bcbp.passengerName),
-                plainField("seat", "Seat", bcbp.seat),
-            )
-        } else {
-            emptyList()
-        }
+        val primaryFields = parsedBcbpFields?.first.orEmpty().ifEmpty { listOf(nameField) }
+        val secondaryFields = parsedBcbpFields?.second.orEmpty()
+        val auxiliaryFields = parsedBcbpFields?.third.orEmpty()
 
         return Pass(
             id = id,
