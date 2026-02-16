@@ -26,7 +26,7 @@ class Biometric(
         val subtitle = activity.getString(R.string.auth_by)
 
         val manager = BiometricManager.from(activity)
-        val authenticators = if(Build.VERSION.SDK_INT > 29) {
+        val authenticators = if (Build.VERSION.SDK_INT > 29) {
             BiometricManager.Authenticators.BIOMETRIC_STRONG or
                     BiometricManager.Authenticators.DEVICE_CREDENTIAL
         } else BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -38,7 +38,7 @@ class Biometric(
             .setAllowedAuthenticators(authenticators)
             .build()
 
-        when(manager.canAuthenticate(authenticators)) {
+        when (manager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
                 showErrorSnackbar("Biometric hardware is unavailable.")
                 resultChannel.trySend(BiometricResult.HardwareUnavailable)
