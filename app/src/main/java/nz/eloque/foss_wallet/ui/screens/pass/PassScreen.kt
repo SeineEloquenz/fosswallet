@@ -84,7 +84,7 @@ fun PassScreen(
             title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel, isPinned = isPinned, isHidden = isHidden, isAuthenticated = isAuthenticated)
+                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel, isAuthenticated = isAuthenticated)
             },
         ) { scrollBehavior ->
             PassView(
@@ -109,8 +109,6 @@ fun Actions(
     snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel,
     isAuthenticated: Boolean,
-    isPinned: Boolean,
-    isHidden: Boolean,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
