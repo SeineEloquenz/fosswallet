@@ -118,10 +118,6 @@ class PassStore @Inject constructor(
     suspend fun hide(pass: Pass) = passRepository.hide(pass)
     suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
 
-    fun isHidden(pass: Pass) = passRepository.isHidden(pass)
-
     suspend fun pin(pass: Pass) = passRepository.pin(pass)
     suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
-
-    fun isPinned(pass: Pass) = passRepository.isPinned(pass)
 }
