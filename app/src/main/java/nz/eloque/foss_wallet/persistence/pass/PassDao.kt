@@ -93,7 +93,7 @@ interface PassDao {
     suspend fun pin(passId: String)
 
     @Query("UPDATE pass SET pinned = 0 WHERE id = :passId")
-    suspend fun unpin(passId: String
+    suspend fun unpin(passId: String)
 
     @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
     fun setLegacyRendering(passId: String, renderLegacy: Boolean)
