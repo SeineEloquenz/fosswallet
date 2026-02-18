@@ -313,11 +313,11 @@ object IataBcbp {
     }
 
     private fun normalize(rawMessage: String): String {
-        val trimmed = rawMessage.trim()
-        return if (trimmed.length > 3 && trimmed[0] == ']') {
-            trimmed.drop(3).trimStart()
+        val withoutLineBreaks = rawMessage.replace("\r", "").replace("\n", "")
+        return if (withoutLineBreaks.length > 3 && withoutLineBreaks[0] == ']') {
+            withoutLineBreaks.drop(3).trimStart()
         } else {
-            trimmed
+            withoutLineBreaks.trimStart()
         }
     }
 
