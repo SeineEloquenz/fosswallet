@@ -39,7 +39,6 @@ class PassRepository @Inject constructor(
     fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
     suspend fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
-
     suspend fun untag(pass: Pass, tag: Tag) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
 
     fun insert(pass: Pass, bitmaps: PassBitmaps, originalPass: OriginalPass?) {
@@ -59,11 +58,18 @@ class PassRepository @Inject constructor(
         passDao.delete(pass)
     }
 
-    fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
-
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
+    fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
+
     fun archive(pass: Pass) = passDao.archive(pass.id)
     fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+
+    suspend fun hide(pass: Pass) = passDao.hide(pass.id)
+    suspend fun unhide(pass: Pass) = passDao.unhide(pass.id)
+
+    suspend fun pin(pass: Pass) = passDao.pin(pass.id)
+    suspend fun unpin(pass: Pass) = passDao.unpin(pass.id)
+
     fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 }

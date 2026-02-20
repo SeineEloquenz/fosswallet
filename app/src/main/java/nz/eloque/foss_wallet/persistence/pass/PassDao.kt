@@ -83,6 +83,18 @@ interface PassDao {
     @Query("UPDATE pass SET archived = 0 WHERE id = :passId")
     fun unarchive(passId: String)
 
+    @Query("UPDATE pass SET hidden = 1 WHERE id = :passId")
+    suspend fun hide(passId: String)
+
+    @Query("UPDATE pass SET hidden = 0 WHERE id = :passId")
+    suspend fun unhide(passId: String)
+
+    @Query("UPDATE pass SET pinned = 1 WHERE id = :passId")
+    suspend fun pin(passId: String)
+
+    @Query("UPDATE pass SET pinned = 0 WHERE id = :passId")
+    suspend fun unpin(passId: String)
+
     @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
     fun setLegacyRendering(passId: String, renderLegacy: Boolean)
 }

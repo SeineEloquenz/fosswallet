@@ -33,6 +33,9 @@ class WalletViewModel @Inject constructor(
     private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
+
     private val _queryState = MutableStateFlow(QueryState())
     private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,16 +65,11 @@ class WalletViewModel @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
 
-    fun filter(query: String) {
-        viewModelScope.launch {
-            _queryState.value = _queryState.value.copy(query = query)
-        }
-    }
+    fun filter(query: String) { viewModelScope.launch { _queryState.value = _queryState.value.copy(query = query) } }
 
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
     suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-
     suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
 
     fun delete(pass: Pass) = passStore.delete(pass)
@@ -81,6 +79,9 @@ class WalletViewModel @Inject constructor(
 
     fun archive(pass: Pass) = passStore.archive(pass)
     fun unarchive(pass: Pass) = passStore.unarchive(pass)
+
+    fun reveal() { _isAuthenticated.value = true }
+    fun conceal() { _isAuthenticated.value = false }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 

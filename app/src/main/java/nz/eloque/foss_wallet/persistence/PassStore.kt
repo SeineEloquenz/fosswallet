@@ -46,12 +46,12 @@ class PassStore @Inject constructor(
     fun add(loadResult: PassLoadResult): ImportResult {
         val existing = passRepository.findById(loadResult.pass.pass.id)
         val result = if (existing != null) ImportResult.Replaced else ImportResult.New
-        
+
         insert(loadResult)
         if (loadResult.pass.pass.updatable()) {
             updateScheduler.scheduleUpdate(loadResult.pass.pass)
         }
-        
+
         return result
     }
 
@@ -62,6 +62,8 @@ class PassStore @Inject constructor(
                 pass = updated.content.result.pass.copy(
                     pass = updated.content.result.pass.pass.copy(
                         archived = pass.archived,
+                        hidden = pass.hidden,
+                        pinned = pass.pinned,
                         renderLegacy = pass.renderLegacy
                     )
                 )
@@ -77,11 +79,9 @@ class PassStore @Inject constructor(
     }
 
     fun archive(pass: Pass) = passRepository.archive(pass)
-
     fun unarchive(pass: Pass) = passRepository.unarchive(pass)
 
     suspend fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
-
     suspend fun untag(pass: Pass, tag: Tag) = passRepository.untag(pass, tag)
 
     fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
@@ -114,4 +114,10 @@ class PassStore @Inject constructor(
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
     fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
+
+    suspend fun hide(pass: Pass) = passRepository.hide(pass)
+    suspend fun unhide(pass: Pass) = passRepository.unhide(pass)
+
+    suspend fun pin(pass: Pass) = passRepository.pin(pass)
+    suspend fun unpin(pass: Pass) = passRepository.unpin(pass)
 }
