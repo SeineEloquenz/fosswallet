@@ -29,6 +29,16 @@ fun ArchiveScreen(
         navController = navController,
         title = stringResource(id = R.string.archive),
         toolWindow = true,
+        actions = {
+            IconButton(onClick = {
+                navController.navigate(Screen.Settings.route)
+            }) {
+                Icon(
+                    imageVector = Screen.Settings.icon,
+                    contentDescription = stringResource(Screen.Settings.resourceId)
+                )
+            }
+        },
         floatingActionButton = {
             if (selectedPasses.isNotEmpty()) {
                 SelectionActions(
