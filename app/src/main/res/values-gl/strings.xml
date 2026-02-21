@@ -64,4 +64,12 @@
     <string name="libraries">Bibliotecas</string>
     <string name="no_url_in_clipboard">Non hai URL no portapapeis</string>
     <string name="barcode_position_bottom">Abaixo</string>
+    <string name="icon">Ícono</string>
+    <string name="logo">Logotipo</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="footer">Rodapé</string>
+    <string name="brightness">Brillo</string>
+    <string name="pass_background_color">Cor de fondo</string>
+    <string name="pass_relevant_start">Inicio</string>
+    <string name="pass_relevant_end">Fin</string>
 </resources>

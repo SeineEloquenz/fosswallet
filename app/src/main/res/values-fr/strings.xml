@@ -92,4 +92,27 @@
     <string name="select_image_with_barcode">Choisir une image avec un code-barre</string>
     <string name="no_calendar_app_found">Pas d\'application d\'agenda détectée</string>
     <string name="no_map_app_found">Pas d\'application de cartographie détectée</string>
+    <string name="pass_label_color">Couleur de mot-clé</string>
+    <string name="save">Enregistrer</string>
+    <string name="barcode_alt_text">Texte alternatif du code-barre</string>
+    <string name="add_another_barcode">Ajouter un nouveau code-barre</string>
+    <string name="logo_text">Texte du logo</string>
+    <string name="icon">Icône</string>
+    <string name="logo">Logo</string>
+    <string name="strip">Bande</string>
+    <string name="thumbnail">Miniature</string>
+    <string name="footer">Pied de page</string>
+    <string name="additional_fields">Champs additionnels</string>
+    <string name="pass_location">Emplacement</string>
+    <string name="location_search_query">Chercher un emplacement</string>
+    <string name="no_search_results">Pas de résultat</string>
+    <string name="searching">Recherche en cours…</string>
+    <string name="selected_location">Sélection : %1$s</string>
+    <string name="open_in_map_app">Ouvrir dans l\'application de cartes</string>
+    <string name="brightness">Luminosité</string>
+    <string name="pass_relevant_start">Début</string>
+    <string name="pass_relevant_end">Fin</string>
+    <string name="pass_expiration_date">Date d\'expiration</string>
+    <string name="pass_background_color">Couleur de fond</string>
+    <string name="pass_foreground_color">Couleur d\'avant plan</string>
 </resources>

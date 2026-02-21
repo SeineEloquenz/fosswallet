@@ -112,4 +112,6 @@
     <string name="icon">Icon</string>
     <string name="searching">Suche…</string>
     <string name="pass_foreground_color">Vordergrundfarbe</string>
+    <string name="strip">Streifen</string>
+    <string name="pass_expiration_date">Ablaufdatum</string>
 </resources>
