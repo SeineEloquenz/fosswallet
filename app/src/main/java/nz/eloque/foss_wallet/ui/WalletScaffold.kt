@@ -36,7 +36,6 @@ fun WalletScaffold(
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.wallet),
     toolWindow: Boolean = false,
-    showBack: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
@@ -54,7 +53,7 @@ fun WalletScaffold(
                     maxLines = 1,
                 ) },
                 navigationIcon = {
-                    if (toolWindow && showBack) {
+                    if (toolWindow) {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                         }
