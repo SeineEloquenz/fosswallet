@@ -4,6 +4,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -12,6 +14,7 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
@@ -29,6 +32,16 @@ fun ArchiveScreen(
         navController = navController,
         title = stringResource(id = R.string.archive),
         toolWindow = true,
+        actions = {
+            IconButton(onClick = {
+                navController.navigate(Screen.Settings.route)
+            }) {
+                Icon(
+                    imageVector = Screen.Settings.icon,
+                    contentDescription = stringResource(Screen.Settings.resourceId)
+                )
+            }
+        },
         floatingActionButton = {
             if (selectedPasses.isNotEmpty()) {
                 SelectionActions(
