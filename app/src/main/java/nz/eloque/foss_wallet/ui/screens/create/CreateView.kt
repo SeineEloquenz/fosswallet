@@ -77,10 +77,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.IataBcbp
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 import java.time.ZoneId
@@ -122,7 +124,7 @@ fun CreateView(
         )
     }
     var activeBarcodeIndex by remember { mutableStateOf(0) }
-    var type by remember { mutableStateOf<PassType>(PassType.Generic) }
+    var selectedType by remember { mutableStateOf<PassType>(PassType.Generic) }
 
     var location by remember { mutableStateOf<Location?>(null) }
     var relevantStart by remember { mutableStateOf<ZonedDateTime?>(null) }
@@ -140,16 +142,29 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
 
     val barCodeModels = barcodes.map {
+        val bcbp = IataBcbp.parse(it.format, it.message)
         BarCode(
             format = it.format,
             message = it.message,
             encoding = Charsets.UTF_8,
-            altText = it.altText.ifBlank { it.message },
+            altText = it.altText.ifBlank { bcbp?.summary() ?: it.message },
         )
     }
-    val pass = PassCreator.create(name, type, barCodeModels)
+    val type = if (barcodes.any { IataBcbp.isBcbp(it.format, it.message) }) {
+        PassType.Boarding(TransitType.AIR)
+    } else {
+        selectedType
+    }
+    val detectedBcbp = barcodes.firstNotNullOfOrNull { IataBcbp.parse(it.format, it.message) }
+    val isBoardingPass = type is PassType.Boarding
+    val effectiveName = if (isBoardingPass) {
+        detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass)
+    } else {
+        name
+    }
+    val pass = PassCreator.create(effectiveName, type, barCodeModels)
 
-    val nameValid = name.length in 1..<30
+    val nameValid = isBoardingPass || name.length in 1..<30
     val showNameError = nameTouched && !nameValid
     val barcodesValid = barcodes.isNotEmpty() && barcodes.zip(barCodeModels).all { (draft, model) ->
         draft.message.isNotEmpty() && barcodeValid(model)
@@ -271,16 +286,18 @@ fun CreateView(
             modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
-            label = { Text(stringResource(R.string.pass_name)) },
-            value = name,
-            onValueChange = {
-                nameTouched = true
-                name = it
-            },
-            modifier = Modifier.fillMaxWidth(),
-            isError = showNameError
-        )
+        if (!isBoardingPass) {
+            OutlinedTextField(
+                label = { Text(stringResource(R.string.pass_name)) },
+                value = name,
+                onValueChange = {
+                    nameTouched = true
+                    name = it
+                },
+                modifier = Modifier.fillMaxWidth(),
+                isError = showNameError
+            )
+        }
 
         ComboBox(
             title = stringResource(R.string.pass_type),
@@ -291,7 +308,7 @@ fun CreateView(
                 PassType.Event
             ),
             selectedOption = type,
-            onOptionSelected = { type = it },
+            onOptionSelected = { selectedType = it },
             optionLabel = { resources.getString(it.label) },
         )
 
@@ -391,40 +408,43 @@ fun CreateView(
             )
         }
 
-        ElevatedButton(
-            onClick = {
-                barcodes = barcodes + BarcodeDraft(
-                    message = "",
-                    altText = "",
-                    format = BarcodeFormat.QR_CODE,
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(stringResource(R.string.add_another_barcode))
-        }
-
-        ElevatedButton(
-            onClick = { advancedExpanded = !advancedExpanded },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(stringResource(R.string.additional_fields))
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
-            )
-        }
-
-        AnimatedVisibility(
-            visible = advancedExpanded,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
-            Column(
+        if (!isBoardingPass) {
+            ElevatedButton(
+                onClick = {
+                    barcodes = barcodes + BarcodeDraft(
+                        message = "",
+                        altText = "",
+                        format = BarcodeFormat.QR_CODE,
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                Text(stringResource(R.string.add_another_barcode))
+            }
+        }
+
+        if (!isBoardingPass) {
+            ElevatedButton(
+                onClick = { advancedExpanded = !advancedExpanded },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.additional_fields))
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
+                )
+            }
+
+            AnimatedVisibility(
+                visible = advancedExpanded,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
                 PickableOutlinedField(
                     label = stringResource(R.string.pass_relevant_start),
                     value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
@@ -535,6 +555,7 @@ fun CreateView(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                }
             }
         }
 
@@ -563,7 +584,7 @@ fun CreateView(
                     }
 
                     val savedPassId = createViewModel.savePass(
-                        name = name,
+                        name = effectiveName,
                         organization = organization,
                         serialNumber = serialNumber,
                         type = type,

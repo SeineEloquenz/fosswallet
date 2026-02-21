@@ -15,6 +15,9 @@ data class BarCode(
     private val encoding: Charset,
     val altText: String?,
 ) {
+    fun barcodeFormat(): BarcodeFormat = format
+
+    fun rawMessage(): String = message
 
     fun toJson(): JSONObject {
         return JSONObject().also {
