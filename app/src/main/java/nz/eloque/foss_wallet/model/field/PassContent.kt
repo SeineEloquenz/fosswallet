@@ -37,8 +37,8 @@ sealed class PassContent(val id: Int) {
     }
 
     data class Time(val time: ZonedDateTime, val format: FormatStyle, val ignoresTimeZone: Boolean, val isRelative: Boolean) : PassContent(TIME) {
-        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format, ignoresTimeZone, isRelative)
-        override fun prettyPrint(): String  = time.prettyTime(format, ignoresTimeZone, isRelative)
+        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format)
+        override fun prettyPrint(): String  = time.prettyTime(format)
         override fun isEmpty(): Boolean = false
     }
 

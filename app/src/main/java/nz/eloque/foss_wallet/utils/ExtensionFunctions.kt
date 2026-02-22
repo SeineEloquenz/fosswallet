@@ -47,9 +47,9 @@ fun ZonedDateTime.prettyDate(style: FormatStyle = FormatStyle.SHORT, ignoresTime
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun ZonedDateTime.prettyTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyTime(style: FormatStyle = FormatStyle.SHORT): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(style)
-    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
+    return this.format(dateFormatter)
 }
 
 private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
