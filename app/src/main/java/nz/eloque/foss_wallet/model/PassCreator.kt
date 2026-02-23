@@ -4,6 +4,7 @@ import android.location.Location
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.linkifyUrls
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -129,7 +130,7 @@ object PassCreator {
         return PassField(
             key = key,
             label = label,
-            content = PassContent.Plain(value),
+            content = PassContent.Plain(linkifyUrls(value)),
         )
     }
 }
