@@ -112,4 +112,6 @@
     <string name="pass_relevant_start">Inizio</string>
     <string name="pass_relevant_end">Fine</string>
     <string name="location_search_query">Cerca luogo</string>
+    <string name="pass_expiration_date">Data di scadenza</string>
+    <string name="pass_label_color">Colore dell\'etichetta</string>
 </resources>

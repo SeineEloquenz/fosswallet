@@ -92,4 +92,27 @@
     <string name="no_barcode_found">未找到條碼</string>
     <string name="no_map_app_found">找不到地圖應用程式</string>
     <string name="no_calendar_app_found">找不到行事曆應用程式</string>
+    <string name="save">儲存</string>
+    <string name="barcode_alt_text">條碼替代文字</string>
+    <string name="add_another_barcode">新增另一個條碼</string>
+    <string name="logo_text">Logo 文字</string>
+    <string name="icon">圖示</string>
+    <string name="logo">Logo</string>
+    <string name="strip">橫幅圖片</string>
+    <string name="thumbnail">縮圖</string>
+    <string name="footer">頁尾</string>
+    <string name="additional_fields">其他欄位</string>
+    <string name="pass_location">地點</string>
+    <string name="location_search_query">搜尋地點</string>
+    <string name="no_search_results">沒有搜尋結果</string>
+    <string name="searching">搜尋中…</string>
+    <string name="selected_location">已選擇：%1$s</string>
+    <string name="open_in_map_app">在地圖應用程式中開啟</string>
+    <string name="brightness">亮度</string>
+    <string name="pass_relevant_start">開始</string>
+    <string name="pass_relevant_end">結束</string>
+    <string name="pass_expiration_date">到期日</string>
+    <string name="pass_background_color">背景顏色</string>
+    <string name="pass_foreground_color">前景顏色</string>
+    <string name="pass_label_color">標籤顏色</string>
 </resources>

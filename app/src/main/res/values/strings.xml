@@ -103,7 +103,7 @@
     <string name="brightness">Brightness</string>
     <string name="pass_relevant_start">Start</string>
     <string name="pass_relevant_end">End</string>
-    <string name="pass_expiration_date">Expiration</string>
+    <string name="pass_expiration_date">Expiration date</string>
     <string name="pass_background_color">Background color</string>
     <string name="pass_foreground_color">Foreground color</string>
     <string name="pass_label_color">Label color</string>

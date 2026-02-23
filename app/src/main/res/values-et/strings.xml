@@ -92,4 +92,27 @@
     <string name="no_barcode_found">Mitte mingisugust triipkoodi ei leidu</string>
     <string name="no_map_app_found">Ühtegi kaardirakendust ei leidu</string>
     <string name="no_calendar_app_found">Ühtegi kalendrirakendust ei leidu</string>
+    <string name="save">Salvesta</string>
+    <string name="barcode_alt_text">Triipkoodi alternatiivne tekst</string>
+    <string name="add_another_barcode">Lisa veel üks triipkood</string>
+    <string name="logo_text">Logo tekst</string>
+    <string name="icon">Ikoon</string>
+    <string name="logo">Logo</string>
+    <string name="strip">Riba</string>
+    <string name="thumbnail">Pisipilt</string>
+    <string name="footer">Jalus</string>
+    <string name="additional_fields">Lisaväljad</string>
+    <string name="pass_location">Asukoht</string>
+    <string name="location_search_query">Otsi asukohta</string>
+    <string name="no_search_results">Otsingul pole tulemusi</string>
+    <string name="searching">Otsin…</string>
+    <string name="selected_location">Valitud: %1$s</string>
+    <string name="open_in_map_app">Ava kaardirakenduses</string>
+    <string name="brightness">Eredus</string>
+    <string name="pass_relevant_start">Algus</string>
+    <string name="pass_relevant_end">Lõpp</string>
+    <string name="pass_expiration_date">Aegumine</string>
+    <string name="pass_background_color">Taustavärv</string>
+    <string name="pass_foreground_color">Esiplaani värv</string>
+    <string name="pass_label_color">Sildi värv</string>
 </resources>

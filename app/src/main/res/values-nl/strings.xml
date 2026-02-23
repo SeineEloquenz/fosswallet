@@ -113,4 +113,6 @@
     <string name="pass_label_color">Labelkleur</string>
     <string name="add_another_barcode">Nog een strepjescode toevoege</string>
     <string name="open_in_map_app">Openen in kaartapp</string>
+    <string name="pass_expiration_date">Vervaldatum</string>
+    <string name="strip">Streep</string>
 </resources>

@@ -1,0 +1,4 @@
+* Hexadezimal-Farbcode im Pass Creator ist jetzt monospaced
+* Alpha-Kanal aus Hexadezimal-Farbcode im Pass Creator entfernt
+* Sortieroption bleibt erhalten
+* Schnellsymbolleiste wird angezeigt, wenn keine Karten-/Kalender-App installiert ist
