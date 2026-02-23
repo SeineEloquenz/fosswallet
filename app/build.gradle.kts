@@ -131,6 +131,7 @@ dependencies {
 
     implementation(libs.zxing)
     implementation(libs.zxing.android.embedded)
+    implementation("com.github.nielstron:BCBPParser:v0.1.0")
 
     //hilt
     implementation(libs.hilt.android)

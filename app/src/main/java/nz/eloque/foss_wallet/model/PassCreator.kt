@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.model
 
 import android.location.Location
+import de.nielstron.bcbp.IataBcbp
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
@@ -19,6 +20,7 @@ object PassCreator {
         name: String,
         type: PassType,
         barCode: BarCode,
+        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -31,6 +33,7 @@ object PassCreator {
             name = name,
             type = type,
             barCodes = listOf(barCode),
+            parsedBcbp = parsedBcbp,
             organization = organization,
             serialNumber = serialNumber,
             logoText = logoText,
@@ -45,6 +48,7 @@ object PassCreator {
         name: String,
         type: PassType,
         barCodes: List<BarCode>,
+        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -78,7 +82,7 @@ object PassCreator {
         )
 
         val bcbp = if (type is PassType.Boarding && type.transitType == TransitType.AIR) {
-            barCodes.firstNotNullOfOrNull { IataBcbp.parse(it.barcodeFormat(), it.rawMessage()) }
+            parsedBcbp ?: barCodes.firstNotNullOfOrNull { IataBcbp.parse(it.rawMessage()) }
         } else {
             null
         }

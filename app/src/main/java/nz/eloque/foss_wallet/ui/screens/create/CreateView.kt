@@ -75,9 +75,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import de.nielstron.bcbp.IataBcbp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.IataBcbp
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
@@ -141,28 +141,29 @@ fun CreateView(
     var isSaving by remember { mutableStateOf(false) }
     var advancedExpanded by remember { mutableStateOf(false) }
 
-    val barCodeModels = barcodes.map {
-        val bcbp = IataBcbp.parse(it.format, it.message)
+    val parsedBcbps = barcodes.map { IataBcbp.parse(it.message) }
+    val barCodeModels = barcodes.mapIndexed { index, barcode ->
+        val bcbp = parsedBcbps[index]
         BarCode(
-            format = it.format,
-            message = it.message,
+            format = barcode.format,
+            message = barcode.message,
             encoding = Charsets.UTF_8,
-            altText = it.altText.ifBlank { bcbp?.summary() ?: it.message },
+            altText = barcode.altText.ifBlank { bcbp?.summary() ?: barcode.message },
         )
     }
-    val type = if (barcodes.any { IataBcbp.isBcbp(it.format, it.message) }) {
+    val type = if (parsedBcbps.any { it != null }) {
         PassType.Boarding(TransitType.AIR)
     } else {
         selectedType
     }
-    val detectedBcbp = barcodes.firstNotNullOfOrNull { IataBcbp.parse(it.format, it.message) }
+    val detectedBcbp = parsedBcbps.firstOrNull { it != null }
     val isBoardingPass = type is PassType.Boarding
     val effectiveName = if (isBoardingPass) {
         detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass)
     } else {
         name
     }
-    val pass = PassCreator.create(effectiveName, type, barCodeModels)
+    val pass = PassCreator.create(effectiveName, type, barCodeModels, parsedBcbp = detectedBcbp)
 
     val nameValid = isBoardingPass || name.length in 1..<30
     val showNameError = nameTouched && !nameValid
