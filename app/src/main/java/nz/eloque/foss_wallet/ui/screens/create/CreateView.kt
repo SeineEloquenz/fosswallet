@@ -29,9 +29,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.Business
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -54,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
@@ -78,6 +86,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 import java.time.ZoneId
@@ -406,6 +415,7 @@ fun CreateView(
                             label = stringResource(R.string.pass_relevant_start),
                             value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
                                 ?: "",
+                            leadingIcon = Icons.Default.CalendarToday,
                             onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
                             onClear = { relevantStart = null },
                             clearEnabled = relevantStart != null,
@@ -415,6 +425,7 @@ fun CreateView(
                             label = stringResource(R.string.pass_relevant_end),
                             value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
                                 ?: "",
+                            leadingIcon = Icons.Default.CalendarToday,
                             onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
                             onClear = { relevantEnd = null },
                             clearEnabled = relevantEnd != null,
@@ -424,6 +435,7 @@ fun CreateView(
                             label = stringResource(R.string.pass_expiration_date),
                             value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
                                 ?: "",
+                            leadingIcon = Icons.Default.CalendarToday,
                             onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
                             onClear = { expirationDate = null },
                             clearEnabled = expirationDate != null,
@@ -433,6 +445,7 @@ fun CreateView(
                             label = stringResource(R.string.pass_location),
                             value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
                                 ?: "",
+                            leadingIcon = Icons.Default.LocationOn,
                             onPick = { showLocationPicker = true },
                             onClear = { location = null },
                             clearEnabled = location != null,
@@ -440,6 +453,7 @@ fun CreateView(
 
                         ColorPickerRow(
                             label = stringResource(R.string.pass_background_color),
+                            icon = Icons.Default.Palette,
                             color = backgroundColor,
                             onPick = { colorPickerTarget = ColorTarget.Background },
                             onClear = { backgroundColor = null }
@@ -447,6 +461,7 @@ fun CreateView(
 
                         ColorPickerRow(
                             label = stringResource(R.string.pass_foreground_color),
+                            icon = Icons.Default.Palette,
                             color = foregroundColor,
                             onPick = { colorPickerTarget = ColorTarget.Foreground },
                             onClear = { foregroundColor = null }
@@ -454,6 +469,7 @@ fun CreateView(
 
                         ColorPickerRow(
                             label = stringResource(R.string.pass_label_color),
+                            icon = Icons.Default.Palette,
                             color = labelColor,
                             onPick = { colorPickerTarget = ColorTarget.Label },
                             onClear = { labelColor = null }
@@ -463,6 +479,12 @@ fun CreateView(
                             label = { Text(stringResource(R.string.organization)) },
                             value = organization,
                             onValueChange = { organization = it },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Business,
+                                    contentDescription = stringResource(R.string.organization)
+                                )
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         )
 
@@ -470,6 +492,12 @@ fun CreateView(
                             label = { Text(stringResource(R.string.serial_number)) },
                             value = serialNumber,
                             onValueChange = { serialNumber = it },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Badge,
+                                    contentDescription = stringResource(R.string.serial_number)
+                                )
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         )
 
@@ -477,46 +505,57 @@ fun CreateView(
                             label = { Text(stringResource(R.string.logo_text)) },
                             value = logoText,
                             onValueChange = { logoText = it },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.TextFields,
+                                    contentDescription = stringResource(R.string.logo_text)
+                                )
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         )
 
-                        Text(stringResource(R.string.logo))
                         ImagePicker(
                             imageUrl = logoUrl,
                             onClear = { logoUrl = null },
                             onChoose = { logoUrl = it },
+                            label = stringResource(R.string.logo),
+                            labelIcon = Icons.Default.Image,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(R.string.icon))
                         ImagePicker(
                             imageUrl = iconUrl,
                             onClear = { iconUrl = null },
                             onChoose = { iconUrl = it },
+                            label = stringResource(R.string.icon),
+                            labelIcon = Icons.Default.Image,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(R.string.strip))
                         ImagePicker(
                             imageUrl = stripUrl,
                             onClear = { stripUrl = null },
                             onChoose = { stripUrl = it },
+                            label = stringResource(R.string.strip),
+                            labelIcon = Icons.Default.Image,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(R.string.thumbnail))
                         ImagePicker(
                             imageUrl = thumbnailUrl,
                             onClear = { thumbnailUrl = null },
                             onChoose = { thumbnailUrl = it },
+                            label = stringResource(R.string.thumbnail),
+                            labelIcon = Icons.Default.Image,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(R.string.footer))
                         ImagePicker(
                             imageUrl = footerUrl,
                             onClear = { footerUrl = null },
                             onChoose = { footerUrl = it },
+                            label = stringResource(R.string.footer),
+                            labelIcon = Icons.Default.Image,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -528,7 +567,7 @@ fun CreateView(
         }
 
         if (detailsExpanded) {
-            ElevatedButton(
+            Button(
                 enabled = createValid,
                 onClick = {
                     isSaving = true
@@ -571,8 +610,9 @@ fun CreateView(
                         )
                         withContext(Dispatchers.Main) {
                             isSaving = false
-                            navController.popBackStack()
-                            navController.navigate("pass/$savedPassId")
+                            navController.navigate("pass/$savedPassId") {
+                                popUpTo(Screen.Wallet.route)
+                            }
                         }
                     }
                 },
@@ -592,6 +632,7 @@ fun CreateView(
 private fun PickableOutlinedField(
     label: String,
     value: String,
+    leadingIcon: ImageVector,
     onPick: () -> Unit,
     onClear: () -> Unit,
     clearEnabled: Boolean,
@@ -606,6 +647,7 @@ private fun PickableOutlinedField(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(label) },
+                leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = label) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(
@@ -626,6 +668,7 @@ private fun PickableOutlinedField(
 @Composable
 private fun ColorPickerRow(
     label: String,
+    icon: ImageVector,
     color: Color?,
     onPick: () -> Unit,
     onClear: () -> Unit,
@@ -643,12 +686,19 @@ private fun ColorPickerRow(
                 label = { Text(label) },
                 textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace),
                 leadingIcon = {
-                    Spacer(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(color ?: Color.Transparent)
-                    )
+                    Row(
+                        modifier = Modifier.padding(start = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(imageVector = icon, contentDescription = label)
+                        Spacer(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(color ?: Color.Transparent)
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -666,6 +716,7 @@ private fun ColorPickerRow(
         }
     }
 }
+
 
 @Composable
 private fun ColorPickerDialog(
