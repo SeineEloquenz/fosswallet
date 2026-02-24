@@ -19,9 +19,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -187,6 +187,7 @@ fun CreateView(
                         )
                     }
                 }
+                detailsExpanded = true
             }
         }
     )
@@ -239,15 +240,16 @@ fun CreateView(
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .navigationBarsPadding()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        barcodes.forEachIndexed { index, barcode ->
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+                .padding(bottom = if (detailsExpanded) 88.dp else 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            barcodes.forEachIndexed { index, barcode ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -310,17 +312,6 @@ fun CreateView(
                 }
             }
 
-            OutlinedTextField(
-                label = { Text(stringResource(R.string.barcode_alt_text)) },
-                value = barcode.altText,
-                onValueChange = { value ->
-                    barcodes = barcodes.mapIndexed { i, item ->
-                        if (i == index) item.copy(altText = value) else item
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
             ComboBox(
                 title = stringResource(R.string.barcode_format),
                 options = BarcodeFormat.entries,
@@ -348,7 +339,7 @@ fun CreateView(
         }
 
         if (!detailsExpanded) {
-            ElevatedButton(
+            Button(
                 enabled = barcodesValid,
                 onClick = { detailsExpanded = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -366,14 +357,6 @@ fun CreateView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(stringResource(R.string.logo))
-                ImagePicker(
-                    imageUrl = logoUrl,
-                    onClear = { logoUrl = null },
-                    onChoose = { logoUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
                 OutlinedTextField(
                     label = { Text(stringResource(R.string.pass_name)) },
                     value = name,
@@ -497,6 +480,14 @@ fun CreateView(
                             modifier = Modifier.fillMaxWidth(),
                         )
 
+                        Text(stringResource(R.string.logo))
+                        ImagePicker(
+                            imageUrl = logoUrl,
+                            onClear = { logoUrl = null },
+                            onChoose = { logoUrl = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
                         Text(stringResource(R.string.icon))
                         ImagePicker(
                             imageUrl = iconUrl,
@@ -533,48 +524,51 @@ fun CreateView(
             }
         }
 
+            Spacer(modifier = Modifier.imePadding())
+        }
+
         if (detailsExpanded) {
             ElevatedButton(
                 enabled = createValid,
                 onClick = {
                     isSaving = true
                     coroutineScope.launch(Dispatchers.IO) {
-                    val relevantDates = when {
-                        relevantStart != null && relevantEnd != null -> listOf(
-                            PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
-                        )
-                        relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
-                        else -> emptyList()
-                    }
+                        val relevantDates = when {
+                            relevantStart != null && relevantEnd != null -> listOf(
+                                PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
+                            )
+                            relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
+                            else -> emptyList()
+                        }
 
-                    val colors = if (allColorsBlank) {
-                        null
-                    } else {
-                        val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
-                        PassColors(
-                            background = backgroundColor ?: fallbackColor,
-                            foreground = foregroundColor ?: fallbackColor,
-                            label = labelColor ?: fallbackColor,
-                        )
-                    }
+                        val colors = if (allColorsBlank) {
+                            null
+                        } else {
+                            val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
+                            PassColors(
+                                background = backgroundColor ?: fallbackColor,
+                                foreground = foregroundColor ?: fallbackColor,
+                                label = labelColor ?: fallbackColor,
+                            )
+                        }
 
-                    val savedPassId = createViewModel.savePass(
-                        name = name,
-                        organization = organization,
-                        serialNumber = serialNumber,
-                        type = type,
-                        barcodes = barCodeModels,
-                        logoText = logoText,
-                        colors = colors,
-                        location = location,
-                        relevantDates = relevantDates,
-                        expirationDate = expirationDate,
-                        iconUrl = iconUrl,
-                        logoUrl = logoUrl,
-                        stripUrl = stripUrl,
-                        thumbnailUrl = thumbnailUrl,
-                        footerUrl = footerUrl,
-                    )
+                        val savedPassId = createViewModel.savePass(
+                            name = name,
+                            organization = organization,
+                            serialNumber = serialNumber,
+                            type = type,
+                            barcodes = barCodeModels,
+                            logoText = logoText,
+                            colors = colors,
+                            location = location,
+                            relevantDates = relevantDates,
+                            expirationDate = expirationDate,
+                            iconUrl = iconUrl,
+                            logoUrl = logoUrl,
+                            stripUrl = stripUrl,
+                            thumbnailUrl = thumbnailUrl,
+                            footerUrl = footerUrl,
+                        )
                         withContext(Dispatchers.Main) {
                             isSaving = false
                             navController.popBackStack()
@@ -582,13 +576,15 @@ fun CreateView(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(8.dp)
             ) {
                 Text(stringResource(R.string.create_pass))
             }
         }
-
-        Spacer(modifier = Modifier.imePadding())
     }
 }
 
