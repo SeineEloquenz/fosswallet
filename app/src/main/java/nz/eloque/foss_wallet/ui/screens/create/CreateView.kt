@@ -94,6 +94,8 @@ import java.util.Calendar
 fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
+    startMode: CreateStartMode = CreateStartMode.Manual,
+    initialBarcode: String? = null,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -110,12 +112,13 @@ fun CreateView(
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
     var logoText by remember { mutableStateOf("") }
-    var barcodes by remember {
+    val initialBarcodeValue = initialBarcode?.trim().orEmpty()
+    var barcodes by remember(initialBarcodeValue) {
         mutableStateOf(
             listOf(
                 BarcodeDraft(
-                    message = "",
-                    altText = "",
+                    message = initialBarcodeValue,
+                    altText = initialBarcodeValue,
                     format = BarcodeFormat.QR_CODE,
                 )
             )
@@ -138,6 +141,8 @@ fun CreateView(
 
     var isSaving by remember { mutableStateOf(false) }
     var advancedExpanded by remember { mutableStateOf(false) }
+    var detailsExpanded by remember { mutableStateOf(false) }
+    var initialScanHandled by remember { mutableStateOf(false) }
 
     val barCodeModels = barcodes.map {
         BarCode(
@@ -188,6 +193,15 @@ fun CreateView(
             }
         }
     )
+
+    LaunchedEffect(startMode, initialScanHandled) {
+        if (startMode == CreateStartMode.Scan && !initialScanHandled) {
+            initialScanHandled = true
+            scanLauncher.launch(
+                ScanOptions().setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+            )
+        }
+    }
 
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -263,37 +277,7 @@ fun CreateView(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(stringResource(R.string.logo))
-        ImagePicker(
-            imageUrl = logoUrl,
-            onClear = { logoUrl = null },
-            onChoose = { logoUrl = it },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            label = { Text(stringResource(R.string.pass_name)) },
-            value = name,
-            onValueChange = {
-                nameTouched = true
-                name = it
-            },
-            modifier = Modifier.fillMaxWidth(),
-            isError = showNameError
-        )
-
-        ComboBox(
-            title = stringResource(R.string.pass_type),
-            options = listOf(
-                PassType.Generic,
-                PassType.StoreCard,
-                PassType.Coupon,
-                PassType.Event
-            ),
-            selectedOption = type,
-            onOptionSelected = { type = it },
-            optionLabel = { resources.getString(it.label) },
-        )
+        Text(stringResource(R.string.barcode_step_title))
 
         barcodes.forEachIndexed { index, barcode ->
             Text(text = "${resources.getString(R.string.barcode)} ${index + 1}")
@@ -404,20 +388,18 @@ fun CreateView(
             Text(stringResource(R.string.add_another_barcode))
         }
 
-        ElevatedButton(
-            onClick = { advancedExpanded = !advancedExpanded },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(stringResource(R.string.additional_fields))
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
-            )
+        if (!detailsExpanded) {
+            ElevatedButton(
+                enabled = barcodesValid,
+                onClick = { detailsExpanded = true },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.continue_to_details))
+            }
         }
 
         AnimatedVisibility(
-            visible = advancedExpanded,
+            visible = detailsExpanded,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
@@ -425,124 +407,179 @@ fun CreateView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_relevant_start),
-                    value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
-                    onClear = { relevantStart = null },
-                    clearEnabled = relevantStart != null,
-                )
-
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_relevant_end),
-                    value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
-                    onClear = { relevantEnd = null },
-                    clearEnabled = relevantEnd != null,
-                )
-
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_expiration_date),
-                    value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                        ?: "",
-                    onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
-                    onClear = { expirationDate = null },
-                    clearEnabled = expirationDate != null,
-                )
-
-                PickableOutlinedField(
-                    label = stringResource(R.string.pass_location),
-                    value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
-                        ?: "",
-                    onPick = { showLocationPicker = true },
-                    onClear = { location = null },
-                    clearEnabled = location != null,
-                )
-
-                ColorPickerRow(
-                    label = stringResource(R.string.pass_background_color),
-                    color = backgroundColor,
-                    onPick = { colorPickerTarget = ColorTarget.Background },
-                    onClear = { backgroundColor = null }
-                )
-
-                ColorPickerRow(
-                    label = stringResource(R.string.pass_foreground_color),
-                    color = foregroundColor,
-                    onPick = { colorPickerTarget = ColorTarget.Foreground },
-                    onClear = { foregroundColor = null }
-                )
-
-                ColorPickerRow(
-                    label = stringResource(R.string.pass_label_color),
-                    color = labelColor,
-                    onPick = { colorPickerTarget = ColorTarget.Label },
-                    onClear = { labelColor = null }
+                Text(stringResource(R.string.logo))
+                ImagePicker(
+                    imageUrl = logoUrl,
+                    onClear = { logoUrl = null },
+                    onChoose = { logoUrl = it },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
-                    label = { Text(stringResource(R.string.organization)) },
-                    value = organization,
-                    onValueChange = { organization = it },
+                    label = { Text(stringResource(R.string.pass_name)) },
+                    value = name,
+                    onValueChange = {
+                        nameTouched = true
+                        name = it
+                    },
                     modifier = Modifier.fillMaxWidth(),
+                    isError = showNameError
                 )
 
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.serial_number)) },
-                    value = serialNumber,
-                    onValueChange = { serialNumber = it },
+                ComboBox(
+                    title = stringResource(R.string.pass_type),
+                    options = listOf(
+                        PassType.Generic,
+                        PassType.StoreCard,
+                        PassType.Coupon,
+                        PassType.Event
+                    ),
+                    selectedOption = type,
+                    onOptionSelected = { type = it },
+                    optionLabel = { resources.getString(it.label) },
+                )
+
+                ElevatedButton(
+                    onClick = { advancedExpanded = !advancedExpanded },
                     modifier = Modifier.fillMaxWidth(),
-                )
+                ) {
+                    Text(stringResource(R.string.additional_fields))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
+                    )
+                }
 
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.logo_text)) },
-                    value = logoText,
-                    onValueChange = { logoText = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                AnimatedVisibility(
+                    visible = advancedExpanded,
+                    enter = expandVertically(),
+                    exit = shrinkVertically(),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        PickableOutlinedField(
+                            label = stringResource(R.string.pass_relevant_start),
+                            value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                ?: "",
+                            onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
+                            onClear = { relevantStart = null },
+                            clearEnabled = relevantStart != null,
+                        )
 
-                Text(stringResource(R.string.icon))
-                ImagePicker(
-                    imageUrl = iconUrl,
-                    onClear = { iconUrl = null },
-                    onChoose = { iconUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        PickableOutlinedField(
+                            label = stringResource(R.string.pass_relevant_end),
+                            value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                ?: "",
+                            onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
+                            onClear = { relevantEnd = null },
+                            clearEnabled = relevantEnd != null,
+                        )
 
-                Text(stringResource(R.string.strip))
-                ImagePicker(
-                    imageUrl = stripUrl,
-                    onClear = { stripUrl = null },
-                    onChoose = { stripUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        PickableOutlinedField(
+                            label = stringResource(R.string.pass_expiration_date),
+                            value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                ?: "",
+                            onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
+                            onClear = { expirationDate = null },
+                            clearEnabled = expirationDate != null,
+                        )
 
-                Text(stringResource(R.string.thumbnail))
-                ImagePicker(
-                    imageUrl = thumbnailUrl,
-                    onClear = { thumbnailUrl = null },
-                    onChoose = { thumbnailUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        PickableOutlinedField(
+                            label = stringResource(R.string.pass_location),
+                            value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
+                                ?: "",
+                            onPick = { showLocationPicker = true },
+                            onClear = { location = null },
+                            clearEnabled = location != null,
+                        )
 
-                Text(stringResource(R.string.footer))
-                ImagePicker(
-                    imageUrl = footerUrl,
-                    onClear = { footerUrl = null },
-                    onChoose = { footerUrl = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        ColorPickerRow(
+                            label = stringResource(R.string.pass_background_color),
+                            color = backgroundColor,
+                            onPick = { colorPickerTarget = ColorTarget.Background },
+                            onClear = { backgroundColor = null }
+                        )
 
+                        ColorPickerRow(
+                            label = stringResource(R.string.pass_foreground_color),
+                            color = foregroundColor,
+                            onPick = { colorPickerTarget = ColorTarget.Foreground },
+                            onClear = { foregroundColor = null }
+                        )
+
+                        ColorPickerRow(
+                            label = stringResource(R.string.pass_label_color),
+                            color = labelColor,
+                            onPick = { colorPickerTarget = ColorTarget.Label },
+                            onClear = { labelColor = null }
+                        )
+
+                        OutlinedTextField(
+                            label = { Text(stringResource(R.string.organization)) },
+                            value = organization,
+                            onValueChange = { organization = it },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        OutlinedTextField(
+                            label = { Text(stringResource(R.string.serial_number)) },
+                            value = serialNumber,
+                            onValueChange = { serialNumber = it },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        OutlinedTextField(
+                            label = { Text(stringResource(R.string.logo_text)) },
+                            value = logoText,
+                            onValueChange = { logoText = it },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        Text(stringResource(R.string.icon))
+                        ImagePicker(
+                            imageUrl = iconUrl,
+                            onClear = { iconUrl = null },
+                            onChoose = { iconUrl = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text(stringResource(R.string.strip))
+                        ImagePicker(
+                            imageUrl = stripUrl,
+                            onClear = { stripUrl = null },
+                            onChoose = { stripUrl = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text(stringResource(R.string.thumbnail))
+                        ImagePicker(
+                            imageUrl = thumbnailUrl,
+                            onClear = { thumbnailUrl = null },
+                            onChoose = { thumbnailUrl = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text(stringResource(R.string.footer))
+                        ImagePicker(
+                            imageUrl = footerUrl,
+                            onClear = { footerUrl = null },
+                            onChoose = { footerUrl = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
         }
 
-        ElevatedButton(
-            enabled = createValid,
-            onClick = {
-                isSaving = true
-                coroutineScope.launch(Dispatchers.IO) {
+        if (detailsExpanded) {
+            ElevatedButton(
+                enabled = createValid,
+                onClick = {
+                    isSaving = true
+                    coroutineScope.launch(Dispatchers.IO) {
                     val relevantDates = when {
                         relevantStart != null && relevantEnd != null -> listOf(
                             PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
@@ -579,15 +616,17 @@ fun CreateView(
                         thumbnailUrl = thumbnailUrl,
                         footerUrl = footerUrl,
                     )
-                    withContext(Dispatchers.Main) {
-                        isSaving = false
-                        navController.popBackStack()
-                        navController.navigate("pass/$savedPassId")
+                        withContext(Dispatchers.Main) {
+                            isSaving = false
+                            navController.popBackStack()
+                            navController.navigate("pass/$savedPassId")
+                        }
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.create_pass))
             }
-        ) {
-            Text(stringResource(R.string.create_pass))
         }
 
         Spacer(modifier = Modifier.imePadding())

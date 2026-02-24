@@ -17,8 +17,10 @@
     <string name="delete">Delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>
+    <string name="import_pass">Import pass</string>
     <string name="about">About</string>
     <string name="webview">Open URL</string>
+    <string name="open_from_clipboard">Open from clipboard</string>
     <string name="source_code">Source code</string>
     <string name="made_with_love">Made with ❤ in Germany</string>
     <string name="to">to</string>
@@ -69,6 +71,11 @@
     <string name="libraries">Libraries</string>
     <string name="compatibility_mode">Compatibility Mode</string>
     <string name="create_pass">Create pass</string>
+    <string name="manual_entry">Manual entry</string>
+    <string name="advanced">Advanced</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="barcode_step_title">Step 1: Add barcode</string>
+    <string name="continue_to_details">Continue to details</string>
     <string name="pass_name">Pass name</string>
     <string name="barcode_value">Barcode value</string>
     <string name="pass_type">Pass type</string>
@@ -88,6 +95,7 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="footer">Footer</string>
     <string name="no_url_in_clipboard">No URL in clipboard</string>
+    <string name="no_text_in_clipboard">No text in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
     <string name="help_translate">Help translate</string>
     <string name="choose_image">Choose image</string>
