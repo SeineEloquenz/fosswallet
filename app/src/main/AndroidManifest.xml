@@ -111,6 +111,7 @@
 
         <activity
             android:name=".ui.screens.create.QrScanActivity"
+            android:theme="@style/Theme.FossWallet.NoActionBar"
             android:screenOrientation="fullSensor" />
 
         <provider
