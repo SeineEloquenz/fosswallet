@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.ui.screens.create
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import com.google.zxing.client.android.Intents
 import com.journeyapps.barcodescanner.CaptureActivity
@@ -12,7 +12,7 @@ import nz.eloque.foss_wallet.R
 class QrScanActivity : CaptureActivity() {
     override fun initializeContent(): DecoratedBarcodeView {
         setContentView(R.layout.qr_scan_capture)
-        findViewById<Button>(R.id.open_gallery_button).setOnClickListener {
+        findViewById<ImageButton>(R.id.open_gallery_button).setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
                 type = "image/*"
             }

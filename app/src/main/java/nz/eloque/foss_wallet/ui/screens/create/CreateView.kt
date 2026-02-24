@@ -247,11 +247,7 @@ fun CreateView(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(stringResource(R.string.barcode_step_title))
-
         barcodes.forEachIndexed { index, barcode ->
-            Text(text = "${resources.getString(R.string.barcode)} ${index + 1}")
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

@@ -74,8 +74,8 @@
     <string name="manual_entry">Manual entry</string>
     <string name="advanced">Advanced</string>
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="barcode_step_title">Step 1: Add barcode</string>
-    <string name="continue_to_details">Continue to details</string>
+    <string name="barcode_step_title">Add barcode</string>
+    <string name="continue_to_details">Continue</string>
     <string name="pass_name">Pass name</string>
     <string name="barcode_value">Barcode value</string>
     <string name="pass_type">Pass type</string>
