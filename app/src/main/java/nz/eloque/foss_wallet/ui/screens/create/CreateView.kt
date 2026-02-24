@@ -9,7 +9,6 @@ import android.location.Location
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -31,7 +30,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.QrCodeScanner
@@ -71,7 +69,6 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -198,36 +195,9 @@ fun CreateView(
         if (startMode == CreateStartMode.Scan && !initialScanHandled) {
             initialScanHandled = true
             scanLauncher.launch(
-                ScanOptions().setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                ScanOptions()
+                    .setCaptureActivity(QrScanActivity::class.java)
             )
-        }
-    }
-
-    val pickImageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { pickedUri ->
-            CoroutineScope(Dispatchers.IO).launch {
-                val result = ImageScanner.scanFrom(context.contentResolver, pickedUri)
-                withContext(Dispatchers.Main) {
-                    if (result != null && result.text != null) {
-                        if (activeBarcodeIndex !in barcodes.indices) return@withContext
-                        barcodes = barcodes.mapIndexed { index, barcode ->
-                            if (index != activeBarcodeIndex) {
-                                barcode
-                            } else {
-                                barcode.copy(
-                                    message = result.text,
-                                    altText = result.text,
-                                    format = result.barcodeFormat,
-                                )
-                            }
-                        }
-                    } else {
-                        Toast.makeText(context, resources.getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
         }
     }
 
@@ -321,16 +291,9 @@ fun CreateView(
 
                 IconButton(onClick = {
                     activeBarcodeIndex = index
-                    pickImageLauncher.launch("image/*")
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ImageSearch,
-                        contentDescription = stringResource(R.string.select_image_with_barcode)
+                    scanLauncher.launch(
+                        ScanOptions().setCaptureActivity(QrScanActivity::class.java)
                     )
-                }
-                IconButton(onClick = {
-                    activeBarcodeIndex = index
-                    scanLauncher.launch(ScanOptions())
                 }) {
                     Icon(
                         imageVector = Icons.Default.QrCodeScanner,
