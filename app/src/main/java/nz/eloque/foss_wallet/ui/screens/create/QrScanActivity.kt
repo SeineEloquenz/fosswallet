@@ -4,18 +4,47 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-import android.widget.ImageButton
+import android.view.View
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.core.view.isVisible
 import com.google.zxing.client.android.Intents
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
 class QrScanActivity : AppCompatActivity() {
-    private lateinit var barcodeView: DecoratedBarcodeView
-    private lateinit var captureManager: CaptureManager
+    private var barcodeView: DecoratedBarcodeView? = null
+    private var captureManager: CaptureManager? = null
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         val pickedUri = uri ?: return@registerForActivityResult
@@ -35,44 +64,125 @@ class QrScanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.qr_scan_capture)
+        setContent {
+            WalletTheme {
+                QrScannerContent(
+                    onViewCreated = { decoratedBarcodeView ->
+                        if (captureManager != null || barcodeView === decoratedBarcodeView) {
+                            return@QrScannerContent
+                        }
 
-        barcodeView = findViewById(R.id.zxing_barcode_scanner)
-        captureManager = CaptureManager(this, barcodeView).also {
-            it.initializeFromIntent(intent, savedInstanceState)
-            it.decode()
-        }
-
-        findViewById<ImageButton>(R.id.open_gallery_button).setOnClickListener {
-            pickImageLauncher.launch("image/*")
+                        barcodeView = decoratedBarcodeView
+                        captureManager = CaptureManager(this, decoratedBarcodeView).also {
+                            it.initializeFromIntent(intent, savedInstanceState)
+                            it.decode()
+                        }
+                    },
+                    onOpenGallery = {
+                        pickImageLauncher.launch("image/*")
+                    }
+                )
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        captureManager.onResume()
+        captureManager?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        captureManager.onPause()
+        captureManager?.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        captureManager.onDestroy()
+        captureManager?.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        captureManager.onSaveInstanceState(outState)
+        captureManager?.onSaveInstanceState(outState)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        captureManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        captureManager?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return barcodeView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+        return barcodeView?.onKeyDown(keyCode, event) == true || super.onKeyDown(keyCode, event)
+    }
+}
+
+@Composable
+private fun QrScannerContent(
+    onViewCreated: (DecoratedBarcodeView) -> Unit,
+    onOpenGallery: () -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                DecoratedBarcodeView(context).apply {
+                    findViewById<View?>(R.id.zxing_viewfinder_view)?.isVisible = false
+                    findViewById<View?>(R.id.zxing_status_view)?.isVisible = false
+                    onViewCreated(this)
+                }
+            }
+        )
+
+        ScannerOverlay(modifier = Modifier.fillMaxSize())
+
+        IconButton(
+            onClick = onOpenGallery,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(bottom = 40.dp)
+                .size(64.dp)
+                .clip(CircleShape)
+                .background(Color.White)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Image,
+                contentDescription = stringResource(R.string.choose_image),
+                tint = Color.Black,
+                modifier = Modifier.size(28.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ScannerOverlay(modifier: Modifier = Modifier) {
+    val cornerRadius = with(LocalDensity.current) { 24.dp.toPx() }
+    val strokeWidth = with(LocalDensity.current) { 2.dp.toPx() }
+
+    Canvas(
+        modifier = modifier.graphicsLayer {
+            compositingStrategy = CompositingStrategy.Offscreen
+        }
+    ) {
+        val frameWidth = size.width * 0.72f
+        val frameHeight = frameWidth
+        val left = (size.width - frameWidth) / 2f
+        val top = (size.height - frameHeight) / 2f
+
+        drawRect(color = Color.Black.copy(alpha = 0.45f))
+        drawRoundRect(
+            color = Color.Transparent,
+            topLeft = androidx.compose.ui.geometry.Offset(left, top),
+            size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight),
+            cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+            blendMode = BlendMode.Clear,
+        )
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.95f),
+            topLeft = androidx.compose.ui.geometry.Offset(left, top),
+            size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight),
+            cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+            style = Stroke(width = strokeWidth),
+        )
     }
 }
