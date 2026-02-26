@@ -3,10 +3,7 @@
     <string name="settings">Ayarlar</string>
     <string name="update">Güncelle</string>
     <string name="back">Geri</string>
-    <string name="permission_rationale">İzinler olmadan FossWallet düzgün çalışmaz</string>
-    <string name="request_permissions">İzin Talebi</string>
     <string name="wallet">Cüzdan</string>
-    <string name="barcode">Barkod</string>
     <string name="serial_number">Seri numarası</string>
     <string name="organization">Organizasyon</string>
     <string name="date">Tarih</string>
@@ -16,17 +13,13 @@
     <string name="source_code">Kaynak kodu</string>
     <string name="made_with_love">Almanya\'da ❤ ile yapıldı</string>
     <string name="license">Lisans</string>
-    <string name="add_pass">Kart ekle</string>
-    <string name="pass">Kart</string>
     <string name="invalid_pass_toast">Kart yüklenemedi. Bunun geçerli bir .pkpass dosyası olduğundan emin misiniz?</string>
     <string name="update_successful">Kart başarıyla güncellendi</string>
-    <string name="update_failed">Kart güncellemesi başarısız oldu</string>
     <string name="share">Kartı paylaş</string>
     <string name="pass_updates_channel">Kart güncellemeleri</string>
     <string name="pass_updated">Kart güncellendi</string>
     <string name="group">Kartları grupla</string>
     <string name="ungroup">Kartları gruplardan dağıt</string>
-    <string name="passes">Kartlar</string>
     <string name="sync_interval">Kart güncelleme aralığı (dk)</string>
     <string name="enable">Etkinleştir</string>
     <string name="search">Ara</string>
@@ -74,7 +67,6 @@
     <string name="boarding_pass">Yolculuk bileti</string>
     <string name="store_card">Mağaza kartı</string>
     <string name="barcode_format">Barkod formatı</string>
-    <string name="no_url_in_clipboard">Panoda URL yok</string>
     <string name="image">Görsel</string>
     <string name="no_barcode_format_given">Bir barkod formatı seçilmedi! Varsayılan olarak QR koda ayarlanıyor. Bu kod düzgün taranmayabilir.</string>
     <string name="to">Şuna</string>
@@ -82,6 +74,5 @@
     <string name="barcode_value_invalid">Belirtilen değer geçerli bir %1$s kodu değil</string>
     <string name="choose_image">Resim seç</string>
     <string name="clear_selection">Seçimi temizle</string>
-    <string name="color">Renk</string>
     <string name="icon">İkon</string>
 </resources>
