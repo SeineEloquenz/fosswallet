@@ -64,20 +64,20 @@ class QrScanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val decoratedBarcodeView = DecoratedBarcodeView(this).apply {
+            findViewById<View?>(com.google.zxing.client.android.R.id.zxing_viewfinder_view)?.isVisible = false
+            findViewById<View?>(com.google.zxing.client.android.R.id.zxing_status_view)?.isVisible = false
+        }
+        barcodeView = decoratedBarcodeView
+        captureManager = CaptureManager(this, decoratedBarcodeView).also {
+            it.initializeFromIntent(intent, savedInstanceState)
+            it.decode()
+        }
+
         setContent {
             WalletTheme {
                 QrScannerContent(
-                    onViewCreated = { decoratedBarcodeView ->
-                        if (captureManager != null || barcodeView === decoratedBarcodeView) {
-                            return@QrScannerContent
-                        }
-
-                        barcodeView = decoratedBarcodeView
-                        captureManager = CaptureManager(this, decoratedBarcodeView).also {
-                            it.initializeFromIntent(intent, savedInstanceState)
-                            it.decode()
-                        }
-                    },
+                    barcodeView = decoratedBarcodeView,
                     onOpenGallery = {
                         pickImageLauncher.launch("image/*")
                     }
@@ -117,19 +117,13 @@ class QrScanActivity : AppCompatActivity() {
 
 @Composable
 private fun QrScannerContent(
-    onViewCreated: (DecoratedBarcodeView) -> Unit,
+    barcodeView: DecoratedBarcodeView,
     onOpenGallery: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                DecoratedBarcodeView(context).apply {
-                    findViewById<View?>(R.id.zxing_viewfinder_view)?.isVisible = false
-                    findViewById<View?>(R.id.zxing_status_view)?.isVisible = false
-                    onViewCreated(this)
-                }
-            }
+            factory = { barcodeView }
         )
 
         ScannerOverlay(modifier = Modifier.fillMaxSize())
