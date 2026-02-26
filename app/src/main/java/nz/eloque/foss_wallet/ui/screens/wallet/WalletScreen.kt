@@ -122,6 +122,13 @@ fun WalletScreen(
                             }
                         ),
                         FabMenuItem(
+                            icon = Icons.Default.QrCodeScanner,
+                            title = stringResource(R.string.scan_code),
+                            onClick = {
+                                navController.navigate(Screen.CreateScan.route)
+                            }
+                        ),
+                        FabMenuItem(
                             icon = Icons.Default.Add,
                             title = stringResource(R.string.import_pass),
                             onClick = {
@@ -130,13 +137,6 @@ fun WalletScreen(
                                     "application/octet-stream",
                                     "text/json"
                                 ).plus(PkpassMimeTypes))
-                            }
-                        ),
-                        FabMenuItem(
-                            icon = Icons.Default.QrCodeScanner,
-                            title = stringResource(R.string.scan_qr_code),
-                            onClick = {
-                                navController.navigate(Screen.CreateScan.route)
                             }
                         )
                     )

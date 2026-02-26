@@ -206,7 +206,7 @@ fun CreateView(
             initialScanHandled = true
             scanLauncher.launch(
                 ScanOptions()
-                    .setCaptureActivity(QrScanActivity::class.java)
+                    .setCaptureActivity(ScanActivity::class.java)
             )
         }
     }
@@ -299,7 +299,7 @@ fun CreateView(
                 IconButton(onClick = {
                     activeBarcodeIndex = index
                     scanLauncher.launch(
-                        ScanOptions().setCaptureActivity(QrScanActivity::class.java)
+                        ScanOptions().setCaptureActivity(ScanActivity::class.java)
                     )
                 }) {
                     Icon(

@@ -53,7 +53,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
-class QrScanActivity : AppCompatActivity() {
+class ScanActivity : AppCompatActivity() {
     private var barcodeView: DecoratedBarcodeView? = null
     private var captureManager: CaptureManager? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)

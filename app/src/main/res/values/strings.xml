@@ -73,7 +73,7 @@
     <string name="create_pass">Create pass</string>
     <string name="manual_entry">Manual entry</string>
     <string name="advanced">Advanced</string>
-    <string name="scan_qr_code">Scan QR code</string>
+    <string name="scan_code">Scan code</string>
     <string name="barcode_step_title">Add barcode</string>
     <string name="continue_to_details">Continue</string>
     <string name="pass_name">Pass name</string>

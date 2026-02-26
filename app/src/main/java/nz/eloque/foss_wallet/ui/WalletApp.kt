@@ -54,7 +54,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes v
     data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
     data object Create : Screen("create", Icons.Default.Create, R.string.create_pass)
-    data object CreateScan : Screen("create_scan", Icons.Default.QrCodeScanner, R.string.scan_qr_code)
+    data object CreateScan : Screen("create_scan", Icons.Default.QrCodeScanner, R.string.scan_code)
     data object AdvancedAdd : Screen("advanced_add", Icons.Default.MoreHoriz, R.string.advanced)
     data object Web : Screen("webview", Icons.Default.ContentPasteGo, R.string.webview)
 }

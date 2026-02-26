@@ -70,7 +70,7 @@
     <string name="create_pass">Pass erstellen</string>
     <string name="manual_entry">Manuelle Eingabe</string>
     <string name="advanced">Erweitert</string>
-    <string name="scan_qr_code">QR-Code scannen</string>
+    <string name="scan_code">Code scannen</string>
     <string name="continue_to_details">Weiter</string>
     <string name="pass_name">Name des Passes</string>
     <string name="barcode_value">Wert des Barcodes</string>
