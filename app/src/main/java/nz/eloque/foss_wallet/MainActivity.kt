@@ -10,8 +10,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -54,11 +64,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
+            var isProcessingImageShare by remember { mutableStateOf(false) }
             LaunchedEffect(dataUri, isImageShare) {
                 if (isImageShare && dataUri != null) {
+                    isProcessingImageShare = true
                     coroutineScope.launch(Dispatchers.IO) {
                         val scanResult = runCatching { ImageScanner.scanFrom(contentResolver, dataUri) }.getOrNull()
                         withContext(Dispatchers.Main) {
+                            isProcessingImageShare = false
                             val barcode = scanResult?.text
                             if (!barcode.isNullOrEmpty()) {
                                 navController.navigate("${Screen.Create.route}?barcode=${URLEncoder.encode(barcode, Charsets.UTF_8.name())}")
@@ -88,9 +101,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
             WalletTheme {
-                WalletApp(
-                    navController,
-                )
+                Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
+                    WalletApp(
+                        navController,
+                    )
+
+                    if (isProcessingImageShare) {
+                        Box(
+                            modifier = androidx.compose.ui.Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
             }
         }
     }
