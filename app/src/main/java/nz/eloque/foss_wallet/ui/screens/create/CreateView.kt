@@ -47,6 +47,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -77,6 +78,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import de.nielstron.bcbp.IataBcbp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -86,6 +88,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
@@ -149,18 +152,34 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
     var initialScanHandled by remember { mutableStateOf(false) }
+    var createBoardingPass by remember { mutableStateOf(false) }
 
-    val barCodeModels = barcodes.map {
+    val parsedBcbps = barcodes.map { IataBcbp.parse(it.message) }
+    val detectedBcbp = parsedBcbps.firstOrNull { it != null }
+    val effectiveType = if (createBoardingPass && detectedBcbp != null) {
+        PassType.Boarding(TransitType.AIR)
+    } else {
+        type
+    }
+    val isBoardingPass = effectiveType is PassType.Boarding
+    val effectiveName = if (isBoardingPass) {
+        detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass)
+    } else {
+        name
+    }
+
+    val barCodeModels = barcodes.mapIndexed { index, barcode ->
+        val parsedBcbp = parsedBcbps[index]
         BarCode(
-            format = it.format,
-            message = it.message,
+            format = barcode.format,
+            message = barcode.message,
             encoding = Charsets.UTF_8,
-            altText = it.altText.ifBlank { it.message },
+            altText = barcode.altText.ifBlank { parsedBcbp?.summary() ?: barcode.message },
         )
     }
-    val pass = PassCreator.create(name, type, barCodeModels)
+    val pass = PassCreator.create(effectiveName, effectiveType, barCodeModels, parsedBcbp = detectedBcbp)
 
-    val nameValid = name.length in 1..<30
+    val nameValid = isBoardingPass || name.length in 1..<30
     val showNameError = nameTouched && !nameValid
     val barcodesValid = barcodes.isNotEmpty() && barcodes.zip(barCodeModels).all { (draft, model) ->
         draft.message.isNotEmpty() && barcodeValid(model)
@@ -196,7 +215,17 @@ fun CreateView(
                         )
                     }
                 }
-                detailsExpanded = true
+                val scannedBcbp = IataBcbp.parse(result.contents)
+                if (scannedBcbp != null) {
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.airline_code_detected),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    detailsExpanded = false
+                } else {
+                    detailsExpanded = true
+                }
             }
         }
     )
@@ -208,6 +237,12 @@ fun CreateView(
                 ScanOptions()
                     .setCaptureActivity(ScanActivity::class.java)
             )
+        }
+    }
+
+    LaunchedEffect(detectedBcbp) {
+        if (detectedBcbp == null) {
+            createBoardingPass = false
         }
     }
 
@@ -348,12 +383,43 @@ fun CreateView(
         }
 
         if (!detailsExpanded) {
-            Button(
-                enabled = barcodesValid,
-                onClick = { detailsExpanded = true },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(stringResource(R.string.continue_to_details))
+            if (detectedBcbp == null) {
+                Button(
+                    enabled = barcodesValid,
+                    onClick = {
+                        createBoardingPass = false
+                        detailsExpanded = true
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.continue_to_details))
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    OutlinedButton(
+                        enabled = barcodesValid,
+                        onClick = {
+                            createBoardingPass = false
+                            detailsExpanded = true
+                        },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(stringResource(R.string.continue_normal_pass))
+                    }
+                    Button(
+                        enabled = barcodesValid,
+                        onClick = {
+                            createBoardingPass = true
+                            detailsExpanded = true
+                        },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(stringResource(R.string.create_boarding_pass))
+                    }
+                }
             }
         }
 
@@ -366,29 +432,31 @@ fun CreateView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.pass_name)) },
-                    value = name,
-                    onValueChange = {
-                        nameTouched = true
-                        name = it
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = showNameError
-                )
+                if (!isBoardingPass) {
+                    OutlinedTextField(
+                        label = { Text(stringResource(R.string.pass_name)) },
+                        value = name,
+                        onValueChange = {
+                            nameTouched = true
+                            name = it
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        isError = showNameError
+                    )
 
-                ComboBox(
-                    title = stringResource(R.string.pass_type),
-                    options = listOf(
-                        PassType.Generic,
-                        PassType.StoreCard,
-                        PassType.Coupon,
-                        PassType.Event
-                    ),
-                    selectedOption = type,
-                    onOptionSelected = { type = it },
-                    optionLabel = { resources.getString(it.label) },
-                )
+                    ComboBox(
+                        title = stringResource(R.string.pass_type),
+                        options = listOf(
+                            PassType.Generic,
+                            PassType.StoreCard,
+                            PassType.Coupon,
+                            PassType.Event
+                        ),
+                        selectedOption = type,
+                        onOptionSelected = { type = it },
+                        optionLabel = { resources.getString(it.label) },
+                    )
+                }
 
                 ElevatedButton(
                     onClick = { advancedExpanded = !advancedExpanded },
@@ -592,10 +660,10 @@ fun CreateView(
                         }
 
                         val savedPassId = createViewModel.savePass(
-                            name = name,
+                            name = effectiveName,
                             organization = organization,
                             serialNumber = serialNumber,
-                            type = type,
+                            type = effectiveType,
                             barcodes = barCodeModels,
                             logoText = logoText,
                             colors = colors,

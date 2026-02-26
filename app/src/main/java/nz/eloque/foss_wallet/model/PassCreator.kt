@@ -1,11 +1,14 @@
 package nz.eloque.foss_wallet.model
 
 import android.location.Location
+import de.nielstron.bcbp.IataBcbp
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.linkifyUrls
 import java.time.Instant
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.LinkedHashSet
 
 object PassCreator {
@@ -17,6 +20,7 @@ object PassCreator {
         name: String,
         type: PassType,
         barCode: BarCode,
+        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -29,6 +33,7 @@ object PassCreator {
             name = name,
             type = type,
             barCodes = listOf(barCode),
+            parsedBcbp = parsedBcbp,
             organization = organization,
             serialNumber = serialNumber,
             logoText = logoText,
@@ -43,6 +48,7 @@ object PassCreator {
         name: String,
         type: PassType,
         barCodes: List<BarCode>,
+        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -75,6 +81,34 @@ object PassCreator {
             content = PassContent.Plain(name)
         )
 
+        val bcbp = if (type is PassType.Boarding && type.transitType == TransitType.AIR) {
+            parsedBcbp ?: barCodes.firstNotNullOfOrNull { IataBcbp.parse(it.rawMessage()) }
+        } else {
+            null
+        }
+
+        val parsedBcbpFields = bcbp?.let {
+            Triple(
+                listOfNotNull(
+                    plainField("from", "From", it.fromAirport),
+                    plainField("to", "To", it.toAirport),
+                ),
+                listOfNotNull(
+                    plainField("flight", "Flight", it.flightCode()),
+                    plainField("date", "Date", it.flightDate?.format(DateTimeFormatter.ISO_LOCAL_DATE).orEmpty()),
+                    plainField("class", "Class", it.travelClass),
+                ),
+                listOfNotNull(
+                    plainField("passenger", "Passenger", it.passengerName),
+                    plainField("seat", "Seat", it.seat),
+                ),
+            )
+        }
+
+        val primaryFields = parsedBcbpFields?.first.orEmpty().ifEmpty { listOf(nameField) }
+        val secondaryFields = parsedBcbpFields?.second.orEmpty()
+        val auxiliaryFields = parsedBcbpFields?.third.orEmpty()
+
         return Pass(
             id = id,
             description = name,
@@ -89,7 +123,18 @@ object PassCreator {
             locations = location?.let { listOf(it) } ?: emptyList(),
             relevantDates = relevantDates,
             expirationDate = expirationDate,
-            primaryFields = listOf(nameField),
+            primaryFields = primaryFields,
+            secondaryFields = secondaryFields,
+            auxiliaryFields = auxiliaryFields,
+        )
+    }
+
+    private fun plainField(key: String, label: String, value: String): PassField? {
+        if (value.isBlank()) return null
+        return PassField(
+            key = key,
+            label = label,
+            content = PassContent.Plain(linkifyUrls(value)),
         )
     }
 }
