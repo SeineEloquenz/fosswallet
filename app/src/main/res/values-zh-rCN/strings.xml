@@ -3,10 +3,13 @@
     <string name="settings">设置</string>
     <string name="update">更新</string>
     <string name="back">返回</string>
+    <string name="permission_rationale">缺少权限，FossWallet 无法正常运行</string>
+    <string name="request_permissions">请求权限</string>
     <string name="image">图片</string>
     <string name="delete">删除</string>
     <string name="about">关于</string>
     <string name="source_code">源代码</string>
+    <string name="barcode">条码</string>
     <string name="search">搜索</string>
     <string name="serial_number">序列号</string>
     <string name="organization">组织</string>
@@ -23,8 +26,12 @@
     <string name="more_options">更多选项</string>
     <string name="filter">排序方式</string>
     <string name="libraries">库</string>
+    <string name="pass">凭证</string>
+    <string name="add_pass">添加凭证</string>
     <string name="update_successful">凭证已成功更新</string>
+    <string name="update_failed">凭证更新失败</string>
     <string name="share">分享凭证</string>
+    <string name="passes">凭证</string>
     <string name="sync_interval">凭证更新间隔（分钟）</string>
     <string name="pass_already_imported">通行证已导入</string>
     <string name="wallet">钱包</string>
@@ -58,6 +65,7 @@
     <string name="pass_updates_channel">凭证更新</string>
     <string name="invalid_pass_toast">无法加载凭证。您确定这是一个有效的 .pkpass 文件吗？</string>
     <string name="no_barcode_format_given">未提供条码格式！默认为 QR 码。此码可能无法正确扫描。</string>
+    <string name="color">颜色</string>
     <string name="webview">打开 URL</string>
     <string name="help_translate">帮助翻译</string>
     <string name="clear_selection">清除选择</string>
@@ -65,6 +73,7 @@
     <string name="remove_tag">移除标签</string>
     <string name="collapse">收起</string>
     <string name="expand">展开</string>
+    <string name="no_url_in_clipboard">剪贴板中没有 URL</string>
     <string name="create_pass">创建凭证</string>
     <string name="pass_name">凭证名称</string>
     <string name="pass_type">凭证类型</string>
@@ -79,10 +88,12 @@
     <string name="barcode_value_invalid">提供的值不是有效的 %1$s 码</string>
     <string name="choose_image">选择图片</string>
     <string name="tag_label">标签名称</string>
+    <string name="select_image_with_barcode">选择带有条码的图片</string>
     <string name="no_barcode_found">未找到条码</string>
     <string name="no_map_app_found">未找到地图应用</string>
     <string name="no_calendar_app_found">未找到日历应用</string>
     <string name="save">保存</string>
+    <string name="barcode_alt_text">替代条码文本</string>
     <string name="add_another_barcode">添加其他条码</string>
     <string name="logo_text">徽标文本</string>
     <string name="icon">图标</string>

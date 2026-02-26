@@ -5,10 +5,13 @@
     <string name="image">Attēls</string>
     <string name="back">Atpakaļ</string>
     <string name="wallet">Maks</string>
+    <string name="pass">Caurlaide</string>
+    <string name="barcode">Svītrkods</string>
     <string name="date">Datums</string>
     <string name="delete">Dzēst</string>
     <string name="about">Par lietotni</string>
     <string name="license">Licence</string>
+    <string name="passes">Caurlaides</string>
     <string name="enable">Iespējot</string>
     <string name="search">Meklēt</string>
     <string name="privacy">Konfidencialitāte</string>
@@ -20,7 +23,9 @@
     <string name="archive">Arhivēt</string>
     <string name="export">Izgūt</string>
     <string name="selected">Atlasītās</string>
+    <string name="request_permissions">Pieprasīt atļauju</string>
     <string name="serial_number">Sērijas numurs</string>
+    <string name="add_pass">Pievienot caurlaidi</string>
     <string name="source_code">Pirmkods</string>
     <string name="share">Kopīgot caurlaidi</string>
     <string name="pass_updated">Caurlaide atjaunināta</string>
@@ -42,8 +47,10 @@
     <string name="status_not_updated">Jūsu caurlaide jau ir atjaunināta</string>
     <string name="barcode_position">Svītrkoda pozīcija, kad pilnekrānā</string>
     <string name="pass_already_imported">Caurlaide jau ievietota</string>
+    <string name="permission_rationale">Bez šīs(-m) atļaujas(-ām) FossWallet nedarbosies korekti</string>
     <string name="organization">Organizācija</string>
     <string name="no_barcode_format_given">Nav norādīts svītrkoda formāts! Izmanto QR kodu. Iespējams, ka šis kods var tikt nepareizi nolasīts.</string>
+    <string name="color">Krāsa</string>
     <string name="coupon">Kupons</string>
     <string name="details">Sīkāka informācija</string>
     <string name="libraries">Bibliotēkas</string>

@@ -3,7 +3,10 @@
     <string name="settings">Paràmetres</string>
     <string name="update">Actualizar</string>
     <string name="back">Enrera</string>
+    <string name="permission_rationale">Sense permís(os), FossWallet no funciona correctament</string>
+    <string name="request_permissions">Demanar Permisos</string>
     <string name="image">Imatge</string>
+    <string name="barcode">Codi de barres</string>
     <string name="serial_number">Número de sèrie</string>
     <string name="organization">Organizació</string>
     <string name="date">Data</string>
@@ -22,10 +25,12 @@
     <string name="copy">Copiar</string>
     <string name="open">Obrir FossWallet</string>
     <string name="coupon">Cupó</string>
+    <string name="color">Color</string>
     <string name="boarding_pass">Tarjeta d\'embarcament</string>
     <string name="barcode_position_top">Dalt</string>
     <string name="barcode_position_center">Centre</string>
     <string name="barcode_position_bottom">Baix</string>
+    <string name="no_url_in_clipboard">No hi ha cap URL al porta-retalls</string>
     <string name="date_added">Data d\'afegiment</string>
     <string name="more_options">Més opcions</string>
     <string name="relevant_date_newest">Data rellevant més recent</string>
