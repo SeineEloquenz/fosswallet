@@ -59,7 +59,7 @@ fun AdvancedAddScreen(
                         var clipboardValue: String? = null
                         for (i in 0 until entry.clipData.itemCount) {
                             val item = entry.clipData.getItemAt(i)
-                            val value = item?.coerceToText(context)?.toString()?.trim().orEmpty()
+                            val value = item?.coerceToText(context)?.toString().orEmpty()
                             if (value.isNotEmpty()) {
                                 clipboardValue = value
                                 break

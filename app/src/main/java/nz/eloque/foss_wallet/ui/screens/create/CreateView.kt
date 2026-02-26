@@ -118,7 +118,7 @@ fun CreateView(
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
     var logoText by remember { mutableStateOf("") }
-    val initialBarcodeValue = initialBarcode?.trim().orEmpty()
+    val initialBarcodeValue = initialBarcode.orEmpty()
     var barcodes by remember(initialBarcodeValue) {
         mutableStateOf(
             listOf(
