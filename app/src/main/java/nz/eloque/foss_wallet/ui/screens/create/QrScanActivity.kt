@@ -56,7 +56,7 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 class QrScanActivity : AppCompatActivity() {
     private var barcodeView: DecoratedBarcodeView? = null
     private var captureManager: CaptureManager? = null
-    private var hasCameraPermission by mutableStateOf(false)
+    private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
     private var pendingState: Bundle? = null
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -76,17 +76,28 @@ class QrScanActivity : AppCompatActivity() {
     }
 
     private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        hasCameraPermission = granted
+        cameraPermissionState = if (granted) CameraPermissionState.Granted else CameraPermissionState.Denied
         if (granted) {
             startCameraIfAllowed()
             captureManager?.onResume()
         }
     }
 
+    private fun requestCameraPermission() {
+        cameraPermissionState = CameraPermissionState.Requesting
+        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+    }
+
+    private fun onCameraAccessFailed() {
+        cameraPermissionState = CameraPermissionState.Denied
+        captureManager = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pendingState = savedInstanceState
-        hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        cameraPermissionState = if (hasCameraPermission) CameraPermissionState.Granted else CameraPermissionState.Requesting
         val decoratedBarcodeView = DecoratedBarcodeView(this).apply {
             findViewById<View?>(com.google.zxing.client.android.R.id.zxing_viewfinder_view)?.isVisible = false
             findViewById<View?>(com.google.zxing.client.android.R.id.zxing_status_view)?.isVisible = false
@@ -94,17 +105,15 @@ class QrScanActivity : AppCompatActivity() {
         barcodeView = decoratedBarcodeView
         startCameraIfAllowed()
         if (!hasCameraPermission) {
-            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            requestCameraPermission()
         }
 
         setContent {
             WalletTheme {
                 QrScannerContent(
                     barcodeView = decoratedBarcodeView,
-                    showCameraPreview = hasCameraPermission,
-                    onRequestCameraPermission = {
-                        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                    },
+                    permissionState = cameraPermissionState,
+                    onRequestCameraPermission = ::requestCameraPermission,
                     onOpenGallery = {
                         pickImageLauncher.launch("image/*")
                     }
@@ -114,42 +123,34 @@ class QrScanActivity : AppCompatActivity() {
     }
 
     private fun startCameraIfAllowed() {
-        if (!hasCameraPermission || captureManager != null) return
+        if (cameraPermissionState != CameraPermissionState.Granted || captureManager != null) return
         val decoratedBarcodeView = barcodeView ?: return
         try {
-            captureManager = SafeCaptureManager(this, decoratedBarcodeView) {
-                hasCameraPermission = false
-                captureManager = null
-            }.also {
+            captureManager = SafeCaptureManager(this, decoratedBarcodeView, ::onCameraAccessFailed).also {
                 it.setShowMissingCameraPermissionDialog(false)
                 it.initializeFromIntent(intent, pendingState)
                 pendingState = null
                 it.decode()
             }
         } catch (_: SecurityException) {
-            hasCameraPermission = false
-            captureManager = null
+            onCameraAccessFailed()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (hasCameraPermission) {
-            try {
-                captureManager?.onResume()
-            } catch (_: SecurityException) {
-                hasCameraPermission = false
-            }
+        try {
+            captureManager?.onResume()
+        } catch (_: SecurityException) {
+            onCameraAccessFailed()
         }
     }
 
     override fun onPause() {
-        if (hasCameraPermission) {
-            try {
-                captureManager?.onPause()
-            } catch (_: SecurityException) {
-                hasCameraPermission = false
-            }
+        try {
+            captureManager?.onPause()
+        } catch (_: SecurityException) {
+            onCameraAccessFailed()
         }
         super.onPause()
     }
@@ -179,46 +180,58 @@ private class SafeCaptureManager(
     }
 }
 
+private enum class CameraPermissionState {
+    Requesting,
+    Granted,
+    Denied,
+}
+
 @Composable
 private fun QrScannerContent(
     barcodeView: DecoratedBarcodeView,
-    showCameraPreview: Boolean,
+    permissionState: CameraPermissionState,
     onRequestCameraPermission: () -> Unit,
     onOpenGallery: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        if (showCameraPreview) {
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { barcodeView }
-            )
+        when (permissionState) {
+            CameraPermissionState.Granted -> {
+                AndroidView(
+                    modifier = Modifier.fillMaxSize(),
+                    factory = { barcodeView }
+                )
 
-            ScannerOverlay(modifier = Modifier.fillMaxSize())
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-            ) {
-                Column(
+                ScannerOverlay(modifier = Modifier.fillMaxSize())
+            }
+            CameraPermissionState.Requesting,
+            CameraPermissionState.Denied -> {
+                Box(
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .fillMaxSize()
+                        .background(Color.Black)
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Warning,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(48.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.permission_rationale),
-                        color = Color.White
-                    )
-                    Button(onClick = onRequestCameraPermission) {
-                        Text(stringResource(R.string.request_permissions))
+                    if (permissionState == CameraPermissionState.Denied) {
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Warning,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.permission_rationale),
+                                color = Color.White
+                            )
+                            Button(onClick = onRequestCameraPermission) {
+                                Text(stringResource(R.string.request_permissions))
+                            }
+                        }
                     }
                 }
             }
