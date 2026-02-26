@@ -246,6 +246,14 @@ fun CreateView(
         }
     }
 
+    LaunchedEffect(detectedBcbp, createBoardingPass) {
+        if (!createBoardingPass) return@LaunchedEffect
+        val bcbpFlightDate = detectedBcbp?.flightDate ?: return@LaunchedEffect
+        expirationDate = bcbpFlightDate
+            .atStartOfDay(ZoneId.systemDefault())
+            .plusDays(1)
+    }
+
     if (showLocationPicker) {
         LocationPickerDialog(
             createViewModel = createViewModel,
