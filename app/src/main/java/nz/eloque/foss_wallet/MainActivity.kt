@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,9 +23,12 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletApp
+import nz.eloque.foss_wallet.ui.screens.create.ImageScanner
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
+import java.net.URLEncoder
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,8 +39,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val isImageShare = intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true
         val dataUri = when {
             Intent.ACTION_VIEW == intent.action -> intent.data
+            isImageShare -> intent.sharedImageUri()
             Intent.ACTION_SEND == intent.action -> {
                 val count = intent.clipData?.itemCount?.minus(1)?.coerceAtLeast(0)
                 count?.let { intent.clipData?.getItemAt(it)?.uri }
@@ -48,7 +54,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
-            LaunchedEffect(dataUri) {
+            LaunchedEffect(dataUri, isImageShare) {
+                if (isImageShare && dataUri != null) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val scanResult = runCatching { ImageScanner.scanFrom(contentResolver, dataUri) }.getOrNull()
+                        withContext(Dispatchers.Main) {
+                            val barcode = scanResult?.text
+                            if (!barcode.isNullOrEmpty()) {
+                                navController.navigate("${Screen.Create.route}?barcode=${URLEncoder.encode(barcode, Charsets.UTF_8.name())}")
+                            } else {
+                                Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    return@LaunchedEffect
+                }
+
                 if (Shortcut.SCHEME != dataUri?.scheme) {
                     coroutineScope.launch(Dispatchers.IO) {
                         val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
@@ -86,5 +107,18 @@ class MainActivity : ComponentActivity() {
         }
 
         return LoaderResult.Invalid
+    }
+
+    @Suppress("DEPRECATION")
+    private fun Intent.sharedImageUri(): Uri? {
+        if (action != Intent.ACTION_SEND) return null
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)?.let { return it }
+        } else {
+            getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let { return it }
+        }
+
+        return clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
     }
 }
