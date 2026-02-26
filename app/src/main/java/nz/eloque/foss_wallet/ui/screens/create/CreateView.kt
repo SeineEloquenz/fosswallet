@@ -174,9 +174,9 @@ fun CreateView(
         onResult = { activityResult ->
             if (activityResult.resultCode == android.app.Activity.RESULT_OK) {
                 val resultData = activityResult.data
-                val contents = resultData?.getStringExtra(QrScanActivity.EXTRA_RESULT)
+                val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
                 if (contents != null) {
-                    val formatName = resultData.getStringExtra(QrScanActivity.EXTRA_RESULT_FORMAT)
+                    val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
                     if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
                     barcodes = barcodes.mapIndexed { index, barcode ->
                         if (index != activeBarcodeIndex) {
