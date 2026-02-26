@@ -130,7 +130,11 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.zxing)
-    implementation(libs.zxing.android.embedded)
+    implementation(libs.zxingcpp.android)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     //hilt
     implementation(libs.hilt.android)

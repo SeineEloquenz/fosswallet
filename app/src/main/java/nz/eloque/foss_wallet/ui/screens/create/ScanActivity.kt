@@ -5,12 +5,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,29 +38,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import com.google.zxing.client.android.Intents
-import com.journeyapps.barcodescanner.CaptureManager
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
+import java.util.concurrent.Executors
+import zxingcpp.BarcodeReader
 
 class ScanActivity : AppCompatActivity() {
-    private var barcodeView: DecoratedBarcodeView? = null
-    private var captureManager: CaptureManager? = null
+    companion object {
+        const val EXTRA_RESULT = "scan_result"
+        const val EXTRA_RESULT_FORMAT = "scan_result_format"
+    }
+
+    private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
-    private var pendingState: Bundle? = null
+    private var hasDeliveredResult = false
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var isCameraBound = false
+    private val cameraExecutor = Executors.newSingleThreadExecutor()
+    private val barcodeReader = BarcodeReader(
+        BarcodeReader.Options(
+            tryHarder = true,
+            tryRotate = true,
+            tryInvert = true,
+        )
+    )
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         val pickedUri = uri ?: return@registerForActivityResult
@@ -67,19 +82,13 @@ class ScanActivity : AppCompatActivity() {
             return@registerForActivityResult
         }
 
-        val scanIntent = Intent().apply {
-            putExtra(Intents.Scan.RESULT, result.text)
-            putExtra(Intents.Scan.RESULT_FORMAT, result.barcodeFormat.toString())
-        }
-        setResult(Activity.RESULT_OK, scanIntent)
-        finish()
+        deliverScanResult(result.text, result.format)
     }
 
     private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         cameraPermissionState = if (granted) CameraPermissionState.Granted else CameraPermissionState.Denied
         if (granted) {
             startCameraIfAllowed()
-            captureManager?.onResume()
         }
     }
 
@@ -90,29 +99,25 @@ class ScanActivity : AppCompatActivity() {
 
     private fun onCameraAccessFailed() {
         cameraPermissionState = CameraPermissionState.Denied
-        captureManager = null
+        cameraProvider?.unbindAll()
+        isCameraBound = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pendingState = savedInstanceState
+
         val hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         cameraPermissionState = if (hasCameraPermission) CameraPermissionState.Granted else CameraPermissionState.Requesting
-        val decoratedBarcodeView = DecoratedBarcodeView(this).apply {
-            findViewById<View?>(com.google.zxing.client.android.R.id.zxing_viewfinder_view)?.isVisible = false
-            findViewById<View?>(com.google.zxing.client.android.R.id.zxing_status_view)?.isVisible = false
-        }
-        barcodeView = decoratedBarcodeView
-        startCameraIfAllowed()
-        if (!hasCameraPermission) {
-            requestCameraPermission()
-        }
-
         setContent {
             WalletTheme {
                 QrScannerContent(
-                    barcodeView = decoratedBarcodeView,
                     permissionState = cameraPermissionState,
+                    onPreviewReady = { view ->
+                        previewView = view
+                        if (cameraPermissionState == CameraPermissionState.Granted) {
+                            startCameraIfAllowed()
+                        }
+                    },
                     onRequestCameraPermission = ::requestCameraPermission,
                     onOpenGallery = {
                         pickImageLauncher.launch("image/*")
@@ -120,18 +125,62 @@ class ScanActivity : AppCompatActivity() {
                 )
             }
         }
+
+        if (!hasCameraPermission) {
+            requestCameraPermission()
+        }
     }
 
     private fun startCameraIfAllowed() {
-        if (cameraPermissionState != CameraPermissionState.Granted || captureManager != null) return
-        val decoratedBarcodeView = barcodeView ?: return
-        try {
-            captureManager = SafeCaptureManager(this, decoratedBarcodeView, ::onCameraAccessFailed).also {
-                it.setShowMissingCameraPermissionDialog(false)
-                it.initializeFromIntent(intent, pendingState)
-                pendingState = null
-                it.decode()
+        if (cameraPermissionState != CameraPermissionState.Granted || hasDeliveredResult || isCameraBound) return
+        val boundPreviewView = previewView ?: return
+
+        val future = ProcessCameraProvider.getInstance(this)
+        future.addListener(
+            {
+                try {
+                    val provider = future.get()
+                    cameraProvider = provider
+                    bindCameraUseCases(provider, boundPreviewView)
+                } catch (_: SecurityException) {
+                    onCameraAccessFailed()
+                }
+            },
+            ContextCompat.getMainExecutor(this)
+        )
+    }
+
+    private fun bindCameraUseCases(provider: ProcessCameraProvider, boundPreviewView: PreviewView) {
+        provider.unbindAll()
+        isCameraBound = false
+
+        val preview = Preview.Builder().build().also {
+            it.surfaceProvider = boundPreviewView.surfaceProvider
+        }
+
+        val analyzer = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+
+        analyzer.setAnalyzer(cameraExecutor) { image ->
+            if (hasDeliveredResult) {
+                image.close()
+                return@setAnalyzer
             }
+
+            val result = image.use { barcodeReader.read(it).firstOrNull() }
+            val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
+            val format = result.format.name
+
+            hasDeliveredResult = true
+            runOnUiThread {
+                deliverScanResult(text, format)
+            }
+        }
+
+        try {
+            provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, analyzer)
+            isCameraBound = true
         } catch (_: SecurityException) {
             onCameraAccessFailed()
         }
@@ -139,44 +188,31 @@ class ScanActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        try {
-            captureManager?.onResume()
-        } catch (_: SecurityException) {
-            onCameraAccessFailed()
-        }
+        startCameraIfAllowed()
     }
 
     override fun onPause() {
-        try {
-            captureManager?.onPause()
-        } catch (_: SecurityException) {
-            onCameraAccessFailed()
-        }
+        cameraProvider?.unbindAll()
+        isCameraBound = false
         super.onPause()
     }
 
     override fun onDestroy() {
+        cameraProvider?.unbindAll()
+        isCameraBound = false
+        cameraExecutor.shutdownNow()
         super.onDestroy()
-        captureManager?.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        captureManager?.onSaveInstanceState(outState)
-    }
+    private fun deliverScanResult(text: String, format: String) {
+        if (isFinishing || isDestroyed) return
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return barcodeView?.onKeyDown(keyCode, event) == true || super.onKeyDown(keyCode, event)
-    }
-}
-
-private class SafeCaptureManager(
-    activity: Activity,
-    barcodeView: DecoratedBarcodeView,
-    private val onCameraFailure: () -> Unit,
-) : CaptureManager(activity, barcodeView) {
-    override fun displayFrameworkBugMessageAndExit(message: String?) {
-        onCameraFailure()
+        val scanIntent = Intent().apply {
+            putExtra(EXTRA_RESULT, text)
+            putExtra(EXTRA_RESULT_FORMAT, format)
+        }
+        setResult(Activity.RESULT_OK, scanIntent)
+        finish()
     }
 }
 
@@ -188,8 +224,8 @@ private enum class CameraPermissionState {
 
 @Composable
 private fun QrScannerContent(
-    barcodeView: DecoratedBarcodeView,
     permissionState: CameraPermissionState,
+    onPreviewReady: (PreviewView) -> Unit,
     onRequestCameraPermission: () -> Unit,
     onOpenGallery: () -> Unit,
 ) {
@@ -198,7 +234,12 @@ private fun QrScannerContent(
             CameraPermissionState.Granted -> {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
-                    factory = { barcodeView }
+                    factory = { context ->
+                        PreviewView(context).apply {
+                            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                            scaleType = PreviewView.ScaleType.FILL_CENTER
+                        }.also(onPreviewReady)
+                    }
                 )
 
                 ScannerOverlay(modifier = Modifier.fillMaxSize())
