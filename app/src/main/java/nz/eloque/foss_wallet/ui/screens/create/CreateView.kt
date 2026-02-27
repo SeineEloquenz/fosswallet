@@ -153,6 +153,14 @@ fun CreateView(
     var initialScanHandled by remember { mutableStateOf(false) }
     var showBcbpPrompt by remember { mutableStateOf(false) }
     var lastPromptedBcbpMessage by remember { mutableStateOf<String?>(null) }
+    val finishSavingAndNavigateToPass: suspend (String) -> Unit = { savedPassId ->
+        withContext(Dispatchers.Main) {
+            isSaving = false
+            navController.navigate("pass/$savedPassId") {
+                popUpTo(Screen.Wallet.route)
+            }
+        }
+    }
 
     val parsedBcbps = barcodes.map { IataBcbp.parse(it.message) }
     val detectedBcbpIndex = parsedBcbps.indexOfFirst { it != null }
@@ -178,53 +186,6 @@ fun CreateView(
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
-    val saveDetailedPassAndNavigate: () -> Unit = {
-        isSaving = true
-        coroutineScope.launch(Dispatchers.IO) {
-            val relevantDates = when {
-                relevantStart != null && relevantEnd != null -> listOf(
-                    PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
-                )
-                relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
-                else -> emptyList()
-            }
-
-            val colors = if (allColorsBlank) {
-                null
-            } else {
-                val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
-                PassColors(
-                    background = backgroundColor ?: fallbackColor,
-                    foreground = foregroundColor ?: fallbackColor,
-                    label = labelColor ?: fallbackColor,
-                )
-            }
-
-            val savedPassId = createViewModel.savePass(
-                name = name,
-                organization = organization,
-                serialNumber = serialNumber,
-                type = type,
-                barcodes = barCodeModels,
-                logoText = logoText,
-                colors = colors,
-                location = location,
-                relevantDates = relevantDates,
-                expirationDate = expirationDate,
-                iconUrl = iconUrl,
-                logoUrl = logoUrl,
-                stripUrl = stripUrl,
-                thumbnailUrl = thumbnailUrl,
-                footerUrl = footerUrl,
-            )
-            withContext(Dispatchers.Main) {
-                isSaving = false
-                navController.navigate("pass/$savedPassId") {
-                    popUpTo(Screen.Wallet.route)
-                }
-            }
-        }
-    }
     val saveBoardingPassAndNavigate: (IataBcbp.Parsed) -> Unit = { bcbp ->
         isSaving = true
         coroutineScope.launch(Dispatchers.IO) {
@@ -233,27 +194,11 @@ fun CreateView(
                 ?.plusDays(1)
             val savedPassId = createViewModel.savePass(
                 name = bcbp.summary(),
-                organization = "",
-                serialNumber = "",
                 type = PassType.Boarding(TransitType.AIR),
                 barcodes = barCodeModels,
-                logoText = "",
-                colors = null,
-                location = null,
-                relevantDates = emptyList(),
                 expirationDate = boardingExpiration,
-                iconUrl = null,
-                logoUrl = null,
-                stripUrl = null,
-                thumbnailUrl = null,
-                footerUrl = null,
             )
-            withContext(Dispatchers.Main) {
-                isSaving = false
-                navController.navigate("pass/$savedPassId") {
-                    popUpTo(Screen.Wallet.route)
-                }
-            }
+            finishSavingAndNavigateToPass(savedPassId)
         }
     }
 
@@ -707,7 +652,46 @@ fun CreateView(
             Button(
                 enabled = createValid,
                 onClick = {
-                    saveDetailedPassAndNavigate()
+                    isSaving = true
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val relevantDates = when {
+                            relevantStart != null && relevantEnd != null -> listOf(
+                                PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
+                            )
+                            relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
+                            else -> emptyList()
+                        }
+
+                        val colors = if (allColorsBlank) {
+                            null
+                        } else {
+                            val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
+                            PassColors(
+                                background = backgroundColor ?: fallbackColor,
+                                foreground = foregroundColor ?: fallbackColor,
+                                label = labelColor ?: fallbackColor,
+                            )
+                        }
+
+                        val savedPassId = createViewModel.savePass(
+                            name = name,
+                            organization = organization,
+                            serialNumber = serialNumber,
+                            type = type,
+                            barcodes = barCodeModels,
+                            logoText = logoText,
+                            colors = colors,
+                            location = location,
+                            relevantDates = relevantDates,
+                            expirationDate = expirationDate,
+                            iconUrl = iconUrl,
+                            logoUrl = logoUrl,
+                            stripUrl = stripUrl,
+                            thumbnailUrl = thumbnailUrl,
+                            footerUrl = footerUrl,
+                        )
+                        finishSavingAndNavigateToPass(savedPassId)
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
