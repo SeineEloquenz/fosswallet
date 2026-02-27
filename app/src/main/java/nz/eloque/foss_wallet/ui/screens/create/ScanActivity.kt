@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -22,9 +23,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -62,8 +67,11 @@ class ScanActivity : AppCompatActivity() {
 
     private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
+    private var isTorchEnabled by mutableStateOf(false)
+    private var lensFacing by mutableStateOf(CameraSelector.LENS_FACING_BACK)
     private var hasDeliveredResult = false
     private var cameraProvider: ProcessCameraProvider? = null
+    private var boundCamera: Camera? = null
     private var isCameraBound = false
     private val cameraExecutor = Executors.newSingleThreadExecutor()
     private val barcodeReader = BarcodeReader(
@@ -112,6 +120,7 @@ class ScanActivity : AppCompatActivity() {
             WalletTheme {
                 QrScannerContent(
                     permissionState = cameraPermissionState,
+                    isTorchEnabled = isTorchEnabled,
                     onPreviewReady = { view ->
                         previewView = view
                         if (cameraPermissionState == CameraPermissionState.Granted) {
@@ -121,7 +130,9 @@ class ScanActivity : AppCompatActivity() {
                     onRequestCameraPermission = ::requestCameraPermission,
                     onOpenGallery = {
                         pickImageLauncher.launch("image/*")
-                    }
+                    },
+                    onToggleFlashlight = ::toggleFlashlight,
+                    onSwitchCamera = ::switchCameraLens,
                 )
             }
         }
@@ -152,6 +163,7 @@ class ScanActivity : AppCompatActivity() {
 
     private fun bindCameraUseCases(provider: ProcessCameraProvider, boundPreviewView: PreviewView) {
         provider.unbindAll()
+        boundCamera = null
         isCameraBound = false
 
         val preview = Preview.Builder().build().also {
@@ -178,12 +190,47 @@ class ScanActivity : AppCompatActivity() {
             }
         }
 
+        val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+
         try {
-            provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, analyzer)
+            val camera = provider.bindToLifecycle(this, selector, preview, analyzer)
+            boundCamera = camera
+            camera.cameraControl.enableTorch(isTorchEnabled)
             isCameraBound = true
         } catch (_: SecurityException) {
             onCameraAccessFailed()
+        } catch (_: IllegalArgumentException) {
+            lensFacing = CameraSelector.LENS_FACING_BACK
+            isTorchEnabled = false
+            onCameraAccessFailed()
         }
+    }
+
+    private fun toggleFlashlight() {
+        if (cameraPermissionState != CameraPermissionState.Granted) return
+        val camera = boundCamera ?: return
+        if (!camera.cameraInfo.hasFlashUnit()) return
+
+        isTorchEnabled = !isTorchEnabled
+        camera.cameraControl.enableTorch(isTorchEnabled)
+    }
+
+    private fun switchCameraLens() {
+        if (cameraPermissionState != CameraPermissionState.Granted) return
+
+        val provider = cameraProvider ?: return
+        val nextLens = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+            CameraSelector.LENS_FACING_FRONT
+        } else {
+            CameraSelector.LENS_FACING_BACK
+        }
+
+        val nextSelector = CameraSelector.Builder().requireLensFacing(nextLens).build()
+        if (!provider.hasCamera(nextSelector)) return
+
+        lensFacing = nextLens
+        isTorchEnabled = false
+        previewView?.let { bindCameraUseCases(provider, it) }
     }
 
     override fun onResume() {
@@ -225,9 +272,12 @@ private enum class CameraPermissionState {
 @Composable
 private fun QrScannerContent(
     permissionState: CameraPermissionState,
+    isTorchEnabled: Boolean,
     onPreviewReady: (PreviewView) -> Unit,
     onRequestCameraPermission: () -> Unit,
     onOpenGallery: () -> Unit,
+    onToggleFlashlight: () -> Unit,
+    onSwitchCamera: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when (permissionState) {
@@ -278,22 +328,59 @@ private fun QrScannerContent(
             }
         }
 
-        IconButton(
-            onClick = onOpenGallery,
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(bottom = 40.dp)
-                .size(64.dp)
-                .clip(CircleShape)
-                .background(Color.White)
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Icon(
-                imageVector = Icons.Filled.Image,
-                contentDescription = stringResource(R.string.choose_image),
-                tint = Color.Black,
-                modifier = Modifier.size(28.dp)
-            )
+            IconButton(
+                onClick = onToggleFlashlight,
+                enabled = permissionState == CameraPermissionState.Granted,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+            ) {
+                Icon(
+                    imageVector = if (isTorchEnabled) Icons.Filled.FlashOff else Icons.Filled.FlashOn,
+                    contentDescription = if (isTorchEnabled) "Turn flashlight off" else "Turn flashlight on",
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            IconButton(
+                onClick = onOpenGallery,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Image,
+                    contentDescription = stringResource(R.string.choose_image),
+                    tint = Color.Black,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+
+            IconButton(
+                onClick = onSwitchCamera,
+                enabled = permissionState == CameraPermissionState.Granted,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Cameraswitch,
+                    contentDescription = "Switch camera",
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
