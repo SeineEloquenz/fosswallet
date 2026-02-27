@@ -97,7 +97,7 @@ fun WalletView(
 
     passToDelete.value?.let { pendingDelete ->
         DeleteConfirmationDialog(
-            setShowDeleteConfirmation = walletViewModel::setShowDeleteConfirmation,
+            setDeleteConfirmationEnabled = walletViewModel::setDeleteConfirmationEnabled,
             onConfirm = {
                 coroutineScope.launch(Dispatchers.IO) {
                     walletViewModel.delete(pendingDelete.pass)
