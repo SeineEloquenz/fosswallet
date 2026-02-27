@@ -97,7 +97,7 @@ fun WalletView(
 
     passToDelete.value?.let { pendingDelete ->
         DeleteConfirmationDialog(
-            setDeleteConfirmationEnabled = walletViewModel::setDeleteConfirmationEnabled,
+            settingsStore = walletViewModel.settingsStore,
             onConfirm = {
                 coroutineScope.launch(Dispatchers.IO) {
                     walletViewModel.delete(pendingDelete.pass)
@@ -174,14 +174,7 @@ fun WalletView(
                     }
                 },
                 onRightSwipe = {
-                    if (walletViewModel.deleteConfirmationEnabled()) {
-                        passToDelete.value = pass
-                    } else {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            walletViewModel.delete(pass.pass)
-                        }
-                        Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
-                    }
+                    passToDelete.value = pass
                 },
                 modifier = Modifier.padding(2.dp)
             ) {

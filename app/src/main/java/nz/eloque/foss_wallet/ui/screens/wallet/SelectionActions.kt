@@ -57,7 +57,7 @@ fun SelectionActions(
 
     if (showDeleteDialog.value) {
         DeleteConfirmationDialog(
-            setDeleteConfirmationEnabled = walletViewModel::setDeleteConfirmationEnabled,
+            settingsStore = walletViewModel.settingsStore,
             onConfirm = {
                 showDeleteDialog.value = false
                 deleteSelected()
@@ -73,11 +73,7 @@ fun SelectionActions(
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.error,
             onClick = {
-                if (walletViewModel.deleteConfirmationEnabled()) {
-                    showDeleteDialog.value = true
-                } else {
-                    deleteSelected()
-                }
+                showDeleteDialog.value = true
             },
         ) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
