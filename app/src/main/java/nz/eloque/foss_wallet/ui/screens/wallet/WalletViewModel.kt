@@ -85,4 +85,8 @@ class WalletViewModel @Inject constructor(
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+
+    fun deleteConfirmationEnabled(): Boolean = settingsStore.deleteConfirmationEnabled()
+
+    fun setDeleteConfirmationEnabled(enabled: Boolean) = settingsStore.setDeleteConfirmationEnabled(enabled)
 }

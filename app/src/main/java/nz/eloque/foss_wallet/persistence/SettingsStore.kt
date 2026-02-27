@@ -17,6 +17,7 @@ private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
 private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 private const val SORT_OPTION = "walletViewSortOption"
+private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
 
 sealed class BarcodePosition(val arrangement: Arrangement.Vertical, val key: String, @param:StringRes val label: Int) {
     object Top : BarcodePosition(Arrangement.Top, "TOP", R.string.barcode_position_top)
@@ -63,4 +64,8 @@ class SettingsStore @Inject constructor(
     fun sortOption(): SortOption = SortOptionSerializer.deserialize(prefs.getString(SORT_OPTION, "")!!) ?: SortOption.TimeAdded
 
     fun setSortOption(sortOption: SortOption) = prefs.edit { putString(SORT_OPTION, SortOptionSerializer.serialize(sortOption)) }
+
+    fun deleteConfirmationEnabled(): Boolean = prefs.getBoolean(DELETE_CONFIRMATION_ENABLED, true)
+
+    fun setDeleteConfirmationEnabled(enabled: Boolean) = prefs.edit { putBoolean(DELETE_CONFIRMATION_ENABLED, enabled) }
 }

@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
@@ -41,6 +43,31 @@ fun SelectionActions(
     val context = LocalContext.current
     val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
+    val showDeleteDialog = remember { mutableStateOf(false) }
+
+    fun deleteSelected() {
+        coroutineScope.launch(Dispatchers.IO) {
+            selectedPasses.toList().forEach { walletViewModel.delete(it.pass) }
+            selectedPasses.clear()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    if (showDeleteDialog.value) {
+        DeleteConfirmationDialog(
+            onConfirm = { dontAskAgain ->
+                if (dontAskAgain) {
+                    walletViewModel.setDeleteConfirmationEnabled(false)
+                }
+                showDeleteDialog.value = false
+                deleteSelected()
+            },
+            onDismiss = { showDeleteDialog.value = false }
+        )
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End
@@ -48,12 +75,10 @@ fun SelectionActions(
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.error,
             onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    selectedPasses.forEach { walletViewModel.delete(it.pass) }
-                    selectedPasses.clear()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
-                    }
+                if (walletViewModel.deleteConfirmationEnabled()) {
+                    showDeleteDialog.value = true
+                } else {
+                    deleteSelected()
                 }
             },
         ) {
