@@ -52,6 +52,8 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun refresh() = update()
+
     fun enableSync(enabled: Boolean) {
         settingsStore.enableSync(enabled)
         if (enabled) {
