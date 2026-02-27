@@ -228,12 +228,7 @@ fun CreateView(
                         )
                     }
                 }
-                val scannedBcbp = IataBcbp.parse(result.contents)
-                if (scannedBcbp != null) {
-                    detailsExpanded = false
-                } else {
-                    detailsExpanded = true
-                }
+                detailsExpanded = true
             }
         }
     )
@@ -248,16 +243,12 @@ fun CreateView(
         }
     }
 
-    LaunchedEffect(detectedBcbp) {
-        if (detectedBcbp == null) {
+    LaunchedEffect(detectedBcbpMessage) {
+        val message = detectedBcbpMessage
+        if (message == null) {
             showBcbpPrompt = false
             lastPromptedBcbpMessage = null
-        }
-    }
-
-    LaunchedEffect(detectedBcbpMessage, detailsExpanded) {
-        val message = detectedBcbpMessage
-        if (message != null && !detailsExpanded && message != lastPromptedBcbpMessage) {
+        } else if (message != lastPromptedBcbpMessage) {
             showBcbpPrompt = true
             lastPromptedBcbpMessage = message
         }
@@ -294,7 +285,6 @@ fun CreateView(
                 TextButton(
                     onClick = {
                         showBcbpPrompt = false
-                        detailsExpanded = true
                     }
                 ) {
                     Text(stringResource(R.string.continue_to_details))
