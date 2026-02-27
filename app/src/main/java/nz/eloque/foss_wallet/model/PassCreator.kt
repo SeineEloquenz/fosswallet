@@ -21,7 +21,6 @@ object PassCreator {
         name: String,
         type: PassType,
         barCode: BarCode,
-        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -34,7 +33,6 @@ object PassCreator {
             name = name,
             type = type,
             barCodes = listOf(barCode),
-            parsedBcbp = parsedBcbp,
             organization = organization,
             serialNumber = serialNumber,
             logoText = logoText,
@@ -49,7 +47,6 @@ object PassCreator {
         name: String,
         type: PassType,
         barCodes: List<BarCode>,
-        parsedBcbp: IataBcbp.Parsed? = null,
         organization: String = ORGANIZATION,
         serialNumber: String = "",
         logoText: String = "",
@@ -57,6 +54,98 @@ object PassCreator {
         location: Location? = null,
         relevantDates: List<PassRelevantDate> = emptyList(),
         expirationDate: ZonedDateTime? = null,
+    ): Pass? {
+        val nameField = PassField(
+            key = "main",
+            label = "",
+            content = PassContent.Plain(name)
+        )
+
+        return createPass(
+            name = name,
+            type = type,
+            barCodes = barCodes,
+            organization = organization,
+            serialNumber = serialNumber,
+            logoText = logoText,
+            colors = colors,
+            location = location,
+            relevantDates = relevantDates,
+            expirationDate = expirationDate,
+            primaryFields = listOf(nameField),
+            secondaryFields = emptyList(),
+            auxiliaryFields = emptyList(),
+        )
+    }
+
+    fun createFromBCBP(
+        bcbp: IataBcbp.Parsed,
+        barCodes: List<BarCode>,
+        name: String = bcbp.summary(),
+        organization: String = ORGANIZATION,
+        serialNumber: String = "",
+        logoText: String = "",
+        colors: PassColors? = null,
+        location: Location? = null,
+        relevantDates: List<PassRelevantDate> = emptyList(),
+        expirationDate: ZonedDateTime? = null,
+    ): Pass? {
+        val primaryFields = listOfNotNull(
+            plainField("from", "From", bcbp.fromAirport),
+            plainField("to", "To", bcbp.toAirport),
+        )
+        val secondaryFields = listOfNotNull(
+            plainField("flight", "Flight", bcbp.flightCode()),
+            bcbp.flightDate?.let { flightDate ->
+                PassField(
+                    key = "date",
+                    label = "Date",
+                    content = PassContent.Date(
+                        date = flightDate.atStartOfDay(ZoneId.systemDefault()),
+                        format = FormatStyle.MEDIUM,
+                        ignoresTimeZone = true,
+                        isRelative = false,
+                    ),
+                )
+            },
+            plainField("class", "Class", bcbp.travelClass),
+        )
+        val auxiliaryFields = listOfNotNull(
+            plainField("passenger", "Passenger", bcbp.passengerName),
+            plainField("seat", "Seat", bcbp.seat),
+        )
+
+        return createPass(
+            name = name,
+            type = PassType.Boarding(TransitType.AIR),
+            barCodes = barCodes,
+            organization = organization,
+            serialNumber = serialNumber,
+            logoText = logoText,
+            colors = colors,
+            location = location,
+            relevantDates = relevantDates,
+            expirationDate = expirationDate,
+            primaryFields = primaryFields,
+            secondaryFields = secondaryFields,
+            auxiliaryFields = auxiliaryFields,
+        )
+    }
+
+    private fun createPass(
+        name: String,
+        type: PassType,
+        barCodes: List<BarCode>,
+        organization: String,
+        serialNumber: String,
+        logoText: String,
+        colors: PassColors?,
+        location: Location?,
+        relevantDates: List<PassRelevantDate>,
+        expirationDate: ZonedDateTime?,
+        primaryFields: List<PassField>,
+        secondaryFields: List<PassField>,
+        auxiliaryFields: List<PassField>,
     ): Pass? {
         if (barCodes.isEmpty()) {
             return null
@@ -75,51 +164,6 @@ object PassCreator {
         }
 
         val id = Hash.sha256(barCodes.joinToString("|") { it.toString() })
-
-        val nameField = PassField(
-            key = "main",
-            label = "",
-            content = PassContent.Plain(name)
-        )
-
-        val bcbp = if (type is PassType.Boarding && type.transitType == TransitType.AIR) {
-            parsedBcbp ?: barCodes.firstNotNullOfOrNull { IataBcbp.parse(it.rawMessage()) }
-        } else {
-            null
-        }
-
-        val parsedBcbpFields = bcbp?.let {
-            Triple(
-                listOfNotNull(
-                    plainField("from", "From", it.fromAirport),
-                    plainField("to", "To", it.toAirport),
-                ),
-                listOfNotNull(
-                    plainField("flight", "Flight", it.flightCode()),
-                    it.flightDate?.let { flightDate ->
-                        PassField(
-                            key = "date",
-                            label = "Date",
-                            content = PassContent.Date(
-                                date = flightDate.atStartOfDay(ZoneId.systemDefault()),
-                                format = FormatStyle.MEDIUM,
-                                ignoresTimeZone = true,
-                                isRelative = false,
-                            ),
-                        )
-                    },
-                    plainField("class", "Class", it.travelClass),
-                ),
-                listOfNotNull(
-                    plainField("passenger", "Passenger", it.passengerName),
-                    plainField("seat", "Seat", it.seat),
-                ),
-            )
-        }
-
-        val primaryFields = parsedBcbpFields?.first.orEmpty().ifEmpty { listOf(nameField) }
-        val secondaryFields = parsedBcbpFields?.second.orEmpty()
-        val auxiliaryFields = parsedBcbpFields?.third.orEmpty()
 
         return Pass(
             id = id,

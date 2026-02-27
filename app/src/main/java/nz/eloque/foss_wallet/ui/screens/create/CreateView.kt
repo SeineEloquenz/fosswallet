@@ -192,12 +192,15 @@ fun CreateView(
             val boardingExpiration = bcbp.flightDate
                 ?.atStartOfDay(ZoneId.systemDefault())
                 ?.plusDays(1)
-            val savedPassId = createViewModel.savePass(
-                name = bcbp.summary(),
-                type = PassType.Boarding(TransitType.AIR),
-                barcodes = barCodeModels,
+            val pass = PassCreator.createFromBCBP(
+                bcbp = bcbp,
+                barCodes = barCodeModels,
                 expirationDate = boardingExpiration,
-            )
+            ) ?: run {
+                isSaving = false
+                return@launch
+            }
+            val savedPassId = createViewModel.savePass(pass)
             finishSavingAndNavigateToPass(savedPassId)
         }
     }
@@ -663,17 +666,24 @@ fun CreateView(
                             )
                         }
 
-                        val savedPassId = createViewModel.savePass(
+                        val passToSave = PassCreator.create(
                             name = name,
                             organization = organization,
                             serialNumber = serialNumber,
                             type = type,
-                            barcodes = barCodeModels,
                             logoText = logoText,
+                            barCodes = barCodeModels,
                             colors = colors,
                             location = location,
                             relevantDates = relevantDates,
                             expirationDate = expirationDate,
+                        ) ?: run {
+                            isSaving = false
+                            return@launch
+                        }
+
+                        val savedPassId = createViewModel.savePass(
+                            pass = passToSave,
                             iconUrl = iconUrl,
                             logoUrl = logoUrl,
                             stripUrl = stripUrl,
