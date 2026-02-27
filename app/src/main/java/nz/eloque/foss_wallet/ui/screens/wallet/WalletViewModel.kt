@@ -88,5 +88,5 @@ class WalletViewModel @Inject constructor(
 
     fun deleteConfirmationEnabled(): Boolean = settingsStore.deleteConfirmationEnabled()
 
-    fun setDeleteConfirmationEnabled(enabled: Boolean) = settingsStore.setDeleteConfirmationEnabled(enabled)
+    fun setShowDeleteConfirmation(enabled: Boolean) = settingsStore.setShowDeleteConfirmation(enabled)
 }

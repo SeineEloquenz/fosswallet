@@ -67,5 +67,5 @@ class SettingsStore @Inject constructor(
 
     fun deleteConfirmationEnabled(): Boolean = prefs.getBoolean(DELETE_CONFIRMATION_ENABLED, true)
 
-    fun setDeleteConfirmationEnabled(enabled: Boolean) = prefs.edit { putBoolean(DELETE_CONFIRMATION_ENABLED, enabled) }
+    fun setShowDeleteConfirmation(enabled: Boolean) = prefs.edit { putBoolean(DELETE_CONFIRMATION_ENABLED, enabled) }
 }

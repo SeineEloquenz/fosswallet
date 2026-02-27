@@ -19,7 +19,8 @@ import nz.eloque.foss_wallet.R
 
 @Composable
 fun DeleteConfirmationDialog(
-    onConfirm: (dontAskAgain: Boolean) -> Unit,
+    setShowDeleteConfirmation: (Boolean) -> Unit,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     var dontAskAgain by remember { mutableStateOf(false) }
@@ -43,7 +44,10 @@ fun DeleteConfirmationDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = { onConfirm(dontAskAgain) }
+                onClick = {
+                    setShowDeleteConfirmation(!dontAskAgain)
+                    onConfirm()
+                }
             ) {
                 Text(stringResource(R.string.delete))
             }

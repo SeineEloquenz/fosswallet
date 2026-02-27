@@ -57,10 +57,8 @@ fun SelectionActions(
 
     if (showDeleteDialog.value) {
         DeleteConfirmationDialog(
-            onConfirm = { dontAskAgain ->
-                if (dontAskAgain) {
-                    walletViewModel.setDeleteConfirmationEnabled(false)
-                }
+            setShowDeleteConfirmation = walletViewModel::setShowDeleteConfirmation,
+            onConfirm = {
                 showDeleteDialog.value = false
                 deleteSelected()
             },

@@ -78,7 +78,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setAskBeforeDelete(enabled: Boolean) {
-        settingsStore.setDeleteConfirmationEnabled(enabled)
+        settingsStore.setShowDeleteConfirmation(enabled)
         update()
     }
 }
