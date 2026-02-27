@@ -120,8 +120,8 @@
     <string name="tag_label">Tag label</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
-    <string name="airline_code_detected">Airline code scanned. You can create a boarding pass.</string>
-    <string name="continue_normal_pass">Normal pass</string>
+    <string name="airline_code_detected">Airline code detected</string>
+    <string name="bcbp_create_question">Create boarding pass?</string>
     <string name="create_boarding_pass">Boarding pass</string>
     <string name="select_image_with_barcode">Select image with barcode</string>
     <string name="no_barcode_found">No barcode found</string>

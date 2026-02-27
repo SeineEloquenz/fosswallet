@@ -47,7 +47,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -152,22 +151,13 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
     var initialScanHandled by remember { mutableStateOf(false) }
-    var createBoardingPass by remember { mutableStateOf(false) }
+    var showBcbpPrompt by remember { mutableStateOf(false) }
+    var lastPromptedBcbpMessage by remember { mutableStateOf<String?>(null) }
 
     val parsedBcbps = barcodes.map { IataBcbp.parse(it.message) }
-    val detectedBcbp = parsedBcbps.firstOrNull { it != null }
-    val effectiveType = if (createBoardingPass && detectedBcbp != null) {
-        PassType.Boarding(TransitType.AIR)
-    } else {
-        type
-    }
-    val isBoardingPass = effectiveType is PassType.Boarding
-    val effectiveName = if (isBoardingPass) {
-        detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass)
-    } else {
-        name
-    }
-
+    val detectedBcbpIndex = parsedBcbps.indexOfFirst { it != null }
+    val detectedBcbp = parsedBcbps.getOrNull(detectedBcbpIndex)
+    val detectedBcbpMessage = barcodes.getOrNull(detectedBcbpIndex)?.message
     val barCodeModels = barcodes.mapIndexed { index, barcode ->
         val parsedBcbp = parsedBcbps[index]
         BarCode(
@@ -177,9 +167,9 @@ fun CreateView(
             altText = barcode.altText.ifBlank { parsedBcbp?.summary() ?: barcode.message },
         )
     }
-    val pass = PassCreator.create(effectiveName, effectiveType, barCodeModels, parsedBcbp = detectedBcbp)
+    val pass = PassCreator.create(name, type, barCodeModels)
 
-    val nameValid = isBoardingPass || name.length in 1..<30
+    val nameValid = name.length in 1..<30
     val showNameError = nameTouched && !nameValid
     val barcodesValid = barcodes.isNotEmpty() && barcodes.zip(barCodeModels).all { (draft, model) ->
         draft.message.isNotEmpty() && barcodeValid(model)
@@ -188,7 +178,7 @@ fun CreateView(
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
-    val savePassAndNavigate: (String, PassType, ZonedDateTime?) -> Unit = { targetName, targetType, targetExpirationDate ->
+    val saveDetailedPassAndNavigate: () -> Unit = {
         isSaving = true
         coroutineScope.launch(Dispatchers.IO) {
             val relevantDates = when {
@@ -211,21 +201,52 @@ fun CreateView(
             }
 
             val savedPassId = createViewModel.savePass(
-                name = targetName,
+                name = name,
                 organization = organization,
                 serialNumber = serialNumber,
-                type = targetType,
+                type = type,
                 barcodes = barCodeModels,
                 logoText = logoText,
                 colors = colors,
                 location = location,
                 relevantDates = relevantDates,
-                expirationDate = targetExpirationDate,
+                expirationDate = expirationDate,
                 iconUrl = iconUrl,
                 logoUrl = logoUrl,
                 stripUrl = stripUrl,
                 thumbnailUrl = thumbnailUrl,
                 footerUrl = footerUrl,
+            )
+            withContext(Dispatchers.Main) {
+                isSaving = false
+                navController.navigate("pass/$savedPassId") {
+                    popUpTo(Screen.Wallet.route)
+                }
+            }
+        }
+    }
+    val saveBoardingPassAndNavigate: (IataBcbp.Parsed) -> Unit = { bcbp ->
+        isSaving = true
+        coroutineScope.launch(Dispatchers.IO) {
+            val boardingExpiration = bcbp.flightDate
+                ?.atStartOfDay(ZoneId.systemDefault())
+                ?.plusDays(1)
+            val savedPassId = createViewModel.savePass(
+                name = bcbp.summary(),
+                organization = "",
+                serialNumber = "",
+                type = PassType.Boarding(TransitType.AIR),
+                barcodes = barCodeModels,
+                logoText = "",
+                colors = null,
+                location = null,
+                relevantDates = emptyList(),
+                expirationDate = boardingExpiration,
+                iconUrl = null,
+                logoUrl = null,
+                stripUrl = null,
+                thumbnailUrl = null,
+                footerUrl = null,
             )
             withContext(Dispatchers.Main) {
                 isSaving = false
@@ -264,11 +285,6 @@ fun CreateView(
                 }
                 val scannedBcbp = IataBcbp.parse(result.contents)
                 if (scannedBcbp != null) {
-                    Toast.makeText(
-                        context,
-                        resources.getString(R.string.airline_code_detected),
-                        Toast.LENGTH_SHORT,
-                    ).show()
                     detailsExpanded = false
                 } else {
                     detailsExpanded = true
@@ -289,16 +305,17 @@ fun CreateView(
 
     LaunchedEffect(detectedBcbp) {
         if (detectedBcbp == null) {
-            createBoardingPass = false
+            showBcbpPrompt = false
+            lastPromptedBcbpMessage = null
         }
     }
 
-    LaunchedEffect(detectedBcbp, createBoardingPass) {
-        if (!createBoardingPass) return@LaunchedEffect
-        val bcbpFlightDate = detectedBcbp?.flightDate ?: return@LaunchedEffect
-        expirationDate = bcbpFlightDate
-            .atStartOfDay(ZoneId.systemDefault())
-            .plusDays(1)
+    LaunchedEffect(detectedBcbpMessage, detailsExpanded) {
+        val message = detectedBcbpMessage
+        if (message != null && !detailsExpanded && message != lastPromptedBcbpMessage) {
+            showBcbpPrompt = true
+            lastPromptedBcbpMessage = message
+        }
     }
 
     if (showLocationPicker) {
@@ -309,6 +326,34 @@ fun CreateView(
             onConfirm = {
                 location = it
                 showLocationPicker = false
+            }
+        )
+    }
+
+    if (showBcbpPrompt && detectedBcbp != null) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.airline_code_detected)) },
+            text = { Text(stringResource(R.string.bcbp_create_question)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showBcbpPrompt = false
+                        saveBoardingPassAndNavigate(detectedBcbp)
+                    }
+                ) {
+                    Text(stringResource(R.string.create_boarding_pass))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showBcbpPrompt = false
+                        detailsExpanded = true
+                    }
+                ) {
+                    Text(stringResource(R.string.continue_to_details))
+                }
             }
         )
     }
@@ -438,50 +483,14 @@ fun CreateView(
         }
 
         if (!detailsExpanded) {
-            if (detectedBcbp == null) {
-                Button(
-                    enabled = barcodesValid,
-                    onClick = {
-                        createBoardingPass = false
-                        detailsExpanded = true
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.continue_to_details))
-                }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    OutlinedButton(
-                        enabled = barcodesValid,
-                        onClick = {
-                            createBoardingPass = false
-                            detailsExpanded = true
-                        },
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(stringResource(R.string.continue_normal_pass))
-                    }
-                    Button(
-                        enabled = barcodesValid,
-                        onClick = {
-                            val boardingExpiration = detectedBcbp
-                                ?.flightDate
-                                ?.atStartOfDay(ZoneId.systemDefault())
-                                ?.plusDays(1)
-                            savePassAndNavigate(
-                                detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass),
-                                PassType.Boarding(TransitType.AIR),
-                                boardingExpiration,
-                            )
-                        },
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(stringResource(R.string.create_boarding_pass))
-                    }
-                }
+            Button(
+                enabled = barcodesValid,
+                onClick = {
+                    detailsExpanded = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.continue_to_details))
             }
         }
 
@@ -494,31 +503,29 @@ fun CreateView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                if (!isBoardingPass) {
-                    OutlinedTextField(
-                        label = { Text(stringResource(R.string.pass_name)) },
-                        value = name,
-                        onValueChange = {
-                            nameTouched = true
-                            name = it
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        isError = showNameError
-                    )
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.pass_name)) },
+                    value = name,
+                    onValueChange = {
+                        nameTouched = true
+                        name = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = showNameError
+                )
 
-                    ComboBox(
-                        title = stringResource(R.string.pass_type),
-                        options = listOf(
-                            PassType.Generic,
-                            PassType.StoreCard,
-                            PassType.Coupon,
-                            PassType.Event
-                        ),
-                        selectedOption = type,
-                        onOptionSelected = { type = it },
-                        optionLabel = { resources.getString(it.label) },
-                    )
-                }
+                ComboBox(
+                    title = stringResource(R.string.pass_type),
+                    options = listOf(
+                        PassType.Generic,
+                        PassType.StoreCard,
+                        PassType.Coupon,
+                        PassType.Event
+                    ),
+                    selectedOption = type,
+                    onOptionSelected = { type = it },
+                    optionLabel = { resources.getString(it.label) },
+                )
 
                 ElevatedButton(
                     onClick = { advancedExpanded = !advancedExpanded },
@@ -700,7 +707,7 @@ fun CreateView(
             Button(
                 enabled = createValid,
                 onClick = {
-                    savePassAndNavigate(effectiveName, effectiveType, expirationDate)
+                    saveDetailedPassAndNavigate()
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
