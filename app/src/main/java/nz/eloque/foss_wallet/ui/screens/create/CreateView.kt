@@ -188,6 +188,53 @@ fun CreateView(
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
+    val savePassAndNavigate: (String, PassType, ZonedDateTime?) -> Unit = { targetName, targetType, targetExpirationDate ->
+        isSaving = true
+        coroutineScope.launch(Dispatchers.IO) {
+            val relevantDates = when {
+                relevantStart != null && relevantEnd != null -> listOf(
+                    PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
+                )
+                relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
+                else -> emptyList()
+            }
+
+            val colors = if (allColorsBlank) {
+                null
+            } else {
+                val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
+                PassColors(
+                    background = backgroundColor ?: fallbackColor,
+                    foreground = foregroundColor ?: fallbackColor,
+                    label = labelColor ?: fallbackColor,
+                )
+            }
+
+            val savedPassId = createViewModel.savePass(
+                name = targetName,
+                organization = organization,
+                serialNumber = serialNumber,
+                type = targetType,
+                barcodes = barCodeModels,
+                logoText = logoText,
+                colors = colors,
+                location = location,
+                relevantDates = relevantDates,
+                expirationDate = targetExpirationDate,
+                iconUrl = iconUrl,
+                logoUrl = logoUrl,
+                stripUrl = stripUrl,
+                thumbnailUrl = thumbnailUrl,
+                footerUrl = footerUrl,
+            )
+            withContext(Dispatchers.Main) {
+                isSaving = false
+                navController.navigate("pass/$savedPassId") {
+                    popUpTo(Screen.Wallet.route)
+                }
+            }
+        }
+    }
 
     val scanLauncher = rememberLauncherForActivityResult(
         contract = ScanContract(),
@@ -420,8 +467,15 @@ fun CreateView(
                     Button(
                         enabled = barcodesValid,
                         onClick = {
-                            createBoardingPass = true
-                            detailsExpanded = true
+                            val boardingExpiration = detectedBcbp
+                                ?.flightDate
+                                ?.atStartOfDay(ZoneId.systemDefault())
+                                ?.plusDays(1)
+                            savePassAndNavigate(
+                                detectedBcbp?.summary() ?: resources.getString(R.string.boarding_pass),
+                                PassType.Boarding(TransitType.AIR),
+                                boardingExpiration,
+                            )
                         },
                         modifier = Modifier.weight(1f),
                     ) {
@@ -646,51 +700,7 @@ fun CreateView(
             Button(
                 enabled = createValid,
                 onClick = {
-                    isSaving = true
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val relevantDates = when {
-                            relevantStart != null && relevantEnd != null -> listOf(
-                                PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
-                            )
-                            relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
-                            else -> emptyList()
-                        }
-
-                        val colors = if (allColorsBlank) {
-                            null
-                        } else {
-                            val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
-                            PassColors(
-                                background = backgroundColor ?: fallbackColor,
-                                foreground = foregroundColor ?: fallbackColor,
-                                label = labelColor ?: fallbackColor,
-                            )
-                        }
-
-                        val savedPassId = createViewModel.savePass(
-                            name = effectiveName,
-                            organization = organization,
-                            serialNumber = serialNumber,
-                            type = effectiveType,
-                            barcodes = barCodeModels,
-                            logoText = logoText,
-                            colors = colors,
-                            location = location,
-                            relevantDates = relevantDates,
-                            expirationDate = expirationDate,
-                            iconUrl = iconUrl,
-                            logoUrl = logoUrl,
-                            stripUrl = stripUrl,
-                            thumbnailUrl = thumbnailUrl,
-                            footerUrl = footerUrl,
-                        )
-                        withContext(Dispatchers.Main) {
-                            isSaving = false
-                            navController.navigate("pass/$savedPassId") {
-                                popUpTo(Screen.Wallet.route)
-                            }
-                        }
-                    }
+                    savePassAndNavigate(effectiveName, effectiveType, expirationDate)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
