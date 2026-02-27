@@ -80,13 +80,23 @@ fun GroupCard(
                     allTags = allTags,
                     onClick = {
                         if (selectedPasses.isNotEmpty()) {
-                            if (selectedPasses.contains(item)) selectedPasses.remove(item) else selectedPasses.add(item)
+                            val allGroupPassesSelected = passes.all { selectedPasses.contains(it) }
+                            if (allGroupPassesSelected) {
+                                selectedPasses.removeAll(passes.toSet())
+                            } else {
+                                selectedPasses.addAll(passes)
+                            }
                         } else {
                             onClick.invoke(item.pass)
                         }
                     },
                     onLongClick = {
-                        if (selectedPasses.contains(item)) selectedPasses.remove(item) else selectedPasses.add(item)
+                        val allGroupPassesSelected = passes.all { selectedPasses.contains(it) }
+                        if (allGroupPassesSelected) {
+                            selectedPasses.removeAll(passes.toSet())
+                        } else {
+                            selectedPasses.addAll(passes)
+                        }
                     },
                     selected = selectedPasses.contains(item),
                     toned = true,
