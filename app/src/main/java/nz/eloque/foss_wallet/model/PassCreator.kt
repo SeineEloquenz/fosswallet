@@ -7,8 +7,9 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
 import nz.eloque.foss_wallet.utils.linkifyUrls
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.LinkedHashSet
 
 object PassCreator {
@@ -95,7 +96,18 @@ object PassCreator {
                 ),
                 listOfNotNull(
                     plainField("flight", "Flight", it.flightCode()),
-                    plainField("date", "Date", it.flightDate?.format(DateTimeFormatter.ISO_LOCAL_DATE).orEmpty()),
+                    it.flightDate?.let { flightDate ->
+                        PassField(
+                            key = "date",
+                            label = "Date",
+                            content = PassContent.Date(
+                                date = flightDate.atStartOfDay(ZoneId.systemDefault()),
+                                format = FormatStyle.MEDIUM,
+                                ignoresTimeZone = true,
+                                isRelative = false,
+                            ),
+                        )
+                    },
                     plainField("class", "Class", it.travelClass),
                 ),
                 listOfNotNull(
