@@ -66,6 +66,7 @@ fun WalletView(
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
+    onVisiblePassesChanged: (Set<LocalizedPassWithTags>) -> Unit = {},
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -93,6 +94,7 @@ fun WalletView(
 
     LaunchedEffect(visiblePasses) {
         selectedPasses.removeAll { it !in visiblePasses }
+        onVisiblePassesChanged(visiblePasses)
     }
 
     passToDelete.value?.let { pendingDelete ->

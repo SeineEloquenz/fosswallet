@@ -103,6 +103,7 @@
     <string name="help_translate">Help translate</string>
     <string name="choose_image">Choose image</string>
     <string name="clear_selection">Clear selection</string>
+    <string name="select_all">Select all</string>
     <string name="add_tag">Add tag</string>
     <string name="additional_fields">Additional fields</string>
     <string name="pass_location">Location</string>

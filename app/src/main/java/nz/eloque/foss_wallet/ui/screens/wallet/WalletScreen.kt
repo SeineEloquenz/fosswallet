@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.outlined.Deselect
+import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -81,11 +83,34 @@ fun WalletScreen(
         }
     }
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
+    val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
+    val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
     WalletScaffold(
         navController = navController,
         title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
+            if (selectedPasses.isNotEmpty()) {
+                IconButton(
+                    onClick = {
+                        if (allVisibleSelected) {
+                            selectedPasses.removeAll(visiblePasses.value)
+                        } else {
+                            selectedPasses.addAll(visiblePasses.value)
+                        }
+                    },
+                    enabled = visiblePasses.value.isNotEmpty()
+                ) {
+                    Icon(
+                        imageVector = if (allVisibleSelected) Icons.Outlined.Deselect else Icons.Outlined.SelectAll,
+                        contentDescription = if (allVisibleSelected) {
+                            stringResource(R.string.clear_selection)
+                        } else {
+                            stringResource(R.string.select_all)
+                        }
+                    )
+                }
+            }
             IconButton(onClick = {
                 navController.navigate(Screen.Archive.route)
             }) {
@@ -150,6 +175,7 @@ fun WalletScreen(
             listState = listState,
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
+            onVisiblePassesChanged = { visiblePasses.value = it },
         )
 
         if (loading.value) {
