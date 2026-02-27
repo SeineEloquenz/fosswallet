@@ -97,6 +97,17 @@ fun SettingsView(
             )
         }
         SettingsSection(
+            heading = stringResource(R.string.delete),
+        ) {
+            SettingsSwitch(
+                title = stringResource(R.string.ask_before_delete),
+                checked = settings.value.askBeforeDelete,
+                onCheckedChange = {
+                    coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setAskBeforeDelete(it) }
+                }
+            )
+        }
+        SettingsSection(
             heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
         ) {
             SettingsButton(
