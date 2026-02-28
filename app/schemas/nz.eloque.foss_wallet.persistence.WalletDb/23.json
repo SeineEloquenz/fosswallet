@@ -1,0 +1,389 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 23,
+    "identityHash": "36b7a8aa58145433b108364a57df84aa",
+    "entities": [
+      {
+        "tableName": "Pass",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL DEFAULT 0, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL DEFAULT '2b767e5b-75fd-4bec-89d7-188e832b2dc3', `colors` TEXT, `groupId` INTEGER, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `archived` INTEGER NOT NULL DEFAULT 0, `autoArchive` INTEGER NOT NULL DEFAULT 1, `renderLegacy` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formatVersion",
+            "columnName": "formatVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organization",
+            "columnName": "organization",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serialNumber",
+            "columnName": "serialNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barCodes",
+            "columnName": "barCodes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addedAt",
+            "columnName": "addedAt",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "hasLogo",
+            "columnName": "hasLogo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasStrip",
+            "columnName": "hasStrip",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasThumbnail",
+            "columnName": "hasThumbnail",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasFooter",
+            "columnName": "hasFooter",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deviceId",
+            "columnName": "deviceId",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'2b767e5b-75fd-4bec-89d7-188e832b2dc3'"
+          },
+          {
+            "fieldPath": "colors",
+            "columnName": "colors",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "relevantDates",
+            "columnName": "relevantDates",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expirationDate",
+            "columnName": "expirationDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "logoText",
+            "columnName": "logoText",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "authToken",
+            "columnName": "authToken",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "webServiceUrl",
+            "columnName": "webServiceUrl",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "passTypeIdentifier",
+            "columnName": "passTypeIdentifier",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "locations",
+            "columnName": "locations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "headerFields",
+            "columnName": "headerFields",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryFields",
+            "columnName": "primaryFields",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryFields",
+            "columnName": "secondaryFields",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "auxiliaryFields",
+            "columnName": "auxiliaryFields",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backFields",
+            "columnName": "backFields",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "autoArchive",
+            "columnName": "autoArchive",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "renderLegacy",
+            "columnName": "renderLegacy",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Pass_groupId",
+            "unique": false,
+            "columnNames": [
+              "groupId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Pass_groupId` ON `${TABLE_NAME}` (`groupId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "PassGroup",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "groupId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "localization",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`passId` TEXT NOT NULL, `lang` TEXT NOT NULL, `label` TEXT NOT NULL, `text` TEXT NOT NULL, PRIMARY KEY(`passId`, `lang`, `label`), FOREIGN KEY(`passId`) REFERENCES `Pass`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "passId",
+            "columnName": "passId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lang",
+            "columnName": "lang",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "passId",
+            "lang",
+            "label"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "Pass",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "passId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "PassGroup",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "tag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `color` TEXT NOT NULL, PRIMARY KEY(`label`))",
+        "fields": [
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "label"
+          ]
+        }
+      },
+      {
+        "tableName": "PassTag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`passId` TEXT NOT NULL, `tagLabel` TEXT NOT NULL, PRIMARY KEY(`passId`, `tagLabel`), FOREIGN KEY(`passId`) REFERENCES `Pass`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagLabel`) REFERENCES `tag`(`label`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "passId",
+            "columnName": "passId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tagLabel",
+            "columnName": "tagLabel",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "passId",
+            "tagLabel"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_PassTag_passId",
+            "unique": false,
+            "columnNames": [
+              "passId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PassTag_passId` ON `${TABLE_NAME}` (`passId`)"
+          },
+          {
+            "name": "index_PassTag_tagLabel",
+            "unique": false,
+            "columnNames": [
+              "tagLabel"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PassTag_tagLabel` ON `${TABLE_NAME}` (`tagLabel`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Pass",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "passId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tag",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tagLabel"
+            ],
+            "referencedColumns": [
+              "label"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '36b7a8aa58145433b108364a57df84aa')"
+    ]
+  }
+}

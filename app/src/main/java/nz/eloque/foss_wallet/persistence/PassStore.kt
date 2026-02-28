@@ -63,6 +63,7 @@ class PassStore @Inject constructor(
                 pass = updated.content.result.pass.copy(
                     pass = updated.content.result.pass.pass.copy(
                         archived = pass.archived,
+                        autoArchive = pass.autoArchive,
                         renderLegacy = pass.renderLegacy
                     )
                 )
@@ -116,7 +117,7 @@ class PassStore @Inject constructor(
 
     private fun withAutoArchive(pass: Pass, now: Instant = Instant.now()): Pass {
         val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
-        return if (expired) pass.copy(archived = true) else pass
+        return if (pass.autoArchive && expired) pass.copy(archived = true) else pass
     }
 
     fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
