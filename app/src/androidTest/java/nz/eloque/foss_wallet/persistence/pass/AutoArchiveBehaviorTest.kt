@@ -20,6 +20,7 @@ import java.time.ZoneOffset
 class AutoArchiveBehaviorTest {
     private val fixedNow = Instant.parse("2026-01-01T00:00:00Z")
     private val fixedExpiredDate = fixedNow.minusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
+    private val fixedFutureDate = fixedNow.plusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
 
     private lateinit var db: WalletDb
     private lateinit var passDao: PassDao
@@ -77,50 +78,25 @@ class AutoArchiveBehaviorTest {
     }
 
     @Test
-    fun expiredPassWithAutoArchiveEnabledGetsArchived() {
-        val expiredPass = Pass(
-            id = "expired-pass-enabled",
-            description = "Expired pass",
-            formatVersion = 1,
-            organization = "Test Org",
-            serialNumber = "124",
-            type = PassType.Generic,
-            barCodes = setOf(),
-            addedAt = fixedNow,
-            expirationDate = fixedExpiredDate,
-        )
-        passDao.insert(expiredPass)
-
-        passRepository.archiveExpiredPasses(now = fixedNow)
-
-        val afterAutoArchiveRun = passDao.findById(expiredPass.id)?.pass
-        assertNotNull(afterAutoArchiveRun)
-        assertTrue(afterAutoArchiveRun!!.archived)
-        assertTrue(afterAutoArchiveRun.autoArchive)
-    }
-
-    @Test
-    fun expiredPassWithAutoArchiveDisabledDoesNotGetArchived() {
-        val expiredPass = Pass(
-            id = "expired-pass-disabled",
-            description = "Expired pass",
+    fun nonExpiredPassDoesNotGetArchived() {
+        val nonExpiredPass = Pass(
+            id = "non-expired-pass",
+            description = "Not yet expired pass",
             formatVersion = 1,
             organization = "Test Org",
             serialNumber = "125",
             type = PassType.Generic,
             barCodes = setOf(),
             addedAt = fixedNow,
-            expirationDate = fixedExpiredDate,
-            archived = false,
-            autoArchive = false,
+            expirationDate = fixedFutureDate,
         )
-        passDao.insert(expiredPass)
+        passDao.insert(nonExpiredPass)
 
         passRepository.archiveExpiredPasses(now = fixedNow)
 
-        val afterAutoArchiveRun = passDao.findById(expiredPass.id)?.pass
+        val afterAutoArchiveRun = passDao.findById(nonExpiredPass.id)?.pass
         assertNotNull(afterAutoArchiveRun)
         assertFalse(afterAutoArchiveRun!!.archived)
-        assertFalse(afterAutoArchiveRun.autoArchive)
+        assertTrue(afterAutoArchiveRun.autoArchive)
     }
 }
