@@ -71,4 +71,5 @@
     <string name="footer">Stopka</string>
     <string name="brightness">Jasność</string>
     <string name="icon">Ikona</string>
+    <string name="thumbnail">Miniatura</string>
 </resources>

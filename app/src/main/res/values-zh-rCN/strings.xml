@@ -110,8 +110,17 @@
     <string name="brightness">亮度</string>
     <string name="pass_relevant_start">开始</string>
     <string name="pass_relevant_end">结束</string>
-    <string name="pass_expiration_date">有效期</string>
+    <string name="pass_expiration_date">失效日期</string>
     <string name="pass_background_color">背景颜色</string>
     <string name="pass_foreground_color">前景颜色</string>
     <string name="pass_label_color">标签颜色</string>
+    <string name="strip">横幅图片</string>
+    <string name="import_pass">导入凭证</string>
+    <string name="open_from_clipboard">从剪贴板打开</string>
+    <string name="manual_entry">手动输入</string>
+    <string name="advanced">高级</string>
+    <string name="scan_code">扫码</string>
+    <string name="barcode_step_title">添加条码</string>
+    <string name="continue_to_details">继续</string>
+    <string name="no_text_in_clipboard">剪贴板中没有文本</string>
 </resources>

@@ -114,4 +114,13 @@
     <string name="location_search_query">Cerca luogo</string>
     <string name="pass_expiration_date">Data di scadenza</string>
     <string name="pass_label_color">Colore dell\'etichetta</string>
+    <string name="no_text_in_clipboard">Nessun testo negli appunti</string>
+    <string name="advanced">Avanzato</string>
+    <string name="import_pass">Importa biglietto</string>
+    <string name="manual_entry">Inserimento manuale</string>
+    <string name="strip">Striscia</string>
+    <string name="scan_code">Scansiona codice</string>
+    <string name="barcode_step_title">Aggiungi codice a barre</string>
+    <string name="continue_to_details">Continua</string>
+    <string name="open_from_clipboard">Apri dagli appunti</string>
 </resources>

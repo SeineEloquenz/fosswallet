@@ -92,4 +92,12 @@
     <string name="no_barcode_found">Ingen streckkod hittades</string>
     <string name="no_calendar_app_found">Ingen kalenderapp hittades</string>
     <string name="no_map_app_found">Ingen kartapp hittades</string>
+    <string name="pass_label_color">Etikettfärg</string>
+    <string name="pass_foreground_color">Förgrundsfärg</string>
+    <string name="pass_background_color">Bakgrundsfärg</string>
+    <string name="pass_expiration_date">Utgångsdatum</string>
+    <string name="brightness">Ljusstyrka</string>
+    <string name="open_in_map_app">Öppna i kartapp</string>
+    <string name="searching">Söker …</string>
+    <string name="no_search_results">Inga sökresultat</string>
 </resources>

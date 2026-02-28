@@ -111,8 +111,16 @@
     <string name="brightness">Jas</string>
     <string name="pass_relevant_start">Začátek</string>
     <string name="pass_relevant_end">Konec</string>
-    <string name="pass_expiration_date">Expirace</string>
+    <string name="pass_expiration_date">Datum expirace</string>
     <string name="pass_background_color">Barva pozadí</string>
     <string name="pass_foreground_color">Barva popředí</string>
     <string name="pass_label_color">Barva popisku</string>
+    <string name="import_pass">Importovat lístek</string>
+    <string name="open_from_clipboard">Otevřít ze schránky</string>
+    <string name="manual_entry">Ruční zadání</string>
+    <string name="advanced">Pokročilé</string>
+    <string name="scan_code">Naskenovat kód</string>
+    <string name="barcode_step_title">Přidat čárový kód</string>
+    <string name="continue_to_details">Pokračovat</string>
+    <string name="no_text_in_clipboard">Žádný text ve schránce</string>
 </resources>

@@ -87,5 +87,17 @@
     <string name="tag_label">Etiquetar etiqueta</string>
     <string name="collapse">Contraer</string>
     <string name="expand">Expandir</string>
-    <string name="barcode_position_bottom">Fondo</string>
+    <string name="barcode_position_bottom">Abajo</string>
+    <string name="pass_background_color">Color de fondo</string>
+    <string name="pass_relevant_end">Fin</string>
+    <string name="pass_relevant_start">Inicio</string>
+    <string name="brightness">Brillo</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="selected_location">Seleccionado: %1$s</string>
+    <string name="searching">Buscando…</string>
+    <string name="footer">Pie de página</string>
+    <string name="icon">Icono</string>
+    <string name="continue_to_details">Continuar</string>
+    <string name="advanced">Avanzado</string>
+    <string name="pass_label_color">Color de la etiqueta</string>
 </resources>

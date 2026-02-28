@@ -60,4 +60,6 @@
     <string name="pass_background_color">Fona krāsa</string>
     <string name="pass_relevant_end">Beigas</string>
     <string name="icon">Ikona</string>
+    <string name="thumbnail">Sīkbilde</string>
+    <string name="pass_relevant_start">Sākt</string>
 </resources>

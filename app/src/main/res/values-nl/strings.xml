@@ -115,4 +115,12 @@
     <string name="open_in_map_app">Openen in kaartapp</string>
     <string name="pass_expiration_date">Vervaldatum</string>
     <string name="strip">Streep</string>
+    <string name="manual_entry">Handmatige invoer</string>
+    <string name="advanced">Geavanceerd</string>
+    <string name="no_text_in_clipboard">Geen tekst in het klembord</string>
+    <string name="open_from_clipboard">Openen vanuit klembord</string>
+    <string name="barcode_step_title">Streepjescode toevoegen</string>
+    <string name="continue_to_details">Doorgaan</string>
+    <string name="import_pass">Pas importeren</string>
+    <string name="scan_code">Code scannen</string>
 </resources>
