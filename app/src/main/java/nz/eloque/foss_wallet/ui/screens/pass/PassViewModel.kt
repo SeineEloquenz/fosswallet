@@ -2,8 +2,10 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
@@ -34,8 +36,17 @@ class PassViewModel @Inject constructor(
 
     fun delete(pass: Pass) = passStore.delete(pass)
 
-    fun archive(pass: Pass) = passStore.archive(pass)
-    fun unarchive(pass: Pass) = passStore.unarchive(pass)
+    fun archive(pass: Pass) {
+        viewModelScope.launch {
+            passStore.archive(pass)
+        }
+    }
+    
+    fun unarchive(pass: Pass) {
+        viewModelScope.launch {
+            passStore.unarchive(pass)
+        }
+    }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
