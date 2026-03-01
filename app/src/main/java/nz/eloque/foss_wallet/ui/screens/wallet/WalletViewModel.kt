@@ -83,8 +83,17 @@ class WalletViewModel @Inject constructor(
     fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
     fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
 
-    fun archive(pass: Pass) = passStore.archive(pass)
-    fun unarchive(pass: Pass) = passStore.unarchive(pass)
+    fun archive(pass: Pass) {
+        viewModelScope.launch {
+            passStore.archive(pass)
+        }
+    }
+    
+    fun unarchive(pass: Pass) {
+        viewModelScope.launch {
+            passStore.unarchive(pass)
+        }
+    }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 

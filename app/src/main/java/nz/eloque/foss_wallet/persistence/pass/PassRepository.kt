@@ -64,11 +64,11 @@ class PassRepository @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
-    fun archive(pass: Pass) = passDao.archive(pass.id)
-    fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+    suspend fun archive(pass: Pass) = passDao.archive(pass.id)
+    suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
     fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 
-    fun archiveExpiredPasses(now: Instant = Instant.now()) {
+    suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
         passDao.nonArchivedWithExpirationDate()
             .filter { pass ->
                 pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false

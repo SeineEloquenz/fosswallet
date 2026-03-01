@@ -78,9 +78,9 @@ class PassStore @Inject constructor(
         }
     }
 
-    fun archive(pass: Pass) = passRepository.archive(pass)
+    suspend fun archive(pass: Pass) = passRepository.archive(pass)
 
-    fun unarchive(pass: Pass) = passRepository.unarchive(pass)
+    suspend fun unarchive(pass: Pass) = passRepository.unarchive(pass)
 
     suspend fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
 
@@ -113,7 +113,7 @@ class PassStore @Inject constructor(
         }
     }
 
-    fun archiveExpiredPasses() = passRepository.archiveExpiredPasses()
+    suspend fun archiveExpiredPasses() = passRepository.archiveExpiredPasses()
 
     private fun withAutoArchive(pass: Pass, now: Instant = Instant.now()): Pass {
         val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
