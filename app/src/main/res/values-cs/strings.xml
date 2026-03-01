@@ -123,4 +123,8 @@
     <string name="barcode_step_title">Přidat čárový kód</string>
     <string name="continue_to_details">Pokračovat</string>
     <string name="no_text_in_clipboard">Žádný text ve schránce</string>
+    <string name="delete_confirmation_message">Odstranit vybrané lístky? Tato akce je nevratná.</string>
+    <string name="dont_ask_again">Znovu se neptat</string>
+    <string name="ask_before_delete">Zeptat se před odstraněním</string>
+    <string name="select_all">Vybrat vše</string>
 </resources>

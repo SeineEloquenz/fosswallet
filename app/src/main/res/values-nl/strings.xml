@@ -123,4 +123,5 @@
     <string name="continue_to_details">Doorgaan</string>
     <string name="import_pass">Pas importeren</string>
     <string name="scan_code">Code scannen</string>
+    <string name="select_all">Alles selecteren</string>
 </resources>
