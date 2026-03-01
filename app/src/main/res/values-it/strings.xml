@@ -123,4 +123,5 @@
     <string name="barcode_step_title">Aggiungi codice a barre</string>
     <string name="continue_to_details">Continua</string>
     <string name="open_from_clipboard">Apri dagli appunti</string>
+    <string name="select_all">Seleziona tutto</string>
 </resources>

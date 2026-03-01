@@ -123,4 +123,8 @@
     <string name="barcode_step_title">添加条码</string>
     <string name="continue_to_details">继续</string>
     <string name="no_text_in_clipboard">剪贴板中没有文本</string>
+    <string name="delete_confirmation_message">是否删除所选凭证？此操作无法撤销。</string>
+    <string name="dont_ask_again">不再询问</string>
+    <string name="ask_before_delete">删除前询问</string>
+    <string name="select_all">全选</string>
 </resources>
