@@ -20,8 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.ChipSelector
@@ -52,18 +50,14 @@ fun TagRow(
             selectedOptions = listOfNotNull(selectedTag),
             onOptionSelected = { onTagSelected(it) },
             onOptionDeselected = {
-                if (selectedTag == it) {
-                    onTagDeselected(it)
-                }
+                if (selectedTag == it) { onTagDeselected(it) }
             },
             optionLabel = { it.label },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
         IconButton(
-            onClick = {
-                tagCreatorShown = true
-            }
+            onClick = { tagCreatorShown = true }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -71,9 +65,7 @@ fun TagRow(
             )
         }
         IconButton(
-            onClick = {
-                tagRemoverShown = true
-            }
+            onClick = { tagRemoverShown = true }
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -84,14 +76,12 @@ fun TagRow(
 
     if (tagCreatorShown) {
         ModalBottomSheet(
-            onDismissRequest = {
-                tagCreatorShown = false
-            },
+            onDismissRequest = { tagCreatorShown = false },
             modifier = Modifier.fillMaxWidth()) {
             TagCreator(
                 onCreate = {
                     tagCreatorShown = false
-                    coroutineScope.launch(Dispatchers.IO) { walletViewModel.addTag(it) }
+                    walletViewModel.addTag(it)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -100,14 +90,12 @@ fun TagRow(
 
     if (tagRemoverShown) {
         ModalBottomSheet(
-            onDismissRequest = {
-                tagRemoverShown = false
-            },
+            onDismissRequest = { tagRemoverShown = false },
             modifier = Modifier.fillMaxWidth()) {
             TagChooser(
                 tags = tags,
-                onSelected = { coroutineScope.launch(Dispatchers.IO) { walletViewModel.removeTag(it) }},
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { walletViewModel.addTag(it) }},
+                onSelected = { walletViewModel.removeTag(it) },
+                onTagCreate = { walletViewModel.addTag(it) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
