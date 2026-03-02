@@ -38,7 +38,7 @@ jobs:
         run: ./gradlew testDebugUnitTest assembleDebug
 
       - name: Upload Apk
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: apk
           path: app/build/outputs/apk/debug
