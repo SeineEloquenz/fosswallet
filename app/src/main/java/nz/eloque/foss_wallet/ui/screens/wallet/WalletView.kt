@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -44,8 +43,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -101,9 +98,7 @@ fun WalletView(
         DeleteConfirmationDialog(
             settingsStore = walletViewModel.settingsStore,
             onConfirm = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    walletViewModel.delete(pendingDelete.pass)
-                }
+                walletViewModel.delete(pendingDelete.pass)
                 Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 passToDelete.value = null
             },
@@ -156,9 +151,7 @@ fun WalletView(
                 groupId = groupId!!,
                 passes = passes,
                 allTags = tags,
-                onClick = {
-                    navController.navigate("pass/${it.id}")
-                },
+                onClick = { navController.navigate("pass/${it.id}") },
                 walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses
             )
@@ -170,14 +163,8 @@ fun WalletView(
                 rightSwipeIcon = Icons.Default.Delete,
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
-                onLeftSwipe = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass)
-                    }
-                },
-                onRightSwipe = {
-                    passToDelete.value = pass
-                },
+                onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) } },
+                onRightSwipe = { passToDelete.value = pass },
                 modifier = Modifier.padding(2.dp)
             ) {
                 ShortPassCard(
