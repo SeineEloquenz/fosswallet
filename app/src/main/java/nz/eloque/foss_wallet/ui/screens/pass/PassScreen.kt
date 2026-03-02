@@ -83,13 +83,13 @@ fun PassScreen(
             PassView(
                 localizedPass = localizedPass,
                 allTags = allTags,
-                onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(localizedPass.pass, it) } },
-                onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(localizedPass.pass, it) } },
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) } },
+                onTagClick = { passViewModel.untag(localizedPass.pass, it) },
+                onTagAdd = { passViewModel.tag(localizedPass.pass, it) },
+                onTagCreate = { passViewModel.addTag(it) },
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
-                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(localizedPass.pass) } },
+                onRenderingChange = { passViewModel.toggleLegacyRendering(localizedPass.pass) },
             )
         }
     }
@@ -132,39 +132,35 @@ fun Actions(
             )
 
             val passFile = pass.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
-            }
+            if (passFile != null) { PassShareButton(passFile) }
             
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        isLoading.value = true
-                        val result = passViewModel.update(pass)
-                        isLoading.value = false
-                        when (result) {
-                            is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
-                                snackbarHostState.showSnackbar(
-                                    message = resources.getString(R.string.update_successful),
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
-                            is UpdateResult.Failed -> {
-                                val snackResult = snackbarHostState.showSnackbar(
-                                    message = when (result.reason) {
-                                        is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
-                                        else -> resources.getString(result.reason.messageId)
-                                    },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
-                                    duration = SnackbarDuration.Short
-                                )
-                                if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
-                                    when (result.reason) {
-                                        is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
-                                        is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
-                                    }
+                    isLoading.value = true
+                    val result = passViewModel.update(pass)
+                    isLoading.value = false
+                    when (result) {
+                        is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
+                            snackbarHostState.showSnackbar(
+                                message = resources.getString(R.string.update_successful),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
+                        is UpdateResult.Failed -> {
+                            val snackResult = snackbarHostState.showSnackbar(
+                                message = when (result.reason) {
+                                    is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
+                                    else -> resources.getString(result.reason.messageId)
+                                },
+                                actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
+                                duration = SnackbarDuration.Short
+                            )
+                            if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
+                                when (result.reason) {
+                                    is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
+                                    is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
                                 }
                             }
                         }
@@ -202,7 +198,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
+                    passViewModel.delete(pass)
                     navController.popBackStack()
                     Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 }
