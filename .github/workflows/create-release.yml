@@ -141,12 +141,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download apk from build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: apk
           path: apk
       - name: Download Changelog
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: changelog
           path: changelog
@@ -165,13 +165,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download aab from build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: aab
           path: aab
 
       - name: Download whatsnew
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: whatsnew
           path: whatsnew
