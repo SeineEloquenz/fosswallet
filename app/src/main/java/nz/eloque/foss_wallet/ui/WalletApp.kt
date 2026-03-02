@@ -49,7 +49,7 @@ import java.net.URLDecoder
 
 sealed class Screen(val route: String, val icon: ImageVector, @param:StringRes val resourceId: Int) {
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
-    data object Archive : Screen("archive", Icons.Default.Archive, R.string.archive)
+    data object Archive : Screen("archive", Icons.Default.Archive, R.string.the_archive)
     data object About : Screen("about", Icons.Default.Info, R.string.about)
     data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
