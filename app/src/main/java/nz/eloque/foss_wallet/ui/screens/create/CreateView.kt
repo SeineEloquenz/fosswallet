@@ -9,6 +9,7 @@ import android.location.Location
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -75,8 +76,6 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -171,32 +170,37 @@ fun CreateView(
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
     val scanLauncher = rememberLauncherForActivityResult(
-        contract = ScanContract(),
-        onResult = { result ->
-            if (result != null && result.contents != null) {
-                if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
-                barcodes = barcodes.mapIndexed { index, barcode ->
-                    if (index != activeBarcodeIndex) {
-                        barcode
-                    } else {
-                        val scannedFormat = try {
-                            BarcodeFormat.valueOf(result.formatName)
-                        } catch (_: IllegalArgumentException) {
-                            Toast.makeText(
-                                context,
-                                resources.getString(R.string.no_barcode_format_given),
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                            BarcodeFormat.QR_CODE
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { activityResult ->
+            if (activityResult.resultCode == android.app.Activity.RESULT_OK) {
+                val resultData = activityResult.data
+                val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
+                if (contents != null) {
+                    val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
+                    if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
+                    barcodes = barcodes.mapIndexed { index, barcode ->
+                        if (index != activeBarcodeIndex) {
+                            barcode
+                        } else {
+                            val scannedFormat = try {
+                                BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
+                            } catch (_: IllegalArgumentException) {
+                                Toast.makeText(
+                                    context,
+                                    resources.getString(R.string.no_barcode_format_given),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                                BarcodeFormat.QR_CODE
+                            }
+                            barcode.copy(
+                                message = contents,
+                                altText = contents,
+                                format = scannedFormat,
+                            )
                         }
-                        barcode.copy(
-                            message = result.contents,
-                            altText = result.contents,
-                            format = scannedFormat,
-                        )
                     }
+                    detailsExpanded = true
                 }
-                detailsExpanded = true
             }
         }
     )
@@ -205,8 +209,7 @@ fun CreateView(
         if (startMode == CreateStartMode.Scan && !initialScanHandled) {
             initialScanHandled = true
             scanLauncher.launch(
-                ScanOptions()
-                    .setCaptureActivity(ScanActivity::class.java)
+                Intent(context, ScanActivity::class.java)
             )
         }
     }
@@ -299,7 +302,7 @@ fun CreateView(
                 IconButton(onClick = {
                     activeBarcodeIndex = index
                     scanLauncher.launch(
-                        ScanOptions().setCaptureActivity(ScanActivity::class.java)
+                        Intent(context, ScanActivity::class.java)
                     )
                 }) {
                     Icon(
