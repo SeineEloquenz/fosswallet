@@ -57,6 +57,7 @@
     <string name="barcode_position_center">Center</string>
     <string name="barcode_position_bottom">Bottom</string>
     <string name="pass_already_imported">Pass already imported</string>
+    <string name="the_archive">Archive</string>
     <string name="archive">Archive</string>
     <string name="unarchive">Unarchive</string>
     <string name="n_passes_imported">%1$d passes imported</string>
