@@ -67,7 +67,7 @@ fun WalletView(
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
-    val coroutineScope = rememberCoroutineScope()
+    
     val emptyState = rememberLazyListState()
     val passFlow = walletViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
