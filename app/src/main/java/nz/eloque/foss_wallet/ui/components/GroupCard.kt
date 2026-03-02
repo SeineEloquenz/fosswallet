@@ -54,7 +54,6 @@ fun GroupCard(
     onClick: (Pass) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     ElevatedCard(
         modifier = modifier,
@@ -113,8 +112,8 @@ fun GroupCard(
                     if (selectedPasses.isNotEmpty()) {
                         IconButton(onClick = { groupId.let {
                             walletViewModel.associate(groupId, selectedPasses.map { it.pass }.toSet())
-                            selectedPasses.clear()
-                        } }) {
+                            selectedPasses.clear() }
+                        }) {
                             Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
                         }
                     }
