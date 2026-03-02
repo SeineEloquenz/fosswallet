@@ -123,4 +123,8 @@
     <string name="strip">Streifen</string>
     <string name="pass_expiration_date">Ablaufdatum</string>
     <string name="barcode_step_title">Barcode hinzufügen</string>
+    <string name="select_all">Alle auswählen</string>
+    <string name="dont_ask_again">Nicht mehr nachfragen</string>
+    <string name="delete_confirmation_message">Ausgewählte Pässe löschen? Dies kann nicht mehr rückgängig gemacht werden.</string>
+    <string name="ask_before_delete">Vor dem Löschen fragen</string>
 </resources>

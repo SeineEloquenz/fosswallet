@@ -1,0 +1,6 @@
+* Zobrazení všech čárových kódů obsažených v lístcích
+* Povolena další pole v nástroji pro vytváření lístků
+* Umožněno klikání na další odkazy při importu
+* Přepracován postup přidávání lístků
+* Povoleno sdílení obrázků pro import
+* Přepracován výběr lístků tak, aby se místo přejetí prstem používalo podržení

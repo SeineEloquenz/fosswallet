@@ -16,7 +16,7 @@
     <string name="date">Date</string>
     <string name="delete">Delete</string>
     <string name="delete_confirmation_message">Delete selected pass(es)? This cannot be undone.</string>
-    <string name="dont_ask_again">Don\'t ask me again</string>
+    <string name="dont_ask_again">Don\'t ask again</string>
     <string name="ask_before_delete">Ask before delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>

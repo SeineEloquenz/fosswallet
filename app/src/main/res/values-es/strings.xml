@@ -100,4 +100,6 @@
     <string name="continue_to_details">Continuar</string>
     <string name="advanced">Avanzado</string>
     <string name="pass_label_color">Color de la etiqueta</string>
+    <string name="save">Guardar</string>
+    <string name="select_all">Seleccionar todo</string>
 </resources>
