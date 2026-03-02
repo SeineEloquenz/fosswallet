@@ -116,7 +116,7 @@ fun WalletScreen(
             }) {
                 Icon(
                     imageVector = Screen.Archive.icon,
-                    contentDescription = stringResource(R.string.archive)
+                    contentDescription = stringResource(R.string.the_archive)
                 )
             }
             IconButton(onClick = {
