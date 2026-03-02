@@ -5,6 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
@@ -22,6 +26,9 @@ class PassViewModel @Inject constructor(
     private val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
+    
     val allTags = tagRepository.all()
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
@@ -36,17 +43,17 @@ class PassViewModel @Inject constructor(
 
     fun delete(pass: Pass) = passStore.delete(pass)
 
-    fun archive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.archive(pass)
-        }
-    }
+    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.hide(pass) }
+    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unhide(pass) }
     
-    fun unarchive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.unarchive(pass)
-        }
-    }
+    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.pin(pass) }
+    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unpin(pass) }
+    
+    fun reveal() { _isAuthenticated.value = true }
+    fun conceal() { _isAuthenticated.value = false }
+    
+    fun archive(pass: Pass) { viewModelScope.launch { passStore.archive(pass) } }
+    fun unarchive(pass: Pass) { viewModelScope.launch { passStore.unarchive(pass) } }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
