@@ -46,13 +46,9 @@ fun SelectionActions(
     val showDeleteDialog = remember { mutableStateOf(false) }
 
     fun deleteSelected() {
-        coroutineScope.launch(Dispatchers.IO) {
-            selectedPasses.toList().forEach { walletViewModel.delete(it.pass) }
-            selectedPasses.clear()
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
-            }
-        }
+        selectedPasses.toList().forEach { walletViewModel.delete(it.pass) }
+        selectedPasses.clear()
+        Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
     }
 
     if (showDeleteDialog.value) {
@@ -81,10 +77,8 @@ fun SelectionActions(
         if (isArchive) {
             FloatingActionButton(
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
-                        selectedPasses.clear()
-                    }
+                    selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
+                    selectedPasses.clear()
                 },
             ) {
                 Icon(imageVector = Icons.Default.Unarchive, contentDescription = stringResource(R.string.unarchive))
@@ -92,10 +86,8 @@ fun SelectionActions(
         } else {
             FloatingActionButton(
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { walletViewModel.archive(it.pass) }
-                        selectedPasses.clear()
-                    }
+                    selectedPasses.forEach { walletViewModel.archive(it.pass) }
+                    selectedPasses.clear()
                 },
             ) {
                 Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
@@ -115,10 +107,8 @@ fun SelectionActions(
             icon = { Icon(imageVector = Icons.Default.Folder, contentDescription = stringResource(R.string.group)) },
             expanded = listState.isScrollingUp(),
             onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    walletViewModel.group(selectedPasses.map { it.pass }.toSet())
-                    selectedPasses.clear()
-                }
+                walletViewModel.group(selectedPasses.map { it.pass }.toSet())
+                selectedPasses.clear()
             },
         )
     }
