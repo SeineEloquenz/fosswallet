@@ -1,0 +1,1 @@
+* Fix delete confirmation dialog missing when triggering delete from pass view
