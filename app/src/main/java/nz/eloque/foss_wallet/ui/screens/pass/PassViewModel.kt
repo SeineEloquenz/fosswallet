@@ -19,7 +19,7 @@ class PassViewModel @Inject constructor(
     application: Application,
     private val passStore: PassStore,
     private val tagRepository: TagRepository,
-    private val settingsStore: SettingsStore
+    val settingsStore: SettingsStore
 ) : AndroidViewModel(application) {
 
     val allTags = tagRepository.all()
