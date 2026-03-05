@@ -127,4 +127,5 @@
     <string name="dont_ask_again">不再询问</string>
     <string name="ask_before_delete">删除前询问</string>
     <string name="select_all">全选</string>
+    <string name="the_archive">归档</string>
 </resources>

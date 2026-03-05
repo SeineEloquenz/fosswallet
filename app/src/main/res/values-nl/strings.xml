@@ -124,4 +124,8 @@
     <string name="import_pass">Pas importeren</string>
     <string name="scan_code">Code scannen</string>
     <string name="select_all">Alles selecteren</string>
+    <string name="dont_ask_again">Niet opnieuw vragen</string>
+    <string name="ask_before_delete">Vragen vóór verwijderen</string>
+    <string name="delete_confirmation_message">Geselecteerde pas(sen) verwijderen? Dit kan niet ongedaan worden gemaakt.</string>
+    <string name="the_archive">Archief</string>
 </resources>
