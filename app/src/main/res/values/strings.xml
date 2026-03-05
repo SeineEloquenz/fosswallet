@@ -51,8 +51,8 @@
     <string name="status_not_updated">Your pass is already up-to-date</string>
     <string name="open">Open</string>
     <string name="barcode_position">Barcode position in fullscreen</string>
-    <string name="pass_view">Pass View</string>
-    <string name="pass_view_brightness">Increase Brightness</string>
+    <string name="pass_view">Pass view</string>
+    <string name="pass_view_brightness">Increase brightness</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
     <string name="barcode_position_bottom">Bottom</string>

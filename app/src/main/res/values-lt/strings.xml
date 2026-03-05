@@ -61,4 +61,8 @@
     <string name="thumbnail">Miniatiūra</string>
     <string name="brightness">Ryškumas</string>
     <string name="pass_background_color">Fono spalva</string>
+    <string name="the_archive">Archyvas</string>
+    <string name="compatibility_mode">Suderinamumo režimas</string>
+    <string name="pass_expiration_date">Galiojimo pabaigos data</string>
+    <string name="pass_relevant_end">Pabaiga</string>
 </resources>

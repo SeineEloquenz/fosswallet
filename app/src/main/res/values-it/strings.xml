@@ -124,4 +124,8 @@
     <string name="continue_to_details">Continua</string>
     <string name="open_from_clipboard">Apri dagli appunti</string>
     <string name="select_all">Seleziona tutto</string>
+    <string name="dont_ask_again">Non chiedere di nuovo</string>
+    <string name="ask_before_delete">Chiedi prima di eliminare</string>
+    <string name="delete_confirmation_message">Eliminare i biglietti selezionati? Questa azione non può essere annullata.</string>
+    <string name="the_archive">Archivio</string>
 </resources>

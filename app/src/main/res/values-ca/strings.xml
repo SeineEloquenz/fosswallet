@@ -57,4 +57,14 @@
     <string name="brightness">Brillantor</string>
     <string name="pass_relevant_end">Fi</string>
     <string name="pass_relevant_start">Inici</string>
+    <string name="pass_expiration_date">Data d\'expiració</string>
+    <string name="searching">Cercant…</string>
+    <string name="pass_location">Ubicació</string>
+    <string name="additional_fields">Camps addicionals</string>
+    <string name="manual_entry">Introducció manual</string>
+    <string name="advanced">Avançat</string>
+    <string name="barcode_value">Valor del codi de barres</string>
+    <string name="no_search_results">Sense resultats de cerca</string>
+    <string name="selected_location">Seleccionats: %1$s</string>
+    <string name="the_archive">Archief</string>
 </resources>

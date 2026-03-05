@@ -1,0 +1,1 @@
+* Absturz beim (De-)Archivieren in der Passansicht behoben

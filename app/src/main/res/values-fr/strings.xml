@@ -115,4 +115,16 @@
     <string name="pass_expiration_date">Date d\'expiration</string>
     <string name="pass_background_color">Couleur de fond</string>
     <string name="pass_foreground_color">Couleur d\'avant plan</string>
+    <string name="dont_ask_again">Ne plus demander</string>
+    <string name="ask_before_delete">Confirmer avant de supprimer</string>
+    <string name="delete_confirmation_message">Supprimer les cartes sélectionnées ? Cela ne pourra pas être annulé.</string>
+    <string name="import_pass">Importer une carte</string>
+    <string name="open_from_clipboard">Ouvrir depuis le presse papier</string>
+    <string name="manual_entry">Entrée manuelle</string>
+    <string name="advanced">Avancé</string>
+    <string name="barcode_step_title">Ajouter un code-barre</string>
+    <string name="continue_to_details">Continuer</string>
+    <string name="no_text_in_clipboard">Pas de texte dans le presse-papier</string>
+    <string name="select_all">Sélectionner tout</string>
+    <string name="scan_code">Scanner un code</string>
 </resources>
