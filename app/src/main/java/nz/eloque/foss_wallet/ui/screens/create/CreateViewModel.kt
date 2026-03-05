@@ -8,7 +8,6 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.location.Geocoder
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.res.ResourcesCompat
@@ -22,14 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.PassColors
-import nz.eloque.foss_wallet.model.PassCreator
-import nz.eloque.foss_wallet.model.PassRelevantDate
-import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
-import java.time.ZonedDateTime
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -49,35 +43,13 @@ class CreateViewModel @Inject constructor(
     )
 
     suspend fun savePass(
-        name: String,
-        organization: String,
-        serialNumber: String,
-        type: PassType,
-        barcodes: List<BarCode>,
-        logoText: String,
-        colors: PassColors?,
-        location: Location?,
-        relevantDates: List<PassRelevantDate>,
-        expirationDate: ZonedDateTime?,
-        iconUrl: Uri?,
-        logoUrl: Uri?,
-        stripUrl: Uri?,
-        thumbnailUrl: Uri?,
-        footerUrl: Uri?,
+        pass: Pass,
+        iconUrl: Uri? = null,
+        logoUrl: Uri? = null,
+        stripUrl: Uri? = null,
+        thumbnailUrl: Uri? = null,
+        footerUrl: Uri? = null,
     ): String {
-        val pass = PassCreator.create(
-            name = name,
-            type = type,
-            barCodes = barcodes,
-            organization = organization,
-            serialNumber = serialNumber,
-            logoText = logoText,
-            colors = colors,
-            location = location,
-            relevantDates = relevantDates,
-            expirationDate = expirationDate,
-        )!!
-
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
         val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawableToBitmap(drawable, 64, 64)
         val logoBitmap = loadBitmapFromUrl(context, logoUrl, LOGO_SIZE)

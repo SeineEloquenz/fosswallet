@@ -77,6 +77,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import de.nielstron.bcbp.IataBcbp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -86,6 +87,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
@@ -149,13 +151,28 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
     var initialScanHandled by remember { mutableStateOf(false) }
+    var showBcbpPrompt by remember { mutableStateOf(false) }
+    var lastPromptedBcbpMessage by remember { mutableStateOf<String?>(null) }
+    val finishSavingAndNavigateToPass: suspend (String) -> Unit = { savedPassId ->
+        withContext(Dispatchers.Main) {
+            isSaving = false
+            navController.navigate("pass/$savedPassId") {
+                popUpTo(Screen.Wallet.route)
+            }
+        }
+    }
 
-    val barCodeModels = barcodes.map {
+    val parsedBcbps = barcodes.map { IataBcbp.parse(it.message) }
+    val detectedBcbpIndex = parsedBcbps.indexOfFirst { it != null }
+    val detectedBcbp = parsedBcbps.getOrNull(detectedBcbpIndex)
+    val detectedBcbpMessage = barcodes.getOrNull(detectedBcbpIndex)?.message
+    val barCodeModels = barcodes.mapIndexed { index, barcode ->
+        val parsedBcbp = parsedBcbps[index]
         BarCode(
-            format = it.format,
-            message = it.message,
+            format = barcode.format,
+            message = barcode.message,
             encoding = Charsets.UTF_8,
-            altText = it.altText.ifBlank { it.message },
+            altText = barcode.altText.ifBlank { parsedBcbp?.summary() ?: barcode.message },
         )
     }
     val pass = PassCreator.create(name, type, barCodeModels)
@@ -169,6 +186,24 @@ fun CreateView(
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
+    val saveBoardingPassAndNavigate: (IataBcbp.Parsed) -> Unit = { bcbp ->
+        isSaving = true
+        coroutineScope.launch(Dispatchers.IO) {
+            val boardingExpiration = bcbp.flightDate
+                ?.atStartOfDay(ZoneId.systemDefault())
+                ?.plusDays(1)
+            val pass = PassCreator.createFromBCBP(
+                bcbp = bcbp,
+                barCodes = barCodeModels,
+                expirationDate = boardingExpiration,
+            ) ?: run {
+                isSaving = false
+                return@launch
+            }
+            val savedPassId = createViewModel.savePass(pass)
+            finishSavingAndNavigateToPass(savedPassId)
+        }
+    }
 
     val scanLauncher = rememberLauncherForActivityResult(
         contract = ScanContract(),
@@ -211,6 +246,17 @@ fun CreateView(
         }
     }
 
+    LaunchedEffect(detectedBcbpMessage) {
+        val message = detectedBcbpMessage
+        if (message == null) {
+            showBcbpPrompt = false
+            lastPromptedBcbpMessage = null
+        } else if (message != lastPromptedBcbpMessage) {
+            showBcbpPrompt = true
+            lastPromptedBcbpMessage = message
+        }
+    }
+
     if (showLocationPicker) {
         LocationPickerDialog(
             createViewModel = createViewModel,
@@ -219,6 +265,33 @@ fun CreateView(
             onConfirm = {
                 location = it
                 showLocationPicker = false
+            }
+        )
+    }
+
+    if (showBcbpPrompt && detectedBcbp != null) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.airline_code_detected)) },
+            text = { Text(stringResource(R.string.bcbp_create_question)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showBcbpPrompt = false
+                        saveBoardingPassAndNavigate(detectedBcbp)
+                    }
+                ) {
+                    Text(stringResource(R.string.create_boarding_pass))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showBcbpPrompt = false
+                    }
+                ) {
+                    Text(stringResource(R.string.continue_to_details))
+                }
             }
         )
     }
@@ -350,7 +423,9 @@ fun CreateView(
         if (!detailsExpanded) {
             Button(
                 enabled = barcodesValid,
-                onClick = { detailsExpanded = true },
+                onClick = {
+                    detailsExpanded = true
+                },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.continue_to_details))
@@ -591,29 +666,31 @@ fun CreateView(
                             )
                         }
 
-                        val savedPassId = createViewModel.savePass(
+                        val passToSave = PassCreator.create(
                             name = name,
                             organization = organization,
                             serialNumber = serialNumber,
                             type = type,
-                            barcodes = barCodeModels,
                             logoText = logoText,
+                            barCodes = barCodeModels,
                             colors = colors,
                             location = location,
                             relevantDates = relevantDates,
                             expirationDate = expirationDate,
+                        ) ?: run {
+                            isSaving = false
+                            return@launch
+                        }
+
+                        val savedPassId = createViewModel.savePass(
+                            pass = passToSave,
                             iconUrl = iconUrl,
                             logoUrl = logoUrl,
                             stripUrl = stripUrl,
                             thumbnailUrl = thumbnailUrl,
                             footerUrl = footerUrl,
                         )
-                        withContext(Dispatchers.Main) {
-                            isSaving = false
-                            navController.navigate("pass/$savedPassId") {
-                                popUpTo(Screen.Wallet.route)
-                            }
-                        }
+                        finishSavingAndNavigateToPass(savedPassId)
                     }
                 },
                 modifier = Modifier
