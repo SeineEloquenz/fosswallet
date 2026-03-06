@@ -27,7 +27,7 @@
     <string name="barcode_position_top">Toppen</string>
     <string name="barcode_position_center">Mitten</string>
     <string name="barcode_position_bottom">Botten</string>
-    <string name="archive">Arkiv</string>
+    <string name="archive">Arkivera</string>
     <string name="unarchive">Avarkivera</string>
     <string name="export">Exportera</string>
     <string name="share_passes">Dela kort</string>
@@ -127,4 +127,5 @@
     <string name="dont_ask_again">Fråga inte igen</string>
     <string name="import_pass">Importera kort</string>
     <string name="open_from_clipboard">Öppna från urklipp</string>
+    <string name="the_archive">Arkiv</string>
 </resources>
