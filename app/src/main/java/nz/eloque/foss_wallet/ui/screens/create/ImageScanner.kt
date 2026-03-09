@@ -4,16 +4,23 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import com.google.zxing.BinaryBitmap
-import com.google.zxing.DecodeHintType
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.NotFoundException
-import com.google.zxing.RGBLuminanceSource
-import com.google.zxing.Result
-import com.google.zxing.common.HybridBinarizer
+import zxingcpp.BarcodeReader
 
 object ImageScanner {
-    fun scanFrom(contentResolver: ContentResolver, uri: Uri): Result? {
+    private val barcodeReader = BarcodeReader(
+        BarcodeReader.Options(
+            tryHarder = true,
+            tryRotate = true,
+            tryInvert = true,
+        )
+    )
+
+    data class ScanResult(
+        val text: String,
+        val format: String,
+    )
+
+    fun scanFrom(contentResolver: ContentResolver, uri: Uri): ScanResult? {
         val source = ImageDecoder.createSource(contentResolver, uri)
         val bitmap = ImageDecoder.decodeBitmap(source) { decoder, info, source ->
             decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
@@ -22,28 +29,12 @@ object ImageScanner {
         return scanFrom(bitmap)
     }
 
-    fun scanFrom(bitmap: Bitmap): Result? {
-        val width = bitmap.width
-        val height = bitmap.height
-
-        val pixels = IntArray(width * height)
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-
-        val source = RGBLuminanceSource(width, height, pixels)
-        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
-
-        val hints = mapOf(
-            DecodeHintType.TRY_HARDER to true
+    fun scanFrom(bitmap: Bitmap): ScanResult? {
+        val result = barcodeReader.read(bitmap).firstOrNull() ?: return null
+        val text = result.text?.takeIf { it.isNotBlank() } ?: return null
+        return ScanResult(
+            text = text,
+            format = result.format.name,
         )
-
-        val reader = MultiFormatReader().apply {
-            setHints(hints)
-        }
-
-        return try {
-            reader.decode(binaryBitmap)
-        } catch (_: NotFoundException) {
-            null
-        }
     }
 }
