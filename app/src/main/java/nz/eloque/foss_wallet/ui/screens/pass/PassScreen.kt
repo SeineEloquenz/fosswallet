@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +60,7 @@ import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.Biometric
+import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,6 +123,22 @@ fun Actions(
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
+
+    var showDeleteModal by remember { mutableStateOf(false) }
+
+    if (showDeleteModal) {
+        DeleteConfirmationDialog(
+            settingsStore = passViewModel.settingsStore,
+            onConfirm = {
+                coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
+                navController.popBackStack()
+                Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+            },
+            onDismiss = {
+                showDeleteModal = false
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -281,9 +299,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
-                    navController.popBackStack()
-                    Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    showDeleteModal = true
                 }
             )
         }

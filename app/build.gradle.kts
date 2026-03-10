@@ -45,8 +45,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 36
-        versionCode = 97
-        versionName = "0.40.1"
+        versionCode = 98
+        versionName = "0.40.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -136,7 +136,11 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.zxing)
-    implementation(libs.zxing.android.embedded)
+    implementation(libs.zxingcpp.android)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     //hilt
     implementation(libs.hilt.android)

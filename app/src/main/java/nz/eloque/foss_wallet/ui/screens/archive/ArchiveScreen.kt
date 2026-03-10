@@ -35,7 +35,7 @@ fun ArchiveScreen(
 
     WalletScaffold(
         navController = navController,
-        title = stringResource(id = R.string.archive),
+        title = stringResource(id = R.string.the_archive),
         toolWindow = true,
         actions = {
             if (selectedPasses.isNotEmpty()) {

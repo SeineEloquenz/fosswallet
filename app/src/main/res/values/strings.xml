@@ -51,12 +51,13 @@
     <string name="status_not_updated">Your pass is already up-to-date</string>
     <string name="open">Open</string>
     <string name="barcode_position">Barcode position in fullscreen</string>
-    <string name="pass_view">Pass View</string>
-    <string name="pass_view_brightness">Increase Brightness</string>
+    <string name="pass_view">Pass view</string>
+    <string name="pass_view_brightness">Increase brightness</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
     <string name="barcode_position_bottom">Bottom</string>
     <string name="pass_already_imported">Pass already imported</string>
+    <string name="the_archive">Archive</string>
     <string name="archive">Archive</string>
     <string name="unarchive">Unarchive</string>
     <string name="n_passes_imported">%1$d passes imported</string>
