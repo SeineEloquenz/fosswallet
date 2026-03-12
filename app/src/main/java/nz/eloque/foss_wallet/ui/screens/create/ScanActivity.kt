@@ -54,6 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.concurrent.Executors
@@ -180,9 +181,19 @@ class ScanActivity : AppCompatActivity() {
                 return@setAnalyzer
             }
 
-            val result = image.use { barcodeReader.read(it).firstOrNull() }
+            // Prevent crashes due to failing barcode reader
+            val result = try {
+                image.use { barcodeReader.read(it).firstOrNull() }
+            } catch (_: RuntimeException) {
+                return@setAnalyzer
+            }
             val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
-            val format = result.format.name
+            // Prevent crashes due to unsupported formats in zxing
+            val format = try {
+                BarcodeFormat.valueOf(result.format.name).toString()
+            } catch (_: Exception) {
+                return@setAnalyzer
+            }
 
             hasDeliveredResult = true
             runOnUiThread {
