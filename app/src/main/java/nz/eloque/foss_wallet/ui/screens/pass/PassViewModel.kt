@@ -32,7 +32,7 @@ class PassViewModel @Inject constructor(
 
     fun untag(pass: Pass, tag: Tag) { viewModelScope.launch { passStore.untag(pass, tag) } }
 
-    fun update(pass: Pass): UpdateResult { viewModelScope.launch { passStore.update(pass) } }
+    fun update(pass: Pass): UpdateResult = viewModelScope.launch { passStore.update(pass) }
 
     fun delete(pass: Pass) { viewModelScope.launch { passStore.delete(pass) } }
 

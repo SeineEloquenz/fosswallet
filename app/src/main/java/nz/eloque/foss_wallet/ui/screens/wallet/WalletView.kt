@@ -163,7 +163,7 @@ fun WalletView(
                 rightSwipeIcon = Icons.Default.Delete,
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
-                onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) } },
+                onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
                 onRightSwipe = { passToDelete.value = pass },
                 modifier = Modifier.padding(2.dp)
             ) {
