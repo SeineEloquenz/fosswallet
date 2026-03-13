@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.navigation.compose.rememberNavController
@@ -41,7 +42,7 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.net.URLEncoder
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val walletViewModel: WalletViewModel by viewModels()
 
