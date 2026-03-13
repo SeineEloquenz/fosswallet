@@ -13,11 +13,11 @@
     <string name="no_barcode_format_given">Aucun format de code-barres spécifié ! Par défaut, il s\'agit d\'un code QR. il est possible que le code ne puisse pas être scanné correctement.</string>
     <string name="date">Date</string>
     <string name="delete">Supprimer</string>
-    <string name="invalid_pass_toast">La carte n\'a pas pu être chargée. Êtes-vous certain que c’est un .pkpass valide ?</string>
+    <string name="invalid_pass_toast">La carte n\'a pas pu être chargée. Êtes-vous sûr·e que c’est un .pkpass valide ?</string>
     <string name="add_pass">Ajouter une carte</string>
     <string name="about">À propos</string>
     <string name="source_code">Code source</string>
-    <string name="made_with_love">Fabriqué avec ❤ en Allemagne</string>
+    <string name="made_with_love">Fait avec ❤ en Allemagne</string>
     <string name="to">à</string>
     <string name="license">Licence</string>
     <string name="update_successful">Carte mise à jour avec succès</string>
@@ -34,7 +34,7 @@
     <string name="passes">Cartes</string>
     <string name="enable">Activer</string>
     <string name="search">Rechercher</string>
-    <string name="status_forbidden">Le serveur n’a pas permis l’accès à cette carte. Peut-être que celle-ci a expiré ?</string>
+    <string name="status_forbidden">Le serveur n’a pas permis l’accès à cette carte. Peut-être que celle-ci a expiré ?</string>
     <string name="status_not_updated">La carte est déjà à jour</string>
     <string name="export">Exporter</string>
     <string name="share_passes">Partager les cartes</string>
@@ -50,7 +50,7 @@
     <string name="barcode_position">Position du code-barres en plein écran</string>
     <string name="pass_view_brightness">Augmenter la luminosité</string>
     <string name="pass_already_imported">La carte est déjà importée</string>
-    <string name="archive">Archive</string>
+    <string name="archive">Archiver</string>
     <string name="unarchive">Désarchiver</string>
     <string name="n_passes_imported">%1$d clefs importées</string>
     <string name="relevant_date_newest">Dernière date pertinente</string>
@@ -81,7 +81,7 @@
     <string name="clear_selection">Effacer la sélection</string>
     <string name="barcode_value_invalid">Cette valeur n\'est pas un code %1$s valide</string>
     <string name="choose_image">Choisir une image</string>
-    <string name="event">Billet d\'Événement</string>
+    <string name="event">Billet d\'évènement</string>
     <string name="add_tag">Ajouter un mot-clé</string>
     <string name="remove_tag">Retirer un mot-clé</string>
     <string name="color">Couleur</string>
@@ -92,7 +92,7 @@
     <string name="select_image_with_barcode">Choisir une image avec un code-barre</string>
     <string name="no_calendar_app_found">Pas d\'application d\'agenda détectée</string>
     <string name="no_map_app_found">Pas d\'application de cartographie détectée</string>
-    <string name="pass_label_color">Couleur de mot-clé</string>
+    <string name="pass_label_color">Couleur du mot-clé</string>
     <string name="save">Enregistrer</string>
     <string name="barcode_alt_text">Texte alternatif du code-barre</string>
     <string name="add_another_barcode">Ajouter un nouveau code-barre</string>
@@ -117,7 +117,7 @@
     <string name="pass_foreground_color">Couleur d\'avant plan</string>
     <string name="dont_ask_again">Ne plus demander</string>
     <string name="ask_before_delete">Confirmer avant de supprimer</string>
-    <string name="delete_confirmation_message">Supprimer les cartes sélectionnées ? Cela ne pourra pas être annulé.</string>
+    <string name="delete_confirmation_message">Supprimer les cartes sélectionnées ? Ceci ne pourra pas être annulé.</string>
     <string name="import_pass">Importer une carte</string>
     <string name="open_from_clipboard">Ouvrir depuis le presse papier</string>
     <string name="manual_entry">Entrée manuelle</string>
@@ -127,4 +127,5 @@
     <string name="no_text_in_clipboard">Pas de texte dans le presse-papier</string>
     <string name="select_all">Sélectionner tout</string>
     <string name="scan_code">Scanner un code</string>
+    <string name="the_archive">Archives</string>
 </resources>
