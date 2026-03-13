@@ -29,10 +29,11 @@ class PassViewModel @Inject constructor(
     fun addTag(tag: Tag) { viewModelScope.launch { tagRepository.insert(tag) } }
 
     fun tag(pass: Pass, tag: Tag) { viewModelScope.launch { passStore.tag(pass, tag) } }
-
     fun untag(pass: Pass, tag: Tag) { viewModelScope.launch { passStore.untag(pass, tag) } }
 
-    fun update(pass: Pass): UpdateResult = viewModelScope.launch { passStore.update(pass) }
+    fun update(pass: Pass, onResult: (UpdateResult) -> Unit = {}) {
+        viewModelScope.launch { onResult.invoke(passStore.update(pass)) }
+    }
 
     fun delete(pass: Pass) { viewModelScope.launch { passStore.delete(pass) } }
 
