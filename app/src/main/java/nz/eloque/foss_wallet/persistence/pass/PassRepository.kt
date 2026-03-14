@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.location.Geocoder
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
@@ -18,7 +19,8 @@ import java.util.Locale
 
 class PassRepository @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val passDao: PassDao
+    private val passDao: PassDao,
+    private val geocoder: Geocoder
 ) {
 
     fun all(): Flow<List<PassWithTagsAndLocalization>> = passDao.all()
@@ -30,7 +32,7 @@ class PassRepository @Inject constructor(
             all()
         } else {
             val result = all()
-            result.map { passes -> passes.filter { it.pass.contains(query) } } }
+            result.map { passes -> passes.filter { it.pass.contains(query, geocoder) } } }
     }
 
     fun flowById(id: String): Flow<LocalizedPassWithTags?> = passDao.flowById(id).map { it?.applyLocalization(Locale.getDefault().language) }
