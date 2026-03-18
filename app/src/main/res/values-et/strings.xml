@@ -127,4 +127,5 @@
     <string name="dont_ask_again">Ära enam küsi minult uuesti</string>
     <string name="ask_before_delete">Küsi kinnitust enne kustutamist</string>
     <string name="select_all">Vali kõik</string>
+    <string name="the_archive">Arhiveeri</string>
 </resources>

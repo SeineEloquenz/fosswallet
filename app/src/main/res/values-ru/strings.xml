@@ -43,7 +43,7 @@
     <string name="status_not_updated">Ваш пропуск уже актуален</string>
     <string name="open">Открыть</string>
     <string name="barcode_position">Положение штрихкода в полноэкранном режиме</string>
-    <string name="pass_view">Вид пропуска</string>
+    <string name="pass_view">Просмотр пропуска</string>
     <string name="pass_view_brightness">Увеличить яркость экрана</string>
     <string name="barcode_position_top">Вверху</string>
     <string name="barcode_position_center">По центру</string>
@@ -127,4 +127,5 @@
     <string name="pass_label_color">Цвет метки</string>
     <string name="pass_background_color">Цвет переднего плана</string>
     <string name="pass_foreground_color">Цвет заднего плана</string>
+    <string name="the_archive">Архив</string>
 </resources>
