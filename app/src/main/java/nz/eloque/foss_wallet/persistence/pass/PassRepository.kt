@@ -37,7 +37,7 @@ class PassRepository @Inject constructor(
 
     fun findById(id: String): LocalizedPassWithTags? = passDao.findById(id)?.applyLocalization(Locale.getDefault().language)
 
-    fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
+    suspend fun associate(pass: Pass, group: PassGroup) = passDao.associate(pass.id, group.id)
 
     suspend fun tag(pass: Pass, tag: Tag) = passDao.tag(PassTagCrossRef(pass.id, tag.label))
 
@@ -55,18 +55,18 @@ class PassRepository @Inject constructor(
         return group.copy(id = id)
     }
 
-    fun delete(pass: Pass) {
+    suspend fun delete(pass: Pass) {
         pass.deleteFiles(context)
         passDao.delete(pass)
     }
 
-    fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
+    suspend fun dissociate(pass: Pass, groupId: Long) = passDao.dissociate(pass, groupId)
 
-    fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
-    fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
+    suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
+    suspend fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
     suspend fun archive(pass: Pass) = passDao.archive(pass.id)
     suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
-    fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
+    suspend fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
 
     suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
         passDao.nonArchivedWithExpirationDate()
