@@ -78,10 +78,10 @@ class WalletViewModel @Inject constructor(
 
     fun removeTag(tag: Tag) { viewModelScope.launch { tagRepository.remove(tag) } }
 
-    fun delete(pass: Pass) = passStore.delete(pass)
+    fun delete(pass: Pass) { viewModelScope.launch { passStore.delete(pass) } }
 
-    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
-    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
+    fun associate(groupId: Long, passes: Set<Pass>) { viewModelScope.launch { passStore.associate(groupId, passes) } }
+    fun dissociate(pass: Pass, groupId: Long) { viewModelScope.launch { passStore.dissociate(pass, groupId) } }
 
     fun archive(pass: Pass) { viewModelScope.launch { passStore.archive(pass) } }
     fun unarchive(pass: Pass) { viewModelScope.launch { passStore.unarchive(pass) } }
