@@ -41,7 +41,7 @@ fun ShortPassContent(
                     TransitType.AIR -> AirlineBoardingPrimary(pass, cardColors)
                     else -> GenericBoardingPrimary(pass, pass.type.transitType, cardColors)
                 }
-            else -> GenericPrimary(pass)
+            else -> GenericPrimary(pass, selectable = false)
         }
         if (pass.primaryFields.empty() && pass.hasStrip) {
             AsyncPassImage(
