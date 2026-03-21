@@ -42,7 +42,8 @@ enum class LabelAlign(val textAlign: TextAlign, val horizontalAlignment: Alignme
 @Composable
 fun MainLabel(
     label: String?,
-    content: PassContent
+    content: PassContent,
+    selectable: Boolean = true,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp),
@@ -58,12 +59,23 @@ fun MainLabel(
             )
         }
         val contentString = content.prettyPrint()
-        Text(
-            text = contentString,
-            minLines = 2,
-            maxLines = 2,
-            style = MaterialTheme.typography.headlineLarge
-        )
+        if (selectable) {
+            SelectionContainer {
+                Text(
+                    text = contentString,
+                    minLines = 2,
+                    maxLines = 2,
+                    style = MaterialTheme.typography.headlineLarge
+                )
+            }
+        } else {
+            Text(
+                text = contentString,
+                minLines = 2,
+                maxLines = 2,
+                style = MaterialTheme.typography.headlineLarge
+            )
+        }
     }
 }
 
