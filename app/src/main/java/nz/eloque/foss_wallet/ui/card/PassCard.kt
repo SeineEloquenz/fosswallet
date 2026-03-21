@@ -57,7 +57,6 @@ fun ShortPassCard(
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = onLongClick,
-                    onDoubleClick = { pass.pass.barCodes.firstOrNull()?.let { showBarcode = true}}
                 )
         ) {
             ShortPassContent(

@@ -20,7 +20,7 @@ import nz.eloque.foss_wallet.ui.card.MainLabel
 
 
 @Composable
-fun GenericPrimary(pass: Pass) {
+fun GenericPrimary(pass: Pass, selectable: Boolean = true) {
     val context = LocalContext.current
 
     val primaryField = pass.primaryFields.firstOrNull()
@@ -32,7 +32,7 @@ fun GenericPrimary(pass: Pass) {
                 modifier = Modifier.fillMaxWidth(if (thumbnailFile != null) {0.6f} else {1.0f})
             ) {
                 pass.primaryFields.firstOrNull()?.let {
-                    MainLabel(it.label, it.content)
+                    MainLabel(it.label, it.content, selectable)
                 }
             }
         }
