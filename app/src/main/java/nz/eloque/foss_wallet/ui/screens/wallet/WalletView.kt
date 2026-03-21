@@ -85,10 +85,15 @@ fun WalletView(
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
     val passToDelete = remember { mutableStateOf<LocalizedPassWithTags?>(null) }
 
+    val isAuthenticated by walletViewModel.isAuthenticated.collectAsState()
     val sortedPasses = passes
         .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
         .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-        .sortedWith(sortOption.comparator)
+        .filter { localizedPass -> !localizedPass.pass.hidden || isAuthenticated }
+        .sortedWith(
+            compareBy<LocalizedPassWithTags> { !it.pass.pinned }
+                .then(sortOption.comparator)
+        )
         .groupBy { it.pass.groupId }.toList()
     val visiblePasses = sortedPasses.flatMap { it.second }.toSet()
 
