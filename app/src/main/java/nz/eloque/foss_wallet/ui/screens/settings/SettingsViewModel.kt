@@ -22,6 +22,7 @@ data class SettingsUiState(
     val syncInterval: Duration = 1.toDuration(DurationUnit.HOURS),
     val barcodePosition: BarcodePosition = BarcodePosition.Center,
     val increasePassViewBrightness: Boolean = false,
+    val askBeforeDelete: Boolean = true,
 )
 
 @HiltViewModel
@@ -46,9 +47,12 @@ class SettingsViewModel @Inject constructor(
                 syncInterval = settingsStore.syncInterval(),
                 barcodePosition = settingsStore.barcodePosition(),
                 increasePassViewBrightness = settingsStore.increasePassViewBrightness(),
+                askBeforeDelete = settingsStore.deleteConfirmationEnabled(),
             )
         }
     }
+
+    fun refresh() = update()
 
     fun enableSync(enabled: Boolean) {
         settingsStore.enableSync(enabled)
@@ -72,6 +76,11 @@ class SettingsViewModel @Inject constructor(
 
     fun enablePassViewBrightness(enabled: Boolean) {
         settingsStore.enablePassViewBrightness(enabled)
+        update()
+    }
+
+    fun setAskBeforeDelete(enabled: Boolean) {
+        settingsStore.setDeleteConfirmationEnabled(enabled)
         update()
     }
 }

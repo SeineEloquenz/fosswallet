@@ -1,0 +1,4 @@
+* Hex. barva písma v nástroji pro vytváření lístků je nyní neproporcionální
+* Odstraněn alfa kanál z hex. barvy v nástroji pro vytváření lístků
+* Zachování nastavení možnosti třídění
+* Zobrazení snackbaru, pokud není nainstalována žádná aplikace mapy/kalendáře

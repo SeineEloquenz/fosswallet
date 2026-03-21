@@ -1,0 +1,2 @@
+* Leere Werte in importierten Feldern zulassen
+* Bei langem Klick auf den Flughafencode eine Meldung mit dem Namen des Flughafens anzeigen

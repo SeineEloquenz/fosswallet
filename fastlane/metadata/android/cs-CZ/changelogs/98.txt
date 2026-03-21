@@ -1,0 +1,1 @@
+* Opraven chybějící dialog potvrzení odstranění při odstranění ze zobrazení lístku

@@ -63,6 +63,8 @@ data class Pass(
     val backFields: List<PassField> = LinkedList(),
     @ColumnInfo(defaultValue = "0")
     val archived: Boolean = false,
+    @ColumnInfo(defaultValue = "1")
+    val autoArchive: Boolean = true,
     @ColumnInfo(defaultValue = "0")
     val renderLegacy: Boolean = false,
 ) {

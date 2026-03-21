@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -31,7 +31,7 @@ import java.io.ByteArrayInputStream
 @Composable
 fun WebviewView(
     navController: NavHostController,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
     url: String,
 ) {
     val context = LocalContext.current
@@ -45,12 +45,12 @@ fun WebviewView(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             webViewClient =
-                CustomWebViewClient(context, passViewModel, coroutineScope, navController)
+                CustomWebViewClient(context, walletViewModel, coroutineScope, navController)
             loadUrl(url)
         }
 
         webview.settings.userAgentString =
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1";
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"
         webview.settings.javaScriptEnabled = true
         webview
     }, update = {
@@ -60,7 +60,7 @@ fun WebviewView(
 
 class CustomWebViewClient(
     val context: Context,
-    val passViewModel: PassViewModel,
+    val walletViewModel: WalletViewModel,
     val coroutineScope: CoroutineScope,
     val navController: NavController
 ) : WebViewClient() {
@@ -81,7 +81,7 @@ class CustomWebViewClient(
             val okHttpRequest = Request.Builder().also {
                 it.url(request?.url.toString())
                 for (header in request!!.requestHeaders) {
-                    if (header.key.startsWith("sec-ch-ua")) continue;
+                    if (header.key.startsWith("sec-ch-ua")) continue
                     it.addHeader(header.key, header.value)
                 }
             }
@@ -89,10 +89,10 @@ class CustomWebViewClient(
 
             val contentType = response.headers["content-type"]?.split(";")?.first()
 
-            if(PkpassMimeTypes.contains(contentType)) {
+            if (PkpassMimeTypes.contains(contentType)) {
                 return handlePkPassResponse(response)
             } else {
-                WebResourceResponse(contentType, "UTF-8", response.body.byteStream(), )
+                WebResourceResponse(contentType, "UTF-8", response.body.byteStream())
             }
         } catch (_: Exception) {
             super.shouldInterceptRequest(webView, request)
@@ -100,12 +100,12 @@ class CustomWebViewClient(
     }
 
     private fun handlePkPassResponse(response: Response): WebResourceResponse {
-        val bytes = response.body.byteStream().readBytes();
+        val bytes = response.body.byteStream().readBytes()
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 val result = Loader(context).handleInputStream(
                     ByteArrayInputStream(bytes),
-                    passViewModel,
+                    walletViewModel,
                     coroutineScope
                 )
                 if (result is LoaderResult.Single) {
@@ -113,7 +113,7 @@ class CustomWebViewClient(
                         navController.popBackStack()
                         navController.navigate("pass/${result.passId}")
                     }
-                } else if(result is LoaderResult.Multiple) {
+                } else if (result is LoaderResult.Multiple) {
                     withContext(Dispatchers.Main) {
                         navController.popBackStack()
                     }
@@ -121,6 +121,6 @@ class CustomWebViewClient(
             }
         }
 
-        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()));
+        return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
     }
 }

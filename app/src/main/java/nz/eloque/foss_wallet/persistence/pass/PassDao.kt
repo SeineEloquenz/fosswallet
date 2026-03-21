@@ -78,11 +78,14 @@ interface PassDao {
     fun deleteEmptyGroup(groupId: Long)
 
     @Query("UPDATE pass SET archived = 1 WHERE id = :passId")
-    fun archive(passId: String)
+    suspend fun archive(passId: String)
 
-    @Query("UPDATE pass SET archived = 0 WHERE id = :passId")
-    fun unarchive(passId: String)
+    @Query("UPDATE pass SET archived = 0, autoArchive = 0 WHERE id = :passId")
+    suspend fun unarchive(passId: String)
 
     @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
     fun setLegacyRendering(passId: String, renderLegacy: Boolean)
+
+    @Query("SELECT * FROM pass WHERE archived = 0 AND autoArchive = 1 AND expirationDate IS NOT NULL")
+    fun nonArchivedWithExpirationDate(): List<Pass>
 }

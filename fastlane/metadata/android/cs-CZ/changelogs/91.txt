@@ -1,0 +1,2 @@
+* Oprava ikony dlaždice rychlých nastavení, která nebyla nastavena trvale
+* Oprava chyby při načítání čárových kódů

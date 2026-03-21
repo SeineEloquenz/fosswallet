@@ -1,0 +1,5 @@
+* Add image file scanning to pass creator
+* Show color hex in tag creator
+* Add support for code 39 and code 93 barcodes
+* Fix brightness increasing breaking after leaving fullscreen barcode view
+* Fix carriage returns appearing in eurostar passes

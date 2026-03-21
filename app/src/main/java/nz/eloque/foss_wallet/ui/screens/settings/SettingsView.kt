@@ -23,8 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -40,10 +43,13 @@ fun SettingsView(
     settingsViewModel: SettingsViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
     val passFlow = settingsViewModel.passFlow
     val passes by remember(passFlow) { passFlow }.map { it }.collectAsState(listOf())
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { settingsViewModel.refresh() }
 
     Column(
         modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
@@ -91,11 +97,22 @@ fun SettingsView(
                         )
                     }
                 },
-                optionLabel = { context.getString(it.label) }
+                optionLabel = { resources.getString(it.label) }
             )
         }
         SettingsSection(
-            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share),
+            heading = stringResource(R.string.delete),
+        ) {
+            SettingsSwitch(
+                title = stringResource(R.string.ask_before_delete),
+                checked = settings.value.askBeforeDelete,
+                onCheckedChange = {
+                    coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setAskBeforeDelete(it) }
+                }
+            )
+        }
+        SettingsSection(
+            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
         ) {
             SettingsButton(
                 title = stringResource(R.string.export) + " (.pkpasses)",

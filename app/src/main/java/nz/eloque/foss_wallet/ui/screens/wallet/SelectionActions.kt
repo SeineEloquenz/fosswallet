@@ -16,10 +16,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -35,10 +38,34 @@ fun SelectionActions(
     isArchive: Boolean,
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
-    passViewModel: PassViewModel,
+    walletViewModel: WalletViewModel,
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
+    val showDeleteDialog = remember { mutableStateOf(false) }
+
+    fun deleteSelected() {
+        coroutineScope.launch(Dispatchers.IO) {
+            selectedPasses.toList().forEach { walletViewModel.delete(it.pass) }
+            selectedPasses.clear()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    if (showDeleteDialog.value) {
+        DeleteConfirmationDialog(
+            settingsStore = walletViewModel.settingsStore,
+            onConfirm = {
+                showDeleteDialog.value = false
+                deleteSelected()
+            },
+            onDismiss = { showDeleteDialog.value = false }
+        )
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End
@@ -46,13 +73,7 @@ fun SelectionActions(
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.error,
             onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    selectedPasses.forEach { passViewModel.delete(it.pass) }
-                    selectedPasses.clear()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
-                    }
-                }
+                showDeleteDialog.value = true
             },
         ) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
@@ -61,7 +82,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.unarchive(it.pass) }
+                        selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -72,7 +93,7 @@ fun SelectionActions(
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { passViewModel.archive(it.pass) }
+                        selectedPasses.forEach { walletViewModel.archive(it.pass) }
                         selectedPasses.clear()
                     }
                 },
@@ -95,7 +116,7 @@ fun SelectionActions(
             expanded = listState.isScrollingUp(),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    passViewModel.group(selectedPasses.map { it.pass }.toSet())
+                    walletViewModel.group(selectedPasses.map { it.pass }.toSet())
                     selectedPasses.clear()
                 }
             },

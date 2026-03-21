@@ -1,0 +1,6 @@
+* Show all barcodes contained in passes
+* Allow additional fields in pass creator
+* Make additional links clickable on import
+* Rework the pass addition flow
+* Allow to share images for importing
+* Rework pass selection to use long-clicks instead of swipes

@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
+import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,9 +32,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,7 +54,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.wallet.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,10 +105,27 @@ fun Actions(
     passViewModel: PassViewModel
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
 
     val expanded = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
+
+    var showDeleteModal by remember { mutableStateOf(false) }
+
+    if (showDeleteModal) {
+        DeleteConfirmationDialog(
+            settingsStore = passViewModel.settingsStore,
+            onConfirm = {
+                coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
+                navController.popBackStack()
+                Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+            },
+            onDismiss = {
+                showDeleteModal = false
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -143,18 +164,18 @@ fun Actions(
                         when (result) {
                             is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
                                 snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.update_successful),
+                                    message = resources.getString(R.string.update_successful),
                                     duration = SnackbarDuration.Short
                                 )
                             }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = context.getString(R.string.status_not_updated))
+                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
                             is UpdateResult.Failed -> {
                                 val snackResult = snackbarHostState.showSnackbar(
                                     message = when (result.reason) {
-                                        is FailureReason.Status -> context.getString(result.reason.messageId, result.reason.status)
-                                        else -> context.getString(result.reason.messageId)
+                                        is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
+                                        else -> resources.getString(result.reason.messageId)
                                     },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) context.getString(R.string.details) else null,
+                                    actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
                                     duration = SnackbarDuration.Short
                                 )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
@@ -169,15 +190,37 @@ fun Actions(
                 }
             }
 
+            if (pass.archived) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.unarchive)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Unarchive,
+                            contentDescription = stringResource(R.string.unarchive)
+                        )
+                    },
+                    onClick = { passViewModel.unarchive(pass) }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.archive)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Archive,
+                            contentDescription = stringResource(R.string.archive)
+                        )
+                    },
+                    onClick = { passViewModel.archive(pass) }
+                )
+            }
+
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
                 leadingIcon =  {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
-                    navController.popBackStack()
-                    Toast.makeText(context, context.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    showDeleteModal = true
                 }
             )
         }

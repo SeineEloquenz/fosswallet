@@ -1,0 +1,5 @@
+* Pass-Gruppierung hinzugefügt
+* Wischgesten zum Gruppieren und Löschen von Pässen hinzugefügt
+* Benachrichtigungsunterstützung für Pass-Aktualisierungen hinzugefügt
+* Unterstützung für Pretty DateTime hinzugefügt
+* Falsche Farben auf generischer Bordkarte korrigiert

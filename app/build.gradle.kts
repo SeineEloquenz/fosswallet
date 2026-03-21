@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.plugin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
@@ -42,16 +41,12 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
-
     defaultConfig {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 36
-        versionCode = 91
-        versionName = "0.35.3"
+        versionCode = 100
+        versionName = "0.41.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -77,18 +72,20 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
     androidResources {
         generateLocaleConfig = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
-    hilt {
-        enableAggregatingTask = true
-    }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+hilt {
+    enableAggregatingTask = true
 }
 
 dependencies {
@@ -125,7 +122,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.androidx.room.testing)
@@ -134,7 +130,11 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.zxing)
-    implementation(libs.zxing.android.embedded)
+    implementation(libs.zxingcpp.android)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     //hilt
     implementation(libs.hilt.android)

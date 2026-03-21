@@ -1,0 +1,1 @@
+FossWallet 是适用于 Apple Passbook（.pkpass）文件的 MDY 钱包

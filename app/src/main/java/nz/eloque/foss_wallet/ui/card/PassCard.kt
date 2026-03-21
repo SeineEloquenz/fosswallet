@@ -26,6 +26,7 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
+import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import nz.eloque.foss_wallet.utils.darken
 
 
@@ -35,6 +36,7 @@ fun ShortPassCard(
     allTags: Set<Tag>,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    onLongClick: () -> Unit,
     selected: Boolean = false,
     increaseBrightness: Boolean = false,
     barcodePosition: BarcodePosition,
@@ -54,9 +56,8 @@ fun ShortPassCard(
                 .scale(scale)
                 .combinedClickable(
                     onClick = onClick,
-                    onLongClick = {
-                        pass.pass.barCodes.firstOrNull()?.let { showBarcode = true }
-                    }
+                    onLongClick = onLongClick,
+                    onDoubleClick = { pass.pass.barCodes.firstOrNull()?.let { showBarcode = true}}
                 )
         ) {
             ShortPassContent(
@@ -77,10 +78,13 @@ fun ShortPassCard(
             pass.pass.renderLegacy && barcode.hasLegacyRepresentation()
         )
 
+
+        if (showBarcode && increaseBrightness) {
+            UpdateBrightness()
+        }
         FullscreenBarcode(
             image = image,
             barcodePosition = barcodePosition,
-            increaseBrightness = increaseBrightness,
             isFullscreen = showBarcode,
             onDismiss = { showBarcode = !showBarcode },
         )

@@ -13,6 +13,7 @@ import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import java.time.Instant
 import java.util.Locale
 
 class PassRepository @Inject constructor(
@@ -63,7 +64,15 @@ class PassRepository @Inject constructor(
 
     fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
     fun associate(groupId: Long, passes: Set<Pass>) = passDao.associate(groupId, passes)
-    fun archive(pass: Pass) = passDao.archive(pass.id)
-    fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+    suspend fun archive(pass: Pass) = passDao.archive(pass.id)
+    suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
     fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
+
+    suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
+        passDao.nonArchivedWithExpirationDate()
+            .filter { pass ->
+                pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
+            }
+            .forEach { passDao.archive(it.id) }
+    }
 }

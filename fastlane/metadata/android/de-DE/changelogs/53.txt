@@ -1,0 +1,4 @@
+* Estonische Übersetzung hinzugefügt
+* Übersetzungen aktualisiert
+* Bei leeren Pässen wird der Streifen in der Vorschau angezeigt
+* Korrektur einer Absturzursache bei fehlformatierten Datumsangaben in Pässen

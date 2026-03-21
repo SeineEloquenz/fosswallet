@@ -54,8 +54,8 @@ fun PassView(
 ) {
     val pass = localizedPass.pass
 
-    val barCode = pass.barCodes.firstOrNull()
-    val hasLegacyRepresentation = barCode?.hasLegacyRepresentation() ?: false
+    val hasBarcodes = pass.barCodes.isNotEmpty()
+    val hasLegacyRepresentation = pass.barCodes.any { it.hasLegacyRepresentation() }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -74,11 +74,11 @@ fun PassView(
             Column(
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                barCode?.let {
+                if (hasBarcodes) {
                     AsyncPassImage(model = pass.footerFile(context))
                     BarcodesView(
                         legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
-                        barcode = it,
+                        barcodes = pass.barCodes.toList(),
                         barcodePosition = barcodePosition,
                         increaseBrightness = increaseBrightness
                     )

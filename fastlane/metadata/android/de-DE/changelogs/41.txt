@@ -1,0 +1,1 @@
+* Fehlende Schutzbedingung behoben, um mit Altdaten umzugehen
