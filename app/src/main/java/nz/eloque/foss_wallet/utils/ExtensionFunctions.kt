@@ -59,7 +59,7 @@ private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezo
     return if (ignoresTimezone) {
         this.toLocalDateTime().format(dateFormatter)
     } else {
-        this.format(dateFormatter)
+        this.withZoneSameInstant(java.time.ZoneId.systemDefault()).format(dateFormatter)
     }
 }
 
