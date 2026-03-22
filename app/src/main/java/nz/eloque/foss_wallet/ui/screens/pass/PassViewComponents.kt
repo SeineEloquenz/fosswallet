@@ -16,12 +16,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,28 +40,10 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.ui.card.LabelAlign
-import nz.eloque.foss_wallet.ui.card.OutlinedPassLabel
-import nz.eloque.foss_wallet.ui.card.PlainPassLabel
+import nz.eloque.foss_wallet.ui.card.PassFieldBack
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
-
-
-@Composable
-fun HeaderFieldsView(
-    headerFields: List<PassField>
-) {
-    Row(
-        modifier = Modifier.wrapContentWidth(Alignment.End)
-    ) {
-        headerFields.forEach { PlainPassLabel(
-            label = it.label,
-            content = it.content,
-            labelAlign = LabelAlign.RIGHT,
-        ) }
-    }
-}
 
 @Composable
 fun BarcodesView(
@@ -227,21 +206,14 @@ fun AsyncPassImage(
 
 @Composable
 fun BackFields(
-    fields: List<PassField>,
-    modifier: Modifier = Modifier,
-    cardColors: CardColors = CardDefaults.outlinedCardColors()
+    fields: List<PassField>
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-        modifier = modifier
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         fields.forEach {
-            OutlinedPassLabel(
-                label = it.label,
-                content = it.content,
-                modifier = Modifier.fillMaxWidth(),
-                colors = cardColors
-            )
+            PassFieldBack(it)
         }
     }
 }

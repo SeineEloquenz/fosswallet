@@ -62,8 +62,12 @@ fun ShortPassCard(
         ) {
             ShortPassContent(
                 localizedPass = pass,
-                cardColors = cardColors,
+            )
+
+            PassCardFooter(
+                localizedPass = pass,
                 allTags = allTags,
+                readOnly = true,
             )
         }
         if (selected) {
@@ -121,12 +125,15 @@ fun PassCard(
     ) {
         PassContent(
             localizedPass = localizedPass,
-            cardColors = cardColors,
+            content = content,
+        )
+
+        PassCardFooter(
+            localizedPass = localizedPass,
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
-            content = content,
         )
     }
 }
