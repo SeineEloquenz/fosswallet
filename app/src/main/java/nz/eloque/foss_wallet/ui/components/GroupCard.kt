@@ -99,9 +99,7 @@ fun GroupCard(
                         }
                     },
                     selected = selectedPasses.contains(item),
-                    toned = true,
-                    barcodePosition = walletViewModel.barcodePosition(),
-                    increaseBrightness = walletViewModel.increasePassViewBrightness()
+                    toned = true
                 )
             }
             Box(
