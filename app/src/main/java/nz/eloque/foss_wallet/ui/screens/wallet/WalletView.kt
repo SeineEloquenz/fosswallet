@@ -193,9 +193,7 @@ fun WalletView(
                     onLongClick = {
                         if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
                     },
-                    selected = selectedPasses.contains(pass),
-                    barcodePosition = walletViewModel.barcodePosition(),
-                    increaseBrightness = walletViewModel.increasePassViewBrightness()
+                    selected = selectedPasses.contains(pass)
                 )
             }
         }
