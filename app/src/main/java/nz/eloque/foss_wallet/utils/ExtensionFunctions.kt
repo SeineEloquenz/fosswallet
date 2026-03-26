@@ -71,9 +71,9 @@ fun Color.clamp(): Color = copy(
 )
 
 fun Color.darken(factor: Float = 0.3f): Color = copy(
-    red = red * factor,
-    green = green * factor,
-    blue = blue * factor,
+    red *= factor,
+    green *= factor,
+    blue *= factor,
 )
 
 fun InputStream.toByteArray(): ByteArray {
