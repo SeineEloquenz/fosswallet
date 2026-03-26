@@ -117,11 +117,11 @@ fun LazyListState.isScrollingUp(): Boolean {
     }.value
 }
 
+fun Float.round(): Float = (this * 10).toInt() / 10f
+
 fun Throwable.asString(): String {
     val sw = StringWriter()
     val pw = PrintWriter(sw)
     this.printStackTrace(pw)
     return sw.toString()
 }
-
-fun Float.round(): Float = (this * 10).toInt() / 10f
