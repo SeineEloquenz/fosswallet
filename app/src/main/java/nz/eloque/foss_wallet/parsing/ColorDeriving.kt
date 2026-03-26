@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.get
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.utils.ExtensionFunctions
 
 fun Bitmap?.derivePassColors(): PassColors? {
     if (this == null) return null
@@ -18,7 +19,7 @@ fun Bitmap?.derivePassColors(): PassColors? {
 }
 
 private fun Bitmap.backgroundColor(): Color? {
-    val bitmapSize = 2 * this.width + 2 * this.height
+    val bitmapSize = 2 * (this.width + this.height)
     val threshold = 0.75
     val colorMap = HashMap<Color, Int>()
     for (i in 0 until this.width) {
@@ -30,22 +31,5 @@ private fun Bitmap.backgroundColor(): Color? {
         colorMap.merge(Color(this[this.width - 1, i]).clamp(), 1, Int::plus)
     }
     val foundColor = colorMap.entries.firstOrNull { (_, count) -> count > threshold * bitmapSize }?.key
-    return foundColor?.coerceOpacity()
-}
-
-private fun Color.clamp(): Color {
-    return this.copy(
-        alpha = this.alpha.round(),
-        red = this.red.round(),
-        blue = this.blue.round(),
-        green = this.green.round()
-    )
-}
-
-private fun Float.round(): Float {
-    return (this * 10).toInt() / 10f
-}
-
-private fun Color.coerceOpacity(): Color {
-    return if (this.alpha == 0f) Color.White else this
+    return foundColor?.takeIf { it.alpha != 0f }
 }
