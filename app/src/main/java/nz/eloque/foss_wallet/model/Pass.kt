@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.model
 
 import android.content.Context
+import android.location.Geocoder
 import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -74,7 +75,11 @@ data class Pass(
     fun thumbnailFile(context: Context): File? = coilImageModel(context, "thumbnail", hasThumbnail)
     fun footerFile(context: Context): File? = coilImageModel(context, "footer", hasFooter)
 
-    fun contains(query: String): Boolean {
+    private fun reverseGeocodedLocation() {
+        Geocoder.isPresent()
+    }
+
+    fun contains(query: String, geocoder: nz.eloque.foss_wallet.location.Geocoder?): Boolean {
         return when {
             query inIgnoreCase description -> true
             query inIgnoreCase type.jsonKey -> true
@@ -84,6 +89,7 @@ data class Pass(
             secondaryFields.any { it.contains(query) } -> true
             auxiliaryFields.any { it.contains(query) } -> true
             backFields.any { it.contains(query) } -> true
+            locations.any { query inIgnoreCase geocoder?.decode(it).toString() } -> true
             else -> false
         }
     }
