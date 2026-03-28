@@ -24,7 +24,8 @@ import nz.eloque.foss_wallet.ui.components.FairRow
 
 @Composable
 fun HeaderRow(
-    pass: Pass
+    pass: Pass,
+    isSelectable: Boolean = true
 ) {
     val context = LocalContext.current
 
@@ -57,7 +58,8 @@ fun HeaderRow(
                 fields = pass.headerFields.reversed(),
                 modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth * 0.5f),
                 arrangeWithSpaceBetween = false,
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
+                isSelectable = isSelectable
             )
         }
     }
@@ -68,7 +70,8 @@ fun FieldsRow(
     fields: List<PassField>,
     modifier: Modifier = Modifier,
     arrangeWithSpaceBetween: Boolean = true,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    isSelectable: Boolean = true
 ) {
     val space = 10.dp
 
@@ -82,10 +85,11 @@ fun FieldsRow(
             arrangeWithSpaceBetween = arrangeWithSpaceBetween
         ) {
             fields.forEach {
-                PassFieldFront(
+                PassField(
                     field = it,
                     horizontalAlignment = horizontalAlignment,
-                    fontSize = fontSize
+                    fontSize = fontSize,
+                    isSelectable = isSelectable
                 )
             }
         }

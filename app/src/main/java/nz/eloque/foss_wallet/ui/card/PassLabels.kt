@@ -62,35 +62,30 @@ fun PassFieldLabel(
 }
 
 @Composable
-fun PassFieldFront(
+fun PassField(
     field: PassField,
     modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     fontSize: TextUnit = TextUnit.Unspecified,
-    maxLines: Int = 1
+    maxLines: Int = 1,
+    style: TextStyle = passFieldContentStyle,
+    isSelectable: Boolean = true
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = horizontalAlignment
     ) {
         PassFieldLabel(field.label)
-        Text(
-            text = field.content.toHtml(),
-            fontSize = fontSize,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = maxLines,
-            style = passFieldContentStyle
-        )
-    }
-}
-
-@Composable
-fun PassFieldBack(
-    field: PassField
-) {
-    Column {
-        PassFieldLabel(field.label)
-        SelectionContainer { Text(field.content.toHtml()) }
+        val content = @Composable {
+            Text(
+                text = field.content.parseHtml(),
+                fontSize = fontSize,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = maxLines,
+                style = style
+            )
+        }
+        if (isSelectable) SelectionContainer { content() } else content()
     }
 }
 
@@ -133,12 +128,13 @@ fun AutoSizePassFields(
 
         // sort content by length to skip measuring the other fields in case of a visual overflow
         val (labels, contents) = fields
-            .map { Pair(it.label?.uppercase(locale).orEmpty(), it.content.toHtml()) }
+            .map { Pair(it.label?.uppercase(locale).orEmpty(), it.content.parseHtml()) }
             .sortedByDescending { it.second.length }
             .unzip()
 
         val (labelHeight, labelWidths) = remember(labels) {
-            val results = labels.map { textMeasurer.measure(text = it, style = labelStyle) }
+            val n = if (useFixedWidth) 1 else labels.size
+            val results = labels.take(n).map { textMeasurer.measure(text = it, style = labelStyle) }
             Pair(results.first().size.height, results.map { it.size.width })
         }
 
@@ -154,7 +150,10 @@ fun AutoSizePassFields(
                 (item.value + stepSize.value).sp.takeIf { it <= maxFontSizeLimit }
             }.toList()
 
-            var maxItemWidth = availableWidth / if (useFixedWidth) fields.size else 1
+            var maxItemWidth = if (useFixedWidth)
+                availableWidth / fields.size
+            else
+                findMaxAllowedWidth(labelWidths, availableWidth)
             fontSizes.binarySearch { currentFontSize ->
                 val contentWidths = contents.map {
                     val result = textMeasurer.measure(
@@ -206,7 +205,7 @@ private fun String.sanitize(): String {
         .replace("\n", "<br>")
 }
 
-private fun PassContent.toHtml(): AnnotatedString =
+private fun PassContent.parseHtml(): AnnotatedString =
     AnnotatedString.fromHtml(prettyPrint().sanitize(), linkStyle)
 
 private fun previewPassField(label: String, content: String) =
@@ -215,8 +214,8 @@ private fun previewPassField(label: String, content: String) =
 @Preview(showBackground = true)
 @Composable
 private fun PreviewPassFieldBack() {
-    PassFieldBack(
-        previewPassField(
+    PassField(
+        field = previewPassField(
             "Information",
             """
             This is a long text.
@@ -234,18 +233,20 @@ private fun PreviewPassFieldBack() {
              
              Lorem Ipsum
             """.trimIndent()
-        )
+        ),
+        maxLines = Int.MAX_VALUE
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewPassFieldBackHtml() {
-    PassFieldBack(
-        previewPassField(
+    PassField(
+        field = previewPassField(
             "Information",
             "Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n".trimIndent()
-        )
+        ),
+        maxLines = Int.MAX_VALUE
     )
 }
 

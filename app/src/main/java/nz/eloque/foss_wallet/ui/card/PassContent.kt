@@ -21,16 +21,16 @@ fun ShortPassContent(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-
     val pass = localizedPass.pass
+
     Column(
         modifier = modifier.padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HeaderRow(pass)
+        HeaderRow(pass, false)
         when (pass.type) {
-            is PassType.Boarding -> GenericBoardingPrimary(pass, pass.type.transitType)
-            else -> GenericPrimary(pass)
+            is PassType.Boarding -> GenericBoardingPrimary(pass, pass.type.transitType, false)
+            else -> GenericPrimary(pass, false)
         }
         if (pass.primaryFields.empty() && pass.hasStrip) {
             AsyncPassImage(

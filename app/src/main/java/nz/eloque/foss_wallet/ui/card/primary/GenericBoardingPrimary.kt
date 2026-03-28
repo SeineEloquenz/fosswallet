@@ -17,13 +17,14 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.card.AutoSizePassFields
-import nz.eloque.foss_wallet.ui.card.PassFieldFront
+import nz.eloque.foss_wallet.ui.card.PassField
 import nz.eloque.foss_wallet.ui.card.PassFieldLabel
 
 @Composable
 fun GenericBoardingPrimary(
     pass: Pass,
     transitType: TransitType,
+    isSelectable: Boolean = true
 ) {
     val departureField = pass.primaryFields.getOrElse(0) { PassField.Empty }
     val destinationField = pass.primaryFields.getOrElse(1) { PassField.Empty }
@@ -41,10 +42,11 @@ fun GenericBoardingPrimary(
             horizontalArrangement = Arrangement.spacedBy(space),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PassFieldFront(
+            PassField(
                 field = departureField,
                 modifier = Modifier.weight(1f),
-                fontSize = fontSize
+                fontSize = fontSize,
+                isSelectable = isSelectable
             )
 
             Column {
@@ -56,11 +58,12 @@ fun GenericBoardingPrimary(
                 )
             }
 
-            PassFieldFront(
+            PassField(
                 field = destinationField,
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End,
-                fontSize = fontSize
+                fontSize = fontSize,
+                isSelectable = isSelectable
             )
         }
     }

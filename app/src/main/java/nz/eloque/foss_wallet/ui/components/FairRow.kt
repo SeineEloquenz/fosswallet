@@ -79,8 +79,10 @@ fun findMaxAllowedWidth(intrinsicWidths: List<Int>, totalWidth: Int): Int {
     val maxWidth = totalWidth / intrinsicWidths.size
     val (acceptedWidths, remainingWidths) = intrinsicWidths.partition { it <= maxWidth }
 
-    return if (acceptedWidths.isEmpty() || remainingWidths.isEmpty())
+    return if (acceptedWidths.isEmpty())
         maxWidth
+    else if (remainingWidths.size <= 1)
+        totalWidth - intrinsicWidths.sorted().dropLast(1).sum()
     else
         findMaxAllowedWidth(remainingWidths, totalWidth - acceptedWidths.sum())
 }

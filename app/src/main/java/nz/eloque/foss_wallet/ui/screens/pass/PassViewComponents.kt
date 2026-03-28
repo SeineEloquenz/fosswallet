@@ -40,7 +40,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.ui.card.PassFieldBack
+import nz.eloque.foss_wallet.ui.card.PassField
 import nz.eloque.foss_wallet.ui.components.FullscreenBarcode
 import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
@@ -213,7 +213,11 @@ fun BackFields(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         fields.forEach {
-            PassFieldBack(it)
+            PassField(
+                field = it,
+                maxLines = Int.MAX_VALUE,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

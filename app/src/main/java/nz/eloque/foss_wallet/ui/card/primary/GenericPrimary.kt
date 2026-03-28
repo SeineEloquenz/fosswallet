@@ -15,10 +15,13 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.ui.card.AutoSizePassFields
-import nz.eloque.foss_wallet.ui.card.PassFieldFront
+import nz.eloque.foss_wallet.ui.card.PassField
 
 @Composable
-fun GenericPrimary(pass: Pass) {
+fun GenericPrimary(
+    pass: Pass,
+    isSelectable: Boolean = true
+) {
     val context = LocalContext.current
 
     Row(
@@ -32,10 +35,11 @@ fun GenericPrimary(pass: Pass) {
                 maxLines = 2,
                 useFixedWidth = true
             ) { fontSize ->
-                PassFieldFront(
+                PassField(
                     field = it,
                     fontSize = fontSize,
-                    maxLines = 2
+                    maxLines = 2,
+                    isSelectable = isSelectable
                 )
             }
         } ?: Spacer(Modifier.weight(1f))
