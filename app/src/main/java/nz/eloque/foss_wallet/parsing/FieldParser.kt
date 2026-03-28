@@ -16,9 +16,7 @@ object FieldParser {
             field.getString("attributedValue")
         } else if (field.has("value")) {
             field.getString("value")
-        } else {
-            "-"
-        }
+        } else { "-" }
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 
         val content = when {
