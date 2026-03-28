@@ -48,10 +48,7 @@ object FieldParser {
     private fun JSONObject.getTimeStyle() = getString("timeStyle").toFormatStyle()
     private fun JSONObject.ignoresTimezone() = optBoolean("ignoresTimeZone")
     private fun JSONObject.isRelative() = optBoolean("isRelative")
-
-    private fun JSONObject.hasStyle(key: String): Boolean {
-        return this.has(key) && this.getString(key) != "PKDateStyleNone"
-    }
+    private fun JSONObject.hasStyle(key: String): this.has(key) && this.getString(key) != "PKDateStyleNone"
 
     private fun chooseBetter(left: FormatStyle, right: FormatStyle): FormatStyle {
         return if (left.ordinal >= right.ordinal) left else right
