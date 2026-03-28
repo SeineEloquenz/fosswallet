@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.utils
 
-fun linkify(text: String): String = linkifyUrls(text)
+fun linkify(text: String): String = linkifyUrls(linkifyMails(text))
 
 fun linkifyUrls(text: String): String {
     val urlPattern = Regex(
@@ -11,5 +11,17 @@ fun linkifyUrls(text: String): String {
     return urlPattern.replace(text) { matchResult ->
         val url = matchResult.value
         """<a href="$url" data-linkified="true">$url</a>"""
+    }
+}
+
+fun linkifyMails(text: String): String {
+    val mailPattern = Regex(
+        """(?<!["'>]|href="|mailto:)[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?![^<]*</a>)""",
+        RegexOption.IGNORE_CASE
+    )
+
+    return mailPattern.replace(text) { matchResult ->
+        val mail = matchResult.value
+        """<a href="mailto:$mail" data-linkified="true">$mail</a>"""
     }
 }
