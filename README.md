@@ -1,3 +1,10 @@
+> [!Warning]
+> **Free and Open-Source Android is under threat.**
+>
+> Google will turn Android into a locked-down platform, restricting your essential freedom to install apps of your choice. Make your voice heard
+>
+> [**Keep Android Open**](https://keepandroidopen.org/).
+
 # <img alt="Logo" src="app/src/main/icon-source.svg" width="40" height="40"/> FossWallet
 
 FossWallet is a free and open source (FOSS) .pkpass application.
