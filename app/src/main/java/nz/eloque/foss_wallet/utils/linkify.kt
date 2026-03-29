@@ -10,7 +10,7 @@ fun linkifyUrls(text: String): String {
     
     return urlPattern.replace(text) { matchResult ->
         val url = matchResult.value
-        """<a href="$url" data-linkified="true" style="white-space:wrap">$url</a>"""
+        """<a href="$url" data-linkified="true">$url</a>"""
     }
 }
 
@@ -22,6 +22,6 @@ fun linkifyMails(text: String): String {
 
     return mailPattern.replace(text) { matchResult ->
         val mail = matchResult.value
-        """<a href="mailto:$mail" data-linkified="true" style="white-space:wrap">$mail</a>"""
+        """<a href="mailto:$mail" data-linkified="true">$mail</a>"""
     }
 }
