@@ -21,7 +21,7 @@ fun linkifyMails(text: String): String {
     )
 
     return mailPattern.replace(text) { matchResult ->
-        val mail = matchResult.value
+        val mail = matchResult.value.removePrefix("mailto:")
         """<a href="mailto:$mail" data-linkified="true">$mail</a>"""
     }
 }
