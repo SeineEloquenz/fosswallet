@@ -2,7 +2,10 @@ package nz.eloque.foss_wallet.shortcut
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.widget.Toast
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -26,10 +29,14 @@ object Shortcut {
             MainActivity::class.java
         )
 
+        val originalBitmap = BitmapFactory.decodeFile(pass.iconFile(context).toPath().toString())
+        val adaptiveBitmap = wrapInAdaptiveBounds(originalBitmap)
+
+        val shortcutIcon = IconCompat.createWithAdaptiveBitmap(adaptiveBitmap)
         val shortcut = ShortcutInfoCompat.Builder(context, pass.shortcutId())
             .setShortLabel(shortcutName)
             .setLongLabel(shortcutName)
-            .setIcon(IconCompat.createWithBitmap(BitmapFactory.decodeFile(pass.iconFile(context).toPath().toString())))
+            .setIcon(shortcutIcon)
             .setIntent(intent)
             .build()
 
@@ -59,5 +66,22 @@ object Shortcut {
 
     private fun Pass.shortcutId(): String {
         return "pass_${this.id}"
+    }
+
+    private fun wrapInAdaptiveBounds(source: Bitmap): Bitmap {
+        // Adaptive icons require the main content to be centered (roughly 60-70% of the total size)
+        val size = source.width.coerceAtLeast(source.height)
+        val newSize = (size * 1.5).toInt() // Increase canvas size to create margins
+
+        val output = Bitmap.createBitmap(newSize, newSize, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+
+        canvas.drawColor(Color.WHITE)
+
+        val left = (newSize - source.width) / 2f
+        val top = (newSize - source.height) / 2f
+
+        canvas.drawBitmap(source, left, top, null)
+        return output
     }
 }
