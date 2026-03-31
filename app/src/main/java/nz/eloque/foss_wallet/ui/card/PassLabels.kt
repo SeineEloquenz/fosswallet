@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.FairRow
 import nz.eloque.foss_wallet.ui.components.findMaxAllowedWidth
 
@@ -49,19 +51,6 @@ val passFieldContentStyle: TextStyle
     )
 
 @Composable
-fun PassFieldLabel(
-    text: String?
-) {
-    Text(
-        text = text?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
-        fontWeight = FontWeight.Bold,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = MaterialTheme.typography.labelMedium
-    )
-}
-
-@Composable
 fun PassField(
     field: PassField,
     modifier: Modifier = Modifier,
@@ -71,15 +60,27 @@ fun PassField(
     style: TextStyle = passFieldContentStyle,
     isSelectable: Boolean = true
 ) {
+    val textAlign = when (horizontalAlignment) {
+        Alignment.End -> TextAlign.End
+        Alignment.CenterHorizontally -> TextAlign.Center
+        else -> TextAlign.Start
+    }
+
     Column(
         modifier = modifier,
         horizontalAlignment = horizontalAlignment
     ) {
-        PassFieldLabel(field.label)
+        AbbreviatingText(
+            text = field.label?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
+            textAlign = textAlign,
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+            useTooltip = isSelectable
+        )
         val content = @Composable {
             Text(
                 text = field.content.parseHtml(),
                 fontSize = fontSize,
+                textAlign = textAlign,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxLines,
                 style = style

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +20,6 @@ import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.ui.card.AutoSizePassFields
 import nz.eloque.foss_wallet.ui.card.PassField
-import nz.eloque.foss_wallet.ui.card.PassFieldLabel
 
 @Composable
 fun GenericBoardingPrimary(
@@ -50,7 +51,7 @@ fun GenericBoardingPrimary(
             )
 
             Column {
-                PassFieldLabel(null)
+                Text("", style = MaterialTheme.typography.labelMedium)
                 Icon(
                     imageVector = transitType.icon,
                     contentDescription = stringResource(R.string.to),
