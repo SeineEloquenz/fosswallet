@@ -1,19 +1,17 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Archive
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,11 +29,11 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.share.share
+import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @Composable
 fun SelectionActions(
-    isArchive: Boolean,
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
     walletViewModel: WalletViewModel,
@@ -44,6 +42,8 @@ fun SelectionActions(
     val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     val showDeleteDialog = remember { mutableStateOf(false) }
+
+    BackHandler(enabled = selectedPasses.isNotEmpty()) { selectedPasses.clear() }
 
     fun deleteSelected() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -70,35 +70,14 @@ fun SelectionActions(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End
     ) {
-        FloatingActionButton(
-            containerColor = MaterialTheme.colorScheme.error,
-            onClick = {
-                showDeleteDialog.value = true
-            },
-        ) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
-        }
-        if (isArchive) {
+        if (selectedPasses.size == 1) {
             FloatingActionButton(
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
-                        selectedPasses.clear()
-                    }
+                    val pass = selectedPasses.first().pass
+                    Shortcut.create(context, pass, pass.description)
                 },
             ) {
-                Icon(imageVector = Icons.Default.Unarchive, contentDescription = stringResource(R.string.unarchive))
-            }
-        } else {
-            FloatingActionButton(
-                onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        selectedPasses.forEach { walletViewModel.archive(it.pass) }
-                        selectedPasses.clear()
-                    }
-                },
-            ) {
-                Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
+                Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
             }
         }
         FloatingActionButton(
