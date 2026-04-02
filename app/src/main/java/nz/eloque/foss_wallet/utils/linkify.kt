@@ -4,14 +4,14 @@ fun linkify(text: String): String = linkifyUrls(linkifyMails(text))
 
 fun linkifyUrls(text: String): String {
     val urlPattern = Regex(
-        """(?<!["'>]|href=")(?:https?://|www.)[^\s<>"'@]+(?<![.,;:!?)])(?![^<]*</a>)""",
+        """(?<!["'>]|href=")(?:https?://|www\.)[^\s<>"'@]+(?<![.,;:!?)])(?![^<]*</a>)""",
         RegexOption.IGNORE_CASE
     )
-    
+
     return urlPattern.replace(text) { matchResult ->
-        val url = if (matchResult.value.startsWith("www.", ignoreCase = true)) "https://${matchResult.value}"
-            else matchResult.value
-        """<a href="$url" data-linkified="true">$url</a>"""
+        val original = matchResult.value
+        val href = if (original.startsWith("www.", ignoreCase = true)) "https://$original" else original
+        """<a href="$href" data-linkified="true">$original</a>"""
     }
 }
 
