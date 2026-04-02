@@ -76,7 +76,7 @@ class Loader(val context: Context) {
                     }
                     else -> if (loadResult.pass.pass.autoArchive) {
                         Toast
-                            .makeText(context, context.getString(R.string.pass_imported_to_the_archive), Toast.LENGTH_LONG)
+                            .makeText(context, context.getString(R.string.pass_imported_into_the_archive), Toast.LENGTH_LONG)
                             .show()
                     } else {
                         Toast
