@@ -4,7 +4,7 @@ fun linkify(text: String): String = linkifyUrls(linkifyMails(text))
 
 fun linkifyUrls(text: String): String {
     val urlPattern = Regex(
-        """(?<!["'>]|href=")(?:https?://|www\.)[^\s<>"'@]+(?<![.,;:!?)])(?![^<]*</a>)""",
+        """(?<!["'>]|href=")(?:https?://|www.)[^\s<>"'@]+(?<![.,;:!?)])(?![^<]*</a>)""",
         RegexOption.IGNORE_CASE
     )
     
