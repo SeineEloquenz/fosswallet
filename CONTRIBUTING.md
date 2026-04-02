@@ -21,3 +21,4 @@ When contributing to this repository, please first discuss the change you wish t
 Undiscussed changes might get closed without review on the maintainer's discretion.
 
 You have discussed your change? Then feel free to start implementing it on your fork and submit a PR!
+Remember to split unrelated changes into separate PRs, to ease review and allow faster merges of finished parts.
