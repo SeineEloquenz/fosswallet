@@ -34,6 +34,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Lint
+        run: ./gradlew ktlintCheck
+
       - name: Test and Build
         run: ./gradlew testDebugUnitTest assembleDebug
 

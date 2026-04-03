@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.aboutLibraries.android)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -59,7 +60,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs["release"]
         }
@@ -117,7 +118,7 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
     implementation(libs.accompanist.permissions)
 
-    //navigation
+    // navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -136,12 +137,12 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
 
-    //hilt
+    // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
 
-    //http requests
+    // http requests
     implementation(libs.okhttp)
 
     implementation(libs.androidx.hilt.work)
