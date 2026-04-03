@@ -217,9 +217,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
                 },
                 onClick = {
-                    passViewModel.delete(pass)
-                    navController.popBackStack()
-                    Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
+                    showDeleteModal = true
                 }
             )
         }
