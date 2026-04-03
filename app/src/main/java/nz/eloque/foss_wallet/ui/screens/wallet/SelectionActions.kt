@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
+import androidx.compose.material.icons.filled.Archive
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -34,6 +37,7 @@ import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @Composable
 fun SelectionActions(
+    isArchive: Boolean,
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
     listState: LazyListState,
     walletViewModel: WalletViewModel,
@@ -70,6 +74,37 @@ fun SelectionActions(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End
     ) {
+        FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.error,
+            onClick = {
+                showDeleteDialog.value = true
+            },
+        ) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+        }
+        if (isArchive) {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        selectedPasses.forEach { walletViewModel.unarchive(it.pass) }
+                        selectedPasses.clear()
+                    }
+                },
+            ) {
+                Icon(imageVector = Icons.Default.Unarchive, contentDescription = stringResource(R.string.unarchive))
+            }
+        } else {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        selectedPasses.forEach { walletViewModel.archive(it.pass) }
+                        selectedPasses.clear()
+                    }
+                },
+            ) {
+                Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
+            }
+        }
         if (selectedPasses.size == 1) {
             FloatingActionButton(
                 onClick = {
