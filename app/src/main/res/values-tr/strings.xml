@@ -42,8 +42,8 @@
     <string name="status_not_updated">Kartınız zaten güncel</string>
     <string name="open">Aç</string>
     <string name="barcode_position">Tam ekrandayken barkod pozisyonu</string>
-    <string name="pass_view">Kart Görünümü</string>
-    <string name="pass_view_brightness">Parlaklığı Arttır</string>
+    <string name="pass_view">Kart görünümü</string>
+    <string name="pass_view_brightness">Parlaklığı arttır</string>
     <string name="barcode_position_top">Üst</string>
     <string name="barcode_position_center">Orta</string>
     <string name="barcode_position_bottom">Alt</string>
@@ -86,4 +86,13 @@
     <string name="icon">İkon</string>
     <string name="brightness">Parlaklık</string>
     <string name="pass_background_color">Arka plan rengi</string>
+    <string name="pass_expiration_date">Son kullanma tarihi</string>
+    <string name="the_archive">Arşiv</string>
+    <string name="logo">Logo</string>
+    <string name="footer">Alt bilgi</string>
+    <string name="no_text_in_clipboard">Panoda metin yok</string>
+    <string name="searching">Aranıyor…</string>
+    <string name="dont_ask_again">Bir daha sorma</string>
+    <string name="no_search_results">Arama sonucu bulunamadı</string>
+    <string name="selected_location">Seçilen: %1$s</string>
 </resources>

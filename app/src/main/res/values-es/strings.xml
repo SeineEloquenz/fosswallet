@@ -102,4 +102,5 @@
     <string name="pass_label_color">Color de la etiqueta</string>
     <string name="save">Guardar</string>
     <string name="select_all">Seleccionar todo</string>
+    <string name="the_archive">Archivo</string>
 </resources>
