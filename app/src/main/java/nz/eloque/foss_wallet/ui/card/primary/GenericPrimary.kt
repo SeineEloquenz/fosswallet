@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.field.isNotEmpty
 import nz.eloque.foss_wallet.ui.card.AutoSizePassFields
 import nz.eloque.foss_wallet.ui.card.PassField
 
@@ -24,32 +25,37 @@ fun GenericPrimary(
 ) {
     val context = LocalContext.current
 
-    Row(
-        modifier = Modifier.height(90.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        pass.primaryFields.firstOrNull()?.let {
-            AutoSizePassFields(
-                fields = listOf(it),
-                modifier = Modifier.weight(1f),
-                maxLines = 2,
-                useFixedWidth = true
-            ) { fontSize ->
-                PassField(
-                    field = it,
-                    fontSize = fontSize,
+    val primaryField = pass.primaryFields.firstOrNull()
+    val thumbnailFile = pass.thumbnailFile(context)
+
+    if (primaryField.isNotEmpty() || thumbnailFile != null) {
+        Row(
+            modifier = Modifier.height(90.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            primaryField?.let {
+                AutoSizePassFields(
+                    fields = listOf(it),
+                    modifier = Modifier.weight(1f),
                     maxLines = 2,
-                    isSelectable = isSelectable
+                    useFixedWidth = true
+                ) { fontSize ->
+                    PassField(
+                        field = it,
+                        fontSize = fontSize,
+                        maxLines = 2,
+                        isSelectable = isSelectable
+                    )
+                }
+            } ?: Spacer(Modifier.weight(1f))
+
+            thumbnailFile?.let {
+                AsyncImage(
+                    model = it,
+                    contentDescription = stringResource(R.string.image),
+                    modifier = Modifier.widthIn(max = 120.dp).fillMaxHeight()
                 )
             }
-        } ?: Spacer(Modifier.weight(1f))
-
-        pass.thumbnailFile(context)?.let {
-            AsyncImage(
-                model = it,
-                contentDescription = stringResource(R.string.image),
-                modifier = Modifier.widthIn(max = 120.dp).fillMaxHeight()
-            )
         }
     }
 }

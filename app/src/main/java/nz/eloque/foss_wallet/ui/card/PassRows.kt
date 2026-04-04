@@ -75,22 +75,24 @@ fun FieldsRow(
 ) {
     val space = 10.dp
 
-    AutoSizePassFields(
-        fields = fields,
-        modifier = modifier.height(38.dp),
-        spacing = space
-    ) { fontSize ->
-        FairRow(
-            spacing = space,
-            arrangeWithSpaceBetween = arrangeWithSpaceBetween
-        ) {
-            fields.forEach {
-                PassField(
-                    field = it,
-                    horizontalAlignment = horizontalAlignment,
-                    fontSize = fontSize,
-                    isSelectable = isSelectable
-                )
+    if (fields.isNotEmpty()) {
+        AutoSizePassFields(
+            fields = fields,
+            modifier = modifier.height(38.dp),
+            spacing = space
+        ) { fontSize ->
+            FairRow(
+                spacing = space,
+                arrangeWithSpaceBetween = arrangeWithSpaceBetween
+            ) {
+                fields.forEach {
+                    PassField(
+                        field = it,
+                        horizontalAlignment = horizontalAlignment,
+                        fontSize = fontSize,
+                        isSelectable = isSelectable
+                    )
+                }
             }
         }
     }
