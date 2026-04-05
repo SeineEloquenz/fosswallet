@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
+import nz.eloque.foss_wallet.location.Geocoder
 import nz.eloque.foss_wallet.persistence.TransactionalExecutor
 import nz.eloque.foss_wallet.persistence.WalletDb
 import nz.eloque.foss_wallet.persistence.buildDb
@@ -32,8 +33,8 @@ object AppModule {
     }
 
     @Provides
-    fun providePassRepository(@ApplicationContext context: Context, passDao: PassDao): PassRepository {
-        return PassRepository(context, passDao)
+    fun providePassRepository(@ApplicationContext context: Context, geocoder: Geocoder, passDao: PassDao): PassRepository {
+        return PassRepository(context, passDao, geocoder)
     }
 
     @Provides
@@ -45,6 +46,12 @@ object AppModule {
     @Singleton
     fun provideWalletDb(@ApplicationContext context: Context): WalletDb {
         return buildDb(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeocoder(@ApplicationContext context: Context): Geocoder {
+        return Geocoder(context)
     }
 
     @Provides
