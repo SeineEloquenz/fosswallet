@@ -38,12 +38,7 @@ fun ImagePicker(
         println("selected file URI $uri")
         onChoose(uri)
     }
-    val launchPicker = {
-        launcher.launch(arrayOf(
-            "image/png",
-            "image/jpeg",
-        ))
-    }
+    val launchPicker = { launcher.launch(arrayOf("image/*")) }
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -72,9 +67,7 @@ fun ImagePicker(
         )
 
         IconButton(
-            onClick = {
-                onClear()
-            },
+            onClick = { onClear() },
             enabled = imageUrl != null
         ) {
             Icon(
@@ -84,9 +77,7 @@ fun ImagePicker(
         }
 
         IconButton(
-            onClick = {
-                launchPicker()
-            }
+            onClick = { launchPicker() }
         ) {
             Icon(
                 imageVector = Icons.Default.ImageSearch,
