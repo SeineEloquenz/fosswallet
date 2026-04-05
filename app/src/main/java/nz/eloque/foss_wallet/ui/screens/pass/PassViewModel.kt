@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
@@ -26,30 +27,20 @@ class PassViewModel @Inject constructor(
 
     fun passFlowById(id: String) = passStore.passFlowById(id)
 
-    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
+    fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 
-    suspend fun tag(pass: Pass, tag: Tag) = passStore.tag(pass, tag)
-
-    suspend fun untag(pass: Pass, tag: Tag) = passStore.untag(pass, tag)
-
-    suspend fun update(pass: Pass): UpdateResult = passStore.update(pass)
-
-    fun delete(pass: Pass) = passStore.delete(pass)
-
-    fun archive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.archive(pass)
-        }
-    }
+    fun tag(pass: Pass, tag: Tag) = viewModelScope.launch(Dispatchers.IO) { passStore.tag(pass, tag) }
+    fun untag(pass: Pass, tag: Tag) = viewModelScope.launch(Dispatchers.IO) { passStore.untag(pass, tag) }
     
-    fun unarchive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.unarchive(pass)
-        }
-    }
+    fun update(pass: Pass, onResult: (UpdateResult) -> Unit = {}) = viewModelScope.launch(Dispatchers.IO) { onResult.invoke(passStore.update(pass)) }
+
+    fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
+
+    fun archive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) }
+    fun unarchive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) }
 
     fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
     fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
-    fun toggleLegacyRendering(pass: Pass) = passStore.toggleLegacyRendering(pass)
+    fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
 }

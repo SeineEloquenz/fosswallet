@@ -64,7 +64,6 @@ fun PassScreen(
     navController: NavHostController,
     passViewModel: PassViewModel
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
@@ -85,13 +84,13 @@ fun PassScreen(
             PassView(
                 localizedPass = localizedPass,
                 allTags = allTags,
-                onTagClick = { coroutineScope.launch(Dispatchers.IO) { passViewModel.untag(localizedPass.pass, it) } },
-                onTagAdd = { coroutineScope.launch(Dispatchers.IO) { passViewModel.tag(localizedPass.pass, it) } },
-                onTagCreate = { coroutineScope.launch(Dispatchers.IO) { passViewModel.addTag(it) } },
+                onTagClick = { passViewModel.untag(localizedPass.pass, it) },
+                onTagAdd = { passViewModel.tag(localizedPass.pass, it) },
+                onTagCreate = { passViewModel.addTag(it) },
                 barcodePosition = passViewModel.barcodePosition(),
                 scrollBehavior = scrollBehavior,
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
-                onRenderingChange = { coroutineScope.launch(Dispatchers.IO) { passViewModel.toggleLegacyRendering(localizedPass.pass) } },
+                onRenderingChange = { passViewModel.toggleLegacyRendering(localizedPass.pass) },
             )
         }
     }
@@ -150,10 +149,8 @@ fun Actions(
             )
 
             val passFile = pass.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
-            }
-            
+            if (passFile != null) { PassShareButton(passFile) }
+
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
                 UpdateButton(isLoading = isLoading.value) {
