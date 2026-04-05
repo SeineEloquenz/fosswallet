@@ -43,8 +43,8 @@
     <string name="status_not_updated">Το πάσο σου είναι ενημερωμένο</string>
     <string name="open">Άνοιγμα</string>
     <string name="barcode_position">Θέση γραμμοκώδικα σε πλήρη οθόνη</string>
-    <string name="pass_view">Προβολή Πάσων</string>
-    <string name="pass_view_brightness">Αύξηση Φωτεινότητας</string>
+    <string name="pass_view">Προβολή πάσων</string>
+    <string name="pass_view_brightness">Αύξηση φωτεινότητας</string>
     <string name="barcode_position_top">Κορυφή</string>
     <string name="barcode_position_center">Κέντρο</string>
     <string name="pass_already_imported">Το πάσο έχει ήδη εισαχθεί</string>
@@ -92,4 +92,5 @@
     <string name="no_barcode_found">Δεν βρέθηκε γραμμοκώδικας</string>
     <string name="no_map_app_found">Δεν βρέθηκε εφαρμογή χαρτών</string>
     <string name="no_calendar_app_found">Δεν βρέθηκε εφαρμογή ημερολογίου</string>
+    <string name="the_archive">Αρχείο</string>
 </resources>

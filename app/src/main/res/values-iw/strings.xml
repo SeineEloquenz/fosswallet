@@ -91,4 +91,5 @@
     <string name="select_image_with_barcode">בחר תמונה עם ברקוד</string>
     <string name="no_barcode_found">ברקוד לא נמצא</string>
     <string name="logo">לוגו</string>
+    <string name="the_archive">ארכיון</string>
 </resources>
