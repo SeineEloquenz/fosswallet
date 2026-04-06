@@ -1,11 +1,11 @@
 package nz.eloque.foss_wallet.parsing
 
+import java.time.format.FormatStyle
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.utils.linkifyUrls
+import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
-import java.time.format.FormatStyle
 
 object FieldParser {
 
@@ -16,9 +16,7 @@ object FieldParser {
             field.getString("attributedValue")
         } else if (field.has("value")) {
             field.getString("value")
-        } else {
-            "-"
-        }
+        } else { "-" }
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 
         val content = when {
@@ -26,7 +24,7 @@ object FieldParser {
             field.hasDateStyle() && field.hasTimeStyle() -> PassContent.DateTime(TimeParser.parse(value), chooseBetter(field.getDateStyle(), field.getTimeStyle()), field.ignoresTimezone(), field.isRelative())
             field.hasDateStyle() -> PassContent.Date(TimeParser.parse(value), field.getDateStyle(), field.ignoresTimezone(), field.isRelative())
             field.hasTimeStyle() -> PassContent.Time(TimeParser.parse(value), field.getTimeStyle(), field.ignoresTimezone(), field.isRelative())
-            else -> PassContent.Plain(linkifyUrls(value))
+            else -> PassContent.Plain(linkify(value))
         }
 
         return PassField(key, label, content, changeMessage)
