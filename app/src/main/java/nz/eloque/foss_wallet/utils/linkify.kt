@@ -4,7 +4,7 @@ fun linkify(text: String): String = linkifyUrls(linkifyMails(text))
 
 fun linkifyUrls(text: String): String {
     val urlPattern = Regex(
-        """(?<!["'>]|href=")(?:https?://|www\.)[^\s<>"'@]+(?<![.,;:!?)])(?![^<]*</a>)""",
+        """(?<!["'>]|href=")(?:https?://|www\.)[^\s<>"']+(?<![.,;:!?)])(?![^<]*</a>)""",
         RegexOption.IGNORE_CASE
     )
 
@@ -17,7 +17,7 @@ fun linkifyUrls(text: String): String {
 
 fun linkifyMails(text: String): String {
     val mailPattern = Regex(
-        """(?<!["'>]|href=")(?:mailto:)?[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?![^<]*</a>)""",
+        """(?<!["'>]|href=")(?:mailto:)?[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?![^<]*</a>)""",
         RegexOption.IGNORE_CASE
     )
 
