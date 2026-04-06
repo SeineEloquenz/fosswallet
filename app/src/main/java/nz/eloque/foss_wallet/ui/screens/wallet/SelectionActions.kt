@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
@@ -33,7 +32,6 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.share.share
-import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.utils.isScrollingUp
 
 @Composable
@@ -104,16 +102,6 @@ fun SelectionActions(
                 },
             ) {
                 Icon(imageVector = Icons.Default.Archive, contentDescription = stringResource(R.string.archive))
-            }
-        }
-        if (selectedPasses.size == 1) {
-            FloatingActionButton(
-                onClick = {
-                    val pass = selectedPasses.first().pass
-                    Shortcut.create(context, pass, pass.description)
-                },
-            ) {
-                Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
             }
         }
         FloatingActionButton(
