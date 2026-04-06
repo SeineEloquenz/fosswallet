@@ -38,6 +38,8 @@ data class PassField(
                 if (json.has("changeMessage")) json.getString("changeMessage") else null
             )
         }
+
+        val Empty = PassField("", "", PassContent.Plain(""))
     }
 }
 
