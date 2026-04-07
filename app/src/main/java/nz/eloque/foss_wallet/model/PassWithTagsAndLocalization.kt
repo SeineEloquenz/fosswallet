@@ -39,6 +39,7 @@ data class PassWithTagsAndLocalization(
             secondaryFields = pass.secondaryFields.applyLocalization(mapping),
             auxiliaryFields = pass.auxiliaryFields.applyLocalization(mapping),
             backFields = pass.backFields.applyLocalization(mapping),
+            barCodes = pass.barCodes.applyLocalization(mapping),
         )
 
         return LocalizedPassWithTags(localizedPass, tags.toSet())
@@ -55,9 +56,28 @@ data class PassWithTagsAndLocalization(
         }
     }
 
+    private fun Set<BarCode>.applyLocalization(mapping: Map<String, PassLocalization>): Set<BarCode> {
+        return this.map { field ->
+
+            val content = field.altText.applyLocalization(mapping)
+
+            field.copy(
+                altText = content
+            )
+        }.toSet()
+    }
+
     private fun PassContent.applyLocalization(mapping: Map<String, PassLocalization>): PassContent {
         return if (this is PassContent.Plain && mapping.containsKey(this.text)) {
             PassContent.Plain(mapping[this.text]!!.text)
+        } else {
+            this
+        }
+    }
+
+    private fun String?.applyLocalization(mapping: Map<String, PassLocalization>): String? {
+        return if (this != null && mapping.containsKey(this)) {
+            mapping[this]!!.text
         } else {
             this
         }
