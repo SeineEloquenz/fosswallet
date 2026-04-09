@@ -72,4 +72,23 @@
     <string name="brightness">Jasność</string>
     <string name="icon">Ikona</string>
     <string name="thumbnail">Miniatura</string>
+    <string name="pass_expiration_date">Data ważności</string>
+    <string name="pass_background_color">Kolor tła</string>
+    <string name="searching">Wyszukiwanie…</string>
+    <string name="no_search_results">Brak wyników wyszukiwania</string>
+    <string name="the_archive">Archiwum</string>
+    <string name="event">Bilet na wydarzenie</string>
+    <string name="boarding_pass">Karta pokładowa</string>
+    <string name="store_card">Karta sklepowa</string>
+    <string name="no_text_in_clipboard">Brak tekstu w schowku</string>
+    <string name="no_barcode_found">Nie znaleziono kodu kreskowego</string>
+    <string name="no_map_app_found">Nie znaleziono aplikacji z mapami</string>
+    <string name="selected_location">Wybrano: %1$s</string>
+    <string name="barcode_alt_text">Alternatywny tekst kodu kreskowego</string>
+    <string name="manual_entry">Ręczne wprowadzanie</string>
+    <string name="additional_fields">Dodatkowe pola</string>
+    <string name="pass_location">Lokalizacja</string>
+    <string name="pass_label_color">Kolor etykiety</string>
+    <string name="pass_foreground_color">Kolor pierwszego planu</string>
+    <string name="barcode_value_invalid">Podana wartość nie jest prawidłowym kodem %1$s</string>
 </resources>

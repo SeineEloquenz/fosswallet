@@ -43,8 +43,8 @@
     <string name="status_not_updated">Το πάσο σου είναι ενημερωμένο</string>
     <string name="open">Άνοιγμα</string>
     <string name="barcode_position">Θέση γραμμοκώδικα σε πλήρη οθόνη</string>
-    <string name="pass_view">Προβολή Πάσων</string>
-    <string name="pass_view_brightness">Αύξηση Φωτεινότητας</string>
+    <string name="pass_view">Προβολή πάσων</string>
+    <string name="pass_view_brightness">Αύξηση φωτεινότητας</string>
     <string name="barcode_position_top">Κορυφή</string>
     <string name="barcode_position_center">Κέντρο</string>
     <string name="pass_already_imported">Το πάσο έχει ήδη εισαχθεί</string>
@@ -92,4 +92,17 @@
     <string name="no_barcode_found">Δεν βρέθηκε γραμμοκώδικας</string>
     <string name="no_map_app_found">Δεν βρέθηκε εφαρμογή χαρτών</string>
     <string name="no_calendar_app_found">Δεν βρέθηκε εφαρμογή ημερολογίου</string>
+    <string name="the_archive">Αρχείο</string>
+    <string name="pass_background_color">Χρώμα φόντου</string>
+    <string name="brightness">Φωτεινότητα</string>
+    <string name="searching">Αναζήτηση…</string>
+    <string name="pass_expiration_date">Ημερομηνία λήξης</string>
+    <string name="no_search_results">Δεν βρέθηκαν αποτελέσματα</string>
+    <string name="pass_foreground_color">Χρώμα προσκηνίου</string>
+    <string name="pass_label_color">Χρώμα ετικέτας</string>
+    <string name="pass_relevant_start">Έναρξη</string>
+    <string name="pass_relevant_end">Τέλος</string>
+    <string name="pass_location">Τοποθεσία</string>
+    <string name="selected_location">Επιλεγμένα: %1$s</string>
+    <string name="thumbnail">Μικρογραφία</string>
 </resources>
