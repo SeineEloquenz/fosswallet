@@ -6,10 +6,8 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.Hash
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.LinkedHashSet
 
 object PassCreator {
-
     const val FORMAT_VERSION = 1
     const val ORGANIZATION = "nz.eloque.foss_wallet"
 
@@ -24,8 +22,8 @@ object PassCreator {
         location: Location? = null,
         relevantDates: List<PassRelevantDate> = emptyList(),
         expirationDate: ZonedDateTime? = null,
-    ): Pass? {
-        return create(
+    ): Pass? =
+        create(
             name = name,
             type = type,
             barCodes = listOf(barCode),
@@ -37,7 +35,6 @@ object PassCreator {
             relevantDates = relevantDates,
             expirationDate = expirationDate,
         )
-    }
 
     fun create(
         name: String,
@@ -69,11 +66,12 @@ object PassCreator {
 
         val id = Hash.sha256(barCodes.joinToString("|") { it.toString() })
 
-        val nameField = PassField(
-            key = "main",
-            label = "",
-            content = PassContent.Plain(name)
-        )
+        val nameField =
+            PassField(
+                key = "main",
+                label = "",
+                content = PassContent.Plain(name),
+            )
 
         return Pass(
             id = id,

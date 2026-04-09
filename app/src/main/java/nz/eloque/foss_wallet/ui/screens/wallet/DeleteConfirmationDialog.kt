@@ -41,11 +41,11 @@ fun DeleteConfirmationDialog(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.delete_confirmation_message))
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(
                         checked = dontAskAgain,
-                        onCheckedChange = { dontAskAgain = it }
+                        onCheckedChange = { dontAskAgain = it },
                     )
                     Text(stringResource(R.string.dont_ask_again))
                 }
@@ -56,7 +56,7 @@ fun DeleteConfirmationDialog(
                 onClick = {
                     settingsStore.setDeleteConfirmationEnabled(!dontAskAgain)
                     onConfirm()
-                }
+                },
             ) {
                 Text(stringResource(R.string.delete))
             }
@@ -65,6 +65,6 @@ fun DeleteConfirmationDialog(
             TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.back))
             }
-        }
+        },
     )
 }

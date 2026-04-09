@@ -5,10 +5,11 @@ import java.io.ByteArrayInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-class PassesLoader(val passLoader: PassLoader) {
-
-    fun load(bytes: ByteArray): Set<PassLoadResult> {
-        return try {
+class PassesLoader(
+    val passLoader: PassLoader,
+) {
+    fun load(bytes: ByteArray): Set<PassLoadResult> =
+        try {
             val results = mutableSetOf<PassLoadResult>()
 
             ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
@@ -27,5 +28,4 @@ class PassesLoader(val passLoader: PassLoader) {
         } catch (e: Exception) {
             throw InvalidPassesException(e)
         }
-    }
 }

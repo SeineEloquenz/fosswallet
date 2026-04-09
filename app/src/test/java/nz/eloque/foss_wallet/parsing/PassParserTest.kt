@@ -11,8 +11,9 @@ import org.junit.runners.Parameterized
 import org.mockito.Mockito
 
 @RunWith(Parameterized::class)
-class PassParserTest(private val passName: String) {
-
+class PassParserTest(
+    private val passName: String,
+) {
     private val parser = PassParser()
     private val bitmaps = Mockito.mock(PassBitmaps::class.java)
 
@@ -25,11 +26,8 @@ class PassParserTest(private val passName: String) {
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(name = "{0}")
-        fun data(): List<Array<String>> {
-            return PASSES.map { pass -> Array(1) { pass } }
-        }
+        fun data(): List<Array<String>> = PASSES.map { pass -> Array(1) { pass } }
     }
 }

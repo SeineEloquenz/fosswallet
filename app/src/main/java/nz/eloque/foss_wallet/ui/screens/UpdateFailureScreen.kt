@@ -26,7 +26,6 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.theme.Typography
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateFailureScreen(
@@ -45,24 +44,24 @@ fun UpdateFailureScreen(
             }) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
-                    contentDescription = stringResource(R.string.copy)
+                    contentDescription = stringResource(R.string.copy),
                 )
             }
-        }
+        },
     ) {
         Column(
             modifier = Modifier.fillMaxSize().horizontalScroll(rememberScrollState()).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
                 text = reason,
                 modifier = Modifier.fillMaxWidth(),
-                style = Typography.headlineMedium
+                style = Typography.headlineMedium,
             )
             Text(
                 text = rationale,
                 modifier = Modifier.fillMaxWidth(),
-                style = Typography.bodyMedium
+                style = Typography.bodyMedium,
             )
         }
     }
@@ -74,50 +73,50 @@ private fun UpdateFailureScreenPreview() {
     UpdateFailureScreen(
         "Exception",
         """
-            This is a stacktrace
-            
-            d
-            w
-            d
-            d
-            ad
-            wa
-            d
-            wad
-            
-            
-            
-            d
-            wa
-            dwa
-            dw
-            ad
-            wa
-            dwa
-            d
-            a
-            wd
-            w
-            ad
-            wa
-            d
-            awd
-            
-            wad
-            wa
-            
-            d
-            dwadwadwa
-            dwa
-            dwa
-            d
-            wad
-            wad
-            wa
-            dwa
-            d
-            awdw
+        This is a stacktrace
+        
+        d
+        w
+        d
+        d
+        ad
+        wa
+        d
+        wad
+        
+        
+        
+        d
+        wa
+        dwa
+        dw
+        ad
+        wa
+        dwa
+        d
+        a
+        wd
+        w
+        ad
+        wa
+        d
+        awd
+        
+        wad
+        wa
+        
+        d
+        dwadwadwa
+        dwa
+        dwa
+        d
+        wad
+        wad
+        wa
+        dwa
+        d
+        awdw
         """.trimIndent(),
-        rememberNavController()
+        rememberNavController(),
     )
 }

@@ -16,8 +16,8 @@ Please try to create bug reports that are:
 - _Scoped to a Single Bug._ One bug per report.
 
 # Submitting Pull Requests
+Some guidelines for successful Pull Requests:
 
-When contributing to this repository, please first discuss the change you wish to make via an issue or discussion before actually implementing and proposing a change.
-Undiscussed changes might get closed without review on the maintainer's discretion.
-
-You have discussed your change? Then feel free to start implementing it on your fork and submit a PR!
+* Discuss your change via an issue or discussion before actually implementing and proposing it if it is not an obvious bug.
+* Split unrelated changes into separate PRs, to ease review and allow faster merges of finished parts.
+* Only change code that needs to be changed

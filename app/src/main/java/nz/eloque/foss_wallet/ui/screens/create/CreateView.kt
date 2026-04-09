@@ -39,8 +39,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -125,8 +125,8 @@ fun CreateView(
                     message = initialBarcodeValue,
                     altText = initialBarcodeValue,
                     format = BarcodeFormat.QR_CODE,
-                )
-            )
+                ),
+            ),
         )
     }
     var activeBarcodeIndex by remember { mutableStateOf(0) }
@@ -149,67 +149,74 @@ fun CreateView(
     var detailsExpanded by remember { mutableStateOf(false) }
     var initialScanHandled by remember { mutableStateOf(false) }
 
-    val barCodeModels = barcodes.map {
-        BarCode(
-            format = it.format,
-            message = it.message,
-            encoding = Charsets.UTF_8,
-            altText = it.altText.ifBlank { it.message },
-        )
-    }
+    val barCodeModels =
+        barcodes.map {
+            BarCode(
+                format = it.format,
+                message = it.message,
+                encoding = Charsets.UTF_8,
+                altText = it.altText.ifBlank { it.message },
+            )
+        }
     val pass = PassCreator.create(name, type, barCodeModels)
 
     val nameValid = name.length in 1..<30
     val showNameError = nameTouched && !nameValid
-    val barcodesValid = barcodes.isNotEmpty() && barcodes.zip(barCodeModels).all { (draft, model) ->
-        draft.message.isNotEmpty() && barcodeValid(model)
-    }
+    val barcodesValid =
+        barcodes.isNotEmpty() &&
+            barcodes.zip(barCodeModels).all { (draft, model) ->
+                draft.message.isNotEmpty() && barcodeValid(model)
+            }
     val datesValid = relevantEnd == null || relevantStart != null
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
 
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
-    val scanLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { activityResult ->
-            if (activityResult.resultCode == android.app.Activity.RESULT_OK) {
-                val resultData = activityResult.data
-                val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
-                if (contents != null) {
-                    val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
-                    if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
-                    barcodes = barcodes.mapIndexed { index, barcode ->
-                        if (index != activeBarcodeIndex) {
-                            barcode
-                        } else {
-                            val scannedFormat = try {
-                                BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
-                            } catch (_: IllegalArgumentException) {
-                                Toast.makeText(
-                                    context,
-                                    resources.getString(R.string.no_barcode_format_given),
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                                BarcodeFormat.QR_CODE
+    val scanLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+            onResult = { activityResult ->
+                if (activityResult.resultCode == android.app.Activity.RESULT_OK) {
+                    val resultData = activityResult.data
+                    val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
+                    if (contents != null) {
+                        val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
+                        if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
+                        barcodes =
+                            barcodes.mapIndexed { index, barcode ->
+                                if (index != activeBarcodeIndex) {
+                                    barcode
+                                } else {
+                                    val scannedFormat =
+                                        try {
+                                            BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
+                                        } catch (_: IllegalArgumentException) {
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    resources.getString(R.string.no_barcode_format_given),
+                                                    Toast.LENGTH_SHORT,
+                                                ).show()
+                                            BarcodeFormat.QR_CODE
+                                        }
+                                    barcode.copy(
+                                        message = contents,
+                                        altText = contents,
+                                        format = scannedFormat,
+                                    )
+                                }
                             }
-                            barcode.copy(
-                                message = contents,
-                                altText = contents,
-                                format = scannedFormat,
-                            )
-                        }
+                        detailsExpanded = true
                     }
-                    detailsExpanded = true
                 }
-            }
-        }
-    )
+            },
+        )
 
     LaunchedEffect(startMode, initialScanHandled) {
         if (startMode == CreateStartMode.Scan && !initialScanHandled) {
             initialScanHandled = true
             scanLauncher.launch(
-                Intent(context, ScanActivity::class.java)
+                Intent(context, ScanActivity::class.java),
             )
         }
     }
@@ -222,23 +229,25 @@ fun CreateView(
             onConfirm = {
                 location = it
                 showLocationPicker = false
-            }
+            },
         )
     }
 
     colorPickerTarget?.let { target ->
-        val initial = when (target) {
-            ColorTarget.Background -> backgroundColor ?: Color.White
-            ColorTarget.Foreground -> foregroundColor ?: Color.White
-            ColorTarget.Label -> labelColor ?: Color.White
-        }
+        val initial =
+            when (target) {
+                ColorTarget.Background -> backgroundColor ?: Color.White
+                ColorTarget.Foreground -> foregroundColor ?: Color.White
+                ColorTarget.Label -> labelColor ?: Color.White
+            }
 
         ColorPickerDialog(
-            title = when (target) {
-                ColorTarget.Background -> stringResource(R.string.pass_background_color)
-                ColorTarget.Foreground -> stringResource(R.string.pass_foreground_color)
-                ColorTarget.Label -> stringResource(R.string.pass_label_color)
-            },
+            title =
+                when (target) {
+                    ColorTarget.Background -> stringResource(R.string.pass_background_color)
+                    ColorTarget.Foreground -> stringResource(R.string.pass_foreground_color)
+                    ColorTarget.Label -> stringResource(R.string.pass_label_color)
+                },
             initialColor = initial,
             onDismiss = { colorPickerTarget = null },
             onConfirm = { selected ->
@@ -248,323 +257,342 @@ fun CreateView(
                     ColorTarget.Label -> labelColor = selected.opaque()
                 }
                 colorPickerTarget = null
-            }
+            },
         )
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-                .padding(bottom = if (detailsExpanded) 88.dp else 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+                    .padding(bottom = if (detailsExpanded) 88.dp else 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.barcode_value)) },
-                    value = barcode.message,
-                    onValueChange = { value ->
-                        barcodes = barcodes.mapIndexed { i, item ->
-                            if (i == index) item.copy(message = value) else item
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(fraction = 0.72f),
-                    isError = barcode.message.isNotEmpty() && !barcodeValid(
-                        BarCode(
-                            format = barcode.format,
-                            message = barcode.message,
-                            encoding = Charsets.UTF_8,
-                            altText = barcode.altText.ifBlank { barcode.message },
-                        )
-                    ),
-                    supportingText = {
-                        if (barcode.message.isNotEmpty() && !barcodeValid(
-                                BarCode(
-                                    format = barcode.format,
-                                    message = barcode.message,
-                                    encoding = Charsets.UTF_8,
-                                    altText = barcode.altText.ifBlank { barcode.message },
-                                )
-                            )
-                        ) {
-                            Text(stringResource(R.string.barcode_value_invalid, barcode.format.toString()))
-                        }
-                    }
-                )
-
-                IconButton(onClick = {
-                    activeBarcodeIndex = index
-                    scanLauncher.launch(
-                        Intent(context, ScanActivity::class.java)
-                    )
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.QrCodeScanner,
-                        contentDescription = stringResource(R.string.scan_barcode)
-                    )
-                }
-                IconButton(
-                    enabled = barcodes.size > 1,
-                    onClick = {
-                        barcodes = barcodes.filterIndexed { i, _ -> i != index }
-                        activeBarcodeIndex = activeBarcodeIndex.coerceAtMost(barcodes.lastIndex.coerceAtLeast(0))
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.delete)
-                    )
-                }
-            }
-
-            ComboBox(
-                title = stringResource(R.string.barcode_format),
-                options = BarcodeFormat.entries,
-                selectedOption = barcode.format,
-                onOptionSelected = { selected ->
-                    barcodes = barcodes.mapIndexed { i, item ->
-                        if (i == index) item.copy(format = selected) else item
-                    }
-                },
-                optionLabel = { it.name },
-            )
-        }
-
-        ElevatedButton(
-            onClick = {
-                barcodes = barcodes + BarcodeDraft(
-                    message = "",
-                    altText = "",
-                    format = BarcodeFormat.QR_CODE,
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(stringResource(R.string.add_another_barcode))
-        }
-
-        if (!detailsExpanded) {
-            Button(
-                enabled = barcodesValid,
-                onClick = { detailsExpanded = true },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(stringResource(R.string.continue_to_details))
-            }
-        }
-
-        AnimatedVisibility(
-            visible = detailsExpanded,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.pass_name)) },
-                    value = name,
-                    onValueChange = {
-                        nameTouched = true
-                        name = it
-                    },
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    isError = showNameError
-                )
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    OutlinedTextField(
+                        label = { Text(stringResource(R.string.barcode_value)) },
+                        value = barcode.message,
+                        onValueChange = { value ->
+                            barcodes =
+                                barcodes.mapIndexed { i, item ->
+                                    if (i == index) item.copy(message = value) else item
+                                }
+                        },
+                        modifier = Modifier.fillMaxWidth(fraction = 0.72f),
+                        isError =
+                            barcode.message.isNotEmpty() &&
+                                !barcodeValid(
+                                    BarCode(
+                                        format = barcode.format,
+                                        message = barcode.message,
+                                        encoding = Charsets.UTF_8,
+                                        altText = barcode.altText.ifBlank { barcode.message },
+                                    ),
+                                ),
+                        supportingText = {
+                            if (barcode.message.isNotEmpty() &&
+                                !barcodeValid(
+                                    BarCode(
+                                        format = barcode.format,
+                                        message = barcode.message,
+                                        encoding = Charsets.UTF_8,
+                                        altText = barcode.altText.ifBlank { barcode.message },
+                                    ),
+                                )
+                            ) {
+                                Text(stringResource(R.string.barcode_value_invalid, barcode.format.toString()))
+                            }
+                        },
+                    )
+
+                    IconButton(onClick = {
+                        activeBarcodeIndex = index
+                        scanLauncher.launch(
+                            Intent(context, ScanActivity::class.java),
+                        )
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.QrCodeScanner,
+                            contentDescription = stringResource(R.string.scan_barcode),
+                        )
+                    }
+                    IconButton(
+                        enabled = barcodes.size > 1,
+                        onClick = {
+                            barcodes = barcodes.filterIndexed { i, _ -> i != index }
+                            activeBarcodeIndex = activeBarcodeIndex.coerceAtMost(barcodes.lastIndex.coerceAtLeast(0))
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.delete),
+                        )
+                    }
+                }
 
                 ComboBox(
-                    title = stringResource(R.string.pass_type),
-                    options = listOf(
-                        PassType.Generic,
-                        PassType.StoreCard,
-                        PassType.Coupon,
-                        PassType.Event
-                    ),
-                    selectedOption = type,
-                    onOptionSelected = { type = it },
-                    optionLabel = { resources.getString(it.label) },
+                    title = stringResource(R.string.barcode_format),
+                    options = BarcodeFormat.entries,
+                    selectedOption = barcode.format,
+                    onOptionSelected = { selected ->
+                        barcodes =
+                            barcodes.mapIndexed { i, item ->
+                                if (i == index) item.copy(format = selected) else item
+                            }
+                    },
+                    optionLabel = { it.name },
                 )
+            }
 
-                ElevatedButton(
-                    onClick = { advancedExpanded = !advancedExpanded },
+            ElevatedButton(
+                onClick = {
+                    barcodes = barcodes +
+                        BarcodeDraft(
+                            message = "",
+                            altText = "",
+                            format = BarcodeFormat.QR_CODE,
+                        )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.add_another_barcode))
+            }
+
+            if (!detailsExpanded) {
+                Button(
+                    enabled = barcodesValid,
+                    onClick = { detailsExpanded = true },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(stringResource(R.string.additional_fields))
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                        contentDescription = if (advancedExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
-                    )
+                    Text(stringResource(R.string.continue_to_details))
                 }
+            }
 
-                AnimatedVisibility(
-                    visible = advancedExpanded,
-                    enter = expandVertically(),
-                    exit = shrinkVertically(),
+            AnimatedVisibility(
+                visible = detailsExpanded,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Column(
+                    OutlinedTextField(
+                        label = { Text(stringResource(R.string.pass_name)) },
+                        value = name,
+                        onValueChange = {
+                            nameTouched = true
+                            name = it
+                        },
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        isError = showNameError,
+                    )
+
+                    ComboBox(
+                        title = stringResource(R.string.pass_type),
+                        options =
+                            listOf(
+                                PassType.Generic,
+                                PassType.StoreCard,
+                                PassType.Coupon,
+                                PassType.Event,
+                            ),
+                        selectedOption = type,
+                        onOptionSelected = { type = it },
+                        optionLabel = { resources.getString(it.label) },
+                    )
+
+                    ElevatedButton(
+                        onClick = { advancedExpanded = !advancedExpanded },
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        PickableOutlinedField(
-                            label = stringResource(R.string.pass_relevant_start),
-                            value = relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                                ?: "",
-                            leadingIcon = Icons.Default.CalendarToday,
-                            onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
-                            onClear = { relevantStart = null },
-                            clearEnabled = relevantStart != null,
+                        Text(stringResource(R.string.additional_fields))
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = if (advancedExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            contentDescription =
+                                if (advancedExpanded) {
+                                    stringResource(
+                                        R.string.collapse,
+                                    )
+                                } else {
+                                    stringResource(R.string.expand)
+                                },
                         )
+                    }
 
-                        PickableOutlinedField(
-                            label = stringResource(R.string.pass_relevant_end),
-                            value = relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                                ?: "",
-                            leadingIcon = Icons.Default.CalendarToday,
-                            onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
-                            onClear = { relevantEnd = null },
-                            clearEnabled = relevantEnd != null,
-                        )
-
-                        PickableOutlinedField(
-                            label = stringResource(R.string.pass_expiration_date),
-                            value = expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
-                                ?: "",
-                            leadingIcon = Icons.Default.CalendarToday,
-                            onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
-                            onClear = { expirationDate = null },
-                            clearEnabled = expirationDate != null,
-                        )
-
-                        PickableOutlinedField(
-                            label = stringResource(R.string.pass_location),
-                            value = location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
-                                ?: "",
-                            leadingIcon = Icons.Default.LocationOn,
-                            onPick = { showLocationPicker = true },
-                            onClear = { location = null },
-                            clearEnabled = location != null,
-                        )
-
-                        ColorPickerRow(
-                            label = stringResource(R.string.pass_background_color),
-                            icon = Icons.Default.Palette,
-                            color = backgroundColor,
-                            onPick = { colorPickerTarget = ColorTarget.Background },
-                            onClear = { backgroundColor = null }
-                        )
-
-                        ColorPickerRow(
-                            label = stringResource(R.string.pass_foreground_color),
-                            icon = Icons.Default.Palette,
-                            color = foregroundColor,
-                            onPick = { colorPickerTarget = ColorTarget.Foreground },
-                            onClear = { foregroundColor = null }
-                        )
-
-                        ColorPickerRow(
-                            label = stringResource(R.string.pass_label_color),
-                            icon = Icons.Default.Palette,
-                            color = labelColor,
-                            onPick = { colorPickerTarget = ColorTarget.Label },
-                            onClear = { labelColor = null }
-                        )
-
-                        OutlinedTextField(
-                            label = { Text(stringResource(R.string.organization)) },
-                            value = organization,
-                            onValueChange = { organization = it },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Business,
-                                    contentDescription = stringResource(R.string.organization)
-                                )
-                            },
+                    AnimatedVisibility(
+                        visible = advancedExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        Column(
                             modifier = Modifier.fillMaxWidth(),
-                        )
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            PickableOutlinedField(
+                                label = stringResource(R.string.pass_relevant_start),
+                                value =
+                                    relevantStart?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                        ?: "",
+                                leadingIcon = Icons.Default.CalendarToday,
+                                onPick = { openDateTimePicker(context, relevantStart) { relevantStart = it } },
+                                onClear = { relevantStart = null },
+                                clearEnabled = relevantStart != null,
+                            )
 
-                        OutlinedTextField(
-                            label = { Text(stringResource(R.string.serial_number)) },
-                            value = serialNumber,
-                            onValueChange = { serialNumber = it },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Badge,
-                                    contentDescription = stringResource(R.string.serial_number)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                            PickableOutlinedField(
+                                label = stringResource(R.string.pass_relevant_end),
+                                value =
+                                    relevantEnd?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                        ?: "",
+                                leadingIcon = Icons.Default.CalendarToday,
+                                onPick = { openDateTimePicker(context, relevantEnd) { relevantEnd = it } },
+                                onClear = { relevantEnd = null },
+                                clearEnabled = relevantEnd != null,
+                            )
 
-                        OutlinedTextField(
-                            label = { Text(stringResource(R.string.logo_text)) },
-                            value = logoText,
-                            onValueChange = { logoText = it },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.TextFields,
-                                    contentDescription = stringResource(R.string.logo_text)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                            PickableOutlinedField(
+                                label = stringResource(R.string.pass_expiration_date),
+                                value =
+                                    expirationDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z"))
+                                        ?: "",
+                                leadingIcon = Icons.Default.CalendarToday,
+                                onPick = { openDateTimePicker(context, expirationDate) { expirationDate = it } },
+                                onClear = { expirationDate = null },
+                                clearEnabled = expirationDate != null,
+                            )
 
-                        ImagePicker(
-                            imageUrl = logoUrl,
-                            onClear = { logoUrl = null },
-                            onChoose = { logoUrl = it },
-                            label = stringResource(R.string.logo),
-                            labelIcon = Icons.Default.Image,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            PickableOutlinedField(
+                                label = stringResource(R.string.pass_location),
+                                value =
+                                    location?.let { "${it.latitude.formatCoord()}, ${it.longitude.formatCoord()}" }
+                                        ?: "",
+                                leadingIcon = Icons.Default.LocationOn,
+                                onPick = { showLocationPicker = true },
+                                onClear = { location = null },
+                                clearEnabled = location != null,
+                            )
 
-                        ImagePicker(
-                            imageUrl = iconUrl,
-                            onClear = { iconUrl = null },
-                            onChoose = { iconUrl = it },
-                            label = stringResource(R.string.icon),
-                            labelIcon = Icons.Default.Image,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            ColorPickerRow(
+                                label = stringResource(R.string.pass_background_color),
+                                icon = Icons.Default.Palette,
+                                color = backgroundColor,
+                                onPick = { colorPickerTarget = ColorTarget.Background },
+                                onClear = { backgroundColor = null },
+                            )
 
-                        ImagePicker(
-                            imageUrl = stripUrl,
-                            onClear = { stripUrl = null },
-                            onChoose = { stripUrl = it },
-                            label = stringResource(R.string.strip),
-                            labelIcon = Icons.Default.Image,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            ColorPickerRow(
+                                label = stringResource(R.string.pass_foreground_color),
+                                icon = Icons.Default.Palette,
+                                color = foregroundColor,
+                                onPick = { colorPickerTarget = ColorTarget.Foreground },
+                                onClear = { foregroundColor = null },
+                            )
 
-                        ImagePicker(
-                            imageUrl = thumbnailUrl,
-                            onClear = { thumbnailUrl = null },
-                            onChoose = { thumbnailUrl = it },
-                            label = stringResource(R.string.thumbnail),
-                            labelIcon = Icons.Default.Image,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            ColorPickerRow(
+                                label = stringResource(R.string.pass_label_color),
+                                icon = Icons.Default.Palette,
+                                color = labelColor,
+                                onPick = { colorPickerTarget = ColorTarget.Label },
+                                onClear = { labelColor = null },
+                            )
 
-                        ImagePicker(
-                            imageUrl = footerUrl,
-                            onClear = { footerUrl = null },
-                            onChoose = { footerUrl = it },
-                            label = stringResource(R.string.footer),
-                            labelIcon = Icons.Default.Image,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            OutlinedTextField(
+                                label = { Text(stringResource(R.string.organization)) },
+                                value = organization,
+                                onValueChange = { organization = it },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Business,
+                                        contentDescription = stringResource(R.string.organization),
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            OutlinedTextField(
+                                label = { Text(stringResource(R.string.serial_number)) },
+                                value = serialNumber,
+                                onValueChange = { serialNumber = it },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Badge,
+                                        contentDescription = stringResource(R.string.serial_number),
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            OutlinedTextField(
+                                label = { Text(stringResource(R.string.logo_text)) },
+                                value = logoText,
+                                onValueChange = { logoText = it },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.TextFields,
+                                        contentDescription = stringResource(R.string.logo_text),
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = logoUrl,
+                                onClear = { logoUrl = null },
+                                onChoose = { logoUrl = it },
+                                label = stringResource(R.string.logo),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = iconUrl,
+                                onClear = { iconUrl = null },
+                                onChoose = { iconUrl = it },
+                                label = stringResource(R.string.icon),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = stripUrl,
+                                onClear = { stripUrl = null },
+                                onChoose = { stripUrl = it },
+                                label = stringResource(R.string.strip),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = thumbnailUrl,
+                                onClear = { thumbnailUrl = null },
+                                onChoose = { thumbnailUrl = it },
+                                label = stringResource(R.string.thumbnail),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = footerUrl,
+                                onClear = { footerUrl = null },
+                                onChoose = { footerUrl = it },
+                                label = stringResource(R.string.footer),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }
-        }
 
             Spacer(modifier = Modifier.imePadding())
         }
@@ -575,42 +603,53 @@ fun CreateView(
                 onClick = {
                     isSaving = true
                     coroutineScope.launch(Dispatchers.IO) {
-                        val relevantDates = when {
-                            relevantStart != null && relevantEnd != null -> listOf(
-                                PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!)
-                            )
-                            relevantStart != null -> listOf(PassRelevantDate.Date(relevantStart!!))
-                            else -> emptyList()
-                        }
+                        val relevantDates =
+                            when {
+                                relevantStart != null && relevantEnd != null -> {
+                                    listOf(
+                                        PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!),
+                                    )
+                                }
 
-                        val colors = if (allColorsBlank) {
-                            null
-                        } else {
-                            val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
-                            PassColors(
-                                background = backgroundColor ?: fallbackColor,
-                                foreground = foregroundColor ?: fallbackColor,
-                                label = labelColor ?: fallbackColor,
-                            )
-                        }
+                                relevantStart != null -> {
+                                    listOf(PassRelevantDate.Date(relevantStart!!))
+                                }
 
-                        val savedPassId = createViewModel.savePass(
-                            name = name,
-                            organization = organization,
-                            serialNumber = serialNumber,
-                            type = type,
-                            barcodes = barCodeModels,
-                            logoText = logoText,
-                            colors = colors,
-                            location = location,
-                            relevantDates = relevantDates,
-                            expirationDate = expirationDate,
-                            iconUrl = iconUrl,
-                            logoUrl = logoUrl,
-                            stripUrl = stripUrl,
-                            thumbnailUrl = thumbnailUrl,
-                            footerUrl = footerUrl,
-                        )
+                                else -> {
+                                    emptyList()
+                                }
+                            }
+
+                        val colors =
+                            if (allColorsBlank) {
+                                null
+                            } else {
+                                val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
+                                PassColors(
+                                    background = backgroundColor ?: fallbackColor,
+                                    foreground = foregroundColor ?: fallbackColor,
+                                    label = labelColor ?: fallbackColor,
+                                )
+                            }
+
+                        val savedPassId =
+                            createViewModel.savePass(
+                                name = name,
+                                organization = organization,
+                                serialNumber = serialNumber,
+                                type = type,
+                                barcodes = barCodeModels,
+                                logoText = logoText,
+                                colors = colors,
+                                location = location,
+                                relevantDates = relevantDates,
+                                expirationDate = expirationDate,
+                                iconUrl = iconUrl,
+                                logoUrl = logoUrl,
+                                stripUrl = stripUrl,
+                                thumbnailUrl = thumbnailUrl,
+                                footerUrl = footerUrl,
+                            )
                         withContext(Dispatchers.Main) {
                             isSaving = false
                             navController.navigate("pass/$savedPassId") {
@@ -619,11 +658,12 @@ fun CreateView(
                         }
                     }
                 },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .imePadding()
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .imePadding()
+                        .padding(8.dp),
             ) {
                 Text(stringResource(R.string.create_pass))
             }
@@ -654,15 +694,16 @@ private fun PickableOutlinedField(
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable { onPick() }
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .clickable { onPick() },
             )
         }
         IconButton(onClick = onClear, enabled = clearEnabled) {
             Icon(
                 imageVector = Icons.Default.Clear,
-                contentDescription = stringResource(R.string.clear_selection)
+                contentDescription = stringResource(R.string.clear_selection),
             )
         }
     }
@@ -679,7 +720,7 @@ private fun ColorPickerRow(
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(modifier = Modifier.weight(1f)) {
             OutlinedTextField(
@@ -687,39 +728,42 @@ private fun ColorPickerRow(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(label) },
-                textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace),
+                textStyle =
+                    androidx.compose.ui.text
+                        .TextStyle(fontFamily = FontFamily.Monospace),
                 leadingIcon = {
                     Row(
                         modifier = Modifier.padding(start = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(imageVector = icon, contentDescription = label)
                         Spacer(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(color ?: Color.Transparent)
+                            modifier =
+                                Modifier
+                                    .size(16.dp)
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(color ?: Color.Transparent),
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             Spacer(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable { onPick() }
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .clickable { onPick() },
             )
         }
         IconButton(onClick = onClear, enabled = color != null) {
             Icon(
                 imageVector = Icons.Default.Clear,
-                contentDescription = stringResource(R.string.clear_selection)
+                contentDescription = stringResource(R.string.clear_selection),
             )
         }
     }
 }
-
 
 @Composable
 private fun ColorPickerDialog(
@@ -749,18 +793,20 @@ private fun ColorPickerDialog(
                     controller = controller,
                     initialColor = initialColor,
                     onColorChanged = { envelope = it },
-                    modifier = Modifier
-                        .width(220.dp)
-                        .size(220.dp)
+                    modifier =
+                        Modifier
+                            .width(220.dp)
+                            .size(220.dp),
                 )
 
                 Text(stringResource(R.string.brightness))
                 BrightnessSlider(
                     controller = controller,
-                    modifier = Modifier
-                        .width(220.dp)
-                        .size(width = 220.dp, height = 28.dp)
-                        .padding(horizontal = 4.dp)
+                    modifier =
+                        Modifier
+                            .width(220.dp)
+                            .size(width = 220.dp, height = 28.dp)
+                            .padding(horizontal = 4.dp),
                 )
 
                 Text("#${envelope.hexCode}", fontFamily = FontFamily.Monospace)
@@ -771,7 +817,7 @@ private fun ColorPickerDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.back)) }
-        }
+        },
     )
 }
 
@@ -798,7 +844,7 @@ private fun LocationPickerDialog(
                     latitude = it.latitude,
                     longitude = it.longitude,
                 )
-            }
+            },
         )
     }
 
@@ -858,11 +904,13 @@ private fun LocationPickerDialog(
 
                 TextButton(
                     onClick = {
-                        val geoUri = if (selected != null) {
-                            "geo:${selected!!.latitude},${selected!!.longitude}?q=${selected!!.latitude},${selected!!.longitude}".toUri()
-                        } else {
-                            "geo:0,0?q=${Uri.encode(query)}".toUri()
-                        }
+                        val geoUri =
+                            if (selected != null) {
+                                "geo:${selected!!.latitude},${selected!!.longitude}?q=${selected!!.latitude},${selected!!.longitude}"
+                                    .toUri()
+                            } else {
+                                "geo:0,0?q=${Uri.encode(query)}".toUri()
+                            }
                         val intent = Intent(Intent.ACTION_VIEW, geoUri)
                         try {
                             context.startActivity(intent)
@@ -880,10 +928,11 @@ private fun LocationPickerDialog(
             TextButton(
                 onClick = {
                     selected?.let {
-                        val location = Location("").apply {
-                            this.latitude = it.latitude
-                            this.longitude = it.longitude
-                        }
+                        val location =
+                            Location("").apply {
+                                this.latitude = it.latitude
+                                this.longitude = it.longitude
+                            }
                         onConfirm(location)
                     }
                 },
@@ -894,7 +943,7 @@ private fun LocationPickerDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.back)) }
-        }
+        },
     )
 }
 
@@ -904,9 +953,10 @@ private fun openDateTimePicker(
     onPicked: (ZonedDateTime) -> Unit,
 ) {
     val seed = initial ?: ZonedDateTime.now()
-    val calendar = Calendar.getInstance().apply {
-        timeInMillis = seed.toInstant().toEpochMilli()
-    }
+    val calendar =
+        Calendar.getInstance().apply {
+            timeInMillis = seed.toInstant().toEpochMilli()
+        }
 
     DatePickerDialog(
         context,
@@ -923,18 +973,18 @@ private fun openDateTimePicker(
                             minute,
                             0,
                             0,
-                            ZoneId.systemDefault()
-                        )
+                            ZoneId.systemDefault(),
+                        ),
                     )
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
-                true
+                true,
             ).show()
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
+        calendar.get(Calendar.DAY_OF_MONTH),
     ).show()
 }
 
@@ -950,14 +1000,13 @@ private data class BarcodeDraft(
     val format: BarcodeFormat,
 )
 
-private fun barcodeValid(barCode: BarCode): Boolean {
-    return try {
+private fun barcodeValid(barCode: BarCode): Boolean =
+    try {
         barCode.encodeAsBitmap(100, 100, false)
         true
     } catch (_: IllegalArgumentException) {
         false
     }
-}
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 

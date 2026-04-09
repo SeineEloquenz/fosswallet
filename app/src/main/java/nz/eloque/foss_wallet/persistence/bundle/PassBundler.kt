@@ -10,11 +10,12 @@ import java.util.zip.ZipOutputStream
 class PassBundler(
     val context: Context,
 ) {
-
     fun bundle(passes: Collection<Pass>): File {
-        val passFiles: Map<String, File> = passes.toList()
-            .filter { it.originalPassFile(context) != null }
-            .associate { pass ->  Pair(pass.id, pass.originalPassFile(context)!!) }
+        val passFiles: Map<String, File> =
+            passes
+                .toList()
+                .filter { it.originalPassFile(context) != null }
+                .associate { pass -> Pair(pass.id, pass.originalPassFile(context)!!) }
         return bundleFiles(passFiles)
     }
 

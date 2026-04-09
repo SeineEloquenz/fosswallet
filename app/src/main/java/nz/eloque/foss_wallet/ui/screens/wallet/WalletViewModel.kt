@@ -23,79 +23,77 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 data class QueryState(
-    val query: String = ""
+    val query: String = "",
 )
 
 @HiltViewModel
-class WalletViewModel @Inject constructor(
-    application: Application,
-    private val passStore: PassStore,
-    private val tagRepository: TagRepository,
-    val settingsStore: SettingsStore
-) : AndroidViewModel(application) {
+class WalletViewModel
+    @Inject
+    constructor(
+        application: Application,
+        private val passStore: PassStore,
+        private val tagRepository: TagRepository,
+        val settingsStore: SettingsStore,
+    ) : AndroidViewModel(application) {
+        private val baseQueryState = MutableStateFlow(QueryState())
+        private val queryState: StateFlow<QueryState> = baseQueryState.asStateFlow()
 
-    private val _queryState = MutableStateFlow(QueryState())
-    private val queryState: StateFlow<QueryState> = _queryState.asStateFlow()
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
+        @OptIn(ExperimentalCoroutinesApi::class)
+        val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
-    val allTags = tagRepository.all()
+        val allTags = tagRepository.all()
 
-    private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
-    val sortOptionState = _sortOptionState.asStateFlow()
+        private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
+        val sortOptionState = _sortOptionState.asStateFlow()
 
-    init {
-        update()
-        viewModelScope.launch(Dispatchers.IO) {
-            passStore.archiveExpiredPasses()
+        init {
+            update()
+            viewModelScope.launch(Dispatchers.IO) {
+                passStore.archiveExpiredPasses()
+            }
         }
-    }
 
-    private fun update() {
-        viewModelScope.launch {
-            _sortOptionState.value = settingsStore.sortOption()
+        private fun update() {
+            viewModelScope.launch {
+                _sortOptionState.value = settingsStore.sortOption()
+            }
         }
-    }
 
-    fun setSortOption(sortOption: SortOption) {
-        settingsStore.setSortOption(sortOption)
-        update()
-    }
-
-    fun group(passes: Set<Pass>) = passStore.group(passes)
-
-    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
-
-    fun filter(query: String) {
-        viewModelScope.launch {
-            _queryState.value = _queryState.value.copy(query = query)
+        fun setSortOption(sortOption: SortOption) {
+            settingsStore.setSortOption(sortOption)
+            update()
         }
+
+        fun group(passes: Set<Pass>) = viewModelScope.launch(Dispatchers.IO) { passStore.group(passes) }
+
+        fun deleteGroup(groupId: Long) = viewModelScope.launch(Dispatchers.IO) { passStore.deleteGroup(groupId) }
+
+        fun filter(query: String) =
+            viewModelScope.launch(Dispatchers.IO) { baseQueryState.value = baseQueryState.value.copy(query = query) }
+
+        fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
+
+        fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
+
+        fun removeTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.remove(tag) }
+
+        fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
+
+        fun associate(
+            groupId: Long,
+            passes: Set<Pass>,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.associate(groupId, passes) }
+
+        fun dissociate(
+            pass: Pass,
+            groupId: Long,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.dissociate(pass, groupId) }
+
+        fun archive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) }
+
+        fun unarchive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) }
+
+        fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
+
+        fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
     }
-
-    fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
-
-    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-
-    suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
-
-    fun delete(pass: Pass) = passStore.delete(pass)
-
-    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
-    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
-
-    fun archive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.archive(pass)
-        }
-    }
-    
-    fun unarchive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.unarchive(pass)
-        }
-    }
-
-    fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
-
-    fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
-}
