@@ -1,2 +1,7 @@
 [*.{kt,kts}]
 ktlint_standard_package-name = disabled
+ktlint_function_naming_ignore_when_annotated_with=Composable
+
+# Disable filename rule for migrations
+[**/persistence/migrations/*.kt]
+ktlint_standard_filename = disabled
