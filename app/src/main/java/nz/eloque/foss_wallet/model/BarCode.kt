@@ -86,6 +86,15 @@ data class BarCode(
         return result
     }
 
+    fun copy(altText: String?): BarCode {
+        return copy(
+            format = this.format,
+            message = this.message,
+            encoding = this.encoding,
+            altText = altText,
+        )
+    }
+
     companion object {
 
         val FALLBACK_CHARSET = Charsets.UTF_8
