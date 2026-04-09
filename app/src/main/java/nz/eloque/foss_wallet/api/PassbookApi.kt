@@ -13,7 +13,6 @@ import java.net.SocketTimeoutException
 
 @Suppress("RedundantSuspendModifier")
 object PassbookApi {
-
     private const val TAG = "PassbookApi"
     private const val API_VERSION = "v1"
 
@@ -24,16 +23,16 @@ object PassbookApi {
 
         val client = OkHttpClient.Builder().build()
 
-        val response = try {
-            client.get(requestUrl, authHeader)
-        } catch (e: SocketTimeoutException) {
-            Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
-            return UpdateResult.Failed(FailureReason.Timeout)
-        }
-        catch (e: IOException) {
-            Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
-            return UpdateResult.Failed(FailureReason.Exception(e))
-        }
+        val response =
+            try {
+                client.get(requestUrl, authHeader)
+            } catch (e: SocketTimeoutException) {
+                Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
+                return UpdateResult.Failed(FailureReason.Timeout)
+            } catch (e: IOException) {
+                Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
+                return UpdateResult.Failed(FailureReason.Exception(e))
+            }
         return if (response.isSuccessful) {
             try {
                 UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(response.body.bytes(), pass.id, pass.addedAt)))
@@ -49,10 +48,15 @@ object PassbookApi {
         }
     }
 
-    private suspend fun OkHttpClient.get(url: String, vararg headers: Pair<String, String>): Response {
-        val requestBuilder = Request.Builder()
-            .url(url)
-            .get()
+    private suspend fun OkHttpClient.get(
+        url: String,
+        vararg headers: Pair<String, String>,
+    ): Response {
+        val requestBuilder =
+            Request
+                .Builder()
+                .url(url)
+                .get()
         headers.forEach { requestBuilder.header(it.first, it.second) }
         return this.newCall(requestBuilder.build()).execute()
     }

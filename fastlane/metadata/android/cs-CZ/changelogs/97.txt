@@ -1,0 +1,1 @@
+* Opraven pád při (od)archivaci v zobrazení lístku

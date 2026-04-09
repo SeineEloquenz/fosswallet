@@ -23,13 +23,13 @@ fun CreateScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = Screen.Create.resourceId)
+        title = stringResource(id = Screen.Create.resourceId),
     ) {
         CreateView(
             navController,
             createViewModel,
             startMode = startMode,
-            initialBarcode = initialBarcode
+            initialBarcode = initialBarcode,
         )
     }
 }

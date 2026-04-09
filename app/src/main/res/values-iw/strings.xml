@@ -91,4 +91,18 @@
     <string name="select_image_with_barcode">בחר תמונה עם ברקוד</string>
     <string name="no_barcode_found">ברקוד לא נמצא</string>
     <string name="logo">לוגו</string>
+    <string name="the_archive">ארכיון</string>
+    <string name="footer">כותרת תחתונה</string>
+    <string name="no_search_results">אין תוצאות חיפוש</string>
+    <string name="brightness">בהירות</string>
+    <string name="searching">מחפש…</string>
+    <string name="pass_background_color">צבע רקע</string>
+    <string name="pass_expiration_date">תוקף</string>
+    <string name="selected_location">נבחר: %1$s</string>
+    <string name="manual_entry">הזנה ידנית</string>
+    <string name="pass_relevant_start">התחלה</string>
+    <string name="no_map_app_found">לא נמצאה אפליקציית מפות</string>
+    <string name="no_calendar_app_found">לא נמצאה אפליקציית לוח שנה</string>
+    <string name="pass_label_color">צבע תווית</string>
+    <string name="thumbnail">תמונה ממוזערת</string>
 </resources>

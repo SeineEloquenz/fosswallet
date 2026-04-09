@@ -31,7 +31,6 @@ import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PassCardFooter(
@@ -45,7 +44,7 @@ fun PassCardFooter(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         val pass = localizedPass.pass
         val tags = localizedPass.tags
@@ -53,22 +52,24 @@ fun PassCardFooter(
         var tagChooserShown by remember { mutableStateOf(false) }
 
         if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
-            val interval: PassRelevantDate.DateInterval = pass.relevantDates.filter {
-                it is PassRelevantDate.DateInterval
-            }[0] as PassRelevantDate.DateInterval
+            val interval: PassRelevantDate.DateInterval =
+                pass.relevantDates.filter {
+                    it is PassRelevantDate.DateInterval
+                }[0] as PassRelevantDate.DateInterval
             CalendarButton(
                 title = pass.description,
                 start = interval.startDate,
-                end = interval.endDate
+                end = interval.endDate,
             )
         } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
-            val date: PassRelevantDate.Date = pass.relevantDates.filter {
-                it is PassRelevantDate.Date
-            }[0] as PassRelevantDate.Date
+            val date: PassRelevantDate.Date =
+                pass.relevantDates.filter {
+                    it is PassRelevantDate.Date
+                }[0] as PassRelevantDate.Date
             CalendarButton(
                 title = pass.description,
                 start = date.date,
-                end = pass.expirationDate
+                end = pass.expirationDate,
             )
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
@@ -89,7 +90,7 @@ fun PassCardFooter(
                 chipColors.copy(
                     containerColor = it.color,
                     labelColor = contentColor,
-                    leadingIconColor = contentColor
+                    leadingIconColor = contentColor,
                 )
             },
             trailingIcon = {
@@ -97,11 +98,11 @@ fun PassCardFooter(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.remove_tag),
-                        tint = it.contentColor()
+                        tint = it.contentColor(),
                     )
                 }
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         if (!readOnly) {
@@ -110,7 +111,7 @@ fun PassCardFooter(
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.add_tag)
+                    contentDescription = stringResource(R.string.add_tag),
                 )
             }
         } else {
@@ -128,7 +129,7 @@ fun PassCardFooter(
                         tagChooserShown = false
                     },
                     onTagCreate = onTagCreate,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

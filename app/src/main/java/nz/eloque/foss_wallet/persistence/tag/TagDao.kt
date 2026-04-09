@@ -11,7 +11,6 @@ import nz.eloque.foss_wallet.model.Tag
 
 @Dao
 interface TagDao {
-
     @Transaction
     @Query("SELECT * FROM tag")
     fun all(): Flow<List<Tag>>

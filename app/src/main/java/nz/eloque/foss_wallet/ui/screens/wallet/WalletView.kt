@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -44,8 +43,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -70,10 +67,13 @@ fun WalletView(
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
-    val coroutineScope = rememberCoroutineScope()
+
     val emptyState = rememberLazyListState()
     val passFlow = walletViewModel.filteredPasses
-    val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }.map { passes -> passes.filter { archive == it.pass.archived } }.collectAsState(listOf())
+    val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }
+        .map { passes ->
+            passes.filter { archive == it.pass.archived }
+        }.collectAsState(listOf())
 
     val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
@@ -85,11 +85,13 @@ fun WalletView(
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
     val passToDelete = remember { mutableStateOf<LocalizedPassWithTags?>(null) }
 
-    val sortedPasses = passes
-        .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-        .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-        .sortedWith(sortOption.comparator)
-        .groupBy { it.pass.groupId }.toList()
+    val sortedPasses =
+        passes
+            .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
+            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
+            .sortedWith(sortOption.comparator)
+            .groupBy { it.pass.groupId }
+            .toList()
     val visiblePasses = sortedPasses.flatMap { it.second }.toSet()
 
     LaunchedEffect(visiblePasses) {
@@ -101,21 +103,20 @@ fun WalletView(
         DeleteConfirmationDialog(
             settingsStore = walletViewModel.settingsStore,
             onConfirm = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    walletViewModel.delete(pendingDelete.pass)
-                }
+                walletViewModel.delete(pendingDelete.pass)
                 Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
                 passToDelete.value = null
             },
             onDismiss = {
                 passToDelete.value = null
-            }
+            },
         )
     }
 
     if (sortedPasses.isEmpty()) {
-        Box(modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             Image(
                 imageVector = emptyIcon,
@@ -123,19 +124,21 @@ fun WalletView(
                 contentDescription = stringResource(R.string.wallet),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth(0.5f),
-                alpha = 0.25f
+                alpha = 0.25f,
             )
         }
     }
 
     LazyColumn(
         state = if (passes.isEmpty()) emptyState else listState,
-        verticalArrangement = Arrangement
-            .spacedBy(8.dp),
+        verticalArrangement =
+            Arrangement
+                .spacedBy(8.dp),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-        modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) {
         val groups = sortedPasses.filter { it.first != null }
         val ungrouped = sortedPasses.filter { it.first == null }.flatMap { it.second }
@@ -147,7 +150,7 @@ fun WalletView(
                 onSortChange = { walletViewModel.setSortOption(it) },
                 passTypesToShow = passTypesToShow,
                 tags = tags,
-                tagToFilterFor = tagToFilterFor
+                tagToFilterFor = tagToFilterFor,
             )
         }
 
@@ -156,11 +159,9 @@ fun WalletView(
                 groupId = groupId!!,
                 passes = passes,
                 allTags = tags,
-                onClick = {
-                    navController.navigate("pass/${it.id}")
-                },
+                onClick = { navController.navigate("pass/${it.id}") },
                 walletViewModel = walletViewModel,
-                selectedPasses = selectedPasses
+                selectedPasses = selectedPasses,
             )
         }
         items(ungrouped) { pass ->
@@ -170,15 +171,9 @@ fun WalletView(
                 rightSwipeIcon = Icons.Default.Delete,
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
-                onLeftSwipe = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass)
-                    }
-                },
-                onRightSwipe = {
-                    passToDelete.value = pass
-                },
-                modifier = Modifier.padding(2.dp)
+                onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
+                onRightSwipe = { passToDelete.value = pass },
+                modifier = Modifier.padding(2.dp),
             ) {
                 ShortPassCard(
                     pass = pass,
@@ -194,8 +189,6 @@ fun WalletView(
                         if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
                     },
                     selected = selectedPasses.contains(pass),
-                    barcodePosition = walletViewModel.barcodePosition(),
-                    increaseBrightness = walletViewModel.increasePassViewBrightness()
                 )
             }
         }

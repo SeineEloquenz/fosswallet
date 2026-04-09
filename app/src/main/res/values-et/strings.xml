@@ -123,4 +123,9 @@
     <string name="barcode_step_title">Lisa triipkood</string>
     <string name="continue_to_details">Jätka</string>
     <string name="no_text_in_clipboard">Lõikelaual pole teksti</string>
+    <string name="delete_confirmation_message">Kas kustutame valitud dokumend(id)? Seda tegevust ei saa tagasi pöörata.</string>
+    <string name="dont_ask_again">Ära enam küsi minult uuesti</string>
+    <string name="ask_before_delete">Küsi kinnitust enne kustutamist</string>
+    <string name="select_all">Vali kõik</string>
+    <string name="the_archive">Arhiveeri</string>
 </resources>

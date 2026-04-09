@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.ui.components
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AbbreviatingText(
     text: String,
@@ -26,41 +24,29 @@ fun AbbreviatingText(
     textAlign: TextAlign? = null,
     maxLines: Int = 1,
     style: TextStyle = LocalTextStyle.current,
+    useTooltip: Boolean = true,
 ) {
-    var isEllipsized by remember { mutableStateOf(false) }
-    val toolTipState = rememberTooltipState()
-
-    if (isEllipsized) {
-        TooltipBox(
-            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-            state = toolTipState,
-            tooltip = {
-                PlainTooltip { Text(text) }
-            },
-            modifier = modifier
-        ) {
-            Text(
-                text = text,
-                maxLines = maxLines,
-                overflow = TextOverflow.Ellipsis,
-                style = style,
-                textAlign = textAlign,
-                onTextLayout = { result ->
-                    isEllipsized = result.hasVisualOverflow
-                }
-            )
-        }
-    } else {
+    var hasOverflow by remember { mutableStateOf(false) }
+    val content = @Composable {
         Text(
             text = text,
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis,
-            style = style,
-            textAlign = textAlign,
             modifier = modifier,
-            onTextLayout = { result ->
-                isEllipsized = result.hasVisualOverflow
-            }
+            textAlign = textAlign,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines,
+            onTextLayout = { if (useTooltip) hasOverflow = it.hasVisualOverflow },
+            style = style,
         )
+    }
+
+    if (hasOverflow) {
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+            tooltip = { PlainTooltip { Text(text) } },
+            state = rememberTooltipState(),
+            content = content,
+        )
+    } else {
+        content()
     }
 }

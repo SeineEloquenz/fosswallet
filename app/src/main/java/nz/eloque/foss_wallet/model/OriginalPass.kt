@@ -5,7 +5,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 data class OriginalPass(
-    val bytes: ByteArray
+    val bytes: ByteArray,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -16,11 +16,12 @@ data class OriginalPass(
         return bytes.contentEquals(other.bytes)
     }
 
-    override fun hashCode(): Int {
-        return bytes.contentHashCode()
-    }
+    override fun hashCode(): Int = bytes.contentHashCode()
 
-    fun saveToDisk(context: Context, passId: String) {
+    fun saveToDisk(
+        context: Context,
+        passId: String,
+    ) {
         val directory = File(context.filesDir, passId)
         if (!directory.exists()) {
             directory.mkdirs()

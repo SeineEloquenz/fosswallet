@@ -18,7 +18,7 @@ fun WebviewScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = R.string.webview)
+        title = stringResource(id = R.string.webview),
     ) {
         WebviewView(navController, walletViewModel, url)
     }

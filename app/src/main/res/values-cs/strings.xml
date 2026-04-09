@@ -98,7 +98,7 @@
     <string name="logo_text">Text loga</string>
     <string name="icon">Ikona</string>
     <string name="logo">Logo</string>
-    <string name="strip">Oříznout</string>
+    <string name="strip">Pruh</string>
     <string name="thumbnail">Náhled</string>
     <string name="footer">Zápatí</string>
     <string name="additional_fields">Další pole</string>
@@ -127,4 +127,5 @@
     <string name="dont_ask_again">Znovu se neptat</string>
     <string name="ask_before_delete">Zeptat se před odstraněním</string>
     <string name="select_all">Vybrat vše</string>
+    <string name="the_archive">Archiv</string>
 </resources>

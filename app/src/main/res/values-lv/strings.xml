@@ -63,4 +63,12 @@
     <string name="thumbnail">Sīkbilde</string>
     <string name="pass_relevant_start">Sākt</string>
     <string name="to">uz</string>
+    <string name="the_archive">Arhīvs</string>
+    <string name="boarding_pass">Iekāpšanas karte</string>
+    <string name="no_url_in_clipboard">Starpliktuvē nav URL</string>
+    <string name="no_text_in_clipboard">Starpliktuvē nav teksta</string>
+    <string name="store_card">Veikala karte</string>
+    <string name="status_code">Serveris atbildēja ar statusu %1$s</string>
+    <string name="searching">Meklēšana…</string>
+    <string name="pass_expiration_date">Derīguma termiņš</string>
 </resources>

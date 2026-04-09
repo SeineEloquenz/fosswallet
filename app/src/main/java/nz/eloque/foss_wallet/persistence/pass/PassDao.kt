@@ -14,7 +14,6 @@ import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
 
 @Dao
 interface PassDao {
-
     @Transaction
     @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithTagsAndLocalization>>
@@ -32,10 +31,13 @@ interface PassDao {
     fun findById(id: String): PassWithTagsAndLocalization?
 
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
-    fun associate(passId: String, groupId: Long)
+    suspend fun associate(
+        passId: String,
+        groupId: Long,
+    )
 
     @Query("UPDATE pass SET groupId = NULL WHERE id = :passId")
-    fun dissociate(passId: String)
+    suspend fun dissociate(passId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pass: Pass)
@@ -44,13 +46,16 @@ interface PassDao {
     fun insert(group: PassGroup): Long
 
     @Delete
-    fun delete(pass: Pass)
+    suspend fun delete(pass: Pass)
 
     @Delete
-    fun delete(group: PassGroup)
+    suspend fun delete(group: PassGroup)
 
     @Transaction
-    fun associate(groupId: Long, passes: Set<Pass>) {
+    suspend fun associate(
+        groupId: Long,
+        passes: Set<Pass>,
+    ) {
         for (pass in passes) {
             associate(pass.id, groupId)
         }
@@ -63,19 +68,24 @@ interface PassDao {
     suspend fun untag(crossRef: PassTagCrossRef)
 
     @Transaction
-    fun dissociate(pass: Pass, groupId: Long) {
+    suspend fun dissociate(
+        pass: Pass,
+        groupId: Long,
+    ) {
         dissociate(pass.id)
         deleteEmptyGroup(groupId)
     }
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM PassGroup
         WHERE id = :groupId 
         AND (
           SELECT COUNT(*) FROM Pass WHERE Pass.groupId = :groupId
         ) = 1
-    """)
-    fun deleteEmptyGroup(groupId: Long)
+    """,
+    )
+    suspend fun deleteEmptyGroup(groupId: Long)
 
     @Query("UPDATE pass SET archived = 1 WHERE id = :passId")
     suspend fun archive(passId: String)
@@ -84,8 +94,11 @@ interface PassDao {
     suspend fun unarchive(passId: String)
 
     @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
-    fun setLegacyRendering(passId: String, renderLegacy: Boolean)
+    suspend fun setLegacyRendering(
+        passId: String,
+        renderLegacy: Boolean,
+    )
 
     @Query("SELECT * FROM pass WHERE archived = 0 AND autoArchive = 1 AND expirationDate IS NOT NULL")
-    fun nonArchivedWithExpirationDate(): List<Pass>
+    suspend fun nonArchivedWithExpirationDate(): List<Pass>
 }

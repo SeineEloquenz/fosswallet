@@ -63,25 +63,29 @@ fun ImagePicker(
             model = imageUrl ?: R.drawable.icon,
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Fit,
-            modifier = Modifier.height(40.dp)
+            modifier = Modifier.height(40.dp),
         )
 
         IconButton(
-            onClick = { onClear() },
-            enabled = imageUrl != null
+            onClick = {
+                onClear()
+            },
+            enabled = imageUrl != null,
         ) {
             Icon(
                 imageVector = Icons.Default.Clear,
-                contentDescription = stringResource(R.string.clear_selection)
+                contentDescription = stringResource(R.string.clear_selection),
             )
         }
 
         IconButton(
-            onClick = { launchPicker() }
+            onClick = {
+                launchPicker()
+            },
         ) {
             Icon(
                 imageVector = Icons.Default.ImageSearch,
-                contentDescription = stringResource(R.string.choose_image)
+                contentDescription = stringResource(R.string.choose_image),
             )
         }
     }

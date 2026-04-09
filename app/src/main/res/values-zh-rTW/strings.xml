@@ -115,4 +115,17 @@
     <string name="pass_background_color">背景顏色</string>
     <string name="pass_foreground_color">前景顏色</string>
     <string name="pass_label_color">標籤顏色</string>
+    <string name="delete_confirmation_message">要刪除已選取的通行證嗎？此操作無法復原。</string>
+    <string name="dont_ask_again">不要再詢問</string>
+    <string name="ask_before_delete">刪除前詢問</string>
+    <string name="import_pass">匯入通行證</string>
+    <string name="open_from_clipboard">從剪貼簿開啟</string>
+    <string name="the_archive">封存</string>
+    <string name="manual_entry">手動輸入</string>
+    <string name="advanced">進階</string>
+    <string name="scan_code">掃描條碼</string>
+    <string name="barcode_step_title">新增條碼</string>
+    <string name="continue_to_details">繼續</string>
+    <string name="no_text_in_clipboard">剪貼簿中沒有文字</string>
+    <string name="select_all">全選</string>
 </resources>

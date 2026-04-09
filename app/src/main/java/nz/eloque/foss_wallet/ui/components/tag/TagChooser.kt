@@ -45,10 +45,11 @@ fun TagChooser(
                     onClick = {
                         onSelected(tag)
                     },
-                    colors = ButtonDefaults.buttonColors().copy(
-                        containerColor = tag.color,
-                        contentColor = tag.contentColor()
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors().copy(
+                            containerColor = tag.color,
+                            contentColor = tag.contentColor(),
+                        ),
                 ) {
                     Text(
                         text = tag.label,
@@ -70,26 +71,26 @@ fun TagChooser(
 
     if (creatorShown) {
         Dialog(
-            onDismissRequest = { creatorShown = false }
+            onDismissRequest = { creatorShown = false },
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(20.dp)
-                    )
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(20.dp),
+                        ),
             ) {
                 TagCreator(
                     onCreate = {
                         onTagCreate(it)
                         creatorShown = false
                     },
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 )
             }
-
         }
     }
 }
