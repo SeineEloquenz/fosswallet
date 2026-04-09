@@ -87,15 +87,15 @@ class PassStore @Inject constructor(
     suspend fun tag(pass: Pass, tag: Tag) = passRepository.tag(pass, tag)
     suspend fun untag(pass: Pass, tag: Tag) = passRepository.untag(pass, tag)
 
-    fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
+    suspend fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
 
-    fun group(passes: Set<Pass>): PassGroup {
+    suspend fun group(passes: Set<Pass>): PassGroup {
         val group = passRepository.insert(PassGroup())
         passes.forEach { passRepository.associate(it, group) }
         return group
     }
 
-    fun delete(pass: Pass) {
+    suspend fun delete(pass: Pass) {
         passRepository.delete(pass)
         updateScheduler.cancelUpdate(pass)
         Shortcut.remove(context, pass)
@@ -121,9 +121,9 @@ class PassStore @Inject constructor(
         return if (pass.autoArchive && expired) pass.copy(archived = true) else pass
     }
 
-    fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
-    fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
-    fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
+    suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
+    suspend fun associate(groupId: Long, passes: Set<Pass>) = passRepository.associate(groupId, passes)
+    suspend fun dissociate(pass: Pass, groupId: Long) = passRepository.dissociate(pass, groupId)
 
     suspend fun hide(pass: Pass) = passRepository.hide(pass)
     suspend fun unhide(pass: Pass) = passRepository.unhide(pass)

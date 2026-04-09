@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,8 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
@@ -57,7 +54,6 @@ fun GroupCard(
     onClick: (Pass) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     ElevatedCard(
         modifier = modifier,
@@ -99,9 +95,7 @@ fun GroupCard(
                         }
                     },
                     selected = selectedPasses.contains(item),
-                    toned = true,
-                    barcodePosition = walletViewModel.barcodePosition(),
-                    increaseBrightness = walletViewModel.increasePassViewBrightness()
+                    toned = true
                 )
             }
             Box(
@@ -114,16 +108,16 @@ fun GroupCard(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     if (selectedPasses.isNotEmpty()) {
-                        IconButton(onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let {
+                        IconButton(onClick = { groupId.let {
                             walletViewModel.associate(groupId, selectedPasses.map { it.pass }.toSet())
-                            selectedPasses.clear()
-                        } } }) {
+                            selectedPasses.clear() }
+                        }) {
                             Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.ungroup))
                         }
                     }
                     IconButton(onClick = {
                         val selectedPass = passes[pagerState.currentPage]
-                        coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.dissociate(selectedPass.pass, groupId) } }
+                        groupId.let { walletViewModel.dissociate(selectedPass.pass, groupId) }
                     }) {
                         Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.ungroup))
                     }
@@ -142,12 +136,12 @@ fun GroupCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.share_passes)) },
                                 leadingIcon = { Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share_passes)) },
-                                onClick = { coroutineScope.launch(Dispatchers.IO) { share(passes.map { it.pass }, context) } }
+                                onClick = { share(passes.map { it.pass }, context) }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ungroup)) },
                                 leadingIcon = { Icon(imageVector = Icons.Default.FolderDelete, contentDescription = stringResource(R.string.ungroup)) },
-                                onClick = { coroutineScope.launch(Dispatchers.IO) { groupId.let { walletViewModel.deleteGroup(it) } } }
+                                onClick = { groupId.let { walletViewModel.deleteGroup(it) } }
                             )
                         }
                     }

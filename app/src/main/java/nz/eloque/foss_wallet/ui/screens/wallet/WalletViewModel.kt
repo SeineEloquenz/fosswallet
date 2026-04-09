@@ -65,33 +65,25 @@ class WalletViewModel @Inject constructor(
         update()
     }
 
-    fun group(passes: Set<Pass>) = passStore.group(passes)
+    fun group(passes: Set<Pass>) = viewModelScope.launch(Dispatchers.IO) { passStore.group(passes) }
 
-    fun deleteGroup(groupId: Long) = passStore.deleteGroup(groupId)
+    fun deleteGroup(groupId: Long) = viewModelScope.launch(Dispatchers.IO) { passStore.deleteGroup(groupId) }
 
-    fun filter(query: String) { viewModelScope.launch { _queryState.value = _queryState.value.copy(query = query) } }
+    fun filter(query: String) = viewModelScope.launch(Dispatchers.IO) { _queryState.value = _queryState.value.copy(query = query) }
 
     fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
-    suspend fun addTag(tag: Tag) = tagRepository.insert(tag)
-    suspend fun removeTag(tag: Tag) = tagRepository.remove(tag)
+    fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 
-    fun delete(pass: Pass) = passStore.delete(pass)
+    fun removeTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.remove(tag) }
 
-    fun associate(groupId: Long, passes: Set<Pass>) = passStore.associate(groupId, passes)
-    fun dissociate(pass: Pass, groupId: Long) = passStore.dissociate(pass, groupId)
+    fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
 
-    fun archive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.archive(pass)
-        }
-    }
-    
-    fun unarchive(pass: Pass) {
-        viewModelScope.launch {
-            passStore.unarchive(pass)
-        }
-    }
+    fun associate(groupId: Long, passes: Set<Pass>) = viewModelScope.launch(Dispatchers.IO) { passStore.associate(groupId, passes) }
+    fun dissociate(pass: Pass, groupId: Long) = viewModelScope.launch(Dispatchers.IO) { passStore.dissociate(pass, groupId) }
+
+    fun archive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) }
+    fun unarchive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) }
 
     fun reveal() { _isAuthenticated.value = true }
     fun conceal() { _isAuthenticated.value = false }
