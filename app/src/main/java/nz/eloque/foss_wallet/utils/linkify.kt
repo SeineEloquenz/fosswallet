@@ -1,28 +1,21 @@
 package nz.eloque.foss_wallet.utils
 
+import androidx.core.util.PatternsCompat
+
 fun linkify(text: String): String = linkifyUrls(linkifyMails(text))
 
 fun linkifyUrls(text: String): String {
-    val urlPattern = Regex(
-        """(?<!["'>]|href=")(?:https?://|www.)[^\s<>"']+(?<![.,;:!?)])(?![^<]*</a>)""",
-        RegexOption.IGNORE_CASE
-    )
-
-    return urlPattern.replace(text) { matchResult ->
-        val original = matchResult.value
-        val href = if (original.startsWith("www.", ignoreCase = true)) "https://$original" else original
-        """<a href="$href" data-linkified="true">$original</a>"""
+    return PatternsCompat.WEB_URL.toRegex(RegexOption.IGNORE_CASE).replace(text) {
+        if (it.value.contains("data-linkified")) return@replace it.value
+        val href = if (!it.value.startsWith("http", ignoreCase = true)) "https://${it.value}" else it.value
+        """<a href="$href" data-linkified="true">${it.value}</a>"""
     }
 }
 
 fun linkifyMails(text: String): String {
-    val mailPattern = Regex(
-        """(?<!["'>]|href=")(?:mailto:)?[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?![^<]*</a>)""",
-        RegexOption.IGNORE_CASE
-    )
-
-    return mailPattern.replace(text) { matchResult ->
-        val mail = matchResult.value.removePrefix("mailto:")
+    return PatternsCompat.EMAIL_ADDRESS.toRegex(RegexOption.IGNORE_CASE).replace(text) {
+        if (it.value.contains("data-linkified")) return@replace it.value
+        val mail = it.value.removePrefix("mailto:")
         """<a href="mailto:$mail" data-linkified="true">$mail</a>"""
     }
 }
