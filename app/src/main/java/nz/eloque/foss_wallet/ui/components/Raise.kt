@@ -16,14 +16,16 @@ fun Raise(
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            decorFitsSystemWindows = true,
-        ),
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                decorFitsSystemWindows = true,
+            ),
     ) {
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(1f)
-        Box(modifier
+        Box(
+            modifier,
         ) {
             content()
         }

@@ -16,34 +16,41 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 
 object Shortcut {
-
     const val SCHEME = "fosswallet"
     const val HOST = "pass"
     const val BASE_URI = "$SCHEME://$HOST"
 
-    fun create(context: Context, pass: Pass, shortcutName: String) {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            "${BASE_URI}/${pass.id}".toUri(),
-            context,
-            MainActivity::class.java
-        )
+    fun create(
+        context: Context,
+        pass: Pass,
+        shortcutName: String,
+    ) {
+        val intent =
+            Intent(
+                Intent.ACTION_VIEW,
+                "${BASE_URI}/${pass.id}".toUri(),
+                context,
+                MainActivity::class.java,
+            )
 
         val originalBitmap = BitmapFactory.decodeFile(pass.iconFile(context).toPath().toString())
         val adaptiveBitmap = wrapInAdaptiveBounds(originalBitmap)
 
         val shortcutIcon = IconCompat.createWithAdaptiveBitmap(adaptiveBitmap)
-        val shortcut = ShortcutInfoCompat.Builder(context, pass.shortcutId())
-            .setShortLabel(shortcutName)
-            .setLongLabel(shortcutName)
-            .setIcon(shortcutIcon)
-            .setIntent(intent)
-            .build()
+        val shortcut =
+            ShortcutInfoCompat
+                .Builder(context, pass.shortcutId())
+                .setShortLabel(shortcutName)
+                .setLongLabel(shortcutName)
+                .setIcon(shortcutIcon)
+                .setIntent(intent)
+                .build()
 
-        val existingShortcuts = ShortcutManagerCompat.getShortcuts(
-            context,
-            ShortcutManagerCompat.FLAG_MATCH_DYNAMIC or ShortcutManagerCompat.FLAG_MATCH_PINNED
-        )
+        val existingShortcuts =
+            ShortcutManagerCompat.getShortcuts(
+                context,
+                ShortcutManagerCompat.FLAG_MATCH_DYNAMIC or ShortcutManagerCompat.FLAG_MATCH_PINNED,
+            )
         if (existingShortcuts.any { it.id == pass.shortcutId() }) {
             Toast.makeText(context, R.string.shortcut_exists, Toast.LENGTH_SHORT).show()
             return
@@ -52,21 +59,26 @@ object Shortcut {
         ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
     }
 
-    fun exists(context: Context, pass: Pass): Boolean {
-        val shortcuts = ShortcutManagerCompat.getShortcuts(
-            context,
-            ShortcutManagerCompat.FLAG_MATCH_DYNAMIC or ShortcutManagerCompat.FLAG_MATCH_PINNED
-        )
+    fun exists(
+        context: Context,
+        pass: Pass,
+    ): Boolean {
+        val shortcuts =
+            ShortcutManagerCompat.getShortcuts(
+                context,
+                ShortcutManagerCompat.FLAG_MATCH_DYNAMIC or ShortcutManagerCompat.FLAG_MATCH_PINNED,
+            )
         return shortcuts.any { it.id == pass.shortcutId() }
     }
 
-    fun remove(context: Context, pass: Pass) {
+    fun remove(
+        context: Context,
+        pass: Pass,
+    ) {
         ShortcutManagerCompat.disableShortcuts(context, listOf(pass.shortcutId()), "")
     }
 
-    private fun Pass.shortcutId(): String {
-        return "pass_${this.id}"
-    }
+    private fun Pass.shortcutId(): String = "pass_${this.id}"
 
     private fun wrapInAdaptiveBounds(source: Bitmap): Bitmap {
         // Adaptive icons require the main content to be centered (roughly 60-70% of the total size)

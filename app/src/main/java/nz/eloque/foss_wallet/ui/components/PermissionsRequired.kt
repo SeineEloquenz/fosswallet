@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionsRequired(
@@ -18,10 +17,10 @@ fun PermissionsRequired(
             content()
         }
         multiplePermissionsState.shouldShowRationale ||
-                !multiplePermissionsState.allPermissionsGranted ->
-        {
-            permissionsNotGrantedContent()
-        }
+            !multiplePermissionsState.allPermissionsGranted ->
+            {
+                permissionsNotGrantedContent()
+            }
         else -> {
             permissionsNotAvailableContent()
         }

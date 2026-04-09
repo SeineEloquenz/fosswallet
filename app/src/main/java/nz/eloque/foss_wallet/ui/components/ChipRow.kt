@@ -23,8 +23,9 @@ fun <T> ChipRow(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
+        modifier =
+            modifier
+                .horizontalScroll(rememberScrollState()),
     ) {
         options.forEach { option ->
             FilterChip(
@@ -33,7 +34,7 @@ fun <T> ChipRow(
                 trailingIcon = { trailingIcon(option) },
                 onClick = { onOptionClick(option) },
                 label = { Text(optionLabel(option)) },
-                colors = optionColors(option)
+                colors = optionColors(option),
             )
         }
     }

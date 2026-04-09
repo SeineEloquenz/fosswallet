@@ -16,23 +16,22 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 
 @Composable
-fun SelectionIndicator(
-    modifier: Modifier = Modifier
-) {
+fun SelectionIndicator(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .size(32.dp)
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .size(32.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape,
+                ),
+        contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Check,
             contentDescription = stringResource(R.string.selected),
             tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(16.dp),
         )
     }
 }

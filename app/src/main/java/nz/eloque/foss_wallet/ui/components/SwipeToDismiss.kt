@@ -29,16 +29,17 @@ fun SwipeToDismiss(
     allowLeftSwipe: Boolean = true,
     leftSwipeIcon: ImageVector = Icons.Default.Edit,
     rightSwipeIcon: ImageVector = Icons.Default.Delete,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val swipeState = rememberSwipeToDismissBoxState()
 
-    val (icon, alignment) = when (swipeState.dismissDirection) {
-        SwipeToDismissBoxValue.EndToStart -> Pair(leftSwipeIcon, Alignment.CenterEnd)
-        SwipeToDismissBoxValue.StartToEnd -> Pair(rightSwipeIcon, Alignment.CenterStart)
-        SwipeToDismissBoxValue.Settled -> Pair(Icons.Default.Delete, Alignment.CenterEnd)
-    }
+    val (icon, alignment) =
+        when (swipeState.dismissDirection) {
+            SwipeToDismissBoxValue.EndToStart -> Pair(leftSwipeIcon, Alignment.CenterEnd)
+            SwipeToDismissBoxValue.StartToEnd -> Pair(rightSwipeIcon, Alignment.CenterStart)
+            SwipeToDismissBoxValue.Settled -> Pair(Icons.Default.Delete, Alignment.CenterEnd)
+        }
 
     SwipeToDismissBox(
         modifier = Modifier.animateContentSize(),
@@ -48,8 +49,9 @@ fun SwipeToDismiss(
         backgroundContent = {
             Box(
                 contentAlignment = alignment,
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
             ) {
                 Icon(
                     imageVector = icon,
@@ -57,10 +59,10 @@ fun SwipeToDismiss(
                     modifier = Modifier.minimumInteractiveComponentSize().alpha(0.5f),
                 )
             }
-        }
+        },
     ) {
         Box(
-            modifier = modifier
+            modifier = modifier,
         ) {
             content()
         }

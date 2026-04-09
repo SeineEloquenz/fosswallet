@@ -9,13 +9,11 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(
-    navController: NavHostController,
-) {
+fun AboutScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = R.string.about)
+        title = stringResource(id = R.string.about),
     ) {
         AboutView(navController)
     }

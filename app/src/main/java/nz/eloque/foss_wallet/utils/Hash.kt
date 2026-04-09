@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.utils
 import java.security.MessageDigest
 
 object Hash {
-
     private val messageDigest = MessageDigest.getInstance("SHA-256")
 
     fun sha256(value: String): String {

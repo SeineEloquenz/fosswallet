@@ -32,9 +32,7 @@ data class FabMenuItem(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FabMenu(
-    items: List<FabMenuItem>
-) {
+fun FabMenu(items: List<FabMenuItem>) {
     Box {
         var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
         BackHandler(fabMenuExpanded) { fabMenuExpanded = false }
@@ -71,5 +69,4 @@ fun FabMenu(
             }
         }
     }
-
 }

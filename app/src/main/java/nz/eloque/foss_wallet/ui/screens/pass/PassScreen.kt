@@ -62,7 +62,7 @@ import nz.eloque.foss_wallet.utils.asString
 fun PassScreen(
     passId: String,
     navController: NavHostController,
-    passViewModel: PassViewModel
+    passViewModel: PassViewModel,
 ) {
     val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
@@ -101,7 +101,7 @@ fun Actions(
     pass: Pass,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    passViewModel: PassViewModel
+    passViewModel: PassViewModel,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -122,34 +122,37 @@ fun Actions(
             },
             onDismiss = {
                 showDeleteModal = false
-            }
+            },
         )
     }
 
     Box(
-        modifier = Modifier
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .padding(16.dp),
     ) {
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
-        
+
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = { expanded.value = false }
+            onDismissRequest = { expanded.value = false },
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon =  {
+                leadingIcon = {
                     Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                 },
                 onClick = {
                     Shortcut.create(context, pass, pass.description)
-                }
+                },
             )
 
             val passFile = pass.originalPassFile(context)
-            if (passFile != null) { PassShareButton(passFile) }
+            if (passFile != null) {
+                PassShareButton(passFile)
+            }
 
             if (pass.updatable()) {
                 val uriHandler = LocalUriHandler.current
@@ -159,26 +162,51 @@ fun Actions(
                         val result = passViewModel.update(pass)
                         isLoading.value = false
                         when (result) {
-                            is UpdateResult.Success -> if (result.content is UpdateContent.Pass) {
+                            is UpdateResult.Success ->
+                                if (result.content is UpdateContent.Pass) {
+                                    snackbarHostState.showSnackbar(
+                                        message = resources.getString(R.string.update_successful),
+                                        duration = SnackbarDuration.Short,
+                                    )
+                                }
+                            is UpdateResult.NotUpdated ->
                                 snackbarHostState.showSnackbar(
-                                    message = resources.getString(R.string.update_successful),
-                                    duration = SnackbarDuration.Short
+                                    message = resources.getString(R.string.status_not_updated),
                                 )
-                            }
-                            is UpdateResult.NotUpdated -> snackbarHostState.showSnackbar(message = resources.getString(R.string.status_not_updated))
                             is UpdateResult.Failed -> {
-                                val snackResult = snackbarHostState.showSnackbar(
-                                    message = when (result.reason) {
-                                        is FailureReason.Status -> resources.getString(result.reason.messageId, result.reason.status)
-                                        else -> resources.getString(result.reason.messageId)
-                                    },
-                                    actionLabel = if (result.reason is FailureReason.Detailed) resources.getString(R.string.details) else null,
-                                    duration = SnackbarDuration.Short
-                                )
+                                val snackResult =
+                                    snackbarHostState.showSnackbar(
+                                        message =
+                                            when (result.reason) {
+                                                is FailureReason.Status ->
+                                                    resources.getString(
+                                                        result.reason.messageId,
+                                                        result.reason.status,
+                                                    )
+                                                else -> resources.getString(result.reason.messageId)
+                                            },
+                                        actionLabel =
+                                            if (result.reason is FailureReason.Detailed) {
+                                                resources.getString(
+                                                    R.string.details,
+                                                )
+                                            } else {
+                                                null
+                                            },
+                                        duration = SnackbarDuration.Short,
+                                    )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
                                     when (result.reason) {
-                                        is FailureReason.Exception -> coroutineScope.launch(Dispatchers.Main) { navController.navigate("updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}") }
-                                        is FailureReason.Status -> uriHandler.openUri("https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}")
+                                        is FailureReason.Exception ->
+                                            coroutineScope.launch(Dispatchers.Main) {
+                                                navController.navigate(
+                                                    "updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}",
+                                                )
+                                            }
+                                        is FailureReason.Status ->
+                                            uriHandler.openUri(
+                                                "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}",
+                                            )
                                     }
                                 }
                             }
@@ -193,10 +221,10 @@ fun Actions(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Unarchive,
-                            contentDescription = stringResource(R.string.unarchive)
+                            contentDescription = stringResource(R.string.unarchive),
                         )
                     },
-                    onClick = { passViewModel.unarchive(pass) }
+                    onClick = { passViewModel.unarchive(pass) },
                 )
             } else {
                 DropdownMenuItem(
@@ -204,21 +232,25 @@ fun Actions(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Archive,
-                            contentDescription = stringResource(R.string.archive)
+                            contentDescription = stringResource(R.string.archive),
                         )
                     },
-                    onClick = { passViewModel.archive(pass) }
+                    onClick = { passViewModel.archive(pass) },
                 )
             }
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
-                leadingIcon =  {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete), tint = MaterialTheme.colorScheme.error)
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete),
+                        tint = MaterialTheme.colorScheme.error,
+                    )
                 },
                 onClick = {
                     showDeleteModal = true
-                }
+                },
             )
         }
     }
@@ -233,19 +265,25 @@ fun UpdateButton(
     val rotation by infiniteTransition.animateFloat(
         initialValue = 360f,
         targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "spin"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(1500, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "spin",
     )
 
     DropdownMenuItem(
         text = { Text(stringResource(R.string.update)) },
         leadingIcon = {
-            Icon(imageVector = Icons.Default.Sync, contentDescription = stringResource(R.string.update), modifier = Modifier.graphicsLayer(
-                rotationZ = if (isLoading) rotation else 0f
-            ))
+            Icon(
+                imageVector = Icons.Default.Sync,
+                contentDescription = stringResource(R.string.update),
+                modifier =
+                    Modifier.graphicsLayer(
+                        rotationZ = if (isLoading) rotation else 0f,
+                    ),
+            )
         },
         onClick = { if (!isLoading) onClick() },
     )

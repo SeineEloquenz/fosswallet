@@ -47,53 +47,53 @@ fun TagCreator(
         var label by remember { mutableStateOf("") }
         var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
 
-
         val valid = !label.isEmpty() && label.length < 30
 
         OutlinedTextField(
             label = { Text(stringResource(R.string.tag_label)) },
             isError = !valid,
             value = label,
-            onValueChange = { label = it }
+            onValueChange = { label = it },
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             HsvColorPicker(
                 controller = controller,
                 initialColor = colorEnvelope.color,
                 onColorChanged = { colorEnvelope = it },
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp)
+                modifier =
+                    Modifier
+                        .width(150.dp)
+                        .height(150.dp),
             )
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AlphaTile(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(RoundedCornerShape(6.dp)),
+                    modifier =
+                        Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(6.dp)),
                     controller = controller,
                 )
 
                 Text(
                     text = colorEnvelope.let { "#${it.hexCode.drop(2)}" },
-                    fontFamily = FontFamily.Monospace
+                    fontFamily = FontFamily.Monospace,
                 )
             }
         }
-
 
         Button(
             onClick = {
                 val tag = Tag(label.trim(), colorEnvelope.color)
                 onCreate(tag)
             },
-            enabled = valid
+            enabled = valid,
         ) {
             Text(text = stringResource(R.string.add_tag))
         }

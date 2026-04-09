@@ -19,23 +19,24 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 
-
 @Composable
 fun LocationButton(
     location: Location,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     IconButton(
         onClick = {
             try {
-                context.startActivity(Intent(Intent.ACTION_VIEW).also {
-                    it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
-                })
+                context.startActivity(
+                    Intent(Intent.ACTION_VIEW).also {
+                        it.data = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
+                    },
+                )
             } catch (e: ActivityNotFoundException) {
                 Log.e("LocationButton", "No map app found!", e)
                 scope.launch {

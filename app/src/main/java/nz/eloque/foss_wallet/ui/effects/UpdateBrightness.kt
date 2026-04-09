@@ -19,16 +19,19 @@ fun UpdateBrightness() {
     }
 }
 
-fun setBrightness(activity: ComponentActivity?, isFull: Boolean) {
+fun setBrightness(
+    activity: ComponentActivity?,
+    isFull: Boolean,
+) {
     if (activity == null) return
     val layoutParams: WindowManager.LayoutParams = activity.window.attributes
     layoutParams.screenBrightness = if (isFull) 1.0f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
     activity.window.attributes = layoutParams
 }
 
-
-fun Context.getActivity(): ComponentActivity? = when (this) {
-    is ComponentActivity -> this
-    is ContextWrapper -> baseContext.getActivity()
-    else -> null
-}
+fun Context.getActivity(): ComponentActivity? =
+    when (this) {
+        is ComponentActivity -> this
+        is ContextWrapper -> baseContext.getActivity()
+        else -> null
+    }

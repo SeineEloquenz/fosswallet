@@ -39,9 +39,7 @@ import kotlin.time.toDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsView(
-    settingsViewModel: SettingsViewModel,
-) {
+fun SettingsView(settingsViewModel: SettingsViewModel) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
@@ -53,7 +51,7 @@ fun SettingsView(
 
     Column(
         modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         SettingsSection(
             heading = stringResource(R.string.pass_updates_channel),
@@ -61,17 +59,22 @@ fun SettingsView(
             SettingsSwitch(
                 title = stringResource(R.string.enable),
                 checked = settings.value.enableSync,
-                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enableSync(it) } }
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enableSync(it) } },
             )
             HorizontalDivider()
             SubmittableTextField(
                 label = stringResource(R.string.sync_interval),
-                initialValue = settings.value.syncInterval.inWholeMinutes.toString(),
+                initialValue =
+                    settings.value.syncInterval.inWholeMinutes
+                        .toString(),
                 imageVector = Icons.Default.Save,
                 inputValidator = { isNaturalNumber(it) },
                 onSubmit = {
-                    coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setSyncInterval(Integer.parseInt(it).toDuration(
-                        DurationUnit.MINUTES)) }
+                    coroutineScope.launch(Dispatchers.IO) {
+                        settingsViewModel.setSyncInterval(
+                            Integer.parseInt(it).toDuration(DurationUnit.MINUTES),
+                        )
+                    }
                 },
                 enabled = settings.value.enableSync,
                 clearOnSubmit = false,
@@ -83,7 +86,7 @@ fun SettingsView(
             SettingsSwitch(
                 title = stringResource(R.string.pass_view_brightness),
                 checked = settings.value.increasePassViewBrightness,
-                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } }
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } },
             )
             HorizontalDivider()
             ComboBox(
@@ -93,11 +96,11 @@ fun SettingsView(
                 onOptionSelected = {
                     coroutineScope.launch(Dispatchers.IO) {
                         settingsViewModel.setBarcodePosition(
-                            it
+                            it,
                         )
                     }
                 },
-                optionLabel = { resources.getString(it.label) }
+                optionLabel = { resources.getString(it.label) },
             )
         }
         SettingsSection(
@@ -108,7 +111,7 @@ fun SettingsView(
                 checked = settings.value.askBeforeDelete,
                 onCheckedChange = {
                     coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setAskBeforeDelete(it) }
-                }
+                },
             )
         }
         SettingsSection(
@@ -121,7 +124,7 @@ fun SettingsView(
                     coroutineScope.launch(Dispatchers.IO) {
                         share(passes.map { it.pass }, context)
                     }
-                }
+                },
             )
         }
         Spacer(modifier = Modifier.imePadding())
@@ -134,21 +137,23 @@ fun SettingsSection(
     content: @Composable () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
     ) {
         Text(
             text = heading,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .padding(start = 16.dp, bottom = 8.dp)
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, bottom = 8.dp),
         )
         Surface(
             tonalElevation = 1.dp,
             shape = MaterialTheme.shapes.medium,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 content()
@@ -157,11 +162,10 @@ fun SettingsSection(
     }
 }
 
-private fun isNaturalNumber(value: String): Boolean {
-    return try {
+private fun isNaturalNumber(value: String): Boolean =
+    try {
         val representation = Integer.parseInt(value)
         representation > 0
     } catch (_: NumberFormatException) {
         false
     }
-}

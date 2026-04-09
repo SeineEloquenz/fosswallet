@@ -28,8 +28,9 @@ fun <T> ChipSelector(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
+        modifier =
+            modifier
+                .horizontalScroll(rememberScrollState()),
     ) {
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
@@ -39,7 +40,7 @@ fun <T> ChipSelector(
                     if (selected) {
                         Icon(
                             imageVector = selectedIcon,
-                            contentDescription = stringResource(R.string.selected)
+                            contentDescription = stringResource(R.string.selected),
                         )
                     }
                 },
