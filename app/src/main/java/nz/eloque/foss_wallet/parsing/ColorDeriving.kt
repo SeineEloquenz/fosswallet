@@ -10,11 +10,11 @@ import nz.eloque.foss_wallet.utils.clamp
 
 fun Bitmap?.derivePassColors(): PassColors? {
     if (this == null) return null
-    
+
     val backgroundColor = this.backgroundColor() ?: return null
     val luminance = ColorUtils.calculateLuminance(backgroundColor.toArgb())
     val contentColor = if (luminance > 0.5) Color.Black else Color.White
-    
+
     return PassColors(backgroundColor, contentColor, contentColor)
 }
 

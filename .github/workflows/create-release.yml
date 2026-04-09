@@ -90,7 +90,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
       - name: Test and Assemble Release
         run: ./gradlew testDebugUnitTest assembleRelease
         env:
@@ -120,7 +120,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
       - name: Test and Bundle Release
         run: ./gradlew testDebugUnitTest bundleRelease
         env:

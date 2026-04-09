@@ -27,7 +27,7 @@ import nz.eloque.foss_wallet.R
 @Composable
 fun FilterBar(
     onSearch: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     var query by rememberSaveable { mutableStateOf("") }
@@ -59,14 +59,13 @@ fun FilterBar(
                             Icon(imageVector = Icons.Default.Clear, contentDescription = stringResource(R.string.delete))
                         }
                     }
-                }
+                },
             )
         },
         expanded = false,
         onExpandedChange = {},
-        modifier = modifier
+        modifier = modifier,
     ) {
-
     }
 }
 

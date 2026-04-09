@@ -26,7 +26,7 @@ fun SettingsScreen(
                 Icon(imageVector = Screen.About.icon, contentDescription = stringResource(R.string.about))
             }
         },
-        title = stringResource(id = R.string.settings)
+        title = stringResource(id = R.string.settings),
     ) {
         SettingsView(settingsViewModel)
     }

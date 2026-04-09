@@ -16,21 +16,19 @@ import nz.eloque.foss_wallet.share.share
 import java.io.File
 
 @Composable
-fun PassShareButton(
-    file: File
-) {
+fun PassShareButton(file: File) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     DropdownMenuItem(
         text = { Text(stringResource(R.string.share)) },
-        leadingIcon =  {
+        leadingIcon = {
             Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share))
         },
         onClick = {
             coroutineScope.launch(Dispatchers.IO) {
                 share(file, context)
             }
-        }
+        },
     )
 }

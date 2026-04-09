@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 buildCache {
     local {
         isEnabled = true
-        directory =  File(rootDir, "build-cache")
+        directory = File(rootDir, "build-cache")
     }
 }
 

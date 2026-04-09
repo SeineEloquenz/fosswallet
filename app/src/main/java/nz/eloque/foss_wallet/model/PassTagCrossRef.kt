@@ -12,21 +12,21 @@ import androidx.room.Index
             entity = Pass::class,
             parentColumns = ["id"],
             childColumns = ["passId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = Tag::class,
             parentColumns = ["label"],
             childColumns = ["tagLabel"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
     indices = [
         Index("passId"),
-        Index("tagLabel")
-    ]
+        Index("tagLabel"),
+    ],
 )
 data class PassTagCrossRef(
     val passId: String,
-    val tagLabel: String
+    val tagLabel: String,
 )

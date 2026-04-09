@@ -24,7 +24,6 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.SelectionIndicator
 import nz.eloque.foss_wallet.utils.darken
 
-
 @Composable
 fun ShortPassCard(
     pass: LocalizedPassWithTags,
@@ -33,28 +32,33 @@ fun ShortPassCard(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit,
     selected: Boolean = false,
-    toned: Boolean = false
+    toned: Boolean = false,
 ) {
     val cardColors = passCardColors(pass.pass.colors, toned)
     val scale by animateFloatAsState(if (selected) 0.95f else 1f)
 
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         ElevatedCard(
             colors = cardColors,
-            modifier = modifier
-                .fillMaxWidth()
-                .scale(scale)
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = onLongClick
-                )
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .scale(scale)
+                    .combinedClickable(
+                        onClick = onClick,
+                        onLongClick = onLongClick,
+                    ),
         ) {
             ShortPassContent(
                 localizedPass = pass,
-                cardColors = cardColors,
+            )
+
+            PassCardFooter(
+                localizedPass = pass,
                 allTags = allTags,
+                readOnly = true,
             )
         }
         if (selected) {
@@ -73,7 +77,7 @@ fun PassCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
 ) {
     val pass = localizedPass.pass
 
@@ -82,42 +86,54 @@ fun PassCard(
 
     ElevatedCard(
         colors = cardColors,
-        modifier = modifier
-            .fillMaxWidth()
-            .scale(scale)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .scale(scale)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                ),
     ) {
         PassContent(
             localizedPass = localizedPass,
-            cardColors = cardColors,
+            content = content,
+        )
+
+        PassCardFooter(
+            localizedPass = localizedPass,
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
-            content = content,
         )
     }
 }
 
 @Composable
-fun passCardColors(passColors: PassColors?, toned: Boolean = false): CardColors {
-    val untonedPassColors = passColors?.toCardColors()
-        ?: CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.38f),
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+fun passCardColors(
+    passColors: PassColors?,
+    toned: Boolean = false,
+): CardColors {
+    val untonedPassColors =
+        passColors?.toCardColors()
+            ?: CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.38f),
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            )
+    return if (toned) {
+        CardDefaults.elevatedCardColors(
+            containerColor = untonedPassColors.containerColor.darken(1.25f),
+            contentColor = untonedPassColors.contentColor.darken(1.25f),
+            disabledContainerColor = untonedPassColors.disabledContainerColor.darken(1.25f),
+            disabledContentColor = untonedPassColors.disabledContentColor.darken(1.25f),
         )
-    return if (toned) CardDefaults.elevatedCardColors(
-        containerColor = untonedPassColors.containerColor.darken(1.25f),
-        contentColor = untonedPassColors.contentColor.darken(1.25f),
-        disabledContainerColor = untonedPassColors.disabledContainerColor.darken(1.25f),
-        disabledContentColor = untonedPassColors.disabledContentColor.darken(1.25f)
-    ) else untonedPassColors
+    } else {
+        untonedPassColors
+    }
 }
 
 @Preview
@@ -128,6 +144,6 @@ private fun PasscardPreview() {
         allTags = setOf(Tag("Tag 1", Color(0, 0, 0)), Tag("Tag 2", Color(100, 100, 100))),
         onTagClick = {},
         onTagAdd = {},
-        onTagCreate = {}
+        onTagCreate = {},
     ) {}
 }

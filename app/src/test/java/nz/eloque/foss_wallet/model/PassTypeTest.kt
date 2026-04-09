@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.model
 import org.junit.Test
 
 class PassTypeTest {
-
     @Test
     fun testIsSameType() {
         val allPassTypes = PassType.all()

@@ -1,0 +1,4 @@
+* Shortcuts now use adaptive icons
+* Improved boarding pass layout
+* Remove double click shortcut to open barcode from wallet
+* Fix wrong timezone handling

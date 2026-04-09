@@ -1,0 +1,4 @@
+* Einstellung for Passaktualisierung hinzugefügt
+* Nutzen von passeigener Zeichenkodierung mit Rückgriff auf UTF-8 nur bei unbekannter Kodierung
+Hinweis: Dies findet nur bei Pässen, die ab dieser Version importiert werden, Anwendung. Alte Pässe verwenden weiterhin UTF-8, falls sie nicht gelöscht und neuimportiert werden.
+* Problem behoben, dass Pässe nicht falsch dargestellt werden, falls kein Logo oder Text zum Logo existiert

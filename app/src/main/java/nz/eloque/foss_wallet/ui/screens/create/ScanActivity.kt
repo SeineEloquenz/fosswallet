@@ -20,10 +20,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -57,8 +57,8 @@ import androidx.core.content.ContextCompat
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
-import java.util.concurrent.Executors
 import zxingcpp.BarcodeReader
+import java.util.concurrent.Executors
 
 class ScanActivity : AppCompatActivity() {
     companion object {
@@ -75,31 +75,34 @@ class ScanActivity : AppCompatActivity() {
     private var boundCamera: Camera? = null
     private var isCameraBound = false
     private val cameraExecutor = Executors.newSingleThreadExecutor()
-    private val barcodeReader = BarcodeReader(
-        BarcodeReader.Options(
-            tryHarder = true,
-            tryRotate = true,
-            tryInvert = true,
+    private val barcodeReader =
+        BarcodeReader(
+            BarcodeReader.Options(
+                tryHarder = true,
+                tryRotate = true,
+                tryInvert = true,
+            ),
         )
-    )
 
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        val pickedUri = uri ?: return@registerForActivityResult
-        val result = ImageScanner.scanFrom(contentResolver, pickedUri)
-        if (result == null) {
-            Toast.makeText(this, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
-            return@registerForActivityResult
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            val pickedUri = uri ?: return@registerForActivityResult
+            val result = ImageScanner.scanFrom(contentResolver, pickedUri)
+            if (result == null) {
+                Toast.makeText(this, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
+                return@registerForActivityResult
+            }
+
+            deliverScanResult(result.text, result.format)
         }
 
-        deliverScanResult(result.text, result.format)
-    }
-
-    private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        cameraPermissionState = if (granted) CameraPermissionState.Granted else CameraPermissionState.Denied
-        if (granted) {
-            startCameraIfAllowed()
+    private val requestCameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            cameraPermissionState = if (granted) CameraPermissionState.Granted else CameraPermissionState.Denied
+            if (granted) {
+                startCameraIfAllowed()
+            }
         }
-    }
 
     private fun requestCameraPermission() {
         cameraPermissionState = CameraPermissionState.Requesting
@@ -158,22 +161,28 @@ class ScanActivity : AppCompatActivity() {
                     onCameraAccessFailed()
                 }
             },
-            ContextCompat.getMainExecutor(this)
+            ContextCompat.getMainExecutor(this),
         )
     }
 
-    private fun bindCameraUseCases(provider: ProcessCameraProvider, boundPreviewView: PreviewView) {
+    private fun bindCameraUseCases(
+        provider: ProcessCameraProvider,
+        boundPreviewView: PreviewView,
+    ) {
         provider.unbindAll()
         boundCamera = null
         isCameraBound = false
 
-        val preview = Preview.Builder().build().also {
-            it.surfaceProvider = boundPreviewView.surfaceProvider
-        }
+        val preview =
+            Preview.Builder().build().also {
+                it.surfaceProvider = boundPreviewView.surfaceProvider
+            }
 
-        val analyzer = ImageAnalysis.Builder()
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
+        val analyzer =
+            ImageAnalysis
+                .Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
 
         analyzer.setAnalyzer(cameraExecutor) { image ->
             if (hasDeliveredResult) {
@@ -182,18 +191,20 @@ class ScanActivity : AppCompatActivity() {
             }
 
             // Prevent crashes due to failing barcode reader
-            val result = try {
-                image.use { barcodeReader.read(it).firstOrNull() }
-            } catch (_: RuntimeException) {
-                return@setAnalyzer
-            }
+            val result =
+                try {
+                    image.use { barcodeReader.read(it).firstOrNull() }
+                } catch (_: RuntimeException) {
+                    return@setAnalyzer
+                }
             val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
             // Prevent crashes due to unsupported formats in zxing
-            val format = try {
-                BarcodeFormat.valueOf(result.format.name).toString()
-            } catch (_: Exception) {
-                return@setAnalyzer
-            }
+            val format =
+                try {
+                    BarcodeFormat.valueOf(result.format.name).toString()
+                } catch (_: Exception) {
+                    return@setAnalyzer
+                }
 
             hasDeliveredResult = true
             runOnUiThread {
@@ -230,11 +241,12 @@ class ScanActivity : AppCompatActivity() {
         if (cameraPermissionState != CameraPermissionState.Granted) return
 
         val provider = cameraProvider ?: return
-        val nextLens = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
-            CameraSelector.LENS_FACING_FRONT
-        } else {
-            CameraSelector.LENS_FACING_BACK
-        }
+        val nextLens =
+            if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                CameraSelector.LENS_FACING_FRONT
+            } else {
+                CameraSelector.LENS_FACING_BACK
+            }
 
         val nextSelector = CameraSelector.Builder().requireLensFacing(nextLens).build()
         if (!provider.hasCamera(nextSelector)) return
@@ -262,13 +274,17 @@ class ScanActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun deliverScanResult(text: String, format: String) {
+    private fun deliverScanResult(
+        text: String,
+        format: String,
+    ) {
         if (isFinishing || isDestroyed) return
 
-        val scanIntent = Intent().apply {
-            putExtra(EXTRA_RESULT, text)
-            putExtra(EXTRA_RESULT_FORMAT, format)
-        }
+        val scanIntent =
+            Intent().apply {
+                putExtra(EXTRA_RESULT, text)
+                putExtra(EXTRA_RESULT_FORMAT, format)
+            }
         setResult(Activity.RESULT_OK, scanIntent)
         finish()
     }
@@ -296,39 +312,44 @@ private fun QrScannerContent(
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
                     factory = { context ->
-                        PreviewView(context).apply {
-                            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-                            scaleType = PreviewView.ScaleType.FILL_CENTER
-                        }.also(onPreviewReady)
-                    }
+                        PreviewView(context)
+                            .apply {
+                                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                                scaleType = PreviewView.ScaleType.FILL_CENTER
+                            }.also(onPreviewReady)
+                    },
                 )
 
                 ScannerOverlay(modifier = Modifier.fillMaxSize())
             }
+
             CameraPermissionState.Requesting,
-            CameraPermissionState.Denied -> {
+            CameraPermissionState.Denied,
+            -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
                 ) {
                     if (permissionState == CameraPermissionState.Denied) {
                         Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(horizontal = 24.dp),
+                            modifier =
+                                Modifier
+                                    .align(Alignment.Center)
+                                    .padding(horizontal = 24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Warning,
                                 contentDescription = null,
                                 tint = Color.White,
-                                modifier = Modifier.size(48.dp)
+                                modifier = Modifier.size(48.dp),
                             )
                             Text(
                                 text = stringResource(R.string.permission_rationale),
-                                color = Color.White
+                                color = Color.White,
                             )
                             Button(onClick = onRequestCameraPermission) {
                                 Text(stringResource(R.string.request_permissions))
@@ -340,56 +361,60 @@ private fun QrScannerContent(
         }
 
         Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(bottom = 40.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             IconButton(
                 onClick = onToggleFlashlight,
                 enabled = permissionState == CameraPermissionState.Granted,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(Color.White),
             ) {
                 Icon(
                     imageVector = if (isTorchEnabled) Icons.Filled.FlashOff else Icons.Filled.FlashOn,
                     contentDescription = if (isTorchEnabled) "Turn flashlight off" else "Turn flashlight on",
                     tint = Color.Black,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
 
             IconButton(
                 onClick = onOpenGallery,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+                modifier =
+                    Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(Color.White),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Image,
                     contentDescription = stringResource(R.string.choose_image),
                     tint = Color.Black,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(28.dp),
                 )
             }
 
             IconButton(
                 onClick = onSwitchCamera,
                 enabled = permissionState == CameraPermissionState.Granted,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(Color.White),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Cameraswitch,
                     contentDescription = "Switch camera",
                     tint = Color.Black,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
@@ -402,9 +427,10 @@ private fun ScannerOverlay(modifier: Modifier = Modifier) {
     val strokeWidth = with(LocalDensity.current) { 2.dp.toPx() }
 
     Canvas(
-        modifier = modifier.graphicsLayer {
-            compositingStrategy = CompositingStrategy.Offscreen
-        }
+        modifier =
+            modifier.graphicsLayer {
+                compositingStrategy = CompositingStrategy.Offscreen
+            },
     ) {
         val frameWidth = size.width * 0.72f
         val frameHeight = frameWidth
@@ -414,15 +440,23 @@ private fun ScannerOverlay(modifier: Modifier = Modifier) {
         drawRect(color = Color.Black.copy(alpha = 0.45f))
         drawRoundRect(
             color = Color.Transparent,
-            topLeft = androidx.compose.ui.geometry.Offset(left, top),
-            size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight),
+            topLeft =
+                androidx.compose.ui.geometry
+                    .Offset(left, top),
+            size =
+                androidx.compose.ui.geometry
+                    .Size(frameWidth, frameHeight),
             cornerRadius = CornerRadius(cornerRadius, cornerRadius),
             blendMode = BlendMode.Clear,
         )
         drawRoundRect(
             color = Color.White.copy(alpha = 0.95f),
-            topLeft = androidx.compose.ui.geometry.Offset(left, top),
-            size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight),
+            topLeft =
+                androidx.compose.ui.geometry
+                    .Offset(left, top),
+            size =
+                androidx.compose.ui.geometry
+                    .Size(frameWidth, frameHeight),
             cornerRadius = CornerRadius(cornerRadius, cornerRadius),
             style = Stroke(width = strokeWidth),
         )

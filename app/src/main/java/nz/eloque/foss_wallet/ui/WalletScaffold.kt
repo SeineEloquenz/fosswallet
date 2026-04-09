@@ -28,7 +28,6 @@ import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScaffold(
@@ -47,11 +46,13 @@ fun WalletScaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { AbbreviatingText(
-                    title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    maxLines = 1,
-                ) },
+                title = {
+                    AbbreviatingText(
+                        title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        maxLines = 1,
+                    )
+                },
                 navigationIcon = {
                     if (toolWindow) {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -60,26 +61,30 @@ fun WalletScaffold(
                     }
                 },
                 actions = actions,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
         contentWindowInsets = WindowInsets.statusBars,
         bottomBar = bottomBar,
         floatingActionButton = {
             Box(
-                modifier = Modifier.padding(
-                    bottom = WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
-                )
+                modifier =
+                    Modifier.padding(
+                        bottom =
+                            WindowInsets.navigationBars
+                                .asPaddingValues()
+                                .calculateBottomPadding(),
+                    ),
             ) {
                 floatingActionButton()
             }
-        }
+        },
     ) { innerPadding ->
-        Box(modifier = modifier
-            .padding(innerPadding)
-            .padding(horizontal = 8.dp)
+        Box(
+            modifier =
+                modifier
+                    .padding(innerPadding)
+                    .padding(horizontal = 8.dp),
         ) {
             content.invoke(scrollBehavior)
         }

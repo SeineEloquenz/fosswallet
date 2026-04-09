@@ -31,15 +31,17 @@ private fun shareFile(
     type: String,
     context: Context,
 ) {
-    val sendIntent = Intent(Intent.ACTION_SEND).apply {
-        putExtra(Intent.EXTRA_STREAM, uri)
-        setDataAndType(uri, type)
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }
+    val sendIntent =
+        Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_STREAM, uri)
+            setDataAndType(uri, type)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
     val shareIntent = Intent.createChooser(sendIntent, "Share pass")
     context.startActivity(shareIntent)
 }
 
-private fun uri(context: Context, file: File): Uri {
-    return FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
-}
+private fun uri(
+    context: Context,
+    file: File,
+): Uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)

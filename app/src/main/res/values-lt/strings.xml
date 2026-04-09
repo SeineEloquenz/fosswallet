@@ -65,4 +65,9 @@
     <string name="compatibility_mode">Suderinamumo režimas</string>
     <string name="pass_expiration_date">Galiojimo pabaigos data</string>
     <string name="pass_relevant_end">Pabaiga</string>
+    <string name="barcode_position_bottom">Apačia</string>
+    <string name="barcode_position_center">Centras</string>
+    <string name="barcode_position_top">Viršus</string>
+    <string name="more_options">Daugiau parinkčių</string>
+    <string name="icon">Piktograma</string>
 </resources>

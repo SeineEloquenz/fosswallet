@@ -10,7 +10,5 @@ data class Tag(
     @PrimaryKey val label: String,
     val color: Color,
 ) {
-    fun contentColor(): Color {
-        return if (color.luminance() > 0.5f) Color.Black else Color.White
-    }
+    fun contentColor(): Color = if (color.luminance() > 0.5f) Color.Black else Color.White
 }
