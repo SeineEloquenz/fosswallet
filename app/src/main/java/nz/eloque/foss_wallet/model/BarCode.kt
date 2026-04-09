@@ -47,16 +47,21 @@ data class BarCode(
     fun hasLegacyRepresentation(): Boolean {
         val legacyRepresentation = encodeAsBitmap(100, 100, true)
         val representation = encodeAsBitmap(100, 100, false)
-        return !representation.sameAs(legacyRepresentation)
+        return !(representation?.sameAs(legacyRepresentation) ?: false)
     }
 
     fun encodeAsBitmap(
         width: Int,
         height: Int,
         legacyRendering: Boolean,
-    ): Bitmap {
+    ): Bitmap? {
         val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
-        val result = MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
+        val result =
+            try {
+                MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
+            } catch (_: Exception) {
+                return null
+            }
         val w = result.width
         val h = result.height
         val pixels = IntArray(w * h)

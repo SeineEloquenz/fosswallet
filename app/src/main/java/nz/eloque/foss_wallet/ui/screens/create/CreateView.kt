@@ -53,6 +53,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -129,7 +130,7 @@ fun CreateView(
             ),
         )
     }
-    var activeBarcodeIndex by remember { mutableStateOf(0) }
+    var activeBarcodeIndex by remember { mutableIntStateOf(0) }
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
 
     var location by remember { mutableStateOf<Location?>(null) }
@@ -1000,13 +1001,7 @@ private data class BarcodeDraft(
     val format: BarcodeFormat,
 )
 
-private fun barcodeValid(barCode: BarCode): Boolean =
-    try {
-        barCode.encodeAsBitmap(100, 100, false)
-        true
-    } catch (_: IllegalArgumentException) {
-        false
-    }
+private fun barcodeValid(barCode: BarCode): Boolean = barCode.encodeAsBitmap(100, 100, false) != null
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 
