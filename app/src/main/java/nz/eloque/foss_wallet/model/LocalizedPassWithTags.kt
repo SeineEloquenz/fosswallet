@@ -5,8 +5,6 @@ data class LocalizedPassWithTags(
     val tags: Set<Tag>,
 ) {
     companion object {
-        fun placeholder(): LocalizedPassWithTags {
-            return LocalizedPassWithTags(Pass.placeholder(), setOf())
-        }
+        fun placeholder(): LocalizedPassWithTags = LocalizedPassWithTags(Pass.placeholder(), setOf())
     }
 }

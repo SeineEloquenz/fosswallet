@@ -14,23 +14,25 @@ private const val BUS_KEY = "PKTransitTypeBus"
 private const val TRAIN_KEY = "PKTransitTypeTrain"
 private const val GENERIC_KEY = "PKTransitTypeGeneric"
 
-enum class TransitType(val jsonKey: String, val icon: ImageVector) {
+enum class TransitType(
+    val jsonKey: String,
+    val icon: ImageVector,
+) {
     GENERIC(GENERIC_KEY, Icons.Default.KeyboardDoubleArrowRight),
     AIR(AIR_KEY, Icons.AutoMirrored.Default.FlightTakeoff),
     BOAT(BOAT_KEY, Icons.Default.DirectionsBoat),
     BUS(BUS_KEY, Icons.Default.DirectionsBus),
-    TRAIN(TRAIN_KEY, Icons.Default.DirectionsTransit);
+    TRAIN(TRAIN_KEY, Icons.Default.DirectionsTransit),
+    ;
 
     companion object {
-
-        fun fromName(name: String): TransitType  {
-            return when (name) {
+        fun fromName(name: String): TransitType =
+            when (name) {
                 AIR_KEY -> AIR
                 BOAT_KEY -> BOAT
                 BUS_KEY -> BUS
                 TRAIN_KEY -> TRAIN
                 else -> GENERIC
             }
-        }
     }
 }

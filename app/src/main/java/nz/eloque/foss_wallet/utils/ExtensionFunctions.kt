@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.LinkedList
 
-
 fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
     val list: MutableList<T> = LinkedList()
     this.forEach { list.add(action(it)) }
@@ -35,15 +34,25 @@ fun JSONArray.filter(predicate: (JSONObject) -> Boolean): JSONArray {
 }
 
 fun JSONArray.forEach(action: (JSONObject) -> Unit) {
-    for (i in 0 until this.length()) { action(this.getJSONObject(i)) }
+    for (i in 0 until this.length()) {
+        action(this.getJSONObject(i))
+    }
 }
 
-fun ZonedDateTime.prettyDateTime(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyDateTime(
+    style: FormatStyle = FormatStyle.SHORT,
+    ignoresTimezone: Boolean = false,
+    isRelative: Boolean = false,
+): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(style)
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
 
-fun ZonedDateTime.prettyDate(style: FormatStyle = FormatStyle.SHORT, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+fun ZonedDateTime.prettyDate(
+    style: FormatStyle = FormatStyle.SHORT,
+    ignoresTimezone: Boolean = false,
+    isRelative: Boolean = false,
+): String {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(style)
     return this.pretty(dateFormatter, ignoresTimezone, isRelative)
 }
@@ -53,7 +62,11 @@ fun ZonedDateTime.prettyTime(style: FormatStyle = FormatStyle.SHORT): String {
     return this.format(dateFormatter)
 }
 
-private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezone: Boolean = false, isRelative: Boolean = false): String {
+private fun ZonedDateTime.pretty(
+    dateFormatter: DateTimeFormatter,
+    ignoresTimezone: Boolean = false,
+    isRelative: Boolean = false,
+): String {
     if (isRelative) {
         return DateUtils.getRelativeTimeSpanString(this.toInstant().toEpochMilli()).toString()
     }
@@ -64,14 +77,13 @@ private fun ZonedDateTime.pretty(dateFormatter: DateTimeFormatter, ignoresTimezo
     }
 }
 
-fun Color.darken(factor: Float = 0.3f): Color {
-    return copy(
+fun Color.darken(factor: Float = 0.3f): Color =
+    copy(
         red = red * factor,
         green = green * factor,
         blue = blue * factor,
-        alpha = alpha
+        alpha = alpha,
     )
-}
 
 fun InputStream.toByteArray(): ByteArray {
     val baos = ByteArrayOutputStream()
@@ -84,13 +96,9 @@ fun InputStream.toByteArray(): ByteArray {
     return baos.toByteArray()
 }
 
-fun JSONObject.stringOrNull(key: String): String? {
-    return if (this.has(key)) this.getString(key) else null
-}
+fun JSONObject.stringOrNull(key: String): String? = if (this.has(key)) this.getString(key) else null
 
-infix fun <T : CharSequence> T.inIgnoreCase(charSequence: T?): Boolean {
-    return charSequence?.contains(this, ignoreCase = true) == true
-}
+infix fun <T : CharSequence> T.inIgnoreCase(charSequence: T?): Boolean = charSequence?.contains(this, ignoreCase = true) == true
 
 @Composable
 fun LazyListState.isScrollingUp(): Boolean {
@@ -113,6 +121,7 @@ fun LazyListState.isScrollingUp(): Boolean {
         }
     }.value
 }
+
 fun Throwable.asString(): String {
     val sw = StringWriter()
     val pw = PrintWriter(sw)

@@ -18,19 +18,17 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LibrariesScreen(
-    navController: NavHostController,
-) {
+fun LibrariesScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = Screen.Libraries.resourceId)
+        title = stringResource(id = Screen.Libraries.resourceId),
     ) {
         val libraries by produceLibraries(R.raw.aboutlibraries)
         LibrariesContainer(
             libraries = libraries,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

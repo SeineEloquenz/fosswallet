@@ -15,18 +15,16 @@ data class BarCode(
     private val encoding: Charset,
     val altText: String?,
 ) {
-
-    fun toJson(): JSONObject {
-        return JSONObject().also {
+    fun toJson(): JSONObject =
+        JSONObject().also {
             it.put("format", format.toString())
             it.put("message", message)
             it.put("messageEncoding", encoding)
             it.put("altText", altText)
         }
-    }
 
-    fun is1d(): Boolean {
-        return when (format) {
+    fun is1d(): Boolean =
+        when (format) {
             BarcodeFormat.AZTEC -> false
             BarcodeFormat.CODABAR -> true
             BarcodeFormat.CODE_39 -> true
@@ -45,15 +43,18 @@ data class BarCode(
             BarcodeFormat.UPC_E -> true
             BarcodeFormat.UPC_EAN_EXTENSION -> true
         }
-    }
 
-    fun hasLegacyRepresentation() : Boolean {
+    fun hasLegacyRepresentation(): Boolean {
         val legacyRepresentation = encodeAsBitmap(100, 100, true)
         val representation = encodeAsBitmap(100, 100, false)
         return !representation.sameAs(legacyRepresentation)
     }
 
-    fun encodeAsBitmap(width: Int, height: Int, legacyRendering: Boolean): Bitmap {
+    fun encodeAsBitmap(
+        width: Int,
+        height: Int,
+        legacyRendering: Boolean,
+    ): Bitmap {
         val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
         val result = MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
         val w = result.width
@@ -87,20 +88,22 @@ data class BarCode(
     }
 
     companion object {
-
         val FALLBACK_CHARSET = Charsets.UTF_8
 
-        fun fromJson(json: JSONObject): BarCode {
-            return BarCode(
+        fun fromJson(json: JSONObject): BarCode =
+            BarCode(
                 BarcodeFormat.valueOf(json.getString("format")),
                 json.getString("message"),
                 Charset.forName(json.optString("messageEncoding", FALLBACK_CHARSET.toString())),
-                if (json.has("altText")) { json.getString("altText") } else { null }
+                if (json.has("altText")) {
+                    json.getString("altText")
+                } else {
+                    null
+                },
             )
-        }
 
-        fun formatFromString(format: String): BarcodeFormat {
-            return when (format) {
+        fun formatFromString(format: String): BarcodeFormat =
+            when (format) {
                 "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
                 "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
                 "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
@@ -108,7 +111,5 @@ data class BarCode(
                 "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
                 else -> BarcodeFormat.QR_CODE
             }
-        }
     }
-
 }

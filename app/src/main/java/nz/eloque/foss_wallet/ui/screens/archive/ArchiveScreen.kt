@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
@@ -47,15 +47,16 @@ fun ArchiveScreen(
                             selectedPasses.addAll(visiblePasses.value)
                         }
                     },
-                    enabled = visiblePasses.value.isNotEmpty()
+                    enabled = visiblePasses.value.isNotEmpty(),
                 ) {
                     Icon(
                         imageVector = if (allVisibleSelected) Icons.Outlined.Deselect else Icons.Outlined.SelectAll,
-                        contentDescription = if (allVisibleSelected) {
-                            stringResource(R.string.clear_selection)
-                        } else {
-                            stringResource(R.string.select_all)
-                        }
+                        contentDescription =
+                            if (allVisibleSelected) {
+                                stringResource(R.string.clear_selection)
+                            } else {
+                                stringResource(R.string.select_all)
+                            },
                     )
                 }
             }
@@ -64,7 +65,7 @@ fun ArchiveScreen(
             }) {
                 Icon(
                     imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(Screen.Settings.resourceId)
+                    contentDescription = stringResource(Screen.Settings.resourceId),
                 )
             }
         },
@@ -74,7 +75,7 @@ fun ArchiveScreen(
                     true,
                     selectedPasses,
                     listState,
-                    walletViewModel
+                    walletViewModel,
                 )
             }
         },

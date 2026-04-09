@@ -13,7 +13,10 @@ interface PassLocalizationDao {
     fun all(): Flow<List<PassLocalization>>
 
     @Query("SELECT * FROM localization WHERE passId=:passId AND lang=:lang")
-    fun byPassId(passId: Int, lang: String): List<PassLocalization>
+    fun byPassId(
+        passId: Int,
+        lang: String,
+    ): List<PassLocalization>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(localization: PassLocalization): Long

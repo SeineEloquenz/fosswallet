@@ -47,26 +47,28 @@ fun TagRow(
             selectedOptions = listOfNotNull(selectedTag),
             onOptionSelected = { onTagSelected(it) },
             onOptionDeselected = {
-                if (selectedTag == it) { onTagDeselected(it) }
+                if (selectedTag == it) {
+                    onTagDeselected(it)
+                }
             },
             optionLabel = { it.label },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
         IconButton(
-            onClick = { tagCreatorShown = true }
+            onClick = { tagCreatorShown = true },
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.add_tag)
+                contentDescription = stringResource(R.string.add_tag),
             )
         }
         IconButton(
-            onClick = { tagRemoverShown = true }
+            onClick = { tagRemoverShown = true },
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
-                contentDescription = stringResource(R.string.remove_tag)
+                contentDescription = stringResource(R.string.remove_tag),
             )
         }
     }
@@ -74,13 +76,14 @@ fun TagRow(
     if (tagCreatorShown) {
         ModalBottomSheet(
             onDismissRequest = { tagCreatorShown = false },
-            modifier = Modifier.fillMaxWidth()) {
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             TagCreator(
                 onCreate = {
                     tagCreatorShown = false
                     walletViewModel.addTag(it)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -88,12 +91,13 @@ fun TagRow(
     if (tagRemoverShown) {
         ModalBottomSheet(
             onDismissRequest = { tagRemoverShown = false },
-            modifier = Modifier.fillMaxWidth()) {
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             TagChooser(
                 tags = tags,
                 onSelected = { walletViewModel.removeTag(it) },
                 onTagCreate = { walletViewModel.addTag(it) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

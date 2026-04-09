@@ -25,7 +25,7 @@ import nz.eloque.foss_wallet.ui.components.FairRow
 @Composable
 fun HeaderRow(
     pass: Pass,
-    isSelectable: Boolean = true
+    isSelectable: Boolean = true,
 ) {
     val context = LocalContext.current
 
@@ -33,13 +33,13 @@ fun HeaderRow(
         Row(
             modifier = Modifier.height(38.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             pass.logoFile(context)?.let {
                 AsyncImage(
                     model = it,
                     contentDescription = stringResource(R.string.image),
-                    modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth * 0.4f)
+                    modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth * 0.4f),
                 )
             }
 
@@ -50,7 +50,7 @@ fun HeaderRow(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     fontSize = 18.sp,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             } ?: Spacer(Modifier.weight(1f))
 
@@ -59,7 +59,7 @@ fun HeaderRow(
                 modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth * 0.5f),
                 arrangeWithSpaceBetween = false,
                 horizontalAlignment = Alignment.End,
-                isSelectable = isSelectable
+                isSelectable = isSelectable,
             )
         }
     }
@@ -71,7 +71,7 @@ fun FieldsRow(
     modifier: Modifier = Modifier,
     arrangeWithSpaceBetween: Boolean = true,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    isSelectable: Boolean = true
+    isSelectable: Boolean = true,
 ) {
     val space = 10.dp
 
@@ -79,18 +79,18 @@ fun FieldsRow(
         AutoSizePassFields(
             fields = fields,
             modifier = modifier.height(38.dp),
-            spacing = space
+            spacing = space,
         ) { fontSize ->
             FairRow(
                 spacing = space,
-                arrangeWithSpaceBetween = arrangeWithSpaceBetween
+                arrangeWithSpaceBetween = arrangeWithSpaceBetween,
             ) {
                 fields.forEach {
                     PassField(
                         field = it,
                         horizontalAlignment = horizontalAlignment,
                         fontSize = fontSize,
-                        isSelectable = isSelectable
+                        isSelectable = isSelectable,
                     )
                 }
             }

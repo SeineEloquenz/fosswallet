@@ -37,18 +37,21 @@ import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 import nz.eloque.foss_wallet.ui.components.FairRow
 import nz.eloque.foss_wallet.ui.components.findMaxAllowedWidth
 
-private val linkStyle = TextLinkStyles(
-    style = SpanStyle(
-        textDecoration = TextDecoration.Underline,
-        fontStyle = FontStyle.Italic,
+private val linkStyle =
+    TextLinkStyles(
+        style =
+            SpanStyle(
+                textDecoration = TextDecoration.Underline,
+                fontStyle = FontStyle.Italic,
+            ),
     )
-)
 
 val passFieldContentStyle: TextStyle
-    @Composable get() = MaterialTheme.typography.bodyMedium.copy(
-        lineHeight = TextUnit.Unspecified,
-        hyphens = Hyphens.Auto
-    )
+    @Composable get() =
+        MaterialTheme.typography.bodyMedium.copy(
+            lineHeight = TextUnit.Unspecified,
+            hyphens = Hyphens.Auto,
+        )
 
 @Composable
 fun PassField(
@@ -58,23 +61,24 @@ fun PassField(
     fontSize: TextUnit = TextUnit.Unspecified,
     maxLines: Int = 1,
     style: TextStyle = passFieldContentStyle,
-    isSelectable: Boolean = true
+    isSelectable: Boolean = true,
 ) {
-    val textAlign = when (horizontalAlignment) {
-        Alignment.End -> TextAlign.End
-        Alignment.CenterHorizontally -> TextAlign.Center
-        else -> TextAlign.Start
-    }
+    val textAlign =
+        when (horizontalAlignment) {
+            Alignment.End -> TextAlign.End
+            Alignment.CenterHorizontally -> TextAlign.Center
+            else -> TextAlign.Start
+        }
 
     Column(
         modifier = modifier,
-        horizontalAlignment = horizontalAlignment
+        horizontalAlignment = horizontalAlignment,
     ) {
         AbbreviatingText(
             text = field.label?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
             textAlign = textAlign,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-            useTooltip = isSelectable
+            useTooltip = isSelectable,
         )
         val content = @Composable {
             Text(
@@ -83,7 +87,7 @@ fun PassField(
                 textAlign = textAlign,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxLines,
-                style = style
+                style = style,
             )
         }
         if (isSelectable) SelectionContainer { content() } else content()
@@ -116,7 +120,7 @@ fun AutoSizePassFields(
     maxLines: Int = 1,
     spacing: Dp = 0.dp,
     useFixedWidth: Boolean = false,
-    content: @Composable (fontSize: TextUnit) -> Unit
+    content: @Composable (fontSize: TextUnit) -> Unit,
 ) {
     BoxWithConstraints(modifier = modifier) {
         if (fields.isEmpty()) return@BoxWithConstraints content(TextUnit.Unspecified)
@@ -128,50 +132,59 @@ fun AutoSizePassFields(
         val textMeasurer = rememberTextMeasurer(0)
 
         // sort content by length to skip measuring the other fields in case of a visual overflow
-        val (labels, contents) = fields
-            .map { Pair(it.label?.uppercase(locale).orEmpty(), it.content.parseHtml()) }
-            .sortedByDescending { it.second.length }
-            .unzip()
+        val (labels, contents) =
+            fields
+                .map { Pair(it.label?.uppercase(locale).orEmpty(), it.content.parseHtml()) }
+                .sortedByDescending { it.second.length }
+                .unzip()
 
-        val (labelHeight, labelWidths) = remember(labels) {
-            val n = if (useFixedWidth) 1 else labels.size
-            val results = labels.take(n).map { textMeasurer.measure(text = it, style = labelStyle) }
-            Pair(results.first().size.height, results.map { it.size.width })
-        }
-
-        val finalFontSize = remember(constraints, contents, labelHeight, labelWidths) {
-            val spacingPx = with(density) { spacing.roundToPx() }
-            val availableWidth = (constraints.maxWidth - spacingPx * (fields.size - 1)).coerceAtLeast(0)
-            val contentHeight = (constraints.maxHeight - labelHeight).coerceAtLeast(0)
-
-            val maxFontSizeLimit = with(density) {
-                if (maxFontSize.toPx() < contentHeight) maxFontSize else contentHeight.toSp() / maxLines
+        val (labelHeight, labelWidths) =
+            remember(labels) {
+                val n = if (useFixedWidth) 1 else labels.size
+                val results = labels.take(n).map { textMeasurer.measure(text = it, style = labelStyle) }
+                Pair(results.first().size.height, results.map { it.size.width })
             }
-            val fontSizes = generateSequence(minFontSize) { item ->
-                (item.value + stepSize.value).sp.takeIf { it <= maxFontSizeLimit }
-            }.toList()
 
-            var maxItemWidth = if (useFixedWidth)
-                availableWidth / fields.size
-            else
-                findMaxAllowedWidth(labelWidths, availableWidth)
-            fontSizes.binarySearch { currentFontSize ->
-                val contentWidths = contents.map {
-                    val result = textMeasurer.measure(
-                        text = it,
-                        style = contentStyle.copy(fontSize = currentFontSize),
-                        maxLines = maxLines,
-                        constraints = Constraints(maxHeight = contentHeight, maxWidth = maxItemWidth)
-                    )
-                    if (result.hasVisualOverflow) return@binarySearch true else result.size.width
+        val finalFontSize =
+            remember(constraints, contents, labelHeight, labelWidths) {
+                val spacingPx = with(density) { spacing.roundToPx() }
+                val availableWidth = (constraints.maxWidth - spacingPx * (fields.size - 1)).coerceAtLeast(0)
+                val contentHeight = (constraints.maxHeight - labelHeight).coerceAtLeast(0)
+
+                val maxFontSizeLimit =
+                    with(density) {
+                        if (maxFontSize.toPx() < contentHeight) maxFontSize else contentHeight.toSp() / maxLines
+                    }
+                val fontSizes =
+                    generateSequence(minFontSize) { item ->
+                        (item.value + stepSize.value).sp.takeIf { it <= maxFontSizeLimit }
+                    }.toList()
+
+                var maxItemWidth =
+                    if (useFixedWidth) {
+                        availableWidth / fields.size
+                    } else {
+                        findMaxAllowedWidth(labelWidths, availableWidth)
+                    }
+                fontSizes.binarySearch { currentFontSize ->
+                    val contentWidths =
+                        contents.map {
+                            val result =
+                                textMeasurer.measure(
+                                    text = it,
+                                    style = contentStyle.copy(fontSize = currentFontSize),
+                                    maxLines = maxLines,
+                                    constraints = Constraints(maxHeight = contentHeight, maxWidth = maxItemWidth),
+                                )
+                            if (result.hasVisualOverflow) return@binarySearch true else result.size.width
+                        }
+                    if (useFixedWidth) return@binarySearch false
+
+                    val itemWidths = labelWidths.zip(contentWidths) { a, b -> maxOf(a, b) }
+                    maxItemWidth = findMaxAllowedWidth(itemWidths, availableWidth)
+                    contentWidths.any { it > maxItemWidth }
                 }
-                if (useFixedWidth) return@binarySearch false
-
-                val itemWidths = labelWidths.zip(contentWidths) { a, b -> maxOf(a, b) }
-                maxItemWidth = findMaxAllowedWidth(itemWidths, availableWidth)
-                contentWidths.any { it > maxItemWidth }
             }
-        }
 
         content(finalFontSize)
     }
@@ -191,51 +204,53 @@ fun <T> List<T>.binarySearch(moveBackwards: (T) -> Boolean): T {
     var highIndex = size - 1
     while (lowIndex <= highIndex) {
         val midIndex = (lowIndex + highIndex) / 2
-        if (moveBackwards(get(midIndex)))
+        if (moveBackwards(get(midIndex))) {
             highIndex = midIndex - 1
-        else
+        } else {
             lowIndex = midIndex + 1
+        }
     }
     return get(highIndex.coerceAtLeast(0))
 }
 
-private fun String.sanitize(): String {
-    return this
+private fun String.sanitize(): String =
+    this
         .replace("\r", "")
         .replace("\\r", "")
         .replace("\n", "<br>")
-}
 
-private fun PassContent.parseHtml(): AnnotatedString =
-    AnnotatedString.fromHtml(prettyPrint().sanitize(), linkStyle)
+private fun PassContent.parseHtml(): AnnotatedString = AnnotatedString.fromHtml(prettyPrint().sanitize(), linkStyle)
 
-private fun previewPassField(label: String, content: String) =
-    PassField("", label, PassContent.Plain(content))
+private fun previewPassField(
+    label: String,
+    content: String,
+) = PassField("", label, PassContent.Plain(content))
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewPassFieldBack() {
     PassField(
-        field = previewPassField(
-            "Information",
-            """
-            This is a long text.
-            
-            Possibly multiple lines
-            
-            this should break
-            nicely and
-            format like a real text input field lololololol
-            dadadwa dwa
-             d
-             wad 
-             wa d
-             wa dwa
-             
-             Lorem Ipsum
-            """.trimIndent()
-        ),
-        maxLines = Int.MAX_VALUE
+        field =
+            previewPassField(
+                "Information",
+                """
+                This is a long text.
+                
+                Possibly multiple lines
+                
+                this should break
+                nicely and
+                format like a real text input field lololololol
+                dadadwa dwa
+                 d
+                 wad 
+                 wa d
+                 wa dwa
+                 
+                 Lorem Ipsum
+                """.trimIndent(),
+            ),
+        maxLines = Int.MAX_VALUE,
     )
 }
 
@@ -243,11 +258,13 @@ private fun PreviewPassFieldBack() {
 @Composable
 private fun PreviewPassFieldBackHtml() {
     PassField(
-        field = previewPassField(
-            "Information",
-            "Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n".trimIndent()
-        ),
-        maxLines = Int.MAX_VALUE
+        field =
+            previewPassField(
+                "Information",
+                "Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n"
+                    .trimIndent(),
+            ),
+        maxLines = Int.MAX_VALUE,
     )
 }
 
@@ -255,37 +272,38 @@ private fun PreviewPassFieldBackHtml() {
 @Preview(showBackground = true, widthDp = 200)
 @Composable
 private fun PreviewAutoSizePassFields() {
-    val passFieldsData = listOf(
+    val passFieldsData =
         listOf(
-            previewPassField("AAA ".repeat(4), "A"),
-            previewPassField("BBB ".repeat(4), "B"),
-        ),
-        listOf(
-            previewPassField("AAA", "AAA ".repeat(5)),
-            previewPassField("BBB", "BBB ".repeat(5)),
-        ),
-        listOf(
-            previewPassField("AAA", "A"),
-            previewPassField("BBB", "BBB ".repeat(6)),
-        ),
-        listOf(
-            previewPassField("AAA", "AAA ".repeat(6)),
-            previewPassField("BBB", "B"),
-        ),
-        listOf(
-            previewPassField("AAA ".repeat(6), "AAA ".repeat(6)),
-            previewPassField("BBB", "B"),
-        ),
-        listOf(
-            previewPassField("AAA ".repeat(6), "AAA ".repeat(6)),
-            previewPassField("BBB ".repeat(6), "B"),
-        ),
-    )
+            listOf(
+                previewPassField("AAA ".repeat(4), "A"),
+                previewPassField("BBB ".repeat(4), "B"),
+            ),
+            listOf(
+                previewPassField("AAA", "AAA ".repeat(5)),
+                previewPassField("BBB", "BBB ".repeat(5)),
+            ),
+            listOf(
+                previewPassField("AAA", "A"),
+                previewPassField("BBB", "BBB ".repeat(6)),
+            ),
+            listOf(
+                previewPassField("AAA", "AAA ".repeat(6)),
+                previewPassField("BBB", "B"),
+            ),
+            listOf(
+                previewPassField("AAA ".repeat(6), "AAA ".repeat(6)),
+                previewPassField("BBB", "B"),
+            ),
+            listOf(
+                previewPassField("AAA ".repeat(6), "AAA ".repeat(6)),
+                previewPassField("BBB ".repeat(6), "B"),
+            ),
+        )
     Column {
         passFieldsData.forEach {
             FieldsRow(
                 fields = it,
-                modifier = Modifier.border(Dp.Hairline, Color.Magenta)
+                modifier = Modifier.border(Dp.Hairline, Color.Magenta),
             )
         }
     }

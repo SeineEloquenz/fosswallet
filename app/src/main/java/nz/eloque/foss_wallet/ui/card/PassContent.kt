@@ -25,7 +25,7 @@ fun ShortPassContent(
 
     Column(
         modifier = modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         HeaderRow(pass, false)
         when (pass.type) {
@@ -35,28 +35,26 @@ fun ShortPassContent(
         if (pass.primaryFields.empty() && pass.hasStrip) {
             AsyncPassImage(
                 model = pass.stripFile(context),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
 
-private fun List<PassField>.empty(): Boolean {
-    return this.isEmpty() || this.all { it.content.isEmpty() }
-}
+private fun List<PassField>.empty(): Boolean = this.isEmpty() || this.all { it.content.isEmpty() }
 
 @Composable
 fun PassContent(
     localizedPass: LocalizedPassWithTags,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
 ) {
     val context = LocalContext.current
     val pass = localizedPass.pass
 
     Column(
         modifier = modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         HeaderRow(pass)
         when (pass.type) {
@@ -65,7 +63,7 @@ fun PassContent(
         }
         AsyncPassImage(
             model = pass.stripFile(context),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         FieldsRow(pass.secondaryFields)
         FieldsRow(pass.auxiliaryFields)

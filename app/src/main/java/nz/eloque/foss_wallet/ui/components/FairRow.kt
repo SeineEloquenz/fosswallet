@@ -32,7 +32,7 @@ fun FairRow(
     modifier: Modifier = Modifier,
     spacing: Dp = 0.dp,
     arrangeWithSpaceBetween: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Layout(content, modifier) { measurables, constraints ->
         if (measurables.isEmpty()) return@Layout layout(0, 0) { }
@@ -49,9 +49,13 @@ fun FairRow(
 
         val layoutWidth = if (arrangeWithSpaceBetween) constraints.maxWidth else placeablesWidth
         val layoutHeight = placeables.maxOf { it.height }
-        val itemSpace = spacingPx + if (arrangeWithSpaceBetween && measurables.size > 1) {
-            (constraints.maxWidth - placeablesWidth) / (measurables.size - 1)
-        } else 0
+        val itemSpace =
+            spacingPx +
+                if (arrangeWithSpaceBetween && measurables.size > 1) {
+                    (constraints.maxWidth - placeablesWidth) / (measurables.size - 1)
+                } else {
+                    0
+                }
 
         layout(layoutWidth, layoutHeight) {
             var xPosition = 0
@@ -75,16 +79,20 @@ fun FairRow(
  * @param totalWidth The available width for all items in [intrinsicWidths].
  * @return The maximum allowed width of an item.
  */
-fun findMaxAllowedWidth(intrinsicWidths: List<Int>, totalWidth: Int): Int {
+fun findMaxAllowedWidth(
+    intrinsicWidths: List<Int>,
+    totalWidth: Int,
+): Int {
     val maxWidth = totalWidth / intrinsicWidths.size
     val (acceptedWidths, remainingWidths) = intrinsicWidths.partition { it <= maxWidth }
 
-    return if (acceptedWidths.isEmpty())
+    return if (acceptedWidths.isEmpty()) {
         maxWidth
-    else if (remainingWidths.size <= 1)
+    } else if (remainingWidths.size <= 1) {
         totalWidth - intrinsicWidths.sorted().dropLast(1).sum()
-    else
+    } else {
         findMaxAllowedWidth(remainingWidths, totalWidth - acceptedWidths.sum())
+    }
 }
 
 @Composable
@@ -93,17 +101,18 @@ private fun TextWrapper(text: String) {
         text = text,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.border(Dp.Hairline, Color.Black)
+        modifier = Modifier.border(Dp.Hairline, Color.Black),
     )
 }
 
-private val previewTextData = listOf(
-    listOf("AAA", "BBB", "CCC"),
-    listOf("AAA ".repeat(4), "BBB", "CCC"),
-    listOf("AAA ".repeat(10), "BBB", "CCC ".repeat(4)),
-    listOf("AAA", "BBB ".repeat(10), "CCC"),
-    listOf("AAA ".repeat(10), "BBB ".repeat(10), "CCC"),
-)
+private val previewTextData =
+    listOf(
+        listOf("AAA", "BBB", "CCC"),
+        listOf("AAA ".repeat(4), "BBB", "CCC"),
+        listOf("AAA ".repeat(10), "BBB", "CCC ".repeat(4)),
+        listOf("AAA", "BBB ".repeat(10), "CCC"),
+        listOf("AAA ".repeat(10), "BBB ".repeat(10), "CCC"),
+    )
 
 @Preview(showBackground = true, widthDp = 250)
 @Composable

@@ -24,7 +24,7 @@ fun AbbreviatingText(
     textAlign: TextAlign? = null,
     maxLines: Int = 1,
     style: TextStyle = LocalTextStyle.current,
-    useTooltip: Boolean = true
+    useTooltip: Boolean = true,
 ) {
     var hasOverflow by remember { mutableStateOf(false) }
     val content = @Composable {
@@ -35,7 +35,7 @@ fun AbbreviatingText(
             overflow = TextOverflow.Ellipsis,
             maxLines = maxLines,
             onTextLayout = { if (useTooltip) hasOverflow = it.hasVisualOverflow },
-            style = style
+            style = style,
         )
     }
 
@@ -44,7 +44,9 @@ fun AbbreviatingText(
             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
             tooltip = { PlainTooltip { Text(text) } },
             state = rememberTooltipState(),
-            content = content
+            content = content,
         )
-    } else content()
+    } else {
+        content()
+    }
 }
