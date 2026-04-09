@@ -1,11 +1,11 @@
 package nz.eloque.foss_wallet.parsing
 
-import java.time.format.FormatStyle
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
+import java.time.format.FormatStyle
 
 object FieldParser {
     fun parse(field: JSONObject): PassField {
