@@ -22,7 +22,7 @@ import nz.eloque.foss_wallet.ui.card.AutoSizePassFields
 import nz.eloque.foss_wallet.ui.card.PassField
 
 @Composable
-fun GenericBoardingPrimary(
+fun BoardingPrimary(
     pass: Pass,
     transitType: TransitType,
     isSelectable: Boolean = true
@@ -51,6 +51,7 @@ fun GenericBoardingPrimary(
             )
 
             Column {
+                //The text correctly spaces the icon
                 Text("", style = MaterialTheme.typography.labelMedium)
                 Icon(
                     imageVector = transitType.icon,

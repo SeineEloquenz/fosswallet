@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.card.primary.GenericBoardingPrimary
+import nz.eloque.foss_wallet.ui.card.primary.BoardingPrimary
 import nz.eloque.foss_wallet.ui.card.primary.GenericPrimary
 import nz.eloque.foss_wallet.ui.screens.pass.AsyncPassImage
 
@@ -29,7 +29,7 @@ fun ShortPassContent(
     ) {
         HeaderRow(pass, false)
         when (pass.type) {
-            is PassType.Boarding -> GenericBoardingPrimary(pass, pass.type.transitType, false)
+            is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType, false)
             else -> GenericPrimary(pass, false)
         }
         if (pass.primaryFields.empty() && pass.hasStrip) {
@@ -60,7 +60,7 @@ fun PassContent(
     ) {
         HeaderRow(pass)
         when (pass.type) {
-            is PassType.Boarding -> GenericBoardingPrimary(pass, pass.type.transitType)
+            is PassType.Boarding -> BoardingPrimary(pass, pass.type.transitType)
             else -> GenericPrimary(pass)
         }
         AsyncPassImage(
