@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -40,11 +39,7 @@ class PassViewModel
             tag: Tag,
         ) = viewModelScope.launch(Dispatchers.IO) { passStore.untag(pass, tag) }
 
-        fun update(
-            pass: Pass,
-            onResult: (UpdateResult) -> Unit = {
-            },
-        ) = viewModelScope.launch(Dispatchers.IO) { onResult.invoke(passStore.update(pass)) }
+        suspend fun update(pass: Pass) = passStore.update(pass)
 
         fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
 
