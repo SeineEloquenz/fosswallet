@@ -70,10 +70,11 @@ fun WalletView(
 
     val emptyState = rememberLazyListState()
     val passFlow = walletViewModel.filteredPasses
-    val passes: List<LocalizedPassWithTags> by remember(passFlow) { passFlow }
-        .map { passes ->
+    val passes: List<LocalizedPassWithTags> by remember(passFlow) {
+        passFlow.map { passes ->
             passes.filter { archive == it.pass.archived }
-        }.collectAsState(listOf())
+        }
+    }.collectAsState(listOf())
 
     val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())

@@ -46,7 +46,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
     val passFlow = settingsViewModel.passFlow
-    val passes by remember(passFlow) { passFlow }.map { it }.collectAsState(listOf())
+    val passes by remember(passFlow) { passFlow.map { it } }.collectAsState(listOf())
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { settingsViewModel.refresh() }
 
