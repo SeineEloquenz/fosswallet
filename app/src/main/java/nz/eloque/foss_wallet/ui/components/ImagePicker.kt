@@ -38,7 +38,9 @@ fun ImagePicker(
         println("selected file URI $uri")
         onChoose(uri)
     }
-    val launchPicker = { launcher.launch(arrayOf("image/*")) }
+    val launchPicker = {
+        launcher.launch(arrayOf("image/*"))
+    }
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
