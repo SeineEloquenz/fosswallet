@@ -71,11 +71,12 @@ fun AdvancedAddScreen(navController: NavHostController) {
                             return@launch
                         }
 
+                        val url = URLEncoder.encode(value, Charsets.UTF_8.name())
                         withContext(Dispatchers.Main) {
                             if (value.startsWith("https://") || value.startsWith("http://")) {
-                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(value, Charsets.UTF_8.name())}")
+                                navController.navigate("${Screen.Web.route}/$url")
                             } else {
-                                navController.navigate("${Screen.Create.route}?barcode=${URLEncoder.encode(value, Charsets.UTF_8.name())}")
+                                navController.navigate("${Screen.Create.route}?barcode=$url")
                             }
                         }
                     }
