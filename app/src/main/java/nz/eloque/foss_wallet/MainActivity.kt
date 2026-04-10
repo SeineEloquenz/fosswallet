@@ -51,8 +51,14 @@ class MainActivity : ComponentActivity() {
         val isImageShare = intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true
         val dataUri =
             when {
-                Intent.ACTION_VIEW == intent.action -> intent.data
-                isImageShare -> intent.sharedImageUri()
+                Intent.ACTION_VIEW == intent.action -> {
+                    intent.data
+                }
+
+                isImageShare -> {
+                    intent.sharedImageUri()
+                }
+
                 Intent.ACTION_SEND == intent.action -> {
                     val count =
                         intent.clipData
@@ -61,7 +67,10 @@ class MainActivity : ComponentActivity() {
                             ?.coerceAtLeast(0)
                     count?.let { intent.clipData?.getItemAt(it)?.uri }
                 }
-                else -> null
+
+                else -> {
+                    null
+                }
             }
 
         enableEdgeToEdge()
@@ -74,12 +83,13 @@ class MainActivity : ComponentActivity() {
                     isProcessingImageShare = true
                     coroutineScope.launch(Dispatchers.IO) {
                         val scanResult = runCatching { ImageScanner.scanFrom(contentResolver, dataUri) }.getOrNull()
+                        val barcode = scanResult?.text
+                        val url = URLEncoder.encode(barcode, Charsets.UTF_8.name())
                         withContext(Dispatchers.Main) {
                             isProcessingImageShare = false
-                            val barcode = scanResult?.text
                             if (!barcode.isNullOrEmpty()) {
                                 navController.navigate(
-                                    "${Screen.Create.route}?barcode=${URLEncoder.encode(barcode, Charsets.UTF_8.name())}",
+                                    "${Screen.Create.route}?barcode=$url",
                                 )
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()

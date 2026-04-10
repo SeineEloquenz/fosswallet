@@ -64,7 +64,13 @@ fun PassScreen(
     navController: NavHostController,
     passViewModel: PassViewModel,
 ) {
-    val passFlow: Flow<LocalizedPassWithTags> = passViewModel.passFlowById(passId).mapNotNull { it ?: LocalizedPassWithTags.placeholder() }
+    val passFlow: Flow<LocalizedPassWithTags> =
+        remember {
+            passViewModel.passFlowById(passId).mapNotNull {
+                it
+                    ?: LocalizedPassWithTags.placeholder()
+            }
+        }
     val localizedPass by remember(passFlow) { passFlow }.collectAsState(initial = LocalizedPassWithTags.placeholder())
 
     val tagFlow = passViewModel.allTags
@@ -162,28 +168,36 @@ fun Actions(
                         val result = passViewModel.update(pass)
                         isLoading.value = false
                         when (result) {
-                            is UpdateResult.Success ->
+                            is UpdateResult.Success -> {
                                 if (result.content is UpdateContent.Pass) {
                                     snackbarHostState.showSnackbar(
                                         message = resources.getString(R.string.update_successful),
                                         duration = SnackbarDuration.Short,
                                     )
                                 }
-                            is UpdateResult.NotUpdated ->
+                            }
+
+                            is UpdateResult.NotUpdated -> {
                                 snackbarHostState.showSnackbar(
                                     message = resources.getString(R.string.status_not_updated),
                                 )
+                            }
+
                             is UpdateResult.Failed -> {
                                 val snackResult =
                                     snackbarHostState.showSnackbar(
                                         message =
                                             when (result.reason) {
-                                                is FailureReason.Status ->
+                                                is FailureReason.Status -> {
                                                     resources.getString(
                                                         result.reason.messageId,
                                                         result.reason.status,
                                                     )
-                                                else -> resources.getString(result.reason.messageId)
+                                                }
+
+                                                else -> {
+                                                    resources.getString(result.reason.messageId)
+                                                }
                                             },
                                         actionLabel =
                                             if (result.reason is FailureReason.Detailed) {
@@ -197,16 +211,19 @@ fun Actions(
                                     )
                                 if (snackResult == SnackbarResult.ActionPerformed && result.reason is FailureReason.Detailed) {
                                     when (result.reason) {
-                                        is FailureReason.Exception ->
+                                        is FailureReason.Exception -> {
                                             coroutineScope.launch(Dispatchers.Main) {
                                                 navController.navigate(
                                                     "updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}",
                                                 )
                                             }
-                                        is FailureReason.Status ->
+                                        }
+
+                                        is FailureReason.Status -> {
                                             uriHandler.openUri(
                                                 "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/${result.reason.status}",
                                             )
+                                        }
                                     }
                                 }
                             }

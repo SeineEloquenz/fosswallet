@@ -38,6 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -69,7 +70,7 @@ class ScanActivity : AppCompatActivity() {
     private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
     private var isTorchEnabled by mutableStateOf(false)
-    private var lensFacing by mutableStateOf(CameraSelector.LENS_FACING_BACK)
+    private var lensFacing by mutableIntStateOf(CameraSelector.LENS_FACING_BACK)
     private var hasDeliveredResult = false
     private var cameraProvider: ProcessCameraProvider? = null
     private var boundCamera: Camera? = null

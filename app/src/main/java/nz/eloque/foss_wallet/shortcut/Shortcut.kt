@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.widget.Toast
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.net.toUri
 import nz.eloque.foss_wallet.MainActivity
@@ -85,7 +86,7 @@ object Shortcut {
         val size = source.width.coerceAtLeast(source.height)
         val newSize = (size * 1.5).toInt() // Increase canvas size to create margins
 
-        val output = Bitmap.createBitmap(newSize, newSize, Bitmap.Config.ARGB_8888)
+        val output = createBitmap(newSize, newSize)
         val canvas = Canvas(output)
 
         canvas.drawColor(Color.WHITE)

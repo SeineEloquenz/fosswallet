@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
@@ -96,16 +97,20 @@ fun BarcodesView(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Image(
-                            bitmap = image.asImageBitmap(),
-                            contentDescription = stringResource(R.string.image),
-                            contentScale = ContentScale.Fit,
-                            modifier =
-                                Modifier
-                                    .heightIn(max = 150.dp)
-                                    .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
-                                    .clickable { fullscreenIndex = index },
-                        )
+                        if (image != null) {
+                            Image(
+                                bitmap = image.asImageBitmap(),
+                                contentDescription = stringResource(R.string.image),
+                                contentScale = ContentScale.Fit,
+                                modifier =
+                                    Modifier
+                                        .heightIn(max = 150.dp)
+                                        .widthIn(max = if (barcode.is1d()) 300.dp else 150.dp)
+                                        .clickable { fullscreenIndex = index },
+                            )
+                        } else {
+                            BrokenBarcodeWarning()
+                        }
                         barcode.altText?.let {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -137,11 +142,32 @@ fun BarcodesView(
                 1000,
                 legacyRendering,
             )
-        FullscreenBarcode(
-            image = fullscreenImage,
-            barcodePosition = barcodePosition,
-            isFullscreen = true,
-            onDismiss = { fullscreenIndex = null },
+        if (fullscreenImage != null) {
+            FullscreenBarcode(
+                image = fullscreenImage,
+                barcodePosition = barcodePosition,
+                isFullscreen = true,
+                onDismiss = { fullscreenIndex = null },
+            )
+        } else {
+            BrokenBarcodeWarning()
+        }
+    }
+}
+
+@Composable
+private fun BrokenBarcodeWarning() {
+    Box(
+        modifier =
+            Modifier
+                .heightIn(max = 150.dp)
+                .widthIn(max = 150.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "⚠",
+            color = MaterialTheme.colorScheme.error,
+            fontSize = 16.em,
         )
     }
 }
