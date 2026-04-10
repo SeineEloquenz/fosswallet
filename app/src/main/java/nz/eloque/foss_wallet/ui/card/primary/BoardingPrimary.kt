@@ -25,7 +25,7 @@ import nz.eloque.foss_wallet.ui.card.PassField
 fun BoardingPrimary(
     pass: Pass,
     transitType: TransitType,
-    isSelectable: Boolean = true
+    isSelectable: Boolean = true,
 ) {
     val departureField = pass.primaryFields.getOrElse(0) { PassField.Empty }
     val destinationField = pass.primaryFields.getOrElse(1) { PassField.Empty }
@@ -37,26 +37,26 @@ fun BoardingPrimary(
         fields = listOf(departureField, destinationField),
         modifier = Modifier.height(70.dp),
         spacing = iconWidth + space * 2,
-        useFixedWidth = true
+        useFixedWidth = true,
     ) { fontSize ->
         Row(
             horizontalArrangement = Arrangement.spacedBy(space),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             PassField(
                 field = departureField,
                 modifier = Modifier.weight(1f),
                 fontSize = fontSize,
-                isSelectable = isSelectable
+                isSelectable = isSelectable,
             )
 
             Column {
-                //The text correctly spaces the icon
+                // The text correctly spaces the icon
                 Text("", style = MaterialTheme.typography.labelMedium)
                 Icon(
                     imageVector = transitType.icon,
                     contentDescription = stringResource(R.string.to),
-                    modifier = Modifier.width(iconWidth).fillMaxHeight()
+                    modifier = Modifier.width(iconWidth).fillMaxHeight(),
                 )
             }
 
@@ -65,7 +65,7 @@ fun BoardingPrimary(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End,
                 fontSize = fontSize,
-                isSelectable = isSelectable
+                isSelectable = isSelectable,
             )
         }
     }

@@ -22,10 +22,10 @@ import java.util.UUID
             entity = PassGroup::class,
             parentColumns = ["id"],
             childColumns = ["groupId"],
-            onDelete = ForeignKey.SET_NULL
-        )
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
-    indices = [Index(value = ["groupId"])]
+    indices = [Index(value = ["groupId"])],
 )
 data class Pass(
     @PrimaryKey val id: String,
@@ -72,13 +72,17 @@ data class Pass(
     val renderLegacy: Boolean = false,
 ) {
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
+
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)
+
     fun stripFile(context: Context): File? = coilImageModel(context, "strip", hasStrip)
+
     fun thumbnailFile(context: Context): File? = coilImageModel(context, "thumbnail", hasThumbnail)
+
     fun footerFile(context: Context): File? = coilImageModel(context, "footer", hasFooter)
 
-    fun contains(query: String): Boolean {
-        return when {
+    fun contains(query: String): Boolean =
+        when {
             query inIgnoreCase description -> true
             query inIgnoreCase type.jsonKey -> true
             query inIgnoreCase logoText -> true
@@ -89,7 +93,6 @@ data class Pass(
             backFields.any { it.contains(query) } -> true
             else -> false
         }
-    }
 
     fun allFields(): List<PassField> = headerFields + primaryFields + secondaryFields + auxiliaryFields + backFields
 
@@ -102,15 +105,16 @@ data class Pass(
             .filter { it.content != updatedFields[it.key]?.content }
     }
 
-    fun updatable(): Boolean {
-        return webServiceUrl != null
-                && authToken != null
-                && passTypeIdentifier != null
-    }
+    fun updatable(): Boolean =
+        webServiceUrl != null &&
+            authToken != null &&
+            passTypeIdentifier != null
 
-    private fun coilImageModel(context: Context, type: String, exists: Boolean): File? {
-        return if (exists) File(context.filesDir, "$id/$type.png") else null
-    }
+    private fun coilImageModel(
+        context: Context,
+        type: String,
+        exists: Boolean,
+    ): File? = if (exists) File(context.filesDir, "$id/$type.png") else null
 
     fun originalPassFile(context: Context): File? {
         val file = File(context.filesDir, "$id/${OriginalPass.FILE_PATH}")
@@ -127,12 +131,8 @@ data class Pass(
     }
 
     companion object {
-        fun placeholder(): Pass {
-            return Pass("", "Loading", 1, "", "", PassType.Generic, setOf(), addedAt = Instant.ofEpochMilli(0))
-        }
+        fun placeholder(): Pass = Pass("", "Loading", 1, "", "", PassType.Generic, setOf(), addedAt = Instant.ofEpochMilli(0))
     }
 
-    fun MutableList<PassField>.contains(query: String): Boolean {
-        return this.any { query in (it.label ?: "") || it.content.contains(query) }
-    }
+    fun MutableList<PassField>.contains(query: String): Boolean = this.any { query in (it.label ?: "") || it.content.contains(query) }
 }

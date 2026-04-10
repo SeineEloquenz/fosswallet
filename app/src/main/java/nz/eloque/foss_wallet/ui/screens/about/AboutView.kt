@@ -40,68 +40,66 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.Screen
 
 @Composable
-fun AboutView(
-    navController: NavHostController,
-) {
+fun AboutView(navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Image(
                 painter = painterResource(R.drawable.icon),
                 contentDescription = stringResource(R.string.wallet),
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.fillMaxWidth(0.5f),
             )
             Text(
                 text = stringResource(R.string.app_name),
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall
+                style = MaterialTheme.typography.displaySmall,
             )
             AboutContent(
                 icon = Icons.Default.Construction,
                 text = stringResource(R.string.made_with_love),
-                textStyle = MaterialTheme.typography.labelLarge
+                textStyle = MaterialTheme.typography.labelLarge,
             )
         }
         UriButton(
             icon = Icons.Default.Source,
             text = stringResource(R.string.source_code),
-            uri = "https://github.com/SeineEloquenz/fosswallet"
+            uri = "https://github.com/SeineEloquenz/fosswallet",
         )
         UriButton(
             icon = Icons.Default.Balance,
             text = stringResource(R.string.license),
-            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE"
+            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/LICENSE",
         )
         UriButton(
             icon = Icons.Default.PrivacyTip,
             text = stringResource(R.string.privacy),
-            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/PRIVACY.md"
+            uri = "https://github.com/SeineEloquenz/fosswallet/blob/main/PRIVACY.md",
         )
         UriButton(
             icon = Icons.Default.Translate,
             text = stringResource(R.string.help_translate),
-            uri = "https://hosted.weblate.org/projects/fosswallet/"
+            uri = "https://hosted.weblate.org/projects/fosswallet/",
         )
         LicensesButton(navController)
         Spacer(Modifier.imePadding())
     }
     Box(
         modifier = Modifier.fillMaxSize().padding(bottom = 8.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
     ) {
         Text(
             text = "v${BuildConfig.VERSION_NAME}-${BuildConfig.BUILD_TYPE}-${BuildConfig.VERSION_CODE}",
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }
@@ -115,24 +113,21 @@ private fun UriButton(
     val uriHandler = LocalUriHandler.current
     OutlinedButton(
         onClick = { uriHandler.openUri(uri) },
-        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
+        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp),
     ) {
         AboutContent(icon = icon, text = text)
     }
 }
 
 @Composable
-private fun LicensesButton(
-    navController: NavHostController
-) {
+private fun LicensesButton(navController: NavHostController) {
     OutlinedButton(
         onClick = { navController.navigate(Screen.Libraries.route) },
-        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp)
+        modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp),
     ) {
         AboutContent(icon = Screen.Libraries.icon, text = stringResource(Screen.Libraries.resourceId))
     }
 }
-
 
 @Composable
 fun AboutContent(
@@ -149,13 +144,13 @@ fun AboutContent(
         Icon(
             imageVector = icon,
             contentDescription = text,
-            tint = MaterialTheme.colorScheme.secondary
+            tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
             text = text,
             color = MaterialTheme.colorScheme.secondary,
             style = textStyle,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

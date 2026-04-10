@@ -55,19 +55,20 @@ fun PassView(
     ForceOrientation(Orientation.Locked)
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .verticalScroll(rememberScrollState()),
     ) {
         PassCard(
             localizedPass = localizedPass,
             allTags = allTags,
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
-            onTagCreate = onTagCreate
+            onTagCreate = onTagCreate,
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(25.dp)
+                verticalArrangement = Arrangement.spacedBy(25.dp),
             ) {
                 if (hasBarcodes) {
                     AsyncPassImage(model = pass.footerFile(context))
@@ -75,7 +76,7 @@ fun PassView(
                         legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
                         barcodes = pass.barCodes.toList(),
                         barcodePosition = barcodePosition,
-                        increaseBrightness = increaseBrightness
+                        increaseBrightness = increaseBrightness,
                     )
                 }
             }
@@ -86,7 +87,7 @@ fun PassView(
                 SettingsSwitch(
                     title = stringResource(R.string.compatibility_mode),
                     checked = pass.renderLegacy,
-                    onCheckedChange = onRenderingChange
+                    onCheckedChange = onRenderingChange,
                 )
             }
         }
@@ -105,36 +106,41 @@ private fun PassPreview() {
     val gameTag = Tag("Spiel", Color.Red)
     val allTags = setOf(kscTag, gameTag)
 
-    val pass = Pass(
-        "",
-        "KSC - SV Elversberg",
-        1,
-        "KSC",
-        "serial",
-        PassType.Generic,
-        HashSet(),
-        Instant.ofEpochSecond(0),
-        hasLogo = false,
-        hasStrip = false,
-        hasThumbnail = false,
-        hasFooter = false,
-        headerFields = mutableListOf(
-            PassField("block", "Block", PassContent.Plain("S1")),
-            PassField("seat", "Seat", PassContent.Plain("47")),
-        ),
-        primaryFields = mutableListOf(
-            PassField("name", "Name", PassContent.Plain("Max Mustermann")),
-            PassField("seat", "Seat", PassContent.Plain("47")),
-        ),
-        auxiliaryFields = mutableListOf(
-            PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
-            PassField("seat", "Seat", PassContent.Plain("36E")),
-        ),
-        secondaryFields = mutableListOf(
-            PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
-            PassField("data2", "data2", PassContent.Plain("Shorter Value")),
-        ),
-    )
+    val pass =
+        Pass(
+            "",
+            "KSC - SV Elversberg",
+            1,
+            "KSC",
+            "serial",
+            PassType.Generic,
+            HashSet(),
+            Instant.ofEpochSecond(0),
+            hasLogo = false,
+            hasStrip = false,
+            hasThumbnail = false,
+            hasFooter = false,
+            headerFields =
+                mutableListOf(
+                    PassField("block", "Block", PassContent.Plain("S1")),
+                    PassField("seat", "Seat", PassContent.Plain("47")),
+                ),
+            primaryFields =
+                mutableListOf(
+                    PassField("name", "Name", PassContent.Plain("Max Mustermann")),
+                    PassField("seat", "Seat", PassContent.Plain("47")),
+                ),
+            auxiliaryFields =
+                mutableListOf(
+                    PassField("block", "Block", PassContent.Plain("S1 | Gegengerade")),
+                    PassField("seat", "Seat", PassContent.Plain("36E")),
+                ),
+            secondaryFields =
+                mutableListOf(
+                    PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
+                    PassField("data2", "data2", PassContent.Plain("Shorter Value")),
+                ),
+        )
     PassView(
         localizedPass = LocalizedPassWithTags(pass, allTags),
         allTags = allTags,
@@ -143,6 +149,6 @@ private fun PassPreview() {
         onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
-        onRenderingChange = {}
+        onRenderingChange = {},
     )
 }

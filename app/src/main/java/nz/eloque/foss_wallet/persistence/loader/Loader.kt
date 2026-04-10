@@ -22,8 +22,12 @@ enum class Input {
 }
 
 sealed class LoaderResult {
-    data class Single(val passId: String) : LoaderResult()
+    data class Single(
+        val passId: String,
+    ) : LoaderResult()
+
     object Multiple : LoaderResult()
+
     object Invalid : LoaderResult()
 }
 
@@ -47,22 +51,26 @@ class UnknownInputException : InvalidInputException {
     constructor(e: Exception) : super(e)
 }
 
-class Loader(val context: Context) {
-    
+class Loader(
+    val context: Context,
+) {
     fun handleInputStream(
         inputStream: InputStream,
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {
-        val loadResults = try {
-            this.load(inputStream)
-        } catch (e: InvalidInputException) {
-            Log.e(TAG, "Failed to load pass from intent: $e")
-            coroutineScope.launch(Dispatchers.Main) { Toast
-                .makeText(context, context.getString(R.string.invalid_pass_toast), Toast.LENGTH_SHORT)
-                .show() }
-            return LoaderResult.Invalid
-        }
+        val loadResults =
+            try {
+                this.load(inputStream)
+            } catch (e: InvalidInputException) {
+                Log.e(TAG, "Failed to load pass from intent: $e")
+                coroutineScope.launch(Dispatchers.Main) {
+                    Toast
+                        .makeText(context, context.getString(R.string.invalid_pass_toast), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                return LoaderResult.Invalid
+            }
         if (loadResults.size == 1) {
             val loadResult = loadResults.first()
             val importResult = walletViewModel.add(loadResult)
@@ -88,13 +96,14 @@ class Loader(val context: Context) {
             walletViewModel.group(loadResults.map { it.pass.pass }.toSet())
 
             coroutineScope.launch(Dispatchers.Main) {
-                Toast.makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)
+                Toast
+                    .makeText(context, context.getString(R.string.n_passes_imported, loadResults.size), Toast.LENGTH_SHORT)
                     .show()
             }
             return LoaderResult.Multiple
         }
     }
-    
+
     @Throws(InvalidInputException::class)
     private fun load(input: InputStream): Set<PassLoadResult> {
         val passParser = PassParser(context)

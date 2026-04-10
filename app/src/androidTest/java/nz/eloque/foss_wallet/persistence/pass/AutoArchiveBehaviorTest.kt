@@ -29,9 +29,11 @@ class AutoArchiveBehaviorTest {
     @Before
     fun setUp() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        db = Room.inMemoryDatabaseBuilder(context, WalletDb::class.java)
-            .allowMainThreadQueries()
-            .build()
+        db =
+            Room
+                .inMemoryDatabaseBuilder(context, WalletDb::class.java)
+                .allowMainThreadQueries()
+                .build()
         passDao = db.passDao()
         passRepository = PassRepository(context, passDao)
     }
@@ -43,17 +45,18 @@ class AutoArchiveBehaviorTest {
 
     @Test
     fun passIsAutoArchivedOnceButNotAfterUnarchive() {
-        val pass = Pass(
-            id = "expired-pass",
-            description = "Expired pass",
-            formatVersion = 1,
-            organization = "Test Org",
-            serialNumber = "123",
-            type = PassType.Generic,
-            barCodes = setOf(),
-            addedAt = fixedNow,
-            expirationDate = fixedExpiredDate,
-        )
+        val pass =
+            Pass(
+                id = "expired-pass",
+                description = "Expired pass",
+                formatVersion = 1,
+                organization = "Test Org",
+                serialNumber = "123",
+                type = PassType.Generic,
+                barCodes = setOf(),
+                addedAt = fixedNow,
+                expirationDate = fixedExpiredDate,
+            )
         passDao.insert(pass)
 
         passRepository.archiveExpiredPasses(now = fixedNow)
@@ -79,17 +82,18 @@ class AutoArchiveBehaviorTest {
 
     @Test
     fun nonExpiredPassDoesNotGetArchived() {
-        val nonExpiredPass = Pass(
-            id = "non-expired-pass",
-            description = "Not yet expired pass",
-            formatVersion = 1,
-            organization = "Test Org",
-            serialNumber = "125",
-            type = PassType.Generic,
-            barCodes = setOf(),
-            addedAt = fixedNow,
-            expirationDate = fixedFutureDate,
-        )
+        val nonExpiredPass =
+            Pass(
+                id = "non-expired-pass",
+                description = "Not yet expired pass",
+                formatVersion = 1,
+                organization = "Test Org",
+                serialNumber = "125",
+                type = PassType.Generic,
+                barCodes = setOf(),
+                addedAt = fixedNow,
+                expirationDate = fixedFutureDate,
+            )
         passDao.insert(nonExpiredPass)
 
         passRepository.archiveExpiredPasses(now = fixedNow)

@@ -57,13 +57,13 @@ fun SelectionActions(
                 showDeleteDialog.value = false
                 deleteSelected()
             },
-            onDismiss = { showDeleteDialog.value = false }
+            onDismiss = { showDeleteDialog.value = false },
         )
     }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.End
+        horizontalAlignment = Alignment.End,
     ) {
         FloatingActionButton(
             containerColor = MaterialTheme.colorScheme.error,

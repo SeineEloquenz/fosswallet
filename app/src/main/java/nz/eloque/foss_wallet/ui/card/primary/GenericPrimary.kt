@@ -21,7 +21,7 @@ import nz.eloque.foss_wallet.ui.card.PassField
 @Composable
 fun GenericPrimary(
     pass: Pass,
-    isSelectable: Boolean = true
+    isSelectable: Boolean = true,
 ) {
     val context = LocalContext.current
 
@@ -31,20 +31,20 @@ fun GenericPrimary(
     if (primaryField.isNotEmpty() || thumbnailFile != null) {
         Row(
             modifier = Modifier.height(90.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             primaryField?.let {
                 AutoSizePassFields(
                     fields = listOf(it),
                     modifier = Modifier.weight(1f),
                     maxLines = 2,
-                    useFixedWidth = true
+                    useFixedWidth = true,
                 ) { fontSize ->
                     PassField(
                         field = it,
                         fontSize = fontSize,
                         maxLines = 2,
-                        isSelectable = isSelectable
+                        isSelectable = isSelectable,
                     )
                 }
             } ?: Spacer(Modifier.weight(1f))
@@ -53,7 +53,7 @@ fun GenericPrimary(
                 AsyncImage(
                     model = it,
                     contentDescription = stringResource(R.string.image),
-                    modifier = Modifier.widthIn(max = 120.dp).fillMaxHeight()
+                    modifier = Modifier.widthIn(max = 120.dp).fillMaxHeight(),
                 )
             }
         }

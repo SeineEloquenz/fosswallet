@@ -1,0 +1,2 @@
+* Note non-exportability of created passes
+* Add link to wikipedia article about barcode formats to pass-creator

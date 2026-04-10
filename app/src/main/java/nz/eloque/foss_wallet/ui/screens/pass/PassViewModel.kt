@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -19,43 +18,61 @@ import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 @HiltViewModel
-class PassViewModel @Inject constructor(
-    application: Application,
-    private val passStore: PassStore,
-    private val tagRepository: TagRepository,
-    val settingsStore: SettingsStore
-) : AndroidViewModel(application) {
+class PassViewModel
+    @Inject
+    constructor(
+        application: Application,
+        private val passStore: PassStore,
+        private val tagRepository: TagRepository,
+        val settingsStore: SettingsStore,
+    ) : AndroidViewModel(application) {
+        val allTags = tagRepository.all()
 
-    private val _isAuthenticated = MutableStateFlow(false)
-    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
+        private val _isAuthenticated = MutableStateFlow(false)
+        val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
     
-    val allTags = tagRepository.all()
+        val allTags = tagRepository.all()
+        fun passFlowById(id: String) = passStore.passFlowById(id)
 
-    fun passFlowById(id: String) = passStore.passFlowById(id)
+        fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 
-    fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
+        fun tag(
+            pass: Pass,
+            tag: Tag,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.tag(pass, tag) }
 
-    fun tag(pass: Pass, tag: Tag) = viewModelScope.launch(Dispatchers.IO) { passStore.tag(pass, tag) }
-    fun untag(pass: Pass, tag: Tag) = viewModelScope.launch(Dispatchers.IO) { passStore.untag(pass, tag) }
+        fun untag(
+            pass: Pass,
+            tag: Tag,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.untag(pass, tag) }
+
+        suspend fun update(pass: Pass) = passStore.update(pass)
+
+        fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.hide(pass) }
+        
+        fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unhide(pass) }
     
-    fun update(pass: Pass, onResult: (UpdateResult) -> Unit = {}) = viewModelScope.launch(Dispatchers.IO) { onResult.invoke(passStore.update(pass)) }
-
-    fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
-
-    fun hide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.hide(pass) }
-    fun unhide(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unhide(pass) }
+        fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.pin(pass) }
+        
+        fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unpin(pass) }
     
-    fun pin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.pin(pass) }
-    fun unpin(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unpin(pass) }
+        fun reveal() { _isAuthenticated.value = true }
+        
+        fun conceal() { _isAuthenticated.value = false }
     
-    fun reveal() { _isAuthenticated.value = true }
-    fun conceal() { _isAuthenticated.value = false }
-    
-    fun archive(pass: Pass) { viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) } }
-    fun unarchive(pass: Pass) { viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) } }
+        fun archive(pass: Pass) { viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) } }
+        
+        fun unarchive(pass: Pass) { viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) } }
+        
+        fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
 
-    fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
+        fun archive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) }
 
-    fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
-    fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
-}
+        fun unarchive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) }
+
+        fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
+
+        fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+
+        fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
+    }

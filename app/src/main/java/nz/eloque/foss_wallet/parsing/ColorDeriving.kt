@@ -9,11 +9,11 @@ import nz.eloque.foss_wallet.model.PassColors
 
 fun Bitmap?.derivePassColors(): PassColors? {
     if (this == null) return null
-    
+
     val backgroundColor = this.backgroundColor() ?: return null
     val luminance = ColorUtils.calculateLuminance(backgroundColor.toArgb())
     val contentColor = if (luminance > 0.5) Color.Black else Color.White
-    
+
     return PassColors(backgroundColor, contentColor, contentColor)
 }
 
@@ -33,19 +33,14 @@ private fun Bitmap.backgroundColor(): Color? {
     return foundColor?.coerceOpacity()
 }
 
-private fun Color.clamp(): Color {
-    return this.copy(
+private fun Color.clamp(): Color =
+    this.copy(
         alpha = this.alpha.round(),
         red = this.red.round(),
         blue = this.blue.round(),
-        green = this.green.round()
+        green = this.green.round(),
     )
-}
 
-private fun Float.round(): Float {
-    return (this * 10).toInt() / 10f
-}
+private fun Float.round(): Float = (this * 10).toInt() / 10f
 
-private fun Color.coerceOpacity(): Color {
-    return if (this.alpha == 0f) Color.White else this
-}
+private fun Color.coerceOpacity(): Color = if (this.alpha == 0f) Color.White else this

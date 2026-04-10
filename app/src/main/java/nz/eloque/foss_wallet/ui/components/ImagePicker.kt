@@ -30,19 +30,22 @@ fun ImagePicker(
     imageUrl: Uri?,
     onClear: () -> Unit,
     onChoose: (Uri?) -> Unit,
+    modifier: Modifier = Modifier,
     label: String? = null,
     labelIcon: ImageVector? = null,
-    modifier: Modifier = Modifier,
 ) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        println("selected file URI $uri")
-        onChoose(uri)
-    }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            println("selected file URI $uri")
+            onChoose(uri)
+        }
     val launchPicker = {
-        launcher.launch(arrayOf(
-            "image/png",
-            "image/jpeg",
-        ))
+        launcher.launch(
+            arrayOf(
+                "image/png",
+                "image/jpeg",
+            ),
+        )
     }
 
     Row(
@@ -68,29 +71,29 @@ fun ImagePicker(
             model = imageUrl ?: R.drawable.icon,
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Fit,
-            modifier = Modifier.height(40.dp)
+            modifier = Modifier.height(40.dp),
         )
 
         IconButton(
             onClick = {
                 onClear()
             },
-            enabled = imageUrl != null
+            enabled = imageUrl != null,
         ) {
             Icon(
                 imageVector = Icons.Default.Clear,
-                contentDescription = stringResource(R.string.clear_selection)
+                contentDescription = stringResource(R.string.clear_selection),
             )
         }
 
         IconButton(
             onClick = {
                 launchPicker()
-            }
+            },
         ) {
             Icon(
                 imageVector = Icons.Default.ImageSearch,
-                contentDescription = stringResource(R.string.choose_image)
+                contentDescription = stringResource(R.string.choose_image),
             )
         }
     }

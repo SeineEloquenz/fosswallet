@@ -21,7 +21,9 @@ import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.tag.TagDao
 
-fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.java, "wallet_db")
+fun buildDb(context: Context) =
+    Room
+        .databaseBuilder(context, WalletDb::class.java, "wallet_db")
         .addMigrations(M_9_10)
         .addMigrations(M_17_18)
         .addMigrations(M_18_19)
@@ -49,11 +51,13 @@ fun buildDb(context: Context) = Room.databaseBuilder(context, WalletDb::class.ja
         AutoMigration (from = 22, to = 23),
         AutoMigration (from = 23, to = 24),
     ],
-    exportSchema = true
+    exportSchema = true,
 )
 @TypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)
 abstract class WalletDb : RoomDatabase() {
     abstract fun passDao(): PassDao
+
     abstract fun localizationDao(): PassLocalizationDao
+
     abstract fun tagDao(): TagDao
 }
