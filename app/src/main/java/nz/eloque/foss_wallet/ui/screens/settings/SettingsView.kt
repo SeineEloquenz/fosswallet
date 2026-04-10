@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -45,13 +46,18 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val settings = settingsViewModel.uiState.collectAsState()
     val passFlow = settingsViewModel.passFlow
-    val passes by remember(passFlow) { passFlow }.map { it }.collectAsState(listOf())
+    val passes by remember(passFlow) { passFlow.map { it } }.collectAsState(listOf())
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { settingsViewModel.refresh() }
 
     Column(
-        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
+                .imePadding(),
     ) {
         SettingsSection(
             heading = stringResource(R.string.pass_updates_channel),
@@ -125,6 +131,11 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                         share(passes.map { it.pass }, context)
                     }
                 },
+            )
+            Text(
+                text = stringResource(R.string.created_pass_export_warning),
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(16.dp),
             )
         }
         Spacer(modifier = Modifier.imePadding())

@@ -30,9 +30,9 @@ fun ImagePicker(
     imageUrl: Uri?,
     onClear: () -> Unit,
     onChoose: (Uri?) -> Unit,
+    modifier: Modifier = Modifier,
     label: String? = null,
     labelIcon: ImageVector? = null,
-    modifier: Modifier = Modifier,
 ) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         println("selected file URI $uri")

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,12 +48,14 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -129,7 +132,7 @@ fun CreateView(
             ),
         )
     }
-    var activeBarcodeIndex by remember { mutableStateOf(0) }
+    var activeBarcodeIndex by remember { mutableIntStateOf(0) }
     var type by remember { mutableStateOf<PassType>(PassType.Generic) }
 
     var location by remember { mutableStateOf<Location?>(null) }
@@ -268,7 +271,8 @@ fun CreateView(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .padding(8.dp)
-                    .padding(bottom = if (detailsExpanded) 88.dp else 8.dp),
+                    .navigationBarsPadding()
+                    .imePadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
@@ -349,6 +353,14 @@ fun CreateView(
                             }
                     },
                     optionLabel = { it.name },
+                    onInfo = {
+                        val intent =
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://en.wikipedia.org/wiki/Barcode#Types_of_barcodes".toUri(),
+                            )
+                        context.startActivity(intent)
+                    },
                 )
             }
 
@@ -594,78 +606,76 @@ fun CreateView(
                 }
             }
 
-            Spacer(modifier = Modifier.imePadding())
-        }
+            if (detailsExpanded) {
+                Button(
+                    enabled = createValid,
+                    onClick = {
+                        isSaving = true
+                        coroutineScope.launch(Dispatchers.IO) {
+                            val relevantDates =
+                                when {
+                                    relevantStart != null && relevantEnd != null -> {
+                                        listOf(
+                                            PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!),
+                                        )
+                                    }
 
-        if (detailsExpanded) {
-            Button(
-                enabled = createValid,
-                onClick = {
-                    isSaving = true
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val relevantDates =
-                            when {
-                                relevantStart != null && relevantEnd != null -> {
-                                    listOf(
-                                        PassRelevantDate.DateInterval(relevantStart!!, relevantEnd!!),
+                                    relevantStart != null -> {
+                                        listOf(PassRelevantDate.Date(relevantStart!!))
+                                    }
+
+                                    else -> {
+                                        emptyList()
+                                    }
+                                }
+
+                            val colors =
+                                if (allColorsBlank) {
+                                    null
+                                } else {
+                                    val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
+                                    PassColors(
+                                        background = backgroundColor ?: fallbackColor,
+                                        foreground = foregroundColor ?: fallbackColor,
+                                        label = labelColor ?: fallbackColor,
                                     )
                                 }
 
-                                relevantStart != null -> {
-                                    listOf(PassRelevantDate.Date(relevantStart!!))
-                                }
-
-                                else -> {
-                                    emptyList()
-                                }
-                            }
-
-                        val colors =
-                            if (allColorsBlank) {
-                                null
-                            } else {
-                                val fallbackColor = requireNotNull(backgroundColor ?: foregroundColor ?: labelColor)
-                                PassColors(
-                                    background = backgroundColor ?: fallbackColor,
-                                    foreground = foregroundColor ?: fallbackColor,
-                                    label = labelColor ?: fallbackColor,
+                            val savedPassId =
+                                createViewModel.savePass(
+                                    name = name,
+                                    organization = organization,
+                                    serialNumber = serialNumber,
+                                    type = type,
+                                    barcodes = barCodeModels,
+                                    logoText = logoText,
+                                    colors = colors,
+                                    location = location,
+                                    relevantDates = relevantDates,
+                                    expirationDate = expirationDate,
+                                    iconUrl = iconUrl,
+                                    logoUrl = logoUrl,
+                                    stripUrl = stripUrl,
+                                    thumbnailUrl = thumbnailUrl,
+                                    footerUrl = footerUrl,
                                 )
-                            }
-
-                        val savedPassId =
-                            createViewModel.savePass(
-                                name = name,
-                                organization = organization,
-                                serialNumber = serialNumber,
-                                type = type,
-                                barcodes = barCodeModels,
-                                logoText = logoText,
-                                colors = colors,
-                                location = location,
-                                relevantDates = relevantDates,
-                                expirationDate = expirationDate,
-                                iconUrl = iconUrl,
-                                logoUrl = logoUrl,
-                                stripUrl = stripUrl,
-                                thumbnailUrl = thumbnailUrl,
-                                footerUrl = footerUrl,
-                            )
-                        withContext(Dispatchers.Main) {
-                            isSaving = false
-                            navController.navigate("pass/$savedPassId") {
-                                popUpTo(Screen.Wallet.route)
+                            withContext(Dispatchers.Main) {
+                                isSaving = false
+                                navController.navigate("pass/$savedPassId") {
+                                    popUpTo(Screen.Wallet.route)
+                                }
                             }
                         }
-                    }
-                },
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .imePadding()
-                        .padding(8.dp),
-            ) {
-                Text(stringResource(R.string.create_pass))
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.create_pass))
+                }
+                Text(
+                    text = stringResource(R.string.created_pass_export_warning),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
@@ -1000,13 +1010,7 @@ private data class BarcodeDraft(
     val format: BarcodeFormat,
 )
 
-private fun barcodeValid(barCode: BarCode): Boolean =
-    try {
-        barCode.encodeAsBitmap(100, 100, false)
-        true
-    } catch (_: IllegalArgumentException) {
-        false
-    }
+private fun barcodeValid(barCode: BarCode): Boolean = barCode.encodeAsBitmap(100, 100, false) != null
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 
