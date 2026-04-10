@@ -350,6 +350,14 @@ fun CreateView(
                             }
                     },
                     optionLabel = { it.name },
+                    onInfo = {
+                        val intent =
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                "https://en.wikipedia.org/wiki/Barcode#Types_of_barcodes".toUri(),
+                            )
+                        context.startActivity(intent)
+                    },
                 )
             }
 
