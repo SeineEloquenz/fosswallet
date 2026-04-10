@@ -77,18 +77,20 @@ private fun ZonedDateTime.pretty(
     }
 }
 
-fun Color.clamp(): Color = copy(
-    red = this.red.round(),
-    blue = this.blue.round(),
-    green = this.green.round(),
-    alpha = this.alpha.round()
-)
+fun Color.clamp(): Color =
+    copy(
+        red = this.red.round(),
+        blue = this.blue.round(),
+        green = this.green.round(),
+        alpha = this.alpha.round(),
+    )
 
-fun Color.darken(factor: Float = 0.3f): Color = copy(
-    red = red * factor,
-    green = green * factor,
-    blue = blue * factor,
-)
+fun Color.darken(factor: Float = 0.3f): Color =
+    copy(
+        red = red * factor,
+        green = green * factor,
+        blue = blue * factor,
+    )
 
 fun InputStream.toByteArray(): ByteArray {
     val baos = ByteArrayOutputStream()
