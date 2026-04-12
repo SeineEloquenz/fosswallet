@@ -130,4 +130,5 @@
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
     <string name="created_pass_export_warning">Created passes can currently not be exported</string>
+    <string name="show_archived_passes">Show archived passes</string>
 </resources>
