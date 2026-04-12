@@ -59,7 +59,7 @@ class CatimaContentProvider : ContentProvider() {
         const val MAJOR_COLUMN: String = "major"
         const val MINOR_COLUMN: String = "minor"
         const val MAJOR: Int = 1
-        const val MINOR: Int = 0
+        const val MINOR: Int = 1
     }
 
     object CatimaFields {
@@ -74,6 +74,7 @@ class CatimaContentProvider : ContentProvider() {
         const val CARD_ID: String = "cardid"
         const val BARCODE_ID: String = "barcodeid"
         const val BARCODE_TYPE: String = "barcodetype"
+        const val BARCODE_ENCODING: String = "barcodeencoding"
         const val STAR_STATUS: String = "starstatus"
         const val LAST_USED: String = "lastused"
         const val ARCHIVE_STATUS: String = "archive"
@@ -172,6 +173,12 @@ class CatimaContentProvider : ContentProvider() {
                     pass.barCodes
                         .firstOrNull()
                         ?.format
+                        .toString(),
+                ).add(
+                    CatimaFields.BARCODE_ENCODING,
+                    pass.barCodes
+                        .firstOrNull()
+                        ?.encoding
                         .toString(),
                 ).add(CatimaFields.STAR_STATUS, 0)
                 .add(CatimaFields.LAST_USED, 0)
