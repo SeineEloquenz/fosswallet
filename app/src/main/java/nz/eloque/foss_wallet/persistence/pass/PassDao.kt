@@ -9,14 +9,15 @@ import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
-import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
+import nz.eloque.foss_wallet.model.PassWithMetadata
 
 @Dao
 interface PassDao {
     @Transaction
     @Query("SELECT * FROM pass")
-    fun all(): Flow<List<PassWithTagsAndLocalization>>
+    fun all(): Flow<List<PassWithMetadata>>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
@@ -24,11 +25,11 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun flowById(id: String): Flow<PassWithTagsAndLocalization?>
+    fun flowById(id: String): Flow<PassWithMetadata?>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun findById(id: String): PassWithTagsAndLocalization?
+    fun findById(id: String): PassWithMetadata?
 
     @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
     suspend fun associate(
@@ -41,6 +42,9 @@ interface PassDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pass: Pass)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(passMetadata: PassMetadata)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(group: PassGroup): Long
@@ -76,6 +80,10 @@ interface PassDao {
         deleteEmptyGroup(groupId)
     }
 
+    @Transaction
+    @Query("SELECT * FROM PassMetadata WHERE passId = :passId")
+    suspend fun metadata(passId: String): PassMetadata?
+
     @Query(
         """
         DELETE FROM PassGroup
@@ -87,18 +95,31 @@ interface PassDao {
     )
     suspend fun deleteEmptyGroup(groupId: Long)
 
-    @Query("UPDATE pass SET archived = 1 WHERE id = :passId")
+    @Query("UPDATE PassMetadata SET archived = 1 WHERE passId = :passId")
     suspend fun archive(passId: String)
 
-    @Query("UPDATE pass SET archived = 0, autoArchive = 0 WHERE id = :passId")
+    @Query("UPDATE PassMetadata SET archived = 0, autoArchive = 0 WHERE passId = :passId")
     suspend fun unarchive(passId: String)
 
-    @Query("UPDATE pass SET renderLegacy = :renderLegacy WHERE id = :passId")
-    suspend fun setLegacyRendering(
-        passId: String,
-        renderLegacy: Boolean,
+    @Query(
+        """
+        UPDATE PassMetadata
+        SET renderLegacy = NOT renderLegacy
+        WHERE passId = :passId
+    """,
     )
+    suspend fun toggleLegacyRendering(passId: String)
 
-    @Query("SELECT * FROM pass WHERE archived = 0 AND autoArchive = 1 AND expirationDate IS NOT NULL")
+    @Query(
+        """
+        SELECT p.*
+        FROM Pass p
+        INNER JOIN PassMetadata m
+            ON p.id = m.passId
+        WHERE m.archived = 0
+          AND m.autoArchive = 1
+          AND p.expirationDate IS NOT NULL
+    """,
+    )
     suspend fun nonArchivedWithExpirationDate(): List<Pass>
 }

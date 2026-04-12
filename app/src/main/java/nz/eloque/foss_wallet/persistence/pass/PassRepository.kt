@@ -9,8 +9,9 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
-import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
+import nz.eloque.foss_wallet.model.PassWithMetadata
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import java.time.Instant
@@ -22,11 +23,11 @@ class PassRepository
         @param:ApplicationContext private val context: Context,
         private val passDao: PassDao,
     ) {
-        fun all(): Flow<List<PassWithTagsAndLocalization>> = passDao.all()
+        fun all(): Flow<List<PassWithMetadata>> = passDao.all()
 
         fun updatable(): List<Pass> = passDao.updatable()
 
-        fun filtered(query: String): Flow<List<PassWithTagsAndLocalization>> =
+        fun filtered(query: String): Flow<List<PassWithMetadata>> =
             if (query.isEmpty()) {
                 all()
             } else {
@@ -54,15 +55,27 @@ class PassRepository
             tag: Tag,
         ) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
 
-        fun insert(
+        suspend fun insert(
             pass: Pass,
             bitmaps: PassBitmaps,
             originalPass: OriginalPass?,
         ) {
             val id = pass.id
             passDao.insert(pass)
+            var passMetadata = passDao.metadata(id) ?: PassMetadata(pass.id)
+            passMetadata = passMetadata.copy(archived = shouldBeAutoArchived(pass, passMetadata))
+            passDao.insert(passMetadata)
             bitmaps.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
+        }
+
+        private fun shouldBeAutoArchived(
+            pass: Pass,
+            metadata: PassMetadata,
+            now: Instant = Instant.now(),
+        ): Boolean {
+            val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
+            return metadata.autoArchive && expired
         }
 
         fun insert(group: PassGroup): PassGroup {
@@ -91,7 +104,7 @@ class PassRepository
 
         suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 
-        suspend fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
+        suspend fun toggleLegacyRendering(pass: Pass) = passDao.toggleLegacyRendering(pass.id)
 
         suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
             passDao

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.model.field.PassContent
@@ -48,6 +49,7 @@ fun PassView(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val pass = localizedPass.pass
+    val metadata = localizedPass.metadata
 
     val hasBarcodes = pass.barCodes.isNotEmpty()
     val hasLegacyRepresentation = pass.barCodes.any { it.hasLegacyRepresentation() }
@@ -73,7 +75,7 @@ fun PassView(
                 if (hasBarcodes) {
                     AsyncPassImage(model = pass.footerFile(context))
                     BarcodesView(
-                        legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
+                        legacyRendering = metadata.renderLegacy && hasLegacyRepresentation,
                         barcodes = pass.barCodes.toList(),
                         barcodePosition = barcodePosition,
                         increaseBrightness = increaseBrightness,
@@ -86,7 +88,7 @@ fun PassView(
             Card {
                 SettingsSwitch(
                     title = stringResource(R.string.compatibility_mode),
-                    checked = pass.renderLegacy,
+                    checked = metadata.renderLegacy,
                     onCheckedChange = onRenderingChange,
                 )
             }
@@ -142,7 +144,7 @@ private fun PassPreview() {
                 ),
         )
     PassView(
-        localizedPass = LocalizedPassWithTags(pass, allTags),
+        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags),
         allTags = allTags,
         onTagClick = {},
         onTagAdd = {},

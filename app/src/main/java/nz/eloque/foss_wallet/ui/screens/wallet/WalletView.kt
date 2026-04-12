@@ -75,7 +75,7 @@ fun WalletView(
     val passFlow = walletViewModel.filteredPasses
     val passes: List<LocalizedPassWithTags> by remember(passFlow) {
         passFlow.map { passes ->
-            passes.filter { archive == it.pass.archived }
+            passes.filter { archive == it.metadata.archived }
         }
     }.collectAsState(listOf())
 
