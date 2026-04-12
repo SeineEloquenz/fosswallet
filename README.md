@@ -24,6 +24,7 @@ Features (non-exhaustive):
 * Compatibility mode for legacy scanners
 * Multiple sort options (incl. by date)
 * Attach tags to passes
+* Gadgetbridge integration to get your passes on your watch
 
 ## Installation
 
