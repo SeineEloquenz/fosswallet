@@ -78,6 +78,25 @@ class CatimaContentProvider : ContentProvider() {
         const val STAR_STATUS: String = "starstatus"
         const val LAST_USED: String = "lastused"
         const val ARCHIVE_STATUS: String = "archive"
+
+        val defaultProjection: Array<String> =
+            arrayOf(
+                ID,
+                STORE,
+                VALID_FROM,
+                EXPIRY,
+                BALANCE,
+                BALANCE_TYPE,
+                NOTE,
+                HEADER_COLOR,
+                CARD_ID,
+                BARCODE_ID,
+                BARCODE_TYPE,
+                BARCODE_ENCODING,
+                STAR_STATUS,
+                LAST_USED,
+                ARCHIVE_STATUS,
+            )
     }
 
     private lateinit var passRepository: PassRepository
@@ -115,7 +134,7 @@ class CatimaContentProvider : ContentProvider() {
                         passRepository.all().first()
                     }
 
-                return buildPassesCursor(passes.map { it.pass }, projection)
+                return buildPassesCursor(passes.map { it.pass }, projection ?: CatimaFields.defaultProjection)
             }
 
             URI_GROUPS -> {
@@ -145,7 +164,7 @@ class CatimaContentProvider : ContentProvider() {
 
     private fun buildPassesCursor(
         passes: List<Pass>,
-        columns: Array<String?>?,
+        columns: Array<out String?>,
     ): Cursor {
         val cursor = MatrixCursor(columns)
 
@@ -184,6 +203,7 @@ class CatimaContentProvider : ContentProvider() {
                 .add(CatimaFields.LAST_USED, 0)
                 .add(CatimaFields.ARCHIVE_STATUS, if (pass.archived) 1 else 0)
         }
+
         return cursor
     }
 
