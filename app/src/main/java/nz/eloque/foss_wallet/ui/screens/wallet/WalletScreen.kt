@@ -39,6 +39,7 @@ import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
+import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -90,7 +91,12 @@ fun WalletScreen(
 
     WalletScaffold(
         navController = navController,
-        title = stringResource(id = Screen.Wallet.resourceId),
+        filterBar = {
+            FilterBar(
+                onSearch = { walletViewModel.filter(it) },
+                modifier = Modifier.weight(1f),
+            )
+        },
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
