@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -48,6 +50,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.Tag
+import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
@@ -191,6 +194,24 @@ fun WalletView(
                     },
                     selected = selectedPasses.contains(pass),
                 )
+            }
+        }
+        if (!archive) {
+            item {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    TextButton(
+                        onClick = {
+                            navController.navigate(Screen.Archive.route)
+                        },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.show_archived_passes),
+                        )
+                    }
+                }
             }
         }
         item {
