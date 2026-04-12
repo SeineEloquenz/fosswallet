@@ -33,13 +33,14 @@ import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 fun WalletScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    title: String = stringResource(R.string.wallet),
+    title: String?,
     toolWindow: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
+    filterBar: @Composable () -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
@@ -47,11 +48,15 @@ fun WalletScaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    AbbreviatingText(
-                        title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        maxLines = 1,
-                    )
+                    if (title != null) {
+                        AbbreviatingText(
+                            title,
+                            style = MaterialTheme.typography.headlineMedium,
+                            maxLines = 1,
+                        )
+                    } else {
+                        filterBar
+                    }
                 },
                 navigationIcon = {
                     if (toolWindow) {
