@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <permission
+        android:description="@string/permission_read_passes_label"
+        android:icon="@drawable/icon"
+        android:label="@string/permission_read_passes_description"
+        android:name="me.hackerchick.catima.READ_CARDS"
+        android:protectionLevel="dangerous" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -123,6 +130,12 @@
         <activity
             android:name=".ui.screens.create.ScanActivity"
             android:theme="@style/Theme.FossWallet.NoActionBar"/>
+
+        <provider
+            android:name=".contentprovider.CatimaContentProvider"
+            android:authorities="${applicationId}.contentprovider.cards"
+            android:exported="true"
+            android:readPermission="me.hackerchick.catima.READ_CARDS"/>
 
         <provider
             android:name=".app.PassProvider"
