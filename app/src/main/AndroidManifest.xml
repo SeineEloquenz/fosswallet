@@ -6,7 +6,7 @@
         android:description="@string/permission_read_passes_label"
         android:icon="@drawable/icon"
         android:label="@string/permission_read_passes_description"
-        android:name="me.hackerchick.catima.READ_CARDS"
+        android:name="${applicationId}.READ_CARDS"
         android:protectionLevel="dangerous" />
 
     <uses-feature
