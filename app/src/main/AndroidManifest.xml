@@ -135,7 +135,7 @@
             android:name=".contentprovider.CatimaContentProvider"
             android:authorities="${applicationId}.contentprovider.cards"
             android:exported="true"
-            android:readPermission="me.hackerchick.catima.READ_CARDS"/>
+            android:readPermission="${applicationId}.READ_CARDS"/>
 
         <provider
             android:name=".app.PassProvider"
