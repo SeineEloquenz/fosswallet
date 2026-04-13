@@ -180,7 +180,7 @@ class CatimaContentProvider : ContentProvider() {
                         ?.startDate()
                         ?.toInstant()
                         ?.toEpochMilli() ?: Instant.EPOCH.toEpochMilli(),
-                ).add(CatimaFields.EXPIRY, pass.expirationDate?.toInstant()?.toEpochMilli() ?: Instant.MAX.toEpochMilli())
+                ).add(CatimaFields.EXPIRY, pass.expirationDate?.toInstant()?.toEpochMilli() ?: Long.MAX_VALUE)
                 .add(CatimaFields.BALANCE, 0)
                 .add(CatimaFields.BALANCE_TYPE, null)
                 .add(CatimaFields.NOTE, pass.description)
