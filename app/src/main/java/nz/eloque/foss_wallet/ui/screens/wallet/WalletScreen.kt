@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterListAlt
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Deselect
@@ -33,6 +34,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
+import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
@@ -179,6 +182,21 @@ fun WalletScreen(
                         ),
                 )
             }
+        },
+        subRow = { 
+            SelectionMenu(
+                icon = Icons.Default.FilterListAlt,
+                singleOptions = SortOption.all(),
+                multiOptions = PassType.all(),
+                singleOptionLabel = { resources.getString(it.l18n) },
+                multiOptionLabel = { resources.getString(it.label) },
+                selectedSingleOption = sortOption,
+                selectedMultiOptions = passTypesToShow,
+                onSingleOptionSelected = onSortChange,
+                onMultiOptionSelected =  { passTypesToShow.add(it) },
+                onMultiOptionDeselected = { passTypesToShow.remove(it) },
+                contentDescription = R.string.filter,
+            )
         },
     ) { scrollBehavior ->
         WalletView(
