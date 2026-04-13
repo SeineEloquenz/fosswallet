@@ -43,6 +43,7 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.ui.components.FilterBar
+import nz.eloque.foss_wallet.ui.components.tag.TagRow
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -57,7 +58,10 @@ fun WalletScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val listState = rememberLazyListState()
-
+    
+    val tags by tagFlow.collectAsState(setOf())
+    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
+    
     val loading = remember { mutableStateOf(false) }
 
     val launcher =
@@ -123,14 +127,19 @@ fun WalletScreen(
                     )
                 }
             }
-            IconButton(onClick = {
-                navController.navigate(Screen.Archive.route)
-            }) {
-                Icon(
-                    imageVector = Screen.Archive.icon,
-                    contentDescription = stringResource(R.string.the_archive),
-                )
-            }
+            SelectionMenu(
+                icon = Icons.Default.FilterListAlt,
+                singleOptions = SortOption.all(),
+                multiOptions = PassType.all(),
+                singleOptionLabel = { resources.getString(it.l18n) },
+                multiOptionLabel = { resources.getString(it.label) },
+                selectedSingleOption = sortOption,
+                selectedMultiOptions = passTypesToShow,
+                onSingleOptionSelected = onSortChange,
+                onMultiOptionSelected =  { passTypesToShow.add(it) },
+                onMultiOptionDeselected = { passTypesToShow.remove(it) },
+                contentDescription = R.string.filter,
+            )
             IconButton(onClick = {
                 navController.navigate(Screen.Settings.route)
             }) {
@@ -184,19 +193,22 @@ fun WalletScreen(
             }
         },
         subRow = { 
-            SelectionMenu(
-                icon = Icons.Default.FilterListAlt,
-                singleOptions = SortOption.all(),
-                multiOptions = PassType.all(),
-                singleOptionLabel = { resources.getString(it.l18n) },
-                multiOptionLabel = { resources.getString(it.label) },
-                selectedSingleOption = sortOption,
-                selectedMultiOptions = passTypesToShow,
-                onSingleOptionSelected = onSortChange,
-                onMultiOptionSelected =  { passTypesToShow.add(it) },
-                onMultiOptionDeselected = { passTypesToShow.remove(it) },
-                contentDescription = R.string.filter,
-            )
+            TagRow(
+                tags = tags,
+                selectedTag = tagToFilterFor.value,
+                onTagSelected = { tagToFilterFor.value = it },
+                onTagDeselected = { tagToFilterFor.value = null },
+                walletViewModel = walletViewModel,
+                modifier = Modifier.fillMaxWidth(),
+             )
+            IconButton(onClick = {
+                navController.navigate(Screen.Archive.route)
+            }) {
+                Icon(
+                    imageVector = Screen.Archive.icon,
+                    contentDescription = stringResource(R.string.the_archive),
+                )
+            }
         },
     ) { scrollBehavior ->
         WalletView(
