@@ -1,15 +1,14 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FilterListAlt
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Deselect
@@ -20,13 +19,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
@@ -45,8 +49,8 @@ import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.components.tag.TagRow
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
+import kotlin.collections.setOf
 
-@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
@@ -55,10 +59,14 @@ fun WalletScreen(
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver
-    val coroutineScope = rememberCoroutineScope()
+    val resources = LocalResources.current
 
+    val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-    
+
+    val passTypesToShow = remember { PassType.all().toMutableStateList() }
+    val sortOption = walletViewModel.sortOptionState.collectAsState().value
+    val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
     
@@ -98,6 +106,7 @@ fun WalletScreen(
 
     WalletScaffold(
         navController = navController,
+        title = null,
         filterBar = {
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
@@ -128,7 +137,6 @@ fun WalletScreen(
                 }
             }
             SelectionMenu(
-                icon = Icons.Default.FilterListAlt,
                 singleOptions = SortOption.all(),
                 multiOptions = PassType.all(),
                 singleOptionLabel = { resources.getString(it.l18n) },

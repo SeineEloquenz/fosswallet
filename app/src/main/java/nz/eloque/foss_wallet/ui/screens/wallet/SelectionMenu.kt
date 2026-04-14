@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -28,13 +27,13 @@ import nz.eloque.foss_wallet.R
 fun <T, F> SelectionMenu(
     multiOptions: Collection<F>,
     singleOptions: List<T>,
-    multiOptionLabel: (T) -> String,
-    singleOptionLabel: (F) -> String,
+    multiOptionLabel: (F) -> String,
+    singleOptionLabel: (T) -> String,
     selectedMultiOptions: Collection<F>,
     selectedSingleOption: T,
     onMultiOptionSelected: (F) -> Unit,
     onSingleOptionSelected: (T) -> Unit,
-    onSingleOptionDeselected: (F) -> Unit,
+    onMultiOptionDeselected: (F) -> Unit,
     modifier: Modifier = Modifier,
     @StringRes contentDescription: Int = R.string.more_options,
 ) {
@@ -42,7 +41,7 @@ fun <T, F> SelectionMenu(
 
     Box(modifier = modifier) {
         IconButton(onClick = { expanded = !expanded }) {
-            Icon(Icons.Default.Menu, contentDescription = stringResource(contentDescription))
+            Icon(Icons.Default.FilterList, contentDescription = stringResource(contentDescription))
         }
         DropdownMenu(
             expanded = expanded,
