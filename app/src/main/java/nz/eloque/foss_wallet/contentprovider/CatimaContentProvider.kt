@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -184,7 +185,7 @@ class CatimaContentProvider : ContentProvider() {
                 .add(CatimaFields.BALANCE, 0)
                 .add(CatimaFields.BALANCE_TYPE, null)
                 .add(CatimaFields.NOTE, pass.description)
-                .add(CatimaFields.HEADER_COLOR, pass.colors?.background)
+                .add(CatimaFields.HEADER_COLOR, pass.colors?.background?.toArgb())
                 .add(CatimaFields.CARD_ID, pass.barCodes.firstOrNull()?.altText ?: pass.barCodes.firstOrNull()?.message ?: pass.id)
                 .add(CatimaFields.BARCODE_ID, pass.barCodes.firstOrNull()?.message)
                 .add(
