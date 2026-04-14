@@ -172,7 +172,7 @@ class CatimaContentProvider : ContentProvider() {
             cursor
                 .newRow()
                 .add(CatimaFields.ID, pass.id.hashCode())
-                .add(CatimaFields.STORE, pass.organization)
+                .add(CatimaFields.STORE, pass.logoText ?: pass.organization)
                 .add(
                     CatimaFields.VALID_FROM,
                     pass.relevantDates
