@@ -185,7 +185,7 @@ class CatimaContentProvider : ContentProvider() {
                 .add(CatimaFields.BALANCE_TYPE, null)
                 .add(CatimaFields.NOTE, pass.description)
                 .add(CatimaFields.HEADER_COLOR, pass.colors?.background)
-                .add(CatimaFields.CARD_ID, pass.id)
+                .add(CatimaFields.CARD_ID, pass.barCodes.firstOrNull()?.altText ?: pass.barCodes.firstOrNull()?.message ?: pass.id)
                 .add(CatimaFields.BARCODE_ID, pass.barCodes.firstOrNull()?.message)
                 .add(
                     CatimaFields.BARCODE_TYPE,
