@@ -30,7 +30,7 @@ data class PassWithTagsAndLocalization(
     val localizations: List<PassLocalization>,
 ) {
     fun applyLocalization(locale: String): LocalizedPassWithTags {
-        val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
+        val mapping = localeMapping(locale)
         val localizedPass =
             pass.copy(
                 description = mapping[pass.description]?.text ?: pass.description,

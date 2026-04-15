@@ -18,7 +18,7 @@ data class PassWithLocalization(
     val localizations: List<PassLocalization>,
 ) {
     fun applyLocalization(locale: String): Pass {
-        val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
+        val mapping = localeMapping(locale)
         return pass.copy(
             description = mapping[pass.description]?.text ?: pass.description,
             headerFields = pass.headerFields.applyLocalization(mapping),
