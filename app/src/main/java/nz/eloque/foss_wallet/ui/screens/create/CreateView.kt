@@ -41,7 +41,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -119,7 +118,6 @@ fun CreateView(
     var nameTouched by remember { mutableStateOf(false) }
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
-    var logoText by remember { mutableStateOf("") }
     val initialBarcodeValue = initialBarcode.orEmpty()
     var barcodes by remember(initialBarcodeValue) {
         mutableStateOf(
@@ -544,19 +542,6 @@ fun CreateView(
                                 modifier = Modifier.fillMaxWidth(),
                             )
 
-                            OutlinedTextField(
-                                label = { Text(stringResource(R.string.logo_text)) },
-                                value = logoText,
-                                onValueChange = { logoText = it },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.TextFields,
-                                        contentDescription = stringResource(R.string.logo_text),
-                                    )
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-
                             ImagePicker(
                                 imageUrl = logoUrl,
                                 onClear = { logoUrl = null },
@@ -648,7 +633,6 @@ fun CreateView(
                                     serialNumber = serialNumber,
                                     type = type,
                                     barcodes = barCodeModels,
-                                    logoText = logoText,
                                     colors = colors,
                                     location = location,
                                     relevantDates = relevantDates,
