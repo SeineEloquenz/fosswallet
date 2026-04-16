@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.app
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -19,7 +20,6 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.persistence.tag.TagDao
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
-import java.util.concurrent.Callable
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,9 +52,7 @@ object AppModule {
     @Provides
     fun provideTransactionalExecutor(walletDb: WalletDb): TransactionalExecutor =
         object : TransactionalExecutor {
-            override fun <T> runTransactionally(callable: Callable<T>): T = walletDb.runInTransaction(callable)
-
-            override fun runTransactionally(runnable: Runnable) = walletDb.runInTransaction(runnable)
+            override suspend fun <T> runTransactionally(callable: suspend () -> T): T = walletDb.withTransaction { callable() }
         }
 
     @Provides

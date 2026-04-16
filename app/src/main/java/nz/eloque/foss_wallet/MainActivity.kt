@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun Uri.handleIntent(
+    private suspend fun Uri.handleIntent(
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {

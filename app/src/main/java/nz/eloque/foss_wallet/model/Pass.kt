@@ -2,10 +2,7 @@ package nz.eloque.foss_wallet.model
 
 import android.content.Context
 import android.location.Location
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
@@ -15,18 +12,7 @@ import java.time.ZonedDateTime
 import java.util.LinkedList
 import java.util.UUID
 
-@Entity(
-    tableName = "Pass",
-    foreignKeys = [
-        ForeignKey(
-            entity = PassGroup::class,
-            parentColumns = ["id"],
-            childColumns = ["groupId"],
-            onDelete = ForeignKey.SET_NULL,
-        ),
-    ],
-    indices = [Index(value = ["groupId"])],
-)
+@Entity(tableName = "Pass")
 data class Pass(
     @PrimaryKey val id: String,
     val description: String,
@@ -35,7 +21,6 @@ data class Pass(
     val serialNumber: String,
     val type: PassType,
     val barCodes: Set<BarCode>,
-    @ColumnInfo(defaultValue = "0")
     val addedAt: Instant,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
@@ -45,10 +30,8 @@ data class Pass(
      * Device UUID used for updating passes.
      * We use a unique UUID per pass so devices can not be linked across servers from the UUID
      */
-    @ColumnInfo(defaultValue = "2b767e5b-75fd-4bec-89d7-188e832b2dc3")
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
-    val groupId: Long? = null,
     val relevantDates: List<PassRelevantDate> = LinkedList(),
     val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,
@@ -61,12 +44,6 @@ data class Pass(
     val secondaryFields: List<PassField> = LinkedList(),
     val auxiliaryFields: List<PassField> = LinkedList(),
     val backFields: List<PassField> = LinkedList(),
-    @ColumnInfo(defaultValue = "0")
-    val archived: Boolean = false,
-    @ColumnInfo(defaultValue = "1")
-    val autoArchive: Boolean = true,
-    @ColumnInfo(defaultValue = "0")
-    val renderLegacy: Boolean = false,
 ) {
     fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
 

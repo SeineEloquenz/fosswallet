@@ -54,7 +54,7 @@ class UnknownInputException : InvalidInputException {
 class Loader(
     val context: Context,
 ) {
-    fun handleInputStream(
+    suspend fun handleInputStream(
         inputStream: InputStream,
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,

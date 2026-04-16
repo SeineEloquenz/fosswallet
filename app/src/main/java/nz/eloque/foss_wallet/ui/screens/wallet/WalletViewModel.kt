@@ -71,7 +71,7 @@ class WalletViewModel
         fun filter(query: String) =
             viewModelScope.launch(Dispatchers.IO) { baseQueryState.value = baseQueryState.value.copy(query = query) }
 
-        fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
+        suspend fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 

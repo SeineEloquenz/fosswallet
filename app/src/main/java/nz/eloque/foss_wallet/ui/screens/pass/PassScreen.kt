@@ -51,6 +51,7 @@ import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
@@ -84,7 +85,13 @@ fun PassScreen(
             title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
+                Actions(
+                    pass = localizedPass.pass,
+                    metadata = localizedPass.metadata,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState,
+                    passViewModel = passViewModel,
+                )
             },
         ) { scrollBehavior ->
             PassView(
@@ -105,6 +112,7 @@ fun PassScreen(
 @Composable
 fun Actions(
     pass: Pass,
+    metadata: PassMetadata,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel,
@@ -234,7 +242,7 @@ fun Actions(
                 PassShareButton(passFile)
             }
 
-            if (pass.archived) {
+            if (metadata.archived) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unarchive)) },
                     leadingIcon = {
