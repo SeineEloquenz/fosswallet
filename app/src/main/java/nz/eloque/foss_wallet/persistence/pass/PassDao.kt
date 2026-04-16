@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
@@ -52,13 +53,13 @@ interface PassDao {
     )
     suspend fun dissociate(passId: String)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insert(pass: Pass)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insert(passMetadata: PassMetadata)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insert(group: PassGroup): Long
 
     @Delete
