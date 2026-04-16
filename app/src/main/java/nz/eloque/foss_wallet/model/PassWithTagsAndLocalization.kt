@@ -5,6 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
+import java.util.Locale
 
 private const val CHANGE_MESSAGE_FORMAT = "%@"
 
@@ -29,7 +30,7 @@ data class PassWithTagsAndLocalization(
     val localizations: List<PassLocalization>,
 ) {
     fun applyLocalization(locale: String): LocalizedPassWithTags {
-        val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
+        val mapping = localeMapping(locale)
         val localizedPass =
             pass.copy(
                 description = mapping[pass.description]?.text ?: pass.description,
@@ -64,9 +65,21 @@ data class PassWithTagsAndLocalization(
             this
         }
 
-    private fun localeMapping(locale: String): Map<String, PassLocalization> =
-        localizations
-            .filter {
-                it.lang == locale
-            }.associateBy { it.label }
+    private fun localeMapping(locale: String): Map<String, PassLocalization> {
+        val availableLanguageTags = localizations.map { it.lang.normalizedLanguageTag() }.distinct()
+        val preferredLanguages = listOf(locale, "en")
+        val bestMatch =
+            Locale.lookupTag(
+                preferredLanguages.mapNotNull { it.normalizedLanguageTag().toLanguageRangeOrNull() },
+                availableLanguageTags,
+            ) ?: "en"
+
+        return localizations
+            .filter { it.lang.normalizedLanguageTag().equals(bestMatch, ignoreCase = true) }
+            .associateBy { it.label }
+    }
+
+    private fun String.normalizedLanguageTag(): String = replace('_', '-')
+
+    private fun String.toLanguageRangeOrNull(): Locale.LanguageRange? = runCatching { Locale.LanguageRange(this) }.getOrNull()
 }

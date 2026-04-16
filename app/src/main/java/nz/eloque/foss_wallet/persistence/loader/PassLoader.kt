@@ -127,8 +127,8 @@ class PassLoader(
                             footer = chooseBetter(footer, loadImage(baos))
                         }
 
-                        in Regex("..\\.lproj/pass.strings") -> {
-                            localizations.addAll(parseLocalization(entry.name.substring(0, 2), baos))
+                        in LOCALIZATION_FILE_REGEX -> {
+                            localizations.addAll(parseLocalization(entry.name.substringBefore(".lproj"), baos))
                         }
                     }
                 }
@@ -198,5 +198,7 @@ class PassLoader(
 
     companion object {
         private const val TAG = "PassLoader"
+        private val LOCALIZATION_FILE_REGEX =
+            Regex("^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*\\.lproj/pass\\.strings$")
     }
 }
