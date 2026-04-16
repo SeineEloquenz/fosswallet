@@ -31,13 +31,25 @@ interface PassDao {
     @Query("SELECT * FROM pass WHERE id=:id")
     fun findById(id: String): PassWithMetadata?
 
-    @Query("UPDATE pass SET groupId = :groupId WHERE id = :passId")
+    @Query(
+        """
+        UPDATE PassMetadata
+        SET groupId = :groupId
+        WHERE passId = :passId
+    """,
+    )
     suspend fun associate(
         passId: String,
         groupId: Long,
     )
 
-    @Query("UPDATE pass SET groupId = NULL WHERE id = :passId")
+    @Query(
+        """
+        UPDATE PassMetadata
+        SET groupId = NULL
+        WHERE passId = :passId
+    """,
+    )
     suspend fun dissociate(passId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -87,9 +99,11 @@ interface PassDao {
     @Query(
         """
         DELETE FROM PassGroup
-        WHERE id = :groupId 
+        WHERE id = :groupId
         AND (
-          SELECT COUNT(*) FROM Pass WHERE Pass.groupId = :groupId
+            SELECT COUNT(*)
+            FROM PassMetadata
+            WHERE groupId = :groupId
         ) = 1
     """,
     )

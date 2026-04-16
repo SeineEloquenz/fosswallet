@@ -13,11 +13,12 @@ val M_23_24 =
                 """
                 CREATE TABLE IF NOT EXISTS PassMetadata (
                     passId TEXT NOT NULL PRIMARY KEY,
+                    groupId INTEGER,
                     archived INTEGER NOT NULL,
                     autoArchive INTEGER NOT NULL,
                     renderLegacy INTEGER NOT NULL,
-                    FOREIGN KEY(passId) REFERENCES Pass(id)
-                        ON DELETE CASCADE
+                    FOREIGN KEY(passId) REFERENCES Pass(id) ON DELETE CASCADE,
+                    FOREIGN KEY(groupId) REFERENCES PassGroup(id) ON UPDATE NO ACTION ON DELETE SET NULL
                 )
                 """.trimIndent(),
             )
@@ -27,8 +28,8 @@ val M_23_24 =
             // ---------------------------------------------------------
             db.execSQL(
                 """
-                INSERT INTO PassMetadata (passId, archived, autoArchive, renderLegacy)
-                SELECT id, archived, autoArchive, renderLegacy
+                INSERT INTO PassMetadata (passId, groupId, archived, autoArchive, renderLegacy)
+                SELECT id, groupId, archived, autoArchive, renderLegacy
                 FROM Pass
                 """.trimIndent(),
             )
@@ -56,7 +57,6 @@ val M_23_24 =
                     hasFooter INTEGER NOT NULL,
                     deviceId TEXT NOT NULL,
                     colors TEXT,
-                    groupId INTEGER,
                     relevantDates TEXT NOT NULL,
                     expirationDate TEXT,
                     logoText TEXT,
@@ -68,8 +68,7 @@ val M_23_24 =
                     primaryFields TEXT NOT NULL,
                     secondaryFields TEXT NOT NULL,
                     auxiliaryFields TEXT NOT NULL,
-                    backFields TEXT NOT NULL,
-                    FOREIGN KEY(groupId) REFERENCES PassGroup(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                    backFields TEXT NOT NULL
                 )
                 """.trimIndent(),
             )
@@ -79,13 +78,13 @@ val M_23_24 =
             // ---------------------------------------------------------
             db.execSQL(
                 """
-                DROP INDEX IF EXISTS index_Pass_groupId
+                DROP INDEX IF EXISTS index_PassMetadata_groupId
                 """.trimIndent(),
             )
 
             db.execSQL(
                 """
-                CREATE INDEX index_Pass_groupId ON Pass(groupId)
+                CREATE INDEX index_PassMetadata_groupId ON PassMetadata(groupId)
                 """.trimIndent(),
             )
 
@@ -115,7 +114,6 @@ val M_23_24 =
                     hasFooter,
                     deviceId,
                     colors,
-                    groupId,
                     relevantDates,
                     expirationDate,
                     logoText,
@@ -144,7 +142,6 @@ val M_23_24 =
                     hasFooter,
                     deviceId,
                     colors,
-                    groupId,
                     relevantDates,
                     expirationDate,
                     logoText,

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 24,
-    "identityHash": "f7cb8ef56150ad3e6bcc06d27dc48ffe",
+    "identityHash": "0e2b07359193b38be73e4e173a7679e3",
     "entities": [
       {
         "tableName": "Pass",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL, `colors` TEXT, `groupId` INTEGER, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `deviceId` TEXT NOT NULL, `colors` TEXT, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -92,11 +92,6 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "groupId",
-            "columnName": "groupId",
-            "affinity": "INTEGER"
-          },
-          {
             "fieldPath": "relevantDates",
             "columnName": "relevantDates",
             "affinity": "TEXT",
@@ -169,41 +164,22 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [
-          {
-            "name": "index_Pass_groupId",
-            "unique": false,
-            "columnNames": [
-              "groupId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Pass_groupId` ON `${TABLE_NAME}` (`groupId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "PassGroup",
-            "onDelete": "SET NULL",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "groupId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        }
       },
       {
         "tableName": "PassMetadata",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`passId` TEXT NOT NULL, `archived` INTEGER NOT NULL, `autoArchive` INTEGER NOT NULL, `renderLegacy` INTEGER NOT NULL, PRIMARY KEY(`passId`), FOREIGN KEY(`passId`) REFERENCES `Pass`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`passId` TEXT NOT NULL, `groupId` INTEGER, `archived` INTEGER NOT NULL, `autoArchive` INTEGER NOT NULL, `renderLegacy` INTEGER NOT NULL, PRIMARY KEY(`passId`), FOREIGN KEY(`passId`) REFERENCES `Pass`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`groupId`) REFERENCES `PassGroup`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "passId",
             "columnName": "passId",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "archived",
@@ -239,6 +215,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_PassMetadata_passId` ON `${TABLE_NAME}` (`passId`)"
+          },
+          {
+            "name": "index_PassMetadata_groupId",
+            "unique": false,
+            "columnNames": [
+              "groupId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PassMetadata_groupId` ON `${TABLE_NAME}` (`groupId`)"
           }
         ],
         "foreignKeys": [
@@ -248,6 +233,17 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "passId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "PassGroup",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "groupId"
             ],
             "referencedColumns": [
               "id"
@@ -420,7 +416,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f7cb8ef56150ad3e6bcc06d27dc48ffe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0e2b07359193b38be73e4e173a7679e3')"
     ]
   }
 }

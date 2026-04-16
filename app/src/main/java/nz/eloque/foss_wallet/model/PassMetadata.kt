@@ -14,11 +14,21 @@ import androidx.room.PrimaryKey
             childColumns = ["passId"],
             onDelete = ForeignKey.CASCADE,
         ),
+        ForeignKey(
+            entity = PassGroup::class,
+            parentColumns = ["id"],
+            childColumns = ["groupId"],
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
-    indices = [Index(value = ["passId"])],
+    indices = [
+        Index(value = ["passId"]),
+        Index(value = ["groupId"]),
+    ],
 )
 data class PassMetadata(
     @PrimaryKey val passId: String,
+    val groupId: Long? = null,
     val archived: Boolean = false,
     val autoArchive: Boolean = true,
     val renderLegacy: Boolean = false,

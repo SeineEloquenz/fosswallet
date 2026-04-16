@@ -3,8 +3,6 @@ package nz.eloque.foss_wallet.model
 import android.content.Context
 import android.location.Location
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
@@ -14,18 +12,7 @@ import java.time.ZonedDateTime
 import java.util.LinkedList
 import java.util.UUID
 
-@Entity(
-    tableName = "Pass",
-    foreignKeys = [
-        ForeignKey(
-            entity = PassGroup::class,
-            parentColumns = ["id"],
-            childColumns = ["groupId"],
-            onDelete = ForeignKey.SET_NULL,
-        ),
-    ],
-    indices = [Index(value = ["groupId"])],
-)
+@Entity(tableName = "Pass")
 data class Pass(
     @PrimaryKey val id: String,
     val description: String,
@@ -45,7 +32,6 @@ data class Pass(
      */
     val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
-    val groupId: Long? = null,
     val relevantDates: List<PassRelevantDate> = LinkedList(),
     val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,

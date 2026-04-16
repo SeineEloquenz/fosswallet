@@ -94,7 +94,7 @@ fun WalletView(
             .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
             .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
             .sortedWith(sortOption.comparator)
-            .groupBy { it.pass.groupId }
+            .groupBy { it.metadata.groupId }
             .toList()
     val visiblePasses = sortedPasses.flatMap { it.second }.toSet()
 
