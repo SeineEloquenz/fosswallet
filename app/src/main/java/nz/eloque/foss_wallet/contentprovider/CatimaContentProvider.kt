@@ -16,8 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import nz.eloque.foss_wallet.BuildConfig
-import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassTagCrossRef
+import nz.eloque.foss_wallet.model.PassWithMetadata
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
@@ -135,7 +135,7 @@ class CatimaContentProvider : ContentProvider() {
                         passRepository.all().first()
                     }
 
-                return buildPassesCursor(passes.map { it.pass }, projection ?: CatimaFields.defaultProjection)
+                return buildPassesCursor(passes, projection ?: CatimaFields.defaultProjection)
             }
 
             URI_GROUPS -> {
@@ -164,12 +164,15 @@ class CatimaContentProvider : ContentProvider() {
     }
 
     private fun buildPassesCursor(
-        passes: List<Pass>,
+        passes: List<PassWithMetadata>,
         columns: Array<out String?>,
     ): Cursor {
         val cursor = MatrixCursor(columns)
 
-        passes.forEach { pass ->
+        passes.forEach {
+            val pass = it.pass
+            val metadata = it.metadata
+
             cursor
                 .newRow()
                 .add(CatimaFields.ID, pass.id.hashCode())
@@ -202,7 +205,7 @@ class CatimaContentProvider : ContentProvider() {
                         .toString(),
                 ).add(CatimaFields.STAR_STATUS, 0)
                 .add(CatimaFields.LAST_USED, 0)
-                .add(CatimaFields.ARCHIVE_STATUS, if (pass.archived) 1 else 0)
+                .add(CatimaFields.ARCHIVE_STATUS, if (metadata.archived) 1 else 0)
         }
 
         return cursor
