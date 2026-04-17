@@ -73,7 +73,7 @@
     <string name="selected">Selected</string>
     <string name="filter">Sort by</string>
     <string name="libraries">Libraries</string>
-    <string name="compatibility_mode">Compatibility Mode</string>
+    <string name="compatibility_mode">Compatibility mode</string>
     <string name="create_pass">Create pass</string>
     <string name="manual_entry">Manual entry</string>
     <string name="advanced">Advanced</string>
