@@ -74,14 +74,6 @@ fun ScanView(
                 increaseBrightness = false,
             )
 
-            TextButton(
-                onClick = {
-                    Screen.Create.navigate(navController, scannedBarcode!!)
-                },
-            ) {
-                Text(stringResource(R.string.manual_entry))
-            }
-
             val bcbp = IataBcbp.parse(it.message)
             if (bcbp != null) {
                 val coroutineScope = rememberCoroutineScope()
@@ -111,6 +103,14 @@ fun ScanView(
                 ) {
                     Text(stringResource(R.string.webview))
                 }
+            }
+
+            TextButton(
+                onClick = {
+                    Screen.Create.navigate(navController, scannedBarcode!!)
+                },
+            ) {
+                Text(stringResource(R.string.manual_entry))
             }
         }
     }
