@@ -1,0 +1,5 @@
+* Alle Pass-Ansichten neu gestaltet, um sie besser an die Richtlinien von Apple anzupassen
+* Freigaben von PassAndroid akzeptieren
+* Alt-Texte für Barcodes werden angezeigt
+* Schaltfläche „Suche rückgängig machen“ zur Pass-Filterung hinzugefügt
+* Auswahlhinweis beim Wischen weniger auffällig gestaltet

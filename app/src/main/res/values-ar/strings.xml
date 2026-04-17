@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">الإعدادات</string>
+    <string name="source_code">كود المصدر</string>
+    <string name="date">التاريخ</string>
+    <string name="details">تفاصيل</string>
+    <string name="the_archive">أرشيف</string>
+    <string name="more_options">خيارات إضافية</string>
+    <string name="libraries">المكتبات</string>
+    <string name="coupon">قسيمة</string>
+    <string name="searching">جارٍ البحث…</string>
+    <string name="brightness">السطوع</string>
+    <string name="color">اللون</string>
+    <string name="license">الترخيص</string>
+    <string name="about">حول</string>
+    <string name="serial_number">الرقم التسلسلي</string>
+</resources>

@@ -1,0 +1,2 @@
+* Hinweis: Die erstellten Ausweise können nicht exportiert werden
+* Link zum Wikipedia-Artikel über Barcode-Formate zum Pass-Creator hinzugefügt

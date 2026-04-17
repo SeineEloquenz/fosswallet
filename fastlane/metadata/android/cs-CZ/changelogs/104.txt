@@ -1,0 +1,2 @@
+* Přidán dodatečný odkaz na archiv
+* Tlačítko aktualizace v zobrazení lístku přesunuto na lištu aplikace

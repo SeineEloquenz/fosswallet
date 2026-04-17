@@ -128,4 +128,8 @@
     <string name="continue_to_details">繼續</string>
     <string name="no_text_in_clipboard">剪貼簿中沒有文字</string>
     <string name="select_all">全選</string>
+    <string name="created_pass_export_warning">目前建立的通行證尚無法匯出</string>
+    <string name="show_archived_passes">顯示已封存的通行證</string>
+    <string name="permission_read_passes_label">讀取通行證</string>
+    <string name="permission_read_passes_description">以 Catima 相容的方式讀取您的通行證及其詳細資訊，包括條碼</string>
 </resources>

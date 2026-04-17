@@ -128,4 +128,8 @@
     <string name="no_map_app_found">Non se atopa unha app de mapas</string>
     <string name="no_calendar_app_found">Non se atopa unha app de calendario</string>
     <string name="tag_label">Nome da etiqueta</string>
+    <string name="created_pass_export_warning">Actualmente non se poden exportar os pases creados</string>
+    <string name="show_archived_passes">Mostrar pases arquivados</string>
+    <string name="permission_read_passes_label">Ler pases</string>
+    <string name="permission_read_passes_description">Le os teus pases e o seus detalles, incluíndo códigos de barras no modo compatible con Catima</string>
 </resources>

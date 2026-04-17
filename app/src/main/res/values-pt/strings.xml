@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="barcode">Código de barras</string>
+    <string name="brightness">Brilho</string>
+    <string name="the_archive">Arquivo</string>
+    <string name="pass_background_color">Cor de fundo</string>
+    <string name="color">Cor</string>
+    <string name="libraries">Bibliotecas</string>
+    <string name="license">Licença</string>
+    <string name="date">Data</string>
+    <string name="serial_number">Número de série</string>
+    <string name="more_options">Mais opções</string>
+    <string name="barcode_value">Valor do código de barras</string>
+    <string name="coupon">Cupão</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="searching">A pesquisar…</string>
+    <string name="pass_expiration_date">Data de validade</string>
+    <string name="source_code">Código-fonte</string>
+    <string name="about">Sobre</string>
+    <string name="wallet">Carteira</string>
+    <string name="image">Imagem</string>
+    <string name="settings">Definições</string>
+    <string name="back">Voltar</string>
+</resources>

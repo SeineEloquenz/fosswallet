@@ -128,4 +128,8 @@
     <string name="import_pass">Importera kort</string>
     <string name="open_from_clipboard">Öppna från urklipp</string>
     <string name="the_archive">Arkiv</string>
+    <string name="show_archived_passes">Visa arkiverade kort</string>
+    <string name="created_pass_export_warning">Skapade kort kan för närvarande inte exporteras</string>
+    <string name="permission_read_passes_label">Läsa kort</string>
+    <string name="permission_read_passes_description">Läsa dina kort och deras uppgifter, inklusive streckkoder, på ett Catima-kompatibelt sätt</string>
 </resources>

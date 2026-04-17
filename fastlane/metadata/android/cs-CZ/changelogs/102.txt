@@ -1,0 +1,4 @@
+* Zkratky nyní používají adaptivní ikony
+* Vylepšeno rozvržení palubních vstupenek
+* Odstraněna zkratka dvojitého klepnutí pro otevření čárového kódu z peněženky
+* Opravena nesprávná práce s časovými pásmy

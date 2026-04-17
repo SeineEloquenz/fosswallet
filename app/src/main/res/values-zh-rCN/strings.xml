@@ -128,4 +128,8 @@
     <string name="ask_before_delete">删除前询问</string>
     <string name="select_all">全选</string>
     <string name="the_archive">归档</string>
+    <string name="created_pass_export_warning">当前无法导出已创建的凭证</string>
+    <string name="show_archived_passes">显示已归档的凭证</string>
+    <string name="permission_read_passes_label">读取凭证</string>
+    <string name="permission_read_passes_description">以 Catima 兼容的方式读取您的凭证及其详情，包括条码</string>
 </resources>
