@@ -1,5 +1,8 @@
 package nz.eloque.foss_wallet.utils
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
@@ -9,6 +12,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.createBitmap
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -127,4 +131,15 @@ fun Throwable.asString(): String {
     val pw = PrintWriter(sw)
     this.printStackTrace(pw)
     return sw.toString()
+}
+
+fun Drawable.toBitmap(
+    width: Int,
+    height: Int,
+): Bitmap {
+    val bitmap = createBitmap(width, height)
+    val canvas = Canvas(bitmap)
+    this.setBounds(0, 0, width, height)
+    this.draw(canvas)
+    return bitmap
 }
