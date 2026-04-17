@@ -9,14 +9,18 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScanScreen(navController: NavHostController) {
+fun ScanScreen(
+    navController: NavHostController,
+    scanViewModel: ScanViewModel,
+) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
         title = stringResource(id = Screen.Create.resourceId),
     ) {
         ScanView(
-            navController,
+            navController = navController,
+            scanViewModel = scanViewModel,
         )
     }
 }
