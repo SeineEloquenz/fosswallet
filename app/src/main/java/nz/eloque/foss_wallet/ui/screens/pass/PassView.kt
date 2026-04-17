@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.screens.pass
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -79,6 +80,7 @@ fun PassView(
                         barcodes = pass.barCodes.toList(),
                         barcodePosition = barcodePosition,
                         increaseBrightness = increaseBrightness,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
