@@ -17,10 +17,12 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import java.net.URLEncoder
@@ -76,7 +78,15 @@ fun AdvancedAddScreen(navController: NavHostController) {
                             if (value.startsWith("https://") || value.startsWith("http://")) {
                                 navController.navigate("${Screen.Web.route}/$url")
                             } else {
-                                navController.navigate("${Screen.Create.route}?barcode=$url")
+                                Screen.Create.navigate(
+                                    navController,
+                                    BarCode(
+                                        format = BarcodeFormat.QR_CODE,
+                                        message = url,
+                                        encoding = Charsets.UTF_8,
+                                        altText = url,
+                                    ),
+                                )
                             }
                         }
                     }
