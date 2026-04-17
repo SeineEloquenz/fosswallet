@@ -42,6 +42,7 @@ import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.scan.ScanScreen
+import nz.eloque.foss_wallet.ui.screens.scan.ScanViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
@@ -101,6 +102,7 @@ fun WalletApp(
     passViewModel: PassViewModel = viewModel(),
     walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
+    scanViewModel: ScanViewModel = viewModel(),
 ) {
     Surface(
         modifier =
@@ -119,7 +121,7 @@ fun WalletApp(
                 WalletScreen(navController, walletViewModel)
             }
             composable(Screen.Scan.route) {
-                ScanScreen(navController)
+                ScanScreen(navController, scanViewModel)
             }
             composable(Screen.Archive.route) {
                 ArchiveScreen(navController, walletViewModel)

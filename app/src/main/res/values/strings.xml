@@ -133,4 +133,5 @@
     <string name="show_archived_passes">Show archived passes</string>
     <string name="permission_read_passes_label">Read Passes</string>
     <string name="permission_read_passes_description">Read your passes and their details, including barcodes in a Catima compatible way</string>
+    <string name="create_boarding_pass">Create Boarding Pass</string>
 </resources>
