@@ -52,7 +52,7 @@ fun BarcodesView(
     barcodes: List<BarCode>,
     barcodePosition: BarcodePosition,
     increaseBrightness: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var fullscreenIndex by remember { mutableStateOf<Int?>(null) }
     val pagerState =

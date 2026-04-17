@@ -80,7 +80,7 @@ fun PassView(
                         barcodes = pass.barCodes.toList(),
                         barcodePosition = barcodePosition,
                         increaseBrightness = increaseBrightness,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
