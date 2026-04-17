@@ -82,9 +82,9 @@ fun AdvancedAddScreen(navController: NavHostController) {
                                     navController,
                                     BarCode(
                                         format = BarcodeFormat.QR_CODE,
-                                        message = url,
+                                        message = value,
                                         encoding = Charsets.UTF_8,
-                                        altText = url,
+                                        altText = value,
                                     ),
                                 )
                             }
