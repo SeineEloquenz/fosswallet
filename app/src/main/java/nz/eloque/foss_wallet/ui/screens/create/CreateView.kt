@@ -102,8 +102,7 @@ import java.util.Calendar
 fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
-    startMode: CreateStartMode = CreateStartMode.Manual,
-    initialBarcode: String? = null,
+    initialBarcode: BarCode? = null,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -119,16 +118,18 @@ fun CreateView(
     var nameTouched by remember { mutableStateOf(false) }
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
-    val initialBarcodeValue = initialBarcode.orEmpty()
-    var barcodes by remember(initialBarcodeValue) {
+
+    var barcodes by remember {
         mutableStateOf(
-            listOf(
-                BarcodeDraft(
-                    message = initialBarcodeValue,
-                    altText = initialBarcodeValue,
-                    format = BarcodeFormat.QR_CODE,
-                ),
-            ),
+            initialBarcode?.let {
+                val draft =
+                    BarcodeDraft(
+                        message = it.message,
+                        altText = it.altText ?: it.message,
+                        format = it.format,
+                    )
+                listOf(draft)
+            } ?: emptyList(),
         )
     }
     var activeBarcodeIndex by remember { mutableIntStateOf(0) }
@@ -149,7 +150,6 @@ fun CreateView(
     var isSaving by remember { mutableStateOf(false) }
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
-    var initialScanHandled by remember { mutableStateOf(false) }
 
     val barCodeModels =
         barcodes.map {
@@ -191,15 +191,6 @@ fun CreateView(
                 }
             detailsExpanded = true
         }
-
-    LaunchedEffect(startMode, initialScanHandled) {
-        if (startMode == CreateStartMode.Scan && !initialScanHandled) {
-            initialScanHandled = true
-            scanLauncher.launch(
-                Intent(context, ScanActivity::class.java),
-            )
-        }
-    }
 
     if (showLocationPicker) {
         LocationPickerDialog(
