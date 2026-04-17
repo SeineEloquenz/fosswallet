@@ -26,6 +26,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.BarcodesView
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,15 +65,25 @@ fun ScanView(navController: NavHostController) {
                 barcodePosition = BarcodePosition.Center,
                 increaseBrightness = false,
             )
-        }
 
-        TextButton(
-            enabled = scannedBarcode != null,
-            onClick = {
-                Screen.Create.navigate(navController, scannedBarcode!!)
-            },
-        ) {
-            Text(stringResource(R.string.manual_entry))
+            TextButton(
+                onClick = {
+                    Screen.Create.navigate(navController, scannedBarcode!!)
+                },
+            ) {
+                Text(stringResource(R.string.manual_entry))
+            }
+
+            if (it.message.startsWith("https://") || it.message.startsWith("http://")) {
+                TextButton(
+                    onClick = {
+                        val url = URLEncoder.encode(it.message, Charsets.UTF_8.name())
+                        navController.navigate("${Screen.Web.route}/$url")
+                    },
+                ) {
+                    Text(stringResource(R.string.webview))
+                }
+            }
         }
     }
 }
