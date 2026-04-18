@@ -135,18 +135,14 @@ fun WalletScreen(
                     )
                 }
             }
-            SelectionMenu(
-                singleOptions = SortOption.all(),
-                multiOptions = PassType.all(),
-                singleOptionLabel = { resources.getString(it.l18n) },
-                multiOptionLabel = { resources.getString(it.label) },
-                selectedSingleOption = sortOption,
-                selectedMultiOptions = passTypesToShow,
-                onSingleOptionSelected = onSortChange,
-                onMultiOptionSelected =  { passTypesToShow.add(it) },
-                onMultiOptionDeselected = { passTypesToShow.remove(it) },
-                contentDescription = R.string.filter,
-            )
+            IconButton(onClick = {
+                navController.navigate(Screen.Archive.route)
+            }) {
+                Icon(
+                    imageVector = Screen.Archive.icon,
+                    contentDescription = stringResource(R.string.the_archive),
+                )
+            }
             IconButton(onClick = {
                 navController.navigate(Screen.Settings.route)
             }) {
@@ -199,7 +195,19 @@ fun WalletScreen(
                 )
             }
         },
-        subRow = { 
+        subRow = {
+            SelectionMenu(
+                singleOptions = SortOption.all(),
+                multiOptions = PassType.all(),
+                singleOptionLabel = { resources.getString(it.l18n) },
+                multiOptionLabel = { resources.getString(it.label) },
+                selectedSingleOption = sortOption,
+                selectedMultiOptions = passTypesToShow,
+                onSingleOptionSelected = { walletViewModel.setSortOption(it) },
+                onMultiOptionSelected =  { passTypesToShow.add(it) },
+                onMultiOptionDeselected = { passTypesToShow.remove(it) },
+                contentDescription = R.string.filter,
+            )
             TagRow(
                 tags = tags,
                 selectedTag = tagToFilterFor.value,
@@ -208,14 +216,6 @@ fun WalletScreen(
                 walletViewModel = walletViewModel,
                 modifier = Modifier.fillMaxWidth(),
              )
-            IconButton(onClick = {
-                navController.navigate(Screen.Archive.route)
-            }) {
-                Icon(
-                    imageVector = Screen.Archive.icon,
-                    contentDescription = stringResource(R.string.the_archive),
-                )
-            }
         },
     ) { scrollBehavior ->
         WalletView(
