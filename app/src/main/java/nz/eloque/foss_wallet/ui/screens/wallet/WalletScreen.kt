@@ -105,7 +105,6 @@ fun WalletScreen(
 
     WalletScaffold(
         navController = navController,
-        title = null,
         filterBar = {
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
