@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
@@ -177,10 +176,10 @@ fun WalletScreen(
                                 },
                             ),
                             FabMenuItem(
-                                icon = Icons.Default.QrCodeScanner,
-                                title = stringResource(R.string.scan_code),
+                                icon = Screen.Scan.icon,
+                                title = stringResource(Screen.Scan.resourceId),
                                 onClick = {
-                                    navController.navigate(Screen.CreateScan.route)
+                                    navController.navigate(Screen.Scan.route)
                                 },
                             ),
                             FabMenuItem(

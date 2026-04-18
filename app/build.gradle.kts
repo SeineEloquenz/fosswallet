@@ -46,8 +46,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 36
-        versionCode = 104
-        versionName = "0.42.3"
+        versionCode = 107
+        versionName = "0.44.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -158,4 +158,6 @@ dependencies {
     implementation(libs.aboutlibraries.compose.m3)
 
     implementation(libs.color.picker)
+
+    implementation(libs.bcbp.parser)
 }

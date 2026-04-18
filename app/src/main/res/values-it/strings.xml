@@ -128,4 +128,5 @@
     <string name="ask_before_delete">Chiedi prima di eliminare</string>
     <string name="delete_confirmation_message">Eliminare i biglietti selezionati? Questa azione non può essere annullata.</string>
     <string name="the_archive">Archivio</string>
+    <string name="show_archived_passes">Mostra pass archiviati</string>
 </resources>
