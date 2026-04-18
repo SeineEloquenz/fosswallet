@@ -34,7 +34,7 @@ import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 fun WalletScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    title: String?,
+    title: String? = null,
     toolWindow: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
