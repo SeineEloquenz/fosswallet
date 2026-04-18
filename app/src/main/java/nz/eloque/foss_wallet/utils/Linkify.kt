@@ -16,8 +16,11 @@ fun linkify(text: String): String {
                 """<a href="mailto:$mail" data-linkified="true">$mail</a>"""
             }
             else -> {
-                val href = if (!it.value.startsWith("http", ignoreCase = true))
-                    "https://${it.value}" else it.value
+                val href = if (!it.value.startsWith("http", ignoreCase = true)) {
+                    "https://${it.value}" 
+                } else {
+                    it.value
+                }
                 """<a href="$href" data-linkified="true">${it.value}</a>"""
             }
         }
