@@ -42,7 +42,7 @@ fun WalletScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     filterBar: @Composable () -> Unit = {},
     subRow: (@Composable () -> Unit)? = null,
-    content: @Composable (TopAppBarScrollBehavior) -> Unit,
+    content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
