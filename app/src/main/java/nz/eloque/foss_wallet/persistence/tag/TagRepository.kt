@@ -14,6 +14,8 @@ class TagRepository
     ) {
         fun all() = tagDao.all().map { it.toSet() }
 
+        suspend fun crossRef() = tagDao.crossRef()
+
         suspend fun insert(tag: Tag) = tagDao.insert(tag)
 
         suspend fun remove(tag: Tag) = tagDao.remove(tag)

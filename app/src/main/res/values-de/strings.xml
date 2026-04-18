@@ -28,7 +28,7 @@
     <string name="pass_updates_channel">Pass-Aktualisierungen</string>
     <string name="pass_updated">Pass aktualisiert</string>
     <string name="group">Pässe gruppieren</string>
-    <string name="ungroup">Pässe entgruppieren</string>
+    <string name="ungroup">Gruppierung aufheben</string>
     <string name="passes">Pässe</string>
     <string name="search">Suchen</string>
     <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
@@ -128,4 +128,9 @@
     <string name="delete_confirmation_message">Ausgewählte Pässe löschen? Dies kann nicht mehr rückgängig gemacht werden.</string>
     <string name="ask_before_delete">Vor dem Löschen fragen</string>
     <string name="the_archive">Archiv</string>
+    <string name="created_pass_export_warning">Erstellte Pässe können aktuell nicht exportiert werden</string>
+    <string name="show_archived_passes">Archivierte Pässe anzeigen</string>
+    <string name="permission_read_passes_label">Pässe lesen</string>
+    <string name="permission_read_passes_description">Auslesen deiner Pässe und deren Daten, einschließlich der Barcodes, auf eine mit Catima kompatible Weise</string>
+    <string name="create_boarding_pass">Bordkarte erstellen</string>
 </resources>

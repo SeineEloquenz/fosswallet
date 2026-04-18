@@ -4,21 +4,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-
-enum class CreateStartMode {
-    Manual,
-    Scan,
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateScreen(
     navController: NavHostController,
     createViewModel: CreateViewModel,
-    startMode: CreateStartMode = CreateStartMode.Manual,
-    initialBarcode: String? = null,
+    initialBarcode: BarCode? = null,
 ) {
     WalletScaffold(
         navController = navController,
@@ -28,7 +23,6 @@ fun CreateScreen(
         CreateView(
             navController,
             createViewModel,
-            startMode = startMode,
             initialBarcode = initialBarcode,
         )
     }

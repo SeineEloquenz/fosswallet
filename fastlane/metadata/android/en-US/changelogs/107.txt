@@ -1,0 +1,3 @@
+* Import boarding passes from scanned IATA BCBP codes
+* Open scanned urls in webview to download passes from there
+* Small changes to styling of manually created passes

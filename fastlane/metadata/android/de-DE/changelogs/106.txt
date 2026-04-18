@@ -1,0 +1,2 @@
+* Gadgetbridge-Integration hinzugefügt
+Hinweis: Hierfür ist Gadgetbridge >0.90 erforderlich

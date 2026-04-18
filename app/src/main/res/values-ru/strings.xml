@@ -25,9 +25,9 @@
     <string name="share">Поделиться пропуском</string>
     <string name="pass_updates_channel">Обновления пропусков</string>
     <string name="pass_updated">Пропуск обновлён</string>
-    <string name="group">Группировать пропуски</string>
-    <string name="ungroup">Разгруппировать пропуски</string>
-    <string name="passes">Пропуски</string>
+    <string name="group">Группировать пропуска</string>
+    <string name="ungroup">Разгруппировать пропуска</string>
+    <string name="passes">Пропуска</string>
     <string name="sync_interval">Интервал обновления пропусков (мин)</string>
     <string name="enable">Включить</string>
     <string name="search">Поиск</string>
@@ -72,9 +72,9 @@
     <string name="pass_type">Тип пропуска</string>
     <string name="scan_barcode">Сканировать штрихкод</string>
     <string name="generic_pass">Общий пропуск</string>
-    <string name="event">Билет на выступление</string>
+    <string name="event">Билет на мероприятие</string>
     <string name="coupon">Купон</string>
-    <string name="boarding_pass">Посадочный билет</string>
+    <string name="boarding_pass">Посадочный талон</string>
     <string name="store_card">Карта магазина</string>
     <string name="barcode_format">Формат штрихкода</string>
     <string name="no_url_in_clipboard">Нет ссылки в буфере обмена</string>
@@ -128,4 +128,6 @@
     <string name="pass_background_color">Цвет переднего плана</string>
     <string name="pass_foreground_color">Цвет заднего плана</string>
     <string name="the_archive">Архив</string>
+    <string name="show_archived_passes">Показать архивированные пропуска</string>
+    <string name="created_pass_export_warning">Созданные пропуска не могут быть экспортированы в данный момент</string>
 </resources>

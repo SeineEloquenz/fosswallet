@@ -7,8 +7,8 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Archive
@@ -33,13 +33,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -51,6 +51,7 @@ import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
@@ -84,7 +85,13 @@ fun PassScreen(
             title = localizedPass.pass.description,
             toolWindow = true,
             actions = {
-                Actions(localizedPass.pass, navController, snackbarHostState, passViewModel)
+                Actions(
+                    pass = localizedPass.pass,
+                    metadata = localizedPass.metadata,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState,
+                    passViewModel = passViewModel,
+                )
             },
         ) { scrollBehavior ->
             PassView(
@@ -105,6 +112,7 @@ fun PassScreen(
 @Composable
 fun Actions(
     pass: Pass,
+    metadata: PassMetadata,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel,
@@ -132,37 +140,15 @@ fun Actions(
         )
     }
 
-    Box(
-        modifier =
-            Modifier
-                .padding(16.dp),
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
     ) {
-        IconButton(onClick = { expanded.value = !expanded.value }) {
-            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
-        }
-
-        DropdownMenu(
-            expanded = expanded.value,
-            onDismissRequest = { expanded.value = false },
-        ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-                },
+        if (pass.updatable()) {
+            val uriHandler = LocalUriHandler.current
+            UpdateButton(
+                isLoading = isLoading.value,
                 onClick = {
-                    Shortcut.create(context, pass, pass.description)
-                },
-            )
-
-            val passFile = pass.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
-            }
-
-            if (pass.updatable()) {
-                val uriHandler = LocalUriHandler.current
-                UpdateButton(isLoading = isLoading.value) {
                     coroutineScope.launch(Dispatchers.IO) {
                         isLoading.value = true
                         val result = passViewModel.update(pass)
@@ -229,10 +215,34 @@ fun Actions(
                             }
                         }
                     }
-                }
+                },
+            )
+        }
+
+        IconButton(onClick = { expanded.value = !expanded.value }) {
+            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
+        }
+
+        DropdownMenu(
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false },
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.add_shortcut)) },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
+                },
+                onClick = {
+                    Shortcut.create(context, pass, pass.description)
+                },
+            )
+
+            val passFile = pass.originalPassFile(context)
+            if (passFile != null) {
+                PassShareButton(passFile)
             }
 
-            if (pass.archived) {
+            if (metadata.archived) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unarchive)) },
                     leadingIcon = {
@@ -277,6 +287,7 @@ fun Actions(
 fun UpdateButton(
     isLoading: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "updateButtonAnimation")
     val rotation by infiniteTransition.animateFloat(
@@ -290,18 +301,17 @@ fun UpdateButton(
         label = "spin",
     )
 
-    DropdownMenuItem(
-        text = { Text(stringResource(R.string.update)) },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Sync,
-                contentDescription = stringResource(R.string.update),
-                modifier =
-                    Modifier.graphicsLayer(
-                        rotationZ = if (isLoading) rotation else 0f,
-                    ),
-            )
-        },
+    IconButton(
         onClick = { if (!isLoading) onClick() },
-    )
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Sync,
+            contentDescription = stringResource(R.string.update),
+            modifier =
+                Modifier.graphicsLayer(
+                    rotationZ = if (isLoading) rotation else 0f,
+                ),
+        )
+    }
 }

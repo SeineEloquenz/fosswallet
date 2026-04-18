@@ -8,9 +8,14 @@ import nz.eloque.foss_wallet.model.field.PassField
 
 private const val CHANGE_MESSAGE_FORMAT = "%@"
 
-data class PassWithTagsAndLocalization(
+data class PassWithMetadata(
     @Embedded
     val pass: Pass,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "passId",
+    )
+    val metadata: PassMetadata,
     @Relation(
         parentColumn = "id",
         entityColumn = "label",
@@ -40,7 +45,7 @@ data class PassWithTagsAndLocalization(
                 backFields = pass.backFields.applyLocalization(mapping),
             )
 
-        return LocalizedPassWithTags(localizedPass, tags.toSet())
+        return LocalizedPassWithTags(localizedPass, metadata, tags.toSet())
     }
 
     private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> =
