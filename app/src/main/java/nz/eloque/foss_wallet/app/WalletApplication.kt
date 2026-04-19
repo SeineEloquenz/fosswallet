@@ -7,8 +7,9 @@ import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 
 @HiltAndroidApp
-class WalletApplication : Application(), Configuration.Provider {
-
+class WalletApplication :
+    Application(),
+    Configuration.Provider {
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
     override val workManagerConfiguration: Configuration

@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun SubmittableTextField(
     label: String,
@@ -40,10 +39,12 @@ fun SubmittableTextField(
 ) {
     var text by rememberSaveable { mutableStateOf(initialValue) }
 
-    val isError by remember { derivedStateOf {
-        val trimmed = text.trim()
-        trimmed.isEmpty() || !inputValidator(trimmed)
-    } }
+    val isError by remember {
+        derivedStateOf {
+            val trimmed = text.trim()
+            trimmed.isEmpty() || !inputValidator(trimmed)
+        }
+    }
 
     val errorMessage = if (isError && text.isNotBlank()) "Invalid input" else null
     val buttonEnabled = enabled && !isError && text != initialValue
@@ -69,40 +70,45 @@ fun SubmittableTextField(
                             if (clearOnSubmit) text = ""
                         }
                     },
-                    enabled = buttonEnabled
+                    enabled = buttonEnabled,
                 ) {
                     Icon(
                         imageVector = imageVector,
                         contentDescription = contentDescription,
-                        tint = if (buttonEnabled)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                        tint =
+                            if (buttonEnabled) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                     )
                 }
             },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (!isError) {
-                        onSubmit(text)
-                        if (clearOnSubmit) text = ""
-                    }
-                }
-            )
+            colors =
+                TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        if (!isError) {
+                            onSubmit(text)
+                            if (clearOnSubmit) text = ""
+                        }
+                    },
+                ),
         )
 
         if (errorMessage != null) {
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = errorMessage,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.error
-                )
+                style =
+                    MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.error,
+                    ),
             )
         }
     }

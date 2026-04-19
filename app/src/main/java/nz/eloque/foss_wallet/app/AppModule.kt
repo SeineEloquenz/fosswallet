@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.app
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -19,64 +20,54 @@ import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.persistence.tag.TagDao
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
-import java.util.concurrent.Callable
-
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Provides
+    fun provideLocalizationRepository(localizationDao: PassLocalizationDao): PassLocalizationRepository =
+        PassLocalizationRepository(localizationDao)
 
     @Provides
-    fun provideLocalizationRepository(localizationDao: PassLocalizationDao): PassLocalizationRepository {
-        return PassLocalizationRepository(localizationDao)
-    }
+    fun providePassRepository(
+        @ApplicationContext context: Context,
+        passDao: PassDao,
+    ): PassRepository = PassRepository(context, passDao)
 
     @Provides
-    fun providePassRepository(@ApplicationContext context: Context, passDao: PassDao): PassRepository {
-        return PassRepository(context, passDao)
-    }
-
-    @Provides
-    fun provideTagRepository(@ApplicationContext context: Context, tagDao: TagDao): TagRepository {
-        return TagRepository(context, tagDao)
-    }
+    fun provideTagRepository(
+        @ApplicationContext context: Context,
+        tagDao: TagDao,
+    ): TagRepository = TagRepository(context, tagDao)
 
     @Provides
     @Singleton
-    fun provideWalletDb(@ApplicationContext context: Context): WalletDb {
-        return buildDb(context)
-    }
+    fun provideWalletDb(
+        @ApplicationContext context: Context,
+    ): WalletDb = buildDb(context)
 
     @Provides
-    fun providePassDao(walletDb: WalletDb): PassDao {
-        return walletDb.passDao()
-    }
+    fun providePassDao(walletDb: WalletDb): PassDao = walletDb.passDao()
 
     @Provides
-    fun provideTransactionalExecutor(walletDb: WalletDb): TransactionalExecutor {
-        return object : TransactionalExecutor {
-            override fun <T> runTransactionally(callable: Callable<T>): T = walletDb.runInTransaction(callable)
-            override fun runTransactionally(runnable: Runnable) = walletDb.runInTransaction(runnable)
+    fun provideTransactionalExecutor(walletDb: WalletDb): TransactionalExecutor =
+        object : TransactionalExecutor {
+            override suspend fun <T> runTransactionally(callable: suspend () -> T): T = walletDb.withTransaction { callable() }
         }
-    }
 
     @Provides
-    fun provideLocalizationDAo(walletDb: WalletDb): PassLocalizationDao {
-        return walletDb.localizationDao()
-    }
+    fun provideLocalizationDAo(walletDb: WalletDb): PassLocalizationDao = walletDb.localizationDao()
 
     @Provides
-    fun provideTagDao(walletDb: WalletDb): TagDao {
-        return walletDb.tagDao()
-    }
+    fun provideTagDao(walletDb: WalletDb): TagDao = walletDb.tagDao()
 
     @Provides
-    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
-        return WorkManager.getInstance(context)
-    }
+    fun provideWorkManager(
+        @ApplicationContext context: Context,
+    ): WorkManager = WorkManager.getInstance(context)
 
     @Provides
-    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)!!
-    }
+    fun provideSharedPrefs(
+        @ApplicationContext context: Context,
+    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)!!
 }

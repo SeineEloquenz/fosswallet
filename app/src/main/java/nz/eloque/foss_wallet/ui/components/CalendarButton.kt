@@ -25,7 +25,7 @@ fun CalendarButton(
     title: String,
     start: ZonedDateTime,
     end: ZonedDateTime?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -33,14 +33,21 @@ fun CalendarButton(
     val snackbarHostState = remember { SnackbarHostState() }
 
     IconButton(onClick = {
-        val intent = Intent(Intent.ACTION_EDIT).also {
-            it.type = "vnd.android.cursor.item/event"
-            it.putExtra("beginTime", start.toEpochSecond() * 1000)
-            it.putExtra("allDay", false)
-            it.putExtra("endTime", if (end != null) end.toEpochSecond() * 1000
-            else start.plus(30, ChronoUnit.MINUTES).toEpochSecond() * 1000) //30 min default
-            it.putExtra("title", title)
-        }
+        val intent =
+            Intent(Intent.ACTION_EDIT).also {
+                it.type = "vnd.android.cursor.item/event"
+                it.putExtra("beginTime", start.toEpochSecond() * 1000)
+                it.putExtra("allDay", false)
+                it.putExtra(
+                    "endTime",
+                    if (end != null) {
+                        end.toEpochSecond() * 1000
+                    } else {
+                        start.plus(30, ChronoUnit.MINUTES).toEpochSecond() * 1000
+                    },
+                ) // 30 min default
+                it.putExtra("title", title)
+            }
 
         try {
             context.startActivity(intent)
@@ -50,7 +57,6 @@ fun CalendarButton(
                 snackbarHostState.showSnackbar(message = resources.getString(R.string.no_calendar_app_found))
             }
         }
-
     }, modifier = modifier) {
         Icon(imageVector = Icons.Default.CalendarToday, contentDescription = stringResource(R.string.date))
     }

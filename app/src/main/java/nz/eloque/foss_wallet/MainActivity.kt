@@ -42,7 +42,6 @@ import java.net.URLEncoder
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val walletViewModel: WalletViewModel by viewModels()
 
     @OptIn(ExperimentalPermissionsApi::class)
@@ -50,15 +49,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val isImageShare = intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true
-        val dataUri = when {
-            Intent.ACTION_VIEW == intent.action -> intent.data
-            isImageShare -> intent.sharedImageUri()
-            Intent.ACTION_SEND == intent.action -> {
-                val count = intent.clipData?.itemCount?.minus(1)?.coerceAtLeast(0)
-                count?.let { intent.clipData?.getItemAt(it)?.uri }
+        val dataUri =
+            when {
+                Intent.ACTION_VIEW == intent.action -> {
+                    intent.data
+                }
+
+                isImageShare -> {
+                    intent.sharedImageUri()
+                }
+
+                Intent.ACTION_SEND == intent.action -> {
+                    val count =
+                        intent.clipData
+                            ?.itemCount
+                            ?.minus(1)
+                            ?.coerceAtLeast(0)
+                    count?.let { intent.clipData?.getItemAt(it)?.uri }
+                }
+
+                else -> {
+                    null
+                }
             }
-            else -> null
-        }
 
         enableEdgeToEdge()
         setContent {
@@ -70,11 +83,14 @@ class MainActivity : ComponentActivity() {
                     isProcessingImageShare = true
                     coroutineScope.launch(Dispatchers.IO) {
                         val scanResult = runCatching { ImageScanner.scanFrom(contentResolver, dataUri) }.getOrNull()
+                        val barcode = scanResult?.text
+                        val url = URLEncoder.encode(barcode, Charsets.UTF_8.name())
                         withContext(Dispatchers.Main) {
                             isProcessingImageShare = false
-                            val barcode = scanResult?.text
                             if (!barcode.isNullOrEmpty()) {
-                                navController.navigate("${Screen.Create.route}?barcode=${URLEncoder.encode(barcode, Charsets.UTF_8.name())}")
+                                navController.navigate(
+                                    "${Screen.Create.route}?barcode=$url",
+                                )
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                             }
@@ -101,17 +117,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
             WalletTheme {
-                Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
+                Box(
+                    modifier =
+                        androidx.compose.ui.Modifier
+                            .fillMaxSize(),
+                ) {
                     WalletApp(
                         navController,
                     )
 
                     if (isProcessingImageShare) {
                         Box(
-                            modifier = androidx.compose.ui.Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
-                            contentAlignment = Alignment.Center
+                            modifier =
+                                androidx.compose.ui.Modifier
+                                    .fillMaxSize()
+                                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
+                            contentAlignment = Alignment.Center,
                         ) {
                             CircularProgressIndicator()
                         }
@@ -121,13 +142,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun Uri.handleIntent(walletViewModel: WalletViewModel, coroutineScope: CoroutineScope): LoaderResult {
+    private suspend fun Uri.handleIntent(
+        walletViewModel: WalletViewModel,
+        coroutineScope: CoroutineScope,
+    ): LoaderResult {
         contentResolver.openInputStream(this).use {
             it?.let {
                 return Loader(this@MainActivity).handleInputStream(
                     it,
                     walletViewModel,
-                    coroutineScope
+                    coroutineScope,
                 )
             }
         }

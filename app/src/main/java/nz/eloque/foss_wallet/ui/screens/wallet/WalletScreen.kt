@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,32 +55,34 @@ fun WalletScreen(
 
     val loading = remember { mutableStateOf(false) }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
-        println("selected file URI $uris")
-        coroutineScope.launch {
-            loading.value = true
-            withContext(Dispatchers.IO) {
-                var result: LoaderResult? = null
-                uris.forEach { uri ->
-                    contentResolver.openInputStream(uri)?.use {
-                        result = Loader(context).handleInputStream(
-                            it,
-                            walletViewModel,
-                            coroutineScope
-                        )
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+            println("selected file URI $uris")
+            coroutineScope.launch {
+                loading.value = true
+                withContext(Dispatchers.IO) {
+                    var result: LoaderResult? = null
+                    uris.forEach { uri ->
+                        contentResolver.openInputStream(uri)?.use {
+                            result =
+                                Loader(context).handleInputStream(
+                                    it,
+                                    walletViewModel,
+                                    coroutineScope,
+                                )
+                        }
                     }
-                }
-                if (uris.size == 1) {
-                    if (result is LoaderResult.Single) {
-                        withContext(Dispatchers.Main) {
-                            navController.navigate("pass/${result.passId}")
+                    if (uris.size == 1) {
+                        if (result is LoaderResult.Single) {
+                            withContext(Dispatchers.Main) {
+                                navController.navigate("pass/${result.passId}")
+                            }
                         }
                     }
                 }
+                loading.value = false
             }
-            loading.value = false
         }
-    }
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
@@ -99,15 +100,16 @@ fun WalletScreen(
                             selectedPasses.addAll(visiblePasses.value)
                         }
                     },
-                    enabled = visiblePasses.value.isNotEmpty()
+                    enabled = visiblePasses.value.isNotEmpty(),
                 ) {
                     Icon(
                         imageVector = if (allVisibleSelected) Icons.Outlined.Deselect else Icons.Outlined.SelectAll,
-                        contentDescription = if (allVisibleSelected) {
-                            stringResource(R.string.clear_selection)
-                        } else {
-                            stringResource(R.string.select_all)
-                        }
+                        contentDescription =
+                            if (allVisibleSelected) {
+                                stringResource(R.string.clear_selection)
+                            } else {
+                                stringResource(R.string.select_all)
+                            },
                     )
                 }
             }
@@ -116,7 +118,7 @@ fun WalletScreen(
             }) {
                 Icon(
                     imageVector = Screen.Archive.icon,
-                    contentDescription = stringResource(R.string.the_archive)
+                    contentDescription = stringResource(R.string.the_archive),
                 )
             }
             IconButton(onClick = {
@@ -124,7 +126,7 @@ fun WalletScreen(
             }) {
                 Icon(
                     imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(Screen.Settings.resourceId)
+                    contentDescription = stringResource(Screen.Settings.resourceId),
                 )
             }
         },
@@ -134,37 +136,40 @@ fun WalletScreen(
                     false,
                     selectedPasses,
                     listState,
-                    walletViewModel
+                    walletViewModel,
                 )
             } else {
                 FabMenu(
-                    items = listOf(
-                        FabMenuItem(
-                            icon = Icons.Default.MoreHoriz,
-                            title = stringResource(R.string.advanced),
-                            onClick = {
-                                navController.navigate(Screen.AdvancedAdd.route)
-                            }
+                    items =
+                        listOf(
+                            FabMenuItem(
+                                icon = Icons.Default.MoreHoriz,
+                                title = stringResource(R.string.advanced),
+                                onClick = {
+                                    navController.navigate(Screen.AdvancedAdd.route)
+                                },
+                            ),
+                            FabMenuItem(
+                                icon = Screen.Scan.icon,
+                                title = stringResource(Screen.Scan.resourceId),
+                                onClick = {
+                                    navController.navigate(Screen.Scan.route)
+                                },
+                            ),
+                            FabMenuItem(
+                                icon = Icons.Default.Add,
+                                title = stringResource(R.string.import_pass),
+                                onClick = {
+                                    launcher.launch(
+                                        arrayOf(
+                                            "application/json+zip",
+                                            "application/octet-stream",
+                                            "text/json",
+                                        ).plus(PkpassMimeTypes),
+                                    )
+                                },
+                            ),
                         ),
-                        FabMenuItem(
-                            icon = Icons.Default.QrCodeScanner,
-                            title = stringResource(R.string.scan_code),
-                            onClick = {
-                                navController.navigate(Screen.CreateScan.route)
-                            }
-                        ),
-                        FabMenuItem(
-                            icon = Icons.Default.Add,
-                            title = stringResource(R.string.import_pass),
-                            onClick = {
-                                launcher.launch(arrayOf(
-                                    "application/json+zip",
-                                    "application/octet-stream",
-                                    "text/json"
-                                ).plus(PkpassMimeTypes))
-                            }
-                        )
-                    )
                 )
             }
         },
@@ -181,9 +186,10 @@ fun WalletScreen(
         if (loading.value) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
             ) {
                 CircularProgressIndicator()
             }

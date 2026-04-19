@@ -12,35 +12,29 @@ data class PassField(
     val content: PassContent,
     val changeMessage: String? = null,
 ) {
-    fun toJson(): JSONObject {
-        return JSONObject().also { json ->
+    fun toJson(): JSONObject =
+        JSONObject().also { json ->
             json.put("key", key)
             json.put("label", label)
             json.put("value", content.serialize())
             changeMessage?.let { json.put("changeMessage", it) }
         }
-    }
 
-    fun hasChangeMessage(): Boolean {
-        return changeMessage != null
-    }
+    fun hasChangeMessage(): Boolean = changeMessage != null
 
-    fun contains(query: String): Boolean {
-        return query inIgnoreCase this.label || this.content.contains(query)
-    }
+    fun contains(query: String): Boolean = query inIgnoreCase this.label || this.content.contains(query)
 
     companion object {
-        fun fromJson(json: JSONObject): PassField {
-            return PassField(
+        fun fromJson(json: JSONObject): PassField =
+            PassField(
                 json.getString("key"),
                 json.stringOrNull("label"),
                 PassContent.deserialize(json.getString("value")),
-                if (json.has("changeMessage")) json.getString("changeMessage") else null
+                if (json.has("changeMessage")) json.getString("changeMessage") else null,
             )
-        }
+
+        val Empty = PassField("", "", PassContent.Plain(""))
     }
 }
 
-fun PassField?.isNotEmpty(): Boolean {
-    return this != null && this.content.isNotEmpty()
-}
+fun PassField?.isNotEmpty(): Boolean = this != null && this.content.isNotEmpty()

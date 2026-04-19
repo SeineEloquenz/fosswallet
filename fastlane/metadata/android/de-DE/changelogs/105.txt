@@ -1,0 +1,1 @@
+* Durch die Zurück-Geste in der Wallet-Ansicht werden die Pässe nun vor dem Schließen der App abgewählt

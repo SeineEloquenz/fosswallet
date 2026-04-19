@@ -128,4 +128,9 @@
     <string name="ask_before_delete">Küsi kinnitust enne kustutamist</string>
     <string name="select_all">Vali kõik</string>
     <string name="the_archive">Arhiveeri</string>
+    <string name="created_pass_export_warning">Loodud dokumente ei saa hetkel eksportida</string>
+    <string name="show_archived_passes">Näita arhiveeritud dokumente</string>
+    <string name="permission_read_passes_label">Dokumentide lugemine/avamine</string>
+    <string name="permission_read_passes_description">Loe oma dokumente ja nende andmeid, sealhulgas triipkoode, Catimaga ühilduval viisil</string>
+    <string name="create_boarding_pass">Loo pardakaart</string>
 </resources>

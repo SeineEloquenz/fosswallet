@@ -1,0 +1,4 @@
+* Verbesserung der Rückmeldung bei fehlgeschlagenen Pass-Aktualisierungen
+* Ausblenden der Schaltfläche „Zum Kalender hinzufügen“, wenn im Pass kein Datum vorhanden ist
+* Aktualisierung der Übersetzungen
+* Behebung eines Layoutfehlers, bei dem Felder außerhalb des Bildschirms angezeigt wurden

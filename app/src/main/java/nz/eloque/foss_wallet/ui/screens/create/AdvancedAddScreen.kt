@@ -17,19 +17,19 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdvancedAddScreen(
-    navController: NavHostController,
-) {
+fun AdvancedAddScreen(navController: NavHostController) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val clipboard = LocalClipboard.current
@@ -38,13 +38,14 @@ fun AdvancedAddScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(R.string.advanced)
+        title = stringResource(R.string.advanced),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Button(
                 onClick = {
@@ -72,23 +73,32 @@ fun AdvancedAddScreen(
                             return@launch
                         }
 
+                        val url = URLEncoder.encode(value, Charsets.UTF_8.name())
                         withContext(Dispatchers.Main) {
                             if (value.startsWith("https://") || value.startsWith("http://")) {
-                                navController.navigate("${Screen.Web.route}/${URLEncoder.encode(value, Charsets.UTF_8.name())}")
+                                navController.navigate("${Screen.Web.route}/$url")
                             } else {
-                                navController.navigate("${Screen.Create.route}?barcode=${URLEncoder.encode(value, Charsets.UTF_8.name())}")
+                                Screen.Create.navigate(
+                                    navController,
+                                    BarCode(
+                                        format = BarcodeFormat.QR_CODE,
+                                        message = value,
+                                        encoding = Charsets.UTF_8,
+                                        altText = value,
+                                    ),
+                                )
                             }
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.open_from_clipboard))
             }
 
             Button(
                 onClick = { navController.navigate(Screen.Create.route) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.manual_entry))
             }

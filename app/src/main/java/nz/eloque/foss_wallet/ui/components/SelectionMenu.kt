@@ -28,29 +28,30 @@ fun <T> SelectionMenu(
     icon: ImageVector = Icons.Default.Menu,
     @StringRes contentDescription: Int = R.string.more_options,
     onOptionSelected: (T) -> Unit,
-    optionLabel: (T) -> String
+    optionLabel: (T) -> String,
 ) {
     val expanded = remember { mutableStateOf(false) }
     Box(
-        modifier = modifier
+        modifier = modifier,
     ) {
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(icon, contentDescription = stringResource(contentDescription))
         }
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = { expanded.value = false }
+            onDismissRequest = { expanded.value = false },
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(optionLabel(option)) },
-                    trailingIcon = { if (option == selectedOption) {
-                        Icon(Icons.Default.Check, stringResource(R.string.selected))
-                    } },
-                    onClick = { onOptionSelected(option) }
+                    trailingIcon = {
+                        if (option == selectedOption) {
+                            Icon(Icons.Default.Check, stringResource(R.string.selected))
+                        }
+                    },
+                    onClick = { onOptionSelected(option) },
                 )
             }
         }
     }
-
 }

@@ -46,10 +46,10 @@ fun SwipeToDismiss(
             ) {
                 background?.invoke()
             }
-        }
+        },
     ) {
         Box(
-            modifier = modifier
+            modifier = modifier,
         ) {
             content()
         }

@@ -14,7 +14,7 @@ data class GroupWithPasses(
     @Embedded val group: PassGroup,
     @Relation(
         parentColumn = "id",
-        entityColumn = "groupId"
+        entityColumn = "groupId",
     )
-    val passes: List<Pass>
+    val passes: List<Pass>,
 )
