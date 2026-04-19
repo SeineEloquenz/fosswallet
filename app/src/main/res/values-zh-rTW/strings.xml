@@ -132,4 +132,5 @@
     <string name="show_archived_passes">顯示已封存的通行證</string>
     <string name="permission_read_passes_label">讀取通行證</string>
     <string name="permission_read_passes_description">以 Catima 相容的方式讀取您的通行證及其詳細資訊，包括條碼</string>
+    <string name="create_boarding_pass">建立登機證</string>
 </resources>

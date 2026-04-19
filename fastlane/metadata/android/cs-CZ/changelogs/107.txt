@@ -1,0 +1,3 @@
+* Import palubních lístků z naskenovaných kódů IATA BCBP
+* Otevření naskenovaných adres ve WebView pro stažení lístků
+* Malé stylistické změny ručně vytvořených lístků
