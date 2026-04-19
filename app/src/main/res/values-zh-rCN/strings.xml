@@ -132,4 +132,5 @@
     <string name="show_archived_passes">显示已归档的凭证</string>
     <string name="permission_read_passes_label">读取凭证</string>
     <string name="permission_read_passes_description">以 Catima 兼容的方式读取您的凭证及其详情，包括条码</string>
+    <string name="create_boarding_pass">创建登机牌</string>
 </resources>
