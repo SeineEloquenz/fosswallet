@@ -42,7 +42,7 @@ fun WalletScaffold(
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     filterBar: @Composable RowScope.() -> Unit = {},
-    subRow: (@Composable () -> Unit)? = null,
+    subRow: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -74,7 +74,7 @@ fun WalletScaffold(
                     actions = actions,
                     scrollBehavior = scrollBehavior,
                 )
-                subRow?.invoke()
+                subRow?.let { Row { it() } }
             }
         },
         contentWindowInsets = WindowInsets.statusBars,

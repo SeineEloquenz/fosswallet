@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -213,7 +212,7 @@ fun WalletScreen(
                 onTagSelected = { tagToFilterFor.value = it },
                 onTagDeselected = { tagToFilterFor.value = null },
                 walletViewModel = walletViewModel,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier,
             )
         },
     ) { scrollBehavior ->
