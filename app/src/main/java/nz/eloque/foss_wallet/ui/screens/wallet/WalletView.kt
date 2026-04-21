@@ -172,8 +172,12 @@ fun WalletView(
         items(ungrouped) { pass ->
             val isSelectionMode = selectedPasses.isNotEmpty()
             SwipeToDismiss(
-                leftSwipeBackground = { Icon(imageVector = if (archive) Icons.Default.Unarchive else Icons.Default.Archive, contentDescription = null) },
-                rightSwipeBackground = { Icon(imageVector = Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                leftSwipeBackground = {
+                    Icon(imageVector = if (archive) Icons.Default.Unarchive else Icons.Default.Archive, contentDescription = null)
+                },
+                rightSwipeBackground = {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                },
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
