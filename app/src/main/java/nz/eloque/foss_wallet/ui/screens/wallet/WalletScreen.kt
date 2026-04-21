@@ -68,7 +68,7 @@ fun WalletScreen(
     val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
-    
+
     val loading = remember { mutableStateOf(false) }
 
     val launcher =
@@ -203,7 +203,7 @@ fun WalletScreen(
                 selectedSingleOption = sortOption,
                 selectedMultiOptions = passTypesToShow,
                 onSingleOptionSelected = { walletViewModel.setSortOption(it) },
-                onMultiOptionSelected =  { passTypesToShow.add(it) },
+                onMultiOptionSelected = { passTypesToShow.add(it) },
                 onMultiOptionDeselected = { passTypesToShow.remove(it) },
                 contentDescription = R.string.filter,
             )
@@ -214,7 +214,7 @@ fun WalletScreen(
                 onTagDeselected = { tagToFilterFor.value = null },
                 walletViewModel = walletViewModel,
                 modifier = Modifier.fillMaxWidth(),
-             )
+            )
         },
     ) { scrollBehavior ->
         WalletView(
