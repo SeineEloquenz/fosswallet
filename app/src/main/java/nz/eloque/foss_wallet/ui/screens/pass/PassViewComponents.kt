@@ -87,7 +87,7 @@ fun BarcodesView(
                 ) { index ->
                     val barcode = barcodes[index]
                     val image =
-                        barcode.encodeAsBitmap(
+                        barcode.toBitmap(
                             if (barcode.is1d()) 3000 else 1000,
                             1000,
                             legacyRendering,
@@ -136,7 +136,7 @@ fun BarcodesView(
     fullscreenIndex?.let { index ->
         val fullscreenBarcode = barcodes.getOrNull(index) ?: return@let
         val fullscreenImage =
-            fullscreenBarcode.encodeAsBitmap(
+            fullscreenBarcode.toBitmap(
                 if (fullscreenBarcode.is1d()) 3000 else 1000,
                 1000,
                 legacyRendering,

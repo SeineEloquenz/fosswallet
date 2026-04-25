@@ -1,11 +1,12 @@
 package nz.eloque.foss_wallet.model
 
 import android.graphics.Bitmap
+import android.graphics.Bitmap.createBitmap
 import android.graphics.Color
-import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
+import com.google.zxing.common.BitMatrix
 import org.json.JSONObject
 import java.nio.charset.Charset
 
@@ -45,35 +46,46 @@ data class BarCode(
         }
 
     fun hasLegacyRepresentation(): Boolean {
-        val legacyRepresentation = encodeAsBitmap(100, 100, true)
-        val representation = encodeAsBitmap(100, 100, false)
-        return !(representation?.sameAs(legacyRepresentation) ?: false)
+        val legacyRepresentation = encode(legacyRendering = true) ?: return false
+        val representation = encode(legacyRendering = false) ?: return false
+
+        return representation != legacyRepresentation
     }
 
-    fun encodeAsBitmap(
-        width: Int,
-        height: Int,
-        legacyRendering: Boolean,
-    ): Bitmap? {
+    fun isNotValid() = encode() == null
+
+    private fun encode(
+        width: Int = 0,
+        height: Int = 0,
+        legacyRendering: Boolean = false,
+    ): BitMatrix? {
         val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
-        val result =
-            try {
-                MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
-            } catch (_: Exception) {
-                return null
-            }
-        val w = result.width
-        val h = result.height
+
+        return try {
+            MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    fun toBitmap(
+        width: Int = 0,
+        height: Int = 0,
+        legacyRendering: Boolean = false,
+    ): Bitmap? {
+        val bitMatrix = encode(width, height, legacyRendering) ?: return null
+
+        val w = bitMatrix.width
+        val h = bitMatrix.height
         val pixels = IntArray(w * h)
         for (y in 0 until h) {
             val offset = y * w
             for (x in 0 until w) {
-                pixels[offset + x] = if (result[x, y]) Color.BLACK else Color.WHITE
+                pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
             }
         }
-        val bitmap = createBitmap(w, h)
-        bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
-        return bitmap
+
+        return createBitmap(pixels, w, h, Bitmap.Config.ARGB_8888)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -59,19 +59,7 @@ object PassCreator {
         auxiliaryFields: List<PassField> = emptyList(),
         backFields: List<PassField> = emptyList(),
     ): Pass? {
-        if (barCodes.isEmpty()) {
-            return null
-        }
-
-        if (barCodes.any {
-                try {
-                    it.encodeAsBitmap(100, 100, false)
-                    false
-                } catch (_: IllegalArgumentException) {
-                    true
-                }
-            }
-        ) {
+        if (barCodes.isEmpty() || barCodes.any { it.isNotValid() }) {
             return null
         }
 
