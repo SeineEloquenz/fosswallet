@@ -132,4 +132,5 @@
     <string name="created_pass_export_warning">Skapade kort kan för närvarande inte exporteras</string>
     <string name="permission_read_passes_label">Läsa kort</string>
     <string name="permission_read_passes_description">Läsa dina kort och deras uppgifter, inklusive streckkoder, på ett Catima-kompatibelt sätt</string>
+    <string name="create_boarding_pass">Skapa boardingkort</string>
 </resources>

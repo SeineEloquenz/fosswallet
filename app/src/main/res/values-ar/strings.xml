@@ -14,4 +14,16 @@
     <string name="license">الترخيص</string>
     <string name="about">حول</string>
     <string name="serial_number">الرقم التسلسلي</string>
+    <string name="back">العودة</string>
+    <string name="wallet">المحفظة</string>
+    <string name="barcode">الباركود</string>
+    <string name="privacy">الخصوصية</string>
+    <string name="compatibility_mode">وضع التوافق</string>
+    <string name="to">إلى</string>
+    <string name="barcode_position_top">أعلى</string>
+    <string name="barcode_position_center">وسط</string>
+    <string name="barcode_position_bottom">أسفل</string>
+    <string name="icon">أيقونة</string>
+    <string name="thumbnail">صورة مصغرة</string>
+    <string name="pass_background_color">لون الخلفية</string>
 </resources>
