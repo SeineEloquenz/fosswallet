@@ -22,7 +22,7 @@ private val newestFirst =
                 .firstOrNull()
                 ?.startDate()
         },
-        Comparator.nullsLast(Comparator.reverseOrder()),
+        Comparator.nullsLast(Comparator.naturalOrder()),
     )
 
 private val oldestFirst =
@@ -32,7 +32,7 @@ private val oldestFirst =
                 .firstOrNull()
                 ?.startDate()
         },
-        Comparator.nullsLast(Comparator.naturalOrder()),
+        Comparator.nullsLast(Comparator.reverseOrder()),
     )
 
 sealed class SortOption(
