@@ -128,4 +128,7 @@
     <string name="ask_before_delete">Vragen vóór verwijderen</string>
     <string name="delete_confirmation_message">Geselecteerde pas(sen) verwijderen? Dit kan niet ongedaan worden gemaakt.</string>
     <string name="the_archive">Archief</string>
+    <string name="show_archived_passes">Gearchiveerde passen weergeven</string>
+    <string name="create_boarding_pass">Instapkaart aanmaken</string>
+    <string name="created_pass_export_warning">Aangemaakte passen kunnen momenteel niet worden geëxporteerd</string>
 </resources>
