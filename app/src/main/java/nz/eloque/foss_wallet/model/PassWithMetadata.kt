@@ -32,6 +32,11 @@ data class PassWithMetadata(
         entityColumn = "passId",
     )
     val localizations: List<PassLocalization>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "passId",
+    )
+    val attachments: List<Attachment>,
 ) {
     fun applyLocalization(locale: String): LocalizedPassWithTags {
         val mapping = localeMapping(locale).ifEmpty { localeMapping("en") }
