@@ -50,7 +50,7 @@ data class PassWithMetadata(
                 backFields = pass.backFields.applyLocalization(mapping),
             )
 
-        return LocalizedPassWithTags(localizedPass, metadata, tags.toSet())
+        return LocalizedPassWithTags(localizedPass, metadata, tags.toSet(), attachments)
     }
 
     private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> =

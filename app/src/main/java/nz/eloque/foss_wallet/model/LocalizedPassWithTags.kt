@@ -4,11 +4,12 @@ data class LocalizedPassWithTags(
     val pass: Pass,
     val metadata: PassMetadata,
     val tags: Set<Tag>,
+    val attachments: List<Attachment>,
 ) {
     companion object {
         fun placeholder(): LocalizedPassWithTags {
             val pass = Pass.placeholder()
-            return LocalizedPassWithTags(pass, PassMetadata(pass.id), setOf())
+            return LocalizedPassWithTags(pass, PassMetadata(pass.id), setOf(), listOf())
         }
     }
 }

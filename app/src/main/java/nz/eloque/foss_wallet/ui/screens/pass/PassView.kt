@@ -32,6 +32,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.components.AttachmentList
 import nz.eloque.foss_wallet.ui.components.FilePicker
 import nz.eloque.foss_wallet.ui.effects.ForceOrientation
 import nz.eloque.foss_wallet.ui.effects.Orientation
@@ -100,6 +101,9 @@ fun PassView(
             }
         }
 
+        AttachmentList(
+            attachments = localizedPass.attachments,
+        )
         val contentResolver = context.contentResolver
         FilePicker(
             onChoose = { name, uri ->
@@ -168,7 +172,7 @@ private fun PassPreview() {
                 ),
         )
     PassView(
-        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags),
+        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags, listOf()),
         allTags = allTags,
         onTagClick = {},
         onTagAdd = {},

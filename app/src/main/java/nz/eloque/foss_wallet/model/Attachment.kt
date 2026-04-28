@@ -22,7 +22,7 @@ data class Attachment(
     val fileName: String,
     val passId: String,
 ) {
-    private fun getFile(context: Context): File = File(context.filesDir, "$passId/attachments/$fileName")
+    fun getFile(context: Context): File = File(context.filesDir, "$passId/attachments/$fileName")
 
     fun save(
         context: Context,
