@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Attachment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,6 +32,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.components.FilePicker
 import nz.eloque.foss_wallet.ui.effects.ForceOrientation
 import nz.eloque.foss_wallet.ui.effects.Orientation
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsSwitch
@@ -40,6 +43,7 @@ import java.time.Instant
 fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    onAttachmentAdd: (String, ByteArray) -> Unit,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
     onTagCreate: (Tag) -> Unit,
@@ -96,9 +100,27 @@ fun PassView(
             }
         }
 
+        val contentResolver = context.contentResolver
+        FilePicker(
+            onChoose = { name, uri ->
+                name?.let { name ->
+                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                        val bytes = inputStream.readBytes()
+                        onAttachmentAdd(name, bytes)
+                    }
+                }
+            },
+            label = "Add attachment",
+            labelIcon = Icons.Default.Attachment,
+        )
+
         BackFields(pass.backFields)
 
-        Spacer(Modifier.padding(16.dp).navigationBarsPadding())
+        Spacer(
+            Modifier
+                .padding(16.dp)
+                .navigationBarsPadding(),
+        )
     }
 }
 
@@ -154,5 +176,6 @@ private fun PassPreview() {
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
         onRenderingChange = {},
+        onAttachmentAdd = { _, _ -> },
     )
 }

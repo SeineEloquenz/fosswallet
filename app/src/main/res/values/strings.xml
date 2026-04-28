@@ -134,4 +134,7 @@
     <string name="permission_read_passes_label">Read Passes</string>
     <string name="permission_read_passes_description">Read your passes and their details, including barcodes in a Catima compatible way</string>
     <string name="create_boarding_pass">Create Boarding Pass</string>
+    <string name="attachment_name">Attachment name</string>
+    <string name="choose_attachment_name">Choose attachment name</string>
+    <string name="select_attachment">Select attachment</string>
 </resources>

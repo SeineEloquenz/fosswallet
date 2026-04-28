@@ -52,4 +52,10 @@ class PassViewModel
         fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
 
         fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
+
+        fun attach(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.attach(pass, name, bytes) }
     }
