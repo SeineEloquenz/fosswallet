@@ -34,10 +34,11 @@ fun ImagePicker(
     label: String? = null,
     labelIcon: ImageVector? = null,
 ) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        println("selected file URI $uri")
-        onChoose(uri)
-    }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            println("selected file URI $uri")
+            onChoose(uri)
+        }
     val launchPicker = {
         launcher.launch(arrayOf("image/*"))
     }
