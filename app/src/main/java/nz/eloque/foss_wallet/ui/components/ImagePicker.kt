@@ -40,12 +40,7 @@ fun ImagePicker(
             onChoose(uri)
         }
     val launchPicker = {
-        launcher.launch(
-            arrayOf(
-                "image/png",
-                "image/jpeg",
-            ),
-        )
+        launcher.launch(arrayOf("image/*"))
     }
 
     Row(
