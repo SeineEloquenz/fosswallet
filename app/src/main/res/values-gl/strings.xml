@@ -132,4 +132,5 @@
     <string name="show_archived_passes">Mostrar pases arquivados</string>
     <string name="permission_read_passes_label">Ler pases</string>
     <string name="permission_read_passes_description">Le os teus pases e o seus detalles, incluíndo códigos de barras no modo compatible con Catima</string>
+    <string name="create_boarding_pass">Crear billete de embarque</string>
 </resources>

@@ -129,4 +129,6 @@
     <string name="delete_confirmation_message">Eliminare i biglietti selezionati? Questa azione non può essere annullata.</string>
     <string name="the_archive">Archivio</string>
     <string name="show_archived_passes">Mostra pass archiviati</string>
+    <string name="create_boarding_pass">Crea carta d\'imbarco</string>
+    <string name="created_pass_export_warning">Al momento non è possibile esportare i pass creati</string>
 </resources>
