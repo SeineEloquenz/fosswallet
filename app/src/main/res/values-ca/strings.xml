@@ -128,4 +128,5 @@
     <string name="no_barcode_found">No s\'ha trobat cap codi de barres</string>
     <string name="no_map_app_found">No s\'ha trobat cap aplicació de mapes</string>
     <string name="no_calendar_app_found">No s\'ha trobat cap aplicació de calendari</string>
+    <string name="create_boarding_pass">Crea targeta d\'embarcament</string>
 </resources>

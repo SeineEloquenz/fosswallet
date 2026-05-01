@@ -63,7 +63,7 @@
     <string name="pass_deleted">Το πάσο διεγράφη επιτυχημένα</string>
     <string name="pass_imported">Τι πάσο εισήχθη επιτυχημένα</string>
     <string name="libraries">Βιβλιοθήκες</string>
-    <string name="compatibility_mode">Λειτουργία Συμβατότητας</string>
+    <string name="compatibility_mode">Λειτουργία συμβατότητας</string>
     <string name="barcode_position_bottom">Κάτω μέρος</string>
     <string name="color">χρώμα</string>
     <string name="coupon">Κουπόνι</string>
