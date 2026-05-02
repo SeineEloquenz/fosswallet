@@ -34,6 +34,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.AttachmentList
 import nz.eloque.foss_wallet.ui.components.FilePicker
+import nz.eloque.foss_wallet.ui.components.Section
 import nz.eloque.foss_wallet.ui.effects.ForceOrientation
 import nz.eloque.foss_wallet.ui.effects.Orientation
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsSwitch
@@ -100,23 +101,24 @@ fun PassView(
                 )
             }
         }
-
-        AttachmentList(
-            attachments = localizedPass.attachments,
-        )
-        val contentResolver = context.contentResolver
-        FilePicker(
-            onChoose = { name, uri ->
-                name?.let { name ->
-                    contentResolver.openInputStream(uri)?.use { inputStream ->
-                        val bytes = inputStream.readBytes()
-                        onAttachmentAdd(name, bytes)
+        Section("Attachments") {
+            AttachmentList(
+                attachments = localizedPass.attachments,
+            )
+            val contentResolver = context.contentResolver
+            FilePicker(
+                onChoose = { name, uri ->
+                    name?.let { name ->
+                        contentResolver.openInputStream(uri)?.use { inputStream ->
+                            val bytes = inputStream.readBytes()
+                            onAttachmentAdd(name, bytes)
+                        }
                     }
-                }
-            },
-            label = "Add attachment",
-            labelIcon = Icons.Default.Attachment,
-        )
+                },
+                label = "Add attachment",
+                labelIcon = Icons.Default.Attachment,
+            )
+        }
 
         BackFields(pass.backFields)
 
