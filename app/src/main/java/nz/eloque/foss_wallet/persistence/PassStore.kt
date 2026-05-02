@@ -141,4 +141,10 @@ class PassStore
             pass: Pass,
             groupId: Long,
         ) = passRepository.dissociate(pass, groupId)
+
+        suspend fun attach(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) = passRepository.insertAttachment(pass, name, bytes)
     }
