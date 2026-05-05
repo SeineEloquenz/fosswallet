@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -171,8 +172,12 @@ fun WalletView(
         items(ungrouped) { pass ->
             val isSelectionMode = selectedPasses.isNotEmpty()
             SwipeToDismiss(
-                leftSwipeIcon = if (archive) Icons.Default.Unarchive else Icons.Default.Archive,
-                rightSwipeIcon = Icons.Default.Delete,
+                leftSwipeBackground = {
+                    Icon(imageVector = if (archive) Icons.Default.Unarchive else Icons.Default.Archive, contentDescription = null)
+                },
+                rightSwipeBackground = {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                },
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
