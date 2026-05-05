@@ -51,6 +51,7 @@ fun AttachmentListEntry(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
