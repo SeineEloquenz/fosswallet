@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +32,10 @@ fun FilterBar(
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
+    var isFocused by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
+
+    BackHandler(enabled = isFocused) { focusManager.clearFocus() }
     SearchBar(
         windowInsets = WindowInsets(0.dp),
         inputField = {
@@ -47,7 +52,10 @@ fun FilterBar(
                 },
                 onExpandedChange = {},
                 expanded = false,
-                modifier = Modifier.fillMaxHeight(),
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .onFocusChanged { isFocused = it.isFocused },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         IconButton(
