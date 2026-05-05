@@ -2,12 +2,15 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Attachment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
@@ -30,6 +34,9 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
+import nz.eloque.foss_wallet.ui.components.AttachmentList
+import nz.eloque.foss_wallet.ui.components.FilePicker
+import nz.eloque.foss_wallet.ui.components.Section
 import nz.eloque.foss_wallet.ui.effects.ForceOrientation
 import nz.eloque.foss_wallet.ui.effects.Orientation
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsSwitch
@@ -40,6 +47,8 @@ import java.time.Instant
 fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    onAttachmentAdd: (String, ByteArray) -> Unit,
+    onAttachmentDelete: (Attachment) -> Unit,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
     onTagCreate: (Tag) -> Unit,
@@ -95,10 +104,36 @@ fun PassView(
                 )
             }
         }
+        Section(stringResource(R.string.attachments)) {
+            AttachmentList(
+                attachments = localizedPass.attachments,
+                onDelete = onAttachmentDelete,
+            )
+            val contentResolver = context.contentResolver
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                FilePicker(
+                    onChoose = { name, uri ->
+                        name?.let { name ->
+                            contentResolver.openInputStream(uri)?.use { inputStream ->
+                                val bytes = inputStream.readBytes()
+                                onAttachmentAdd(name, bytes)
+                            }
+                        }
+                    },
+                    label = stringResource(R.string.add_attachment),
+                    labelIcon = Icons.Default.Attachment,
+                )
+            }
+        }
 
         BackFields(pass.backFields)
 
-        Spacer(Modifier.padding(16.dp).navigationBarsPadding())
+        Spacer(
+            Modifier
+                .padding(16.dp)
+                .navigationBarsPadding(),
+        )
     }
 }
 
@@ -146,7 +181,7 @@ private fun PassPreview() {
                 ),
         )
     PassView(
-        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags),
+        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags, listOf()),
         allTags = allTags,
         onTagClick = {},
         onTagAdd = {},
@@ -154,5 +189,7 @@ private fun PassPreview() {
         barcodePosition = BarcodePosition.Center,
         increaseBrightness = false,
         onRenderingChange = {},
+        onAttachmentAdd = { _, _ -> },
+        onAttachmentDelete = {},
     )
 }

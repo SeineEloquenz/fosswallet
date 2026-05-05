@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
+import android.webkit.MimeTypeMap
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -16,6 +17,7 @@ import androidx.core.graphics.createBitmap
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -142,4 +144,13 @@ fun Drawable.toBitmap(
     this.setBounds(0, 0, width, height)
     this.draw(canvas)
     return bitmap
+}
+
+fun File.getMimeType(): String {
+    val extension = this.extension.lowercase()
+
+    return MimeTypeMap
+        .getSingleton()
+        .getMimeTypeFromExtension(extension)
+        ?: "application/octet-stream"
 }

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,6 +34,7 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.share
+import nz.eloque.foss_wallet.ui.components.Section
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -59,7 +59,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 .navigationBarsPadding()
                 .imePadding(),
     ) {
-        SettingsSection(
+        Section(
             heading = stringResource(R.string.pass_updates_channel),
         ) {
             SettingsSwitch(
@@ -86,7 +86,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 clearOnSubmit = false,
             )
         }
-        SettingsSection(
+        Section(
             heading = stringResource(R.string.pass_view),
         ) {
             SettingsSwitch(
@@ -109,7 +109,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 optionLabel = { resources.getString(it.label) },
             )
         }
-        SettingsSection(
+        Section(
             heading = stringResource(R.string.delete),
         ) {
             SettingsSwitch(
@@ -120,7 +120,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 },
             )
         }
-        SettingsSection(
+        Section(
             heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
         ) {
             SettingsButton(
@@ -139,37 +139,6 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
             )
         }
         Spacer(modifier = Modifier.imePadding())
-    }
-}
-
-@Composable
-fun SettingsSection(
-    heading: String,
-    content: @Composable () -> Unit,
-) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-    ) {
-        Text(
-            text = heading,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier =
-                Modifier
-                    .padding(start = 16.dp, bottom = 8.dp),
-        )
-        Surface(
-            tonalElevation = 1.dp,
-            shape = MaterialTheme.shapes.medium,
-            modifier = Modifier.padding(horizontal = 8.dp),
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                content()
-            }
-        }
     }
 }
 

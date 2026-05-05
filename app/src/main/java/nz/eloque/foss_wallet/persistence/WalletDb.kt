@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassLocalization
@@ -34,8 +35,10 @@ fun buildDb(context: Context) =
         .build()
 
 @Database(
-    version = 24,
-    entities = [Pass::class, PassMetadata::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class],
+    version = 25,
+    entities = [
+        Pass::class, PassMetadata::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class, Attachment::class,
+    ],
     autoMigrations = [
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
@@ -52,6 +55,7 @@ fun buildDb(context: Context) =
         AutoMigration(from = 20, to = 21, spec = M20_21::class),
         AutoMigration(from = 21, to = 22),
         AutoMigration(from = 22, to = 23),
+        AutoMigration(from = 24, to = 25),
     ],
     exportSchema = true,
 )

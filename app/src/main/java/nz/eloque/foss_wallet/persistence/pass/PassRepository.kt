@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
@@ -69,6 +70,16 @@ class PassRepository
             originalPass?.saveToDisk(context, id)
         }
 
+        suspend fun insertAttachment(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) {
+            val attachment = Attachment(passId = pass.id, fileName = name)
+            attachment.save(context, bytes)
+            passDao.insert(attachment)
+        }
+
         private fun shouldBeAutoArchived(
             pass: Pass,
             metadata: PassMetadata,
@@ -86,6 +97,11 @@ class PassRepository
         suspend fun delete(pass: Pass) {
             pass.deleteFiles(context)
             passDao.delete(pass)
+        }
+
+        suspend fun delete(attachment: Attachment) {
+            attachment.delete(context)
+            passDao.delete(attachment)
         }
 
         suspend fun dissociate(

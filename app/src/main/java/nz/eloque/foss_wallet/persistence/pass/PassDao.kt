@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassMetadata
@@ -62,11 +63,17 @@ interface PassDao {
     @Upsert
     fun insert(group: PassGroup): Long
 
+    @Upsert
+    suspend fun insert(attachment: Attachment)
+
     @Delete
     suspend fun delete(pass: Pass)
 
     @Delete
     suspend fun delete(group: PassGroup)
+
+    @Delete
+    suspend fun delete(attachment: Attachment)
 
     @Transaction
     suspend fun associate(

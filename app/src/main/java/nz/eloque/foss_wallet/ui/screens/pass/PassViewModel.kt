@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -43,6 +44,8 @@ class PassViewModel
 
         fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
 
+        fun delete(attachment: Attachment) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(attachment) }
+
         fun archive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.archive(pass) }
 
         fun unarchive(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.unarchive(pass) }
@@ -52,4 +55,10 @@ class PassViewModel
         fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
 
         fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
+
+        fun attach(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) = viewModelScope.launch(Dispatchers.IO) { passStore.attach(pass, name, bytes) }
     }
