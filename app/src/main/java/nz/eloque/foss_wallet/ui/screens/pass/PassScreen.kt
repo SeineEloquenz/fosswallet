@@ -105,6 +105,7 @@ fun PassScreen(
                 increaseBrightness = passViewModel.increasePassViewBrightness(),
                 onRenderingChange = { passViewModel.toggleLegacyRendering(localizedPass.pass) },
                 onAttachmentAdd = { name, bytes -> passViewModel.attach(localizedPass.pass, name, bytes) },
+                onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
             )
         }
     }

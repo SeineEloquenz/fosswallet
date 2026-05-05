@@ -99,6 +99,11 @@ class PassRepository
             passDao.delete(pass)
         }
 
+        suspend fun delete(attachment: Attachment) {
+            attachment.delete(context)
+            passDao.delete(attachment)
+        }
+
         suspend fun dissociate(
             pass: Pass,
             groupId: Long,

@@ -26,6 +26,7 @@ import nz.eloque.foss_wallet.utils.getMimeType
 @Composable
 fun AttachmentListEntry(
     attachment: Attachment,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -70,9 +71,7 @@ fun AttachmentListEntry(
             )
         }
         IconButton(
-            onClick = {
-                TODO() // Implement deleting
-            },
+            onClick = onDelete,
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
@@ -85,6 +84,7 @@ fun AttachmentListEntry(
 @Composable
 fun AttachmentList(
     attachments: List<Attachment>,
+    onDelete: (Attachment) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -95,6 +95,7 @@ fun AttachmentList(
         attachments.forEach { attachment ->
             AttachmentListEntry(
                 attachment = attachment,
+                onDelete = { onDelete(attachment) },
             )
         }
     }

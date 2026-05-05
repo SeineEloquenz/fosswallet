@@ -22,6 +22,11 @@ data class Attachment(
     val fileName: String,
     val passId: String,
 ) {
+    fun delete(context: Context) {
+        val file = File(context.filesDir, "$passId/attachments/$fileName")
+        file.delete()
+    }
+
     fun getFile(context: Context): File = File(context.filesDir, "$passId/attachments/$fileName")
 
     fun save(

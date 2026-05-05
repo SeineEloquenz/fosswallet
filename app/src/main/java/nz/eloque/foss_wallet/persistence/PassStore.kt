@@ -9,6 +9,7 @@ import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.api.UpdateScheduler
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.Tag
@@ -105,6 +106,10 @@ class PassStore
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
             Shortcut.remove(context, pass)
+        }
+
+        suspend fun delete(attachment: Attachment) {
+            passRepository.delete(attachment)
         }
 
         suspend fun load(

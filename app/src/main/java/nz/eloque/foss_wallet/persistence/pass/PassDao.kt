@@ -72,6 +72,9 @@ interface PassDao {
     @Delete
     suspend fun delete(group: PassGroup)
 
+    @Delete
+    suspend fun delete(attachment: Attachment)
+
     @Transaction
     suspend fun associate(
         groupId: Long,

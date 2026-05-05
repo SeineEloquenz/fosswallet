@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
@@ -47,6 +48,7 @@ fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
     onAttachmentAdd: (String, ByteArray) -> Unit,
+    onAttachmentDelete: (Attachment) -> Unit,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
     onTagCreate: (Tag) -> Unit,
@@ -105,11 +107,10 @@ fun PassView(
         Section(stringResource(R.string.attachments)) {
             AttachmentList(
                 attachments = localizedPass.attachments,
+                onDelete = onAttachmentDelete,
             )
             val contentResolver = context.contentResolver
-            Row(
-
-            ) {
+            Row {
                 Spacer(modifier = Modifier.weight(1f))
                 FilePicker(
                     onChoose = { name, uri ->
@@ -189,5 +190,6 @@ private fun PassPreview() {
         increaseBrightness = false,
         onRenderingChange = {},
         onAttachmentAdd = { _, _ -> },
+        onAttachmentDelete = {}
     )
 }
