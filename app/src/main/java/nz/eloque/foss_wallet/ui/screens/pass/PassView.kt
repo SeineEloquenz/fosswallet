@@ -190,6 +190,6 @@ private fun PassPreview() {
         increaseBrightness = false,
         onRenderingChange = {},
         onAttachmentAdd = { _, _ -> },
-        onAttachmentDelete = {}
+        onAttachmentDelete = {},
     )
 }
