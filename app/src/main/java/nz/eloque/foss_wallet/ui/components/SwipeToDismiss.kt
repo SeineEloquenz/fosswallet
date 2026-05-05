@@ -29,9 +29,9 @@ fun SwipeToDismiss(
 
     val (background, alignment) =
         when (swipeState.dismissDirection) {
-            SwipeToDismissBoxValue.EndToStart -> Pair<(@Composable () -> Unit)?, Alignment>(leftSwipeBackground, Alignment.CenterEnd)
-            SwipeToDismissBoxValue.StartToEnd -> Pair<(@Composable () -> Unit)?, Alignment>(rightSwipeBackground, Alignment.CenterStart)
-            SwipeToDismissBoxValue.Settled -> Pair<(@Composable () -> Unit)?, Alignment>(null, Alignment.CenterEnd)
+            SwipeToDismissBoxValue.EndToStart -> Pair<(@Composable () -> Unit), Alignment>(leftSwipeBackground, Alignment.CenterEnd)
+            SwipeToDismissBoxValue.StartToEnd -> Pair<(@Composable () -> Unit), Alignment>(rightSwipeBackground, Alignment.CenterStart)
+            SwipeToDismissBoxValue.Settled -> Pair<(@Composable () -> Unit), Alignment>({}, Alignment.CenterEnd)
         }
 
     SwipeToDismissBox(
