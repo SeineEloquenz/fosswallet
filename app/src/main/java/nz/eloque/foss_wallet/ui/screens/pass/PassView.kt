@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -106,18 +107,23 @@ fun PassView(
                 attachments = localizedPass.attachments,
             )
             val contentResolver = context.contentResolver
-            FilePicker(
-                onChoose = { name, uri ->
-                    name?.let { name ->
-                        contentResolver.openInputStream(uri)?.use { inputStream ->
-                            val bytes = inputStream.readBytes()
-                            onAttachmentAdd(name, bytes)
+            Row(
+
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                FilePicker(
+                    onChoose = { name, uri ->
+                        name?.let { name ->
+                            contentResolver.openInputStream(uri)?.use { inputStream ->
+                                val bytes = inputStream.readBytes()
+                                onAttachmentAdd(name, bytes)
+                            }
                         }
-                    }
-                },
-                label = stringResource(R.string.add_attachment),
-                labelIcon = Icons.Default.Attachment,
-            )
+                    },
+                    label = stringResource(R.string.add_attachment),
+                    labelIcon = Icons.Default.Attachment,
+                )
+            }
         }
 
         BackFields(pass.backFields)
