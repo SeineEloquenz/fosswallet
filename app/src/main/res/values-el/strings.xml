@@ -55,8 +55,8 @@
     <string name="share_passes">Κοινοποίηση πάσων</string>
     <string name="more_options">Περισσότερες επιλογές</string>
     <string name="date_added">Ημερομηνία προσθήκης</string>
-    <string name="relevant_date_newest">Νεότερη σχετική ημερομηνία</string>
-    <string name="relevant_date_oldest">Παλαιότερη σχετική ημερομηνία</string>
+    <string name="relevant_date_latest">Νεότερη σχετική ημερομηνία</string>
+    <string name="relevant_date_earliest">Παλαιότερη σχετική ημερομηνία</string>
     <string name="selected">Επιλεγμένα</string>
     <string name="filter">Ταξινόμηση κατά</string>
     <string name="wallet">Πορτοφόλι</string>

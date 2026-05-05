@@ -59,8 +59,8 @@
     <string name="date_added">Datum hinzugefügt</string>
     <string name="selected">Ausgewählt</string>
     <string name="filter">Sortieren nach</string>
-    <string name="relevant_date_newest">Aktuellstes Datum</string>
-    <string name="relevant_date_oldest">Ältestes Datum</string>
+    <string name="relevant_date_latest">Aktuellstes Datum</string>
+    <string name="relevant_date_earliest">Ältestes Datum</string>
     <string name="libraries">Bibliotheken</string>
     <string name="wallet">Passetui</string>
     <string name="compatibility_mode">Kompatibilitätsmodus</string>

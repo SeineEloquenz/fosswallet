@@ -80,8 +80,8 @@
     <string name="choose_image">בחר תמונה</string>
     <string name="clear_selection">נקה בחירה</string>
     <string name="no_barcode_format_given">תבנית הברקוד לא נבחרה! קוד QR נבחר כברירת המחדל. ייתכן שהברקוד הזה לא יסרק כראוי.</string>
-    <string name="relevant_date_newest">התאריך הרלוונטי החדש ביותר</string>
-    <string name="relevant_date_oldest">התאריך הרלוונטי הישן ביותר</string>
+    <string name="relevant_date_latest">התאריך הרלוונטי החדש ביותר</string>
+    <string name="relevant_date_earliest">התאריך הרלוונטי הישן ביותר</string>
     <string name="color">צבע</string>
     <string name="add_tag">הוסף תג</string>
     <string name="remove_tag">להסיר תג</string>

@@ -55,8 +55,8 @@
     <string name="share_passes">Sdílet lístky</string>
     <string name="more_options">Další možnosti</string>
     <string name="date_added">Datum přidání</string>
-    <string name="relevant_date_newest">Nejnovější relevantní datum</string>
-    <string name="relevant_date_oldest">Nejstarší relevantní datum</string>
+    <string name="relevant_date_latest">Nejnovější relevantní datum</string>
+    <string name="relevant_date_earliest">Nejstarší relevantní datum</string>
     <string name="selected">Vybráno</string>
     <string name="filter">Seřadit podle</string>
     <string name="libraries">Knihovny</string>

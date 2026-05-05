@@ -36,8 +36,8 @@
     <string name="filter">Sortera efter</string>
     <string name="compatibility_mode">Kompatibilitetsläge</string>
     <string name="date_added">Datum tillagt</string>
-    <string name="relevant_date_newest">Senaste relevanta datum</string>
-    <string name="relevant_date_oldest">Äldsta relevanta datum</string>
+    <string name="relevant_date_latest">Senaste relevanta datum</string>
+    <string name="relevant_date_earliest">Äldsta relevanta datum</string>
     <string name="request_permissions">Begär behörighet</string>
     <string name="pass_updates_channel">Kortuppdateringar</string>
     <string name="pass_updated">Kort uppdaterat</string>

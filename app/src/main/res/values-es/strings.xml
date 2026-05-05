@@ -55,8 +55,8 @@
     <string name="share_passes">Compatir pases</string>
     <string name="more_options">Más opciones</string>
     <string name="date_added">Fecha en que se añadió</string>
-    <string name="relevant_date_newest">Fecha relevante más reciente</string>
-    <string name="relevant_date_oldest">Fecha relevante más vieja</string>
+    <string name="relevant_date_latest">Fecha relevante más reciente</string>
+    <string name="relevant_date_earliest">Fecha relevante más vieja</string>
     <string name="selected">Seleccionado</string>
     <string name="filter">Ordenar por</string>
     <string name="color">Color</string>

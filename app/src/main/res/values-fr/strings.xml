@@ -53,8 +53,8 @@
     <string name="archive">Archiver</string>
     <string name="unarchive">Désarchiver</string>
     <string name="n_passes_imported">%1$d clefs importées</string>
-    <string name="relevant_date_newest">Dernière date pertinente</string>
-    <string name="relevant_date_oldest">Date pertinente la plus ancienne</string>
+    <string name="relevant_date_latest">Dernière date pertinente</string>
+    <string name="relevant_date_earliest">Date pertinente la plus ancienne</string>
     <string name="libraries">Librairies</string>
     <string name="ungroup">Dégrouper les cartes</string>
     <string name="open">Ouvrir</string>

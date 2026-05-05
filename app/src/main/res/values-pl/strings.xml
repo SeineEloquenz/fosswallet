@@ -57,8 +57,8 @@
     <string name="date_added">Data dodana</string>
     <string name="selected">Zaznaczone</string>
     <string name="filter">Sortuj wg</string>
-    <string name="relevant_date_newest">Najnowsza istotna data</string>
-    <string name="relevant_date_oldest">Najstarsza istotna data</string>
+    <string name="relevant_date_latest">Najnowsza istotna data</string>
+    <string name="relevant_date_earliest">Najstarsza istotna data</string>
     <string name="libraries">Biblioteki</string>
     <string name="wallet">Portfel</string>
     <string name="compatibility_mode">Tryb kompatybilności</string>
