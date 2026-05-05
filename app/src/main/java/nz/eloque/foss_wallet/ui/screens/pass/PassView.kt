@@ -115,7 +115,7 @@ fun PassView(
                         }
                     }
                 },
-                label = "Add attachment",
+                label = stringResource(R.string.add_attachment),
                 labelIcon = Icons.Default.Attachment,
             )
         }
