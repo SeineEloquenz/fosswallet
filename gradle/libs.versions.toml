@@ -1,11 +1,11 @@
 [versions]
-aboutLibraries = "14.0.1"
+aboutLibraries = "14.1.0"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.13.0"
 androidGradlePlugin = "9.1.1"
 bcbpParser = "v0.1.0"
 coil = "2.7.0"
-color-picker = "1.1.3"
+color-picker = "1.1.4"
 composeBom = "2026.04.01"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
