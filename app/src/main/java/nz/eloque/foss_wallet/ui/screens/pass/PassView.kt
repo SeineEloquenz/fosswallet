@@ -101,7 +101,7 @@ fun PassView(
                 )
             }
         }
-        Section("Attachments") {
+        Section(stringResource(R.string.attachments)) {
             AttachmentList(
                 attachments = localizedPass.attachments,
             )

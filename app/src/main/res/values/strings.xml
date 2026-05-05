@@ -138,4 +138,5 @@
     <string name="choose_attachment_name">Choose attachment name</string>
     <string name="select_attachment">Select attachment</string>
     <string name="delete_attachment">Delete attachment</string>
+    <string name="attachments">Attachments</string>
 </resources>
