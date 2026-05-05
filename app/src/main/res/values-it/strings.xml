@@ -56,8 +56,8 @@
     <string name="share_passes">Condividi biglietti</string>
     <string name="filter">Ordina per</string>
     <string name="date_added">Data aggiunta</string>
-    <string name="relevant_date_newest">La più recente data rilevante</string>
-    <string name="relevant_date_oldest">La più vecchia data rilevante</string>
+    <string name="relevant_date_latest">La più recente data rilevante</string>
+    <string name="relevant_date_earliest">La più vecchia data rilevante</string>
     <string name="selected">Selezionati</string>
     <string name="libraries">Librerie</string>
     <string name="wallet">Porta tessere</string>

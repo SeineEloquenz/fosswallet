@@ -55,8 +55,8 @@
     <string name="share_passes">分享通行證</string>
     <string name="more_options">更多選擇</string>
     <string name="date_added">已新增日期</string>
-    <string name="relevant_date_newest">最新相關日期</string>
-    <string name="relevant_date_oldest">最早相關日期</string>
+    <string name="relevant_date_latest">最新相關日期</string>
+    <string name="relevant_date_earliest">最早相關日期</string>
     <string name="selected">已選取</string>
     <string name="filter">排序依據</string>
     <string name="libraries">庫</string>

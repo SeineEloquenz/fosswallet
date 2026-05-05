@@ -55,8 +55,8 @@
     <string name="share_passes">Jaga dokumente</string>
     <string name="more_options">Lisavalikud</string>
     <string name="date_added">Lisamise kuupäev</string>
-    <string name="relevant_date_newest">Viimane oluline kuupäev</string>
-    <string name="relevant_date_oldest">Vanim oluline kuupäev</string>
+    <string name="relevant_date_latest">Viimane oluline kuupäev</string>
+    <string name="relevant_date_earliest">Vanim oluline kuupäev</string>
     <string name="selected">Valitud</string>
     <string name="filter">Järjestus</string>
     <string name="libraries">Teegid</string>

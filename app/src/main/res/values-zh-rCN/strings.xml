@@ -51,8 +51,8 @@
     <string name="timeout">调用更新服务器时超时</string>
     <string name="exception">调用更新服务器时发生错误</string>
     <string name="date_added">添加日期</string>
-    <string name="relevant_date_oldest">最早相关日期</string>
-    <string name="relevant_date_newest">最新相关日期</string>
+    <string name="relevant_date_earliest">最早相关日期</string>
+    <string name="relevant_date_latest">最新相关日期</string>
     <string name="selected">已选择</string>
     <string name="pass_view">凭证视图</string>
     <string name="open">打开</string>
