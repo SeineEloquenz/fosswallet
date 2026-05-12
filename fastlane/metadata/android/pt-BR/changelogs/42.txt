@@ -1,0 +1,5 @@
+* Adicionar agrupamento de cartões
+* Adicionar gestos de deslizar para agrupar e excluir cartões
+* Adicionar suporte a notificações para atualizações de cartões
+* Adicionar suporte ao formato DateTime
+* Corrigir cores incorretas no cartão de embarque genérico

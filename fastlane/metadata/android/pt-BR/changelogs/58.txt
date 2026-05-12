@@ -1,0 +1,5 @@
+* Adicionar um bloco de configurações rápidas para abrir o aplicativo
+* Atualizar traduções
+* Corrigir o problema de as notificações de atualização não estarem localizadas
+* Corrigir o cálculo que determina para quais campos exibir notificações de atualização
+* Corrigir o posicionamento incorreto do último campo na linha

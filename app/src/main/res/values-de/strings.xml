@@ -133,4 +133,9 @@
     <string name="permission_read_passes_label">Pässe lesen</string>
     <string name="permission_read_passes_description">Auslesen deiner Pässe und deren Daten, einschließlich der Barcodes, auf eine mit Catima kompatible Weise</string>
     <string name="create_boarding_pass">Bordkarte erstellen</string>
+    <string name="attachments">Anhänge</string>
+    <string name="delete_attachment">Anhang löschen</string>
+    <string name="add_attachment">Anhang hinzufügen</string>
+    <string name="attachment_name">Name des Anhangs</string>
+    <string name="choose_attachment_name">Wähle den Namen des Anhangs</string>
 </resources>

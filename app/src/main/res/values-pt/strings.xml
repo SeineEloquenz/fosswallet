@@ -21,4 +21,11 @@
     <string name="image">Imagem</string>
     <string name="settings">Definições</string>
     <string name="back">Voltar</string>
+    <string name="attachments">Anexos</string>
+    <string name="barcode_position_top">Topo</string>
+    <string name="barcode_position_center">Centro</string>
+    <string name="barcode_position_bottom">Fundo</string>
+    <string name="compatibility_mode">Modo de compatibilidade</string>
+    <string name="icon">Ícone</string>
+    <string name="pass_foreground_color">Cor de primeiro plano</string>
 </resources>

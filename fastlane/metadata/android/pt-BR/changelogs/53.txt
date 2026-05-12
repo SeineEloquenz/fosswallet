@@ -1,0 +1,4 @@
+* Adicionada tradução para o estoniano
+* Atualização das traduções
+* Agora, os passes vazios exibem sua faixa na visualização
+* Corrigida uma possível falha de sistema causada por formatos de data incorretos nos passes

@@ -1,0 +1,2 @@
+* Corrigir margens internas incorretas em algumas telas
+* Corrigir o problema de as opções de classificação não serem salvas corretamente

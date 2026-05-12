@@ -1,0 +1,3 @@
+* Importar cartões de embarque a partir de códigos BCBP da IATA digitalizados
+* Abrir URLs digitalizados no WebView para baixar os cartões de embarque a partir daí
+* Pequenas alterações no estilo dos cartões de embarque criados manualmente

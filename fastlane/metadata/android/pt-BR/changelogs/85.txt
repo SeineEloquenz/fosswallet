@@ -1,0 +1,3 @@
+* Adicionar suporte para planos de fundo de passes em formato hexadecimal
+* Adicionar tradução para o letão
+* Corrigir falha ao ordenar

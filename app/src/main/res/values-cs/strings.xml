@@ -133,4 +133,9 @@
     <string name="permission_read_passes_label">Čtení lístků</string>
     <string name="permission_read_passes_description">Číst vaše lístky a jejich podrobnosti, včetně čárových kódu způsobem kompatibilním s aplikací Catima</string>
     <string name="create_boarding_pass">Vytvořit palubní lístek</string>
+    <string name="attachment_name">Název přílohy</string>
+    <string name="choose_attachment_name">Zvolte název přílohy</string>
+    <string name="add_attachment">Přidat přílohu</string>
+    <string name="delete_attachment">Odstranit přílohu</string>
+    <string name="attachments">Přílohy</string>
 </resources>

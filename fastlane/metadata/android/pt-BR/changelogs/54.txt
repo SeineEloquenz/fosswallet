@@ -1,0 +1,4 @@
+* Adicionar tradução para o polonês
+* Adicionar animações de transição entre as telas
+* Adicionar link para as informações de privacidade na página Sobre
+* Traduções atualizadas

@@ -1,0 +1,4 @@
+* Adicionar tradução para galego
+* Adicionar tradução para espanhol
+* Adicionar tradução para francês (tradução feita com o melhor empenho por um falante não nativo)
+* Algumas correções diversas na tradução

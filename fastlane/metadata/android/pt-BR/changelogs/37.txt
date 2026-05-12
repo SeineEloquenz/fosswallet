@@ -1,0 +1,1 @@
+* Corrigir a falha do aplicativo ao atualizar manualmente um passe sem conexão com a internet

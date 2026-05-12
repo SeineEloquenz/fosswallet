@@ -1,0 +1,2 @@
+* Adicionar integração com o Gadgetbridge
+Observação: é necessário o Gadgetbridge versão 0.90 ou superior para que funcione

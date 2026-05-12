@@ -1,0 +1,3 @@
+* Melhorar o design dos blocos de configurações rápidas
+* Implementar suporte para campos de parâmetros que fazem referência a outras localizações
+* Atualizar as traduções

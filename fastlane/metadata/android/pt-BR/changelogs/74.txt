@@ -1,0 +1,2 @@
+* Fazer com que o conteúdo do aplicativo seja exibido de ponta a ponta abaixo da barra de navegação
+* Remover o botão de detalhes não utilizado da barra de notificação de atualização bem-sucedida

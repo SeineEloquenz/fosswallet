@@ -1,0 +1,1 @@
+* Corrigir a ausência da caixa de diálogo de confirmação de exclusão ao acionar a exclusão na visualização de passes
