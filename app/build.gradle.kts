@@ -13,7 +13,6 @@ plugins {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xwhen-guards")
         jvmTarget = JvmTarget.JVM_17
     }
 }
