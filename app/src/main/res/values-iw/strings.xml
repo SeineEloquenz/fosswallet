@@ -105,4 +105,5 @@
     <string name="no_calendar_app_found">לא נמצאה אפליקציית לוח שנה</string>
     <string name="pass_label_color">צבע תווית</string>
     <string name="thumbnail">תמונה ממוזערת</string>
+    <string name="attachments">צרופות</string>
 </resources>

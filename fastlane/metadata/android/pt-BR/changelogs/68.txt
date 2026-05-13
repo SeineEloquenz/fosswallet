@@ -1,0 +1,4 @@
+* Permitir intenções adicionais para a abertura de passes
+* Adicionar notificação pop-up ao importar um passe duplicado
+* Alterar o ícone de limpar filtro
+* Atualizar traduções

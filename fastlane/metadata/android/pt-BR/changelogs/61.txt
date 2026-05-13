@@ -1,0 +1,5 @@
+* Adicionar tradução parcial para o chinês
+* Atualizar traduções
+* Permitir rótulos vazios no campo do passe
+* Ícone de licença atualizado
+* Exibir o código de barras com a codificação especificada no passe

@@ -1,0 +1,3 @@
+* Traduções atualizadas
+* Compilação com o SDK do Android 16
+* Adicionado suporte a idiomas por aplicativo

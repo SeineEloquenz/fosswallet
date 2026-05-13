@@ -62,7 +62,7 @@
     <string name="selected">Seçildi</string>
     <string name="filter">Şuna göre sırala</string>
     <string name="libraries">Kütüphaneler</string>
-    <string name="compatibility_mode">Uyumluluk Modu</string>
+    <string name="compatibility_mode">Uyumluluk modu</string>
     <string name="create_pass">Kart oluştur</string>
     <string name="pass_name">Kart adı</string>
     <string name="barcode_value">Barkod değeri</string>

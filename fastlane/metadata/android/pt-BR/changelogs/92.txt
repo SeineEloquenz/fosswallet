@@ -1,0 +1,3 @@
+* Adicionar suporte à etiquetação de passes
+* Reestruturar a interface de usuário de pesquisa/filtro
+* Corrigir um bug que fazia com que a barra de pesquisa desaparecesse até o aplicativo ser reiniciado

@@ -105,4 +105,5 @@
     <string name="the_archive">Archivo</string>
     <string name="no_search_results">Sin resultados de búsqueda</string>
     <string name="pass_expiration_date">Fecha de validez</string>
+    <string name="attachments">Adjuntos</string>
 </resources>

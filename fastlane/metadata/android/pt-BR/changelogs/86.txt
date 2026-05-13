@@ -1,0 +1,9 @@
+* Adicionar o WebView do iOS para baixar passes
+* Adicionar a funcionalidade de criação inicial de passes. Observação: por enquanto, esses passes não podem ser exportados
+* Suporte ao clique prolongado nos passes para abrir diretamente o código de barras em tela cheia
+* Suporte a valores atribuídos nos campos dos passes
+* Suporte ao campo relevantDates
+* Agrupar por padrão os passes importados de .pkpasses
+* Atualizar traduções
+
+* Corrigir problema na importação de alguns arquivos .pkpasses

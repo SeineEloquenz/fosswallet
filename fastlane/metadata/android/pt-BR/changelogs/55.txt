@@ -1,0 +1,4 @@
+* Melhorar o feedback quando as atualizações do passe falham
+* Ocultar o botão Adicionar ao calendário se não houver nenhuma data no passe
+* Atualizar as traduções
+* Corrigir um problema de layout em que os campos eram exibidos fora da tela

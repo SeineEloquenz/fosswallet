@@ -1,0 +1,4 @@
+* Adicionar widget para filtrar a lista de passes
+* Melhorar a formatação da data
+* Armazenar os arquivos originais dos passes no armazenamento do aplicativo e permitir a reexportação do arquivo
+* Corrigir o problema que permitia clicar no cartão na visualização de passes

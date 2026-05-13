@@ -1,0 +1,6 @@
+* Mostrar todos os códigos de barras contidos nos passes
+* Permitir campos adicionais no criador de passes
+* Tornar os links adicionais clicáveis durante a importação
+* Reformular o fluxo de adição de passes
+* Permitir o envio de imagens para importação
+* Reformular a seleção de passes para usar toques longos em vez de deslizes

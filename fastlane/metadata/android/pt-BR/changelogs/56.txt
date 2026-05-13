@@ -1,0 +1,1 @@
+* Exibir corretamente os caracteres de retorno e avanço de linha nos campos de passe

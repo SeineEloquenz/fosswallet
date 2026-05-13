@@ -133,4 +133,9 @@
     <string name="permission_read_passes_label">读取凭证</string>
     <string name="permission_read_passes_description">以 Catima 兼容的方式读取您的凭证及其详情，包括条码</string>
     <string name="create_boarding_pass">创建登机牌</string>
+    <string name="attachment_name">附件名称</string>
+    <string name="choose_attachment_name">选择附件名称</string>
+    <string name="add_attachment">添加附件</string>
+    <string name="delete_attachment">删除附件</string>
+    <string name="attachments">附件</string>
 </resources>

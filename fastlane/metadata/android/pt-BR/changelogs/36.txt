@@ -1,0 +1,2 @@
+* Adicionar tradução para o tcheco. Agradecimentos a Fjuro!
+* Usar a localização em inglês da senha se a configuração regional padrão do sistema não estiver incluída na senha

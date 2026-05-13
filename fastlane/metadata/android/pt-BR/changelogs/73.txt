@@ -1,0 +1,7 @@
+* Novo ícone do aplicativo
+* Adicionada tradução para o grego
+* Adicionados indicadores mais claros para a seleção de passes
+* Melhorada a determinação da cor de fundo dos passes
+* Corrigido o problema em que os passes compartilhados de outros aplicativos não ficavam visíveis até a reinicialização do aplicativo
+* Corrigido o problema em que o conteúdo não rolava totalmente para cima quando o teclado na tela estava ativo
+* Atualizadas as traduções
