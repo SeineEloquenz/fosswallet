@@ -34,7 +34,7 @@ android {
         }
     }
     namespace = "nz.eloque.foss_wallet"
-    compileSdk = 36
+    compileSdk = 37
 
     buildFeatures {
         compose = true
@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 107
         versionName = "0.44.0"
 
