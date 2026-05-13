@@ -129,4 +129,13 @@
     <string name="delete_confirmation_message">Eliminare i biglietti selezionati? Questa azione non può essere annullata.</string>
     <string name="the_archive">Archivio</string>
     <string name="show_archived_passes">Mostra pass archiviati</string>
+    <string name="create_boarding_pass">Crea carta d\'imbarco</string>
+    <string name="created_pass_export_warning">Al momento non è possibile esportare i pass creati</string>
+    <string name="attachments">Allegati</string>
+    <string name="add_attachment">Aggiungi allegato</string>
+    <string name="delete_attachment">Elimina allegato</string>
+    <string name="attachment_name">Nome dell\'allegato</string>
+    <string name="choose_attachment_name">Scegli nome dell\'allegato</string>
+    <string name="permission_read_passes_label">Biglietti di lettura</string>
+    <string name="permission_read_passes_description">Leggere i tuoi biglietti e i loro dettagli, inclusi i codici a barre in modo compatibile con Catima</string>
 </resources>

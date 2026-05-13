@@ -1,0 +1,1 @@
+* Corrigir o caso em que uma cor de fundo incorreta para um passe poderia ser atribuída se os logotipos tivessem uma borda totalmente translúcida

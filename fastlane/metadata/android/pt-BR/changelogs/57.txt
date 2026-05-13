@@ -1,0 +1,4 @@
+* Adicionar tradução para o holandês
+* Melhorar as informações sobre os motivos pelos quais as atualizações de passes falham
+* Atualizar as traduções
+* Corrigir a falha ao visualizar os detalhes de uma atualização de passe com falha

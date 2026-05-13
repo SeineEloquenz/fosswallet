@@ -130,4 +130,7 @@
     <string name="the_archive">Архив</string>
     <string name="show_archived_passes">Показать архивированные пропуска</string>
     <string name="created_pass_export_warning">Созданные пропуска не могут быть экспортированы в данный момент</string>
+    <string name="permission_read_passes_label">Считывать пропуска</string>
+    <string name="permission_read_passes_description">Считывание ваших пропусков и их данных, включая штрихкоды, способом, совместимым с Catima</string>
+    <string name="create_boarding_pass">Создать посадочный талон</string>
 </resources>

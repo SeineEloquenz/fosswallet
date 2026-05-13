@@ -1,0 +1,5 @@
+* Redesenhar todas as visualizações de passes para que se alinhem melhor às diretrizes da Apple
+* Aceitar compartilhamentos do PassAndroid
+* Exibir textos alternativos dos códigos de barras
+* Adicionar um botão para desfazer a pesquisa na filtragem de passes
+* Tornar a dica de seleção ao deslizar menos evidente

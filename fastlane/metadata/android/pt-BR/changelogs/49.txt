@@ -1,0 +1,4 @@
+* Adicionar tela de configurações para atualizações de passes
+* Utilizar o conjunto de caracteres do passe e recorrer ao UTF-8 apenas se ele for desconhecido.
+Observação: isso se aplicará apenas aos passes importados a partir desta versão. Os passes antigos continuarão usando o UTF-8 por padrão, a menos que sejam excluídos e reimportados.
+* Corrigir a exibição incorreta do passe caso não haja logotipo ou texto do logotipo

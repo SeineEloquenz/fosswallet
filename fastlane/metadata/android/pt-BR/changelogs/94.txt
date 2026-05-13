@@ -1,0 +1,5 @@
+* Adicionar a digitalização de arquivos de imagem ao criador de passes
+* Exibir o código hexadecimal da cor no criador de etiquetas
+* Adicionar suporte para códigos de barras Code 39 e Code 93
+* Corrigir o problema em que o aumento do brilho não funcionava após sair da visualização de código de barras em tela cheia
+* Corrigir o problema em que apareciam retornos nos passes Eurostar

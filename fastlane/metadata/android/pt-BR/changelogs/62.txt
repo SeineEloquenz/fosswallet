@@ -1,0 +1,1 @@
+* Obter a cor de fundo a partir do logotipo, caso não haja nenhuma definida na passagem

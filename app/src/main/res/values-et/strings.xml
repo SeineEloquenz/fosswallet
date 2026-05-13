@@ -133,4 +133,9 @@
     <string name="permission_read_passes_label">Dokumentide lugemine/avamine</string>
     <string name="permission_read_passes_description">Loe oma dokumente ja nende andmeid, sealhulgas triipkoode, Catimaga ühilduval viisil</string>
     <string name="create_boarding_pass">Loo pardakaart</string>
+    <string name="attachment_name">Manuse nimi</string>
+    <string name="choose_attachment_name">Sisesta manuse nimi</string>
+    <string name="add_attachment">Lisa manus</string>
+    <string name="delete_attachment">Kustuta manus</string>
+    <string name="attachments">Failid/manused</string>
 </resources>

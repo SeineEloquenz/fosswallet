@@ -1,0 +1,6 @@
+* Permitir alguns desvios do padrão JSON durante a importação
+* Permitir adicionar vários passes de uma só vez
+* Adicionar tela de licença de terceiros
+* Adicionar tradução para o chinês (caracteres Han tradicionais)
+* Corrigir alguns espaços internos incorretos na navegação por botões
+* Atualizar traduções

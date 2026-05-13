@@ -1,0 +1,3 @@
+* Concluir a tradução para o hebraico
+* Atualizar as traduções
+* Melhorar o suporte a idiomas com escrita da direita para a esquerda

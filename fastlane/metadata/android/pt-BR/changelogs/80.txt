@@ -1,0 +1,4 @@
+* Adicionar modo de compatibilidade para scanners antigos
+* Corrigir a exibição de imagens verticais em tamanho muito pequeno
+* Corrigir a exibição da ação Arquivar no lugar da ação Desarquivar
+* Atualizar traduções
