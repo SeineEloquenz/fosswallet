@@ -213,7 +213,7 @@ class PassParser(
     private fun parsePassColors(passJson: JSONObject): PassColors? {
         val background = parseColor("backgroundColor", passJson)
         val foreground = parseColor("foregroundColor", passJson)
-        val label = parseColor("labelColor", passJson)
+        val label = parseColor("labelColor", passJson) ?: foreground
         return if (background != null && foreground != null && label != null) {
             PassColors(background, foreground, label)
         } else {
