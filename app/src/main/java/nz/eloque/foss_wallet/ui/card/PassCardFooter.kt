@@ -32,7 +32,6 @@ import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 import nz.eloque.foss_wallet.utils.prettyDate
-import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

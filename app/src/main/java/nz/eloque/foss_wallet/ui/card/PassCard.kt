@@ -59,7 +59,7 @@ fun ShortPassCard(
                 localizedPass = pass,
                 allTags = allTags,
                 readOnly = true,
-                showDates = true
+                showDates = true,
             )
         }
         if (selected) {
