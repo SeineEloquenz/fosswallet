@@ -39,7 +39,6 @@ class ScanViewModel
 
             val headerFields =
                 listOfNotNull(
-                    plainField("group", "Grp", bcbp.checkInSequence),
                     plainField("seat", "Seat", bcbp.seat),
                 )
 
@@ -73,6 +72,24 @@ class ScanViewModel
                         )
                     },
                 )
+            val electronicTicketNumber = bcbp.electronicTicketNumber(0)
+            val etktField =
+                if (electronicTicketNumber != null) {
+                    plainField(
+                        "etkt",
+                        "eTKT",
+                        electronicTicketNumber,
+                    )
+                } else {
+                    null
+                }
+
+            val backFields =
+                listOfNotNull(
+                    plainField("checkInSequence", "Check-in sequence", bcbp.checkInSequence),
+                    plainField("bookingId", "Booking reference", bcbp.pnr),
+                    etktField,
+                )
 
             val pass =
                 PassCreator.create(
@@ -87,6 +104,7 @@ class ScanViewModel
                     primaryFields = primaryFields,
                     secondaryFields = secondaryFields,
                     auxiliaryFields = auxiliaryFields,
+                    backFields = backFields,
                 )!!
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
