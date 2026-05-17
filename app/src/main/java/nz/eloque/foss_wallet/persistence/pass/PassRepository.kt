@@ -64,7 +64,7 @@ class PassRepository
             val id = pass.id
             passDao.insert(pass)
             var passMetadata = passDao.metadata(id) ?: PassMetadata(pass.id)
-            passMetadata = passMetadata.copy(archived = shouldBeAutoArchived(pass, passMetadata))
+            passMetadata = passMetadata.copy(archived = AutoArchiver.shouldBeAutoArchived(pass, passMetadata))
             passDao.insert(passMetadata)
             bitmaps.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
@@ -78,15 +78,6 @@ class PassRepository
             val attachment = Attachment(passId = pass.id, fileName = name)
             attachment.save(context, bytes)
             passDao.insert(attachment)
-        }
-
-        private fun shouldBeAutoArchived(
-            pass: Pass,
-            metadata: PassMetadata,
-            now: Instant = Instant.now(),
-        ): Boolean {
-            val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
-            return metadata.autoArchive && expired
         }
 
         fun insert(group: PassGroup): PassGroup {
