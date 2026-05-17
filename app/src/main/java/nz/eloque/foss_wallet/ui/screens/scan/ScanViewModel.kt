@@ -31,6 +31,7 @@ class ScanViewModel
         @param:ApplicationContext private val context: Context,
         private val passStore: PassStore,
     ) : AndroidViewModel(application) {
+
         suspend fun saveBcbpPass(
             barcode: BarCode,
             bcbp: IataBcbp.Parsed,
@@ -39,7 +40,6 @@ class ScanViewModel
 
             val headerFields =
                 listOfNotNull(
-                    plainField("group", "Grp", bcbp.checkInSequence),
                     plainField("seat", "Seat", bcbp.seat),
                 )
 
@@ -73,6 +73,17 @@ class ScanViewModel
                         )
                     },
                 )
+            val repeated = bcbp.firstLeg.repeatedConditional
+            val etktField = if (repeated != null) {
+                plainField("etkt", "eTKT", repeated.airlineNumericCode + repeated.documentSerialNumber)
+            } else null
+
+            val backFields =
+                listOfNotNull(
+                    plainField("checkInSequence", "Check-in sequence", bcbp.checkInSequence),
+                    plainField("bookingId", "Booking reference", bcbp.pnr),
+                    etktField,
+                )
 
             val pass =
                 PassCreator.create(
@@ -87,6 +98,7 @@ class ScanViewModel
                     primaryFields = primaryFields,
                     secondaryFields = secondaryFields,
                     auxiliaryFields = auxiliaryFields,
+                    backFields = backFields,
                 )!!
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
