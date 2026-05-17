@@ -38,8 +38,8 @@
     <string name="sync_interval">Intervalo de atualização do passe (min)</string>
     <string name="enable">Ativar</string>
     <string name="search">Pesquisar</string>
-    <string name="add_shortcut">Adicionar teclado</string>
-    <string name="shortcut_exists">Atalha já existe!</string>
+    <string name="add_shortcut">Adicionar atalho</string>
+    <string name="shortcut_exists">Atalho já existe!</string>
     <string name="privacy">Privacidade</string>
     <string name="details">Detalhes</string>
     <string name="timeout">Ocorreu um tempo limite durante a chamada ao servidor de atualização</string>

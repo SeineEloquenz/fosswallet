@@ -54,7 +54,7 @@
     <string name="permission_rationale">Utan behörigheten/behörigheterna fungerar FossWallet inte korrekt</string>
     <string name="no_barcode_format_given">Inget streckkodsformat har angetts! Standardinställningen är QR-kod. Denna kod skannas kanske inte korrekt.</string>
     <string name="invalid_pass_toast">Kortet kunde inte laddas. Är du säker på att detta är ett giltigt .pkpass?</string>
-    <string name="sync_interval">Kortuppdateringsintervall (min)</string>
+    <string name="sync_interval">Uppdateringsintervall för kort (min)</string>
     <string name="timeout">En timeout inträffade när uppdateringsservern anropades</string>
     <string name="exception">Ett undantagsfel inträffade när uppdateringsservern anropades</string>
     <string name="status_code">Servern svarade med statusen %1$s</string>

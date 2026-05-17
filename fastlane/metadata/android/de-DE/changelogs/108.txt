@@ -1,0 +1,4 @@
+* Unterstützung für Bild- und PDF-Anhänge
+* Klarere Benennung der Sortieroptionen
+* Fokus wird beim Zurückdrücken von der Filterleiste entfernt
+* Wischsymbol zum Löschen ist nun rot
