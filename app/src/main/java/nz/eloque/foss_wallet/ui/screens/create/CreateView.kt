@@ -167,7 +167,7 @@ fun CreateView(
     val barcodesValid =
         barcodes.isNotEmpty() &&
             barcodes.zip(barCodeModels).all { (draft, model) ->
-                draft.message.isNotEmpty() && barcodeValid(model)
+                draft.message.isNotEmpty() && !model.isNotValid()
             }
     val datesValid = relevantEnd == null || relevantStart != null
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
@@ -244,6 +244,15 @@ fun CreateView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
+                val isNotValid =
+                    barcode.message.isNotEmpty() &&
+                        BarCode(
+                            format = barcode.format,
+                            message = barcode.message,
+                            encoding = Charsets.UTF_8,
+                            altText = barcode.altText.ifBlank { barcode.message },
+                        ).isNotValid()
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -259,27 +268,9 @@ fun CreateView(
                                 }
                         },
                         modifier = Modifier.fillMaxWidth(fraction = 0.72f),
-                        isError =
-                            barcode.message.isNotEmpty() &&
-                                !barcodeValid(
-                                    BarCode(
-                                        format = barcode.format,
-                                        message = barcode.message,
-                                        encoding = Charsets.UTF_8,
-                                        altText = barcode.altText.ifBlank { barcode.message },
-                                    ),
-                                ),
+                        isError = isNotValid,
                         supportingText = {
-                            if (barcode.message.isNotEmpty() &&
-                                !barcodeValid(
-                                    BarCode(
-                                        format = barcode.format,
-                                        message = barcode.message,
-                                        encoding = Charsets.UTF_8,
-                                        altText = barcode.altText.ifBlank { barcode.message },
-                                    ),
-                                )
-                            ) {
+                            if (isNotValid) {
                                 Text(stringResource(R.string.barcode_value_invalid, barcode.format.toString()))
                             }
                         },
@@ -962,8 +953,6 @@ private data class BarcodeDraft(
     val altText: String,
     val format: BarcodeFormat,
 )
-
-private fun barcodeValid(barCode: BarCode): Boolean = barCode.encodeAsBitmap(100, 100, false) != null
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 
