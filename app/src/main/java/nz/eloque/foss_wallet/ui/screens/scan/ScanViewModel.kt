@@ -18,7 +18,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
-import nz.eloque.foss_wallet.utils.linkifyUrls
+import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.toBitmap
 import java.time.ZoneId
 import java.time.format.FormatStyle
@@ -123,7 +123,7 @@ class ScanViewModel
             return PassField(
                 key = key,
                 label = label,
-                content = PassContent.Plain(linkifyUrls(value)),
+                content = PassContent.Plain(linkify(value)),
             )
         }
     }
