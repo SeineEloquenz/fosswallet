@@ -13,6 +13,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,8 @@ import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
+import nz.eloque.foss_wallet.utils.prettyDate
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +43,7 @@ fun PassCardFooter(
     onTagAdd: (Tag) -> Unit = {},
     onTagCreate: (Tag) -> Unit = {},
     readOnly: Boolean = false,
+    showDates: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -59,6 +63,11 @@ fun PassCardFooter(
                 start = interval.startDate,
                 end = interval.endDate,
             )
+            if (showDates) {
+                Text(
+                    text = interval.startDate.prettyDate(),
+                )
+            }
         } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
             val date: PassRelevantDate.Date =
                 pass.relevantDates.filterIsInstance<PassRelevantDate.Date>()[0] as PassRelevantDate.Date
@@ -67,6 +76,11 @@ fun PassCardFooter(
                 start = date.date,
                 end = pass.expirationDate,
             )
+            if (showDates) {
+                Text(
+                    text = date.date.prettyDate(),
+                )
+            }
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
 
