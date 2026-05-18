@@ -41,8 +41,6 @@ import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
-const val OPEN_FAB_MENU_REQUEST = "open_fab_menu_request"
-
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +59,11 @@ fun WalletScreen(
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             println("selected file URI $uris")
+            if (uris.isEmpty()) {
+                navController.currentBackStackEntry?.savedStateHandle?.set(OPEN_FAB_MENU_REQUEST, true)
+                return@rememberLauncherForActivityResult
+            }
+
             coroutineScope.launch {
                 loading.value = true
                 withContext(Dispatchers.IO) {

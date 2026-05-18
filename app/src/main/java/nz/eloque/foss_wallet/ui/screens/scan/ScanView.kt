@@ -31,7 +31,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.BarcodesView
-import nz.eloque.foss_wallet.ui.screens.wallet.OPEN_FAB_MENU_REQUEST
+import nz.eloque.foss_wallet.ui.screens.wallet.openWalletFabMenu
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,8 +51,7 @@ fun ScanView(
                 scannedBarcode = it
             },
             onCanceled = {
-                navController.getBackStackEntry(Screen.Wallet.route).savedStateHandle[OPEN_FAB_MENU_REQUEST] = true
-                navController.popBackStack(Screen.Wallet.route, inclusive = false)
+                navController.openWalletFabMenu()
             },
         )
 
