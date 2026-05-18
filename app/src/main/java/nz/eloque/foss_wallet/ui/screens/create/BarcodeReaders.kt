@@ -3,15 +3,18 @@ package nz.eloque.foss_wallet.ui.screens.create
 import zxingcpp.BarcodeReader
 
 object BarcodeReaders {
+    val primary =
+        BarcodeReader(
+            BarcodeReader.Options(
+                tryHarder = true,
+                tryRotate = true,
+                tryInvert = true,
+            ),
+        )
+
     val decoders =
         listOf(
-            BarcodeReader(
-                BarcodeReader.Options(
-                    tryHarder = true,
-                    tryRotate = true,
-                    tryInvert = true,
-                ),
-            ),
+            primary,
             BarcodeReader(
                 BarcodeReader.Options(
                     tryHarder = true,
