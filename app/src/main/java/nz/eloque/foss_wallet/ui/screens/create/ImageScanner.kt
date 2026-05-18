@@ -4,18 +4,8 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import zxingcpp.BarcodeReader
 
 object ImageScanner {
-    private val barcodeReader =
-        BarcodeReader(
-            BarcodeReader.Options(
-                tryHarder = true,
-                tryRotate = true,
-                tryInvert = true,
-            ),
-        )
-
     data class ScanResult(
         val text: String,
         val format: String,
@@ -35,7 +25,7 @@ object ImageScanner {
     }
 
     fun scanFrom(bitmap: Bitmap): ScanResult? {
-        val result = barcodeReader.read(bitmap).firstOrNull() ?: return null
+        val result = BarcodeReaders.primary.read(bitmap).firstOrNull() ?: return null
         val text = result.text?.takeIf { it.isNotBlank() } ?: return null
         return ScanResult(
             text = text,
