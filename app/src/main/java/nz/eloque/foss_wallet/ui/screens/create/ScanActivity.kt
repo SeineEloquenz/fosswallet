@@ -80,38 +80,6 @@ class ScanActivity : AppCompatActivity() {
     private var isCameraBound = false
     private var analyzedFrameCount = 0
     private val cameraExecutor = Executors.newSingleThreadExecutor()
-    private val barcodeReaders =
-        listOf(
-            BarcodeReader(
-                BarcodeReader.Options(
-                    tryHarder = true,
-                    tryRotate = true,
-                    tryInvert = true,
-                ),
-            ),
-            BarcodeReader(
-                BarcodeReader.Options(
-                    tryHarder = true,
-                    tryRotate = true,
-                    tryInvert = true,
-                    tryDenoise = true,
-                    tryDownscale = false,
-                    binarizer = BarcodeReader.Binarizer.GLOBAL_HISTOGRAM,
-                ),
-            ),
-        )
-    private val symbolLocator =
-        BarcodeReader(
-            BarcodeReader.Options(
-                tryHarder = true,
-                tryRotate = true,
-                tryInvert = true,
-                tryDenoise = true,
-                tryDownscale = false,
-                returnErrors = true,
-            ),
-        )
-
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             val pickedUri = uri ?: return@registerForActivityResult
@@ -232,7 +200,8 @@ class ScanActivity : AppCompatActivity() {
                     image.use {
                         analyzedFrameCount += 1
                         val decodedResult =
-                            barcodeReaders
+                            BarcodeReaders
+                                .decoders
                                 .asSequence()
                                 .flatMap { reader -> reader.read(it).asSequence() }
                                 .firstOrNull { result -> result.error == null && !result.text.isNullOrBlank() }
@@ -240,7 +209,7 @@ class ScanActivity : AppCompatActivity() {
 
                         if (analyzedFrameCount % 8 != 0) return@use CameraScanResult.NoFeedbackChange
 
-                        val locatedResult = symbolLocator.read(it).firstOrNull()
+                        val locatedResult = BarcodeReaders.symbolLocator.read(it).firstOrNull()
                         if (locatedResult != null) CameraScanResult.SymbolLocated else CameraScanResult.NoSymbol
                     }
                 } catch (_: RuntimeException) {

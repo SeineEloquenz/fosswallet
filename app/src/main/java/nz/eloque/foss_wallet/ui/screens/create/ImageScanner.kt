@@ -15,39 +15,6 @@ import kotlin.math.hypot
 import kotlin.math.max
 
 object ImageScanner {
-    private val barcodeReaders =
-        listOf(
-            BarcodeReader(
-                BarcodeReader.Options(
-                    tryHarder = true,
-                    tryRotate = true,
-                    tryInvert = true,
-                ),
-            ),
-            BarcodeReader(
-                BarcodeReader.Options(
-                    tryHarder = true,
-                    tryRotate = true,
-                    tryInvert = true,
-                    tryDenoise = true,
-                    tryDownscale = false,
-                    binarizer = BarcodeReader.Binarizer.GLOBAL_HISTOGRAM,
-                ),
-            ),
-        )
-
-    private val symbolLocator =
-        BarcodeReader(
-            BarcodeReader.Options(
-                tryHarder = true,
-                tryRotate = true,
-                tryInvert = true,
-                tryDenoise = true,
-                tryDownscale = false,
-                returnErrors = true,
-            ),
-        )
-
     data class ScanResult(
         val text: String,
         val format: String,
@@ -70,7 +37,8 @@ object ImageScanner {
         scanBitmap(bitmap)?.let { return it }
 
         val locatedResult =
-            symbolLocator
+            BarcodeReaders
+                .symbolLocator
                 .read(bitmap)
                 .firstOrNull()
                 ?: return null
@@ -84,10 +52,10 @@ object ImageScanner {
     }
 
     private fun scanBitmap(bitmap: Bitmap): ScanResult? {
-        barcodeReaders.forEachIndexed { index, reader ->
+        BarcodeReaders.decoders.forEach { reader ->
             val results = reader.read(bitmap)
-            val result = results.firstOrNull { it.error == null } ?: return@forEachIndexed
-            val text = result.text?.takeIf { it.isNotBlank() } ?: return@forEachIndexed
+            val result = results.firstOrNull { it.error == null } ?: return@forEach
+            val text = result.text?.takeIf { it.isNotBlank() } ?: return@forEach
             return ScanResult(
                 text = text,
                 format = result.format.name,
