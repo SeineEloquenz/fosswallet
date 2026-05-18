@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,8 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.components.FabMenu
 import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
+
+const val OPEN_FAB_MENU_REQUEST = "open_fab_menu_request"
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +89,12 @@ fun WalletScreen(
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val openFabMenuRequest =
+        savedStateHandle
+            ?.getStateFlow(OPEN_FAB_MENU_REQUEST, false)
+            ?.collectAsState()
+            ?.value == true
 
     WalletScaffold(
         navController = navController,
@@ -140,6 +149,10 @@ fun WalletScreen(
                 )
             } else {
                 FabMenu(
+                    openMenuRequest = openFabMenuRequest,
+                    onOpenMenuRequestConsumed = {
+                        savedStateHandle?.set(OPEN_FAB_MENU_REQUEST, false)
+                    },
                     items =
                         listOf(
                             FabMenuItem(
