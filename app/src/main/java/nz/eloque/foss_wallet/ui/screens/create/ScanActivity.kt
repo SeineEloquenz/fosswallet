@@ -65,6 +65,7 @@ import java.util.concurrent.Executors
 
 class ScanActivity : AppCompatActivity() {
     companion object {
+        private const val SCANNER_FEEDBACK_MIN_DURATION_MS = 1_000L
         const val EXTRA_RESULT = "scan_result"
         const val EXTRA_RESULT_FORMAT = "scan_result_format"
     }
@@ -79,6 +80,7 @@ class ScanActivity : AppCompatActivity() {
     private var boundCamera: Camera? = null
     private var isCameraBound = false
     private var analyzedFrameCount = 0
+    private var lastSymbolLocatedAt = 0L
     private val cameraExecutor = Executors.newSingleThreadExecutor()
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -216,14 +218,20 @@ class ScanActivity : AppCompatActivity() {
                     return@setAnalyzer
                 }
 
-            if (scanResult == CameraScanResult.SymbolLocated && scannerFeedback != ScannerFeedback.SymbolLocated) {
+            if (scanResult == CameraScanResult.SymbolLocated) {
+                lastSymbolLocatedAt = System.currentTimeMillis()
+                if (scannerFeedback == ScannerFeedback.SymbolLocated) return@setAnalyzer
                 runOnUiThread {
                     scannerFeedback = ScannerFeedback.SymbolLocated
                 }
                 return@setAnalyzer
             }
 
-            if (scanResult == CameraScanResult.NoSymbol && scannerFeedback != ScannerFeedback.None) {
+            if (
+                scanResult == CameraScanResult.NoSymbol &&
+                scannerFeedback != ScannerFeedback.None &&
+                System.currentTimeMillis() - lastSymbolLocatedAt >= SCANNER_FEEDBACK_MIN_DURATION_MS
+            ) {
                 runOnUiThread {
                     scannerFeedback = ScannerFeedback.None
                 }
