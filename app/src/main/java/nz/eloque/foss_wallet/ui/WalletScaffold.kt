@@ -39,6 +39,7 @@ fun WalletScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onNavigateBack: () -> Unit = { navController.popBackStack() },
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -55,7 +56,7 @@ fun WalletScaffold(
                 },
                 navigationIcon = {
                     if (toolWindow) {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = onNavigateBack) {
                             Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                         }
                     }

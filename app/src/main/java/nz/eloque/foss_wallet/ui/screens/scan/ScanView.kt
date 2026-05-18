@@ -31,6 +31,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.BarcodesView
+import nz.eloque.foss_wallet.ui.screens.wallet.openWalletFabMenu
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,9 +46,14 @@ fun ScanView(
     var initialScanHandled by remember { mutableStateOf(false) }
 
     val scanLauncher =
-        ScanLauncher.launch {
-            scannedBarcode = it
-        }
+        ScanLauncher.launch(
+            onScanned = {
+                scannedBarcode = it
+            },
+            onCanceled = {
+                navController.openWalletFabMenu()
+            },
+        )
 
     LaunchedEffect(initialScanHandled) {
         if (!initialScanHandled) {

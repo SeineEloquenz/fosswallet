@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.screens.wallet.openWalletFabMenu
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,10 +37,17 @@ fun AdvancedAddScreen(navController: NavHostController) {
     val clipboard = LocalClipboard.current
     val coroutineScope = rememberCoroutineScope()
 
+    BackHandler {
+        navController.openWalletFabMenu()
+    }
+
     WalletScaffold(
         navController = navController,
         toolWindow = true,
         title = stringResource(R.string.advanced),
+        onNavigateBack = {
+            navController.openWalletFabMenu()
+        },
     ) {
         Column(
             modifier =

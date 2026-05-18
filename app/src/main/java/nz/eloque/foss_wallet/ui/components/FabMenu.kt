@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +33,19 @@ data class FabMenuItem(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FabMenu(items: List<FabMenuItem>) {
+fun FabMenu(
+    items: List<FabMenuItem>,
+    openMenuRequest: Boolean = false,
+    onOpenMenuRequestConsumed: () -> Unit = {},
+) {
     Box {
         var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(openMenuRequest) {
+            if (openMenuRequest) {
+                fabMenuExpanded = true
+                onOpenMenuRequestConsumed()
+            }
+        }
         BackHandler(fabMenuExpanded) { fabMenuExpanded = false }
         FloatingActionButtonMenu(
             modifier = Modifier.align(Alignment.BottomEnd),
