@@ -69,12 +69,12 @@ object ImageScanner {
     fun scanFrom(bitmap: Bitmap): ScanResult? {
         scanBitmap(bitmap)?.let { return it }
 
-        val position =
+        val locatedResult =
             symbolLocator
                 .read(bitmap)
                 .firstOrNull()
-                ?.position
                 ?: return null
+        val position = locatedResult.position
 
         for (correctedBitmap in perspectiveCorrectionCandidates(bitmap, position)) {
             scanBitmap(correctedBitmap)?.let { return it }
@@ -84,17 +84,17 @@ object ImageScanner {
     }
 
     private fun scanBitmap(bitmap: Bitmap): ScanResult? {
-        val result =
-            barcodeReaders
-                .asSequence()
-                .flatMap { it.read(bitmap).asSequence() }
-                .firstOrNull { it.error == null }
-                ?: return null
-        val text = result.text?.takeIf { it.isNotBlank() } ?: return null
-        return ScanResult(
-            text = text,
-            format = result.format.name,
-        )
+        barcodeReaders.forEachIndexed { index, reader ->
+            val results = reader.read(bitmap)
+            val result = results.firstOrNull { it.error == null } ?: return@forEachIndexed
+            val text = result.text?.takeIf { it.isNotBlank() } ?: return@forEachIndexed
+            return ScanResult(
+                text = text,
+                format = result.format.name,
+            )
+        }
+
+        return null
     }
 
     private fun perspectiveCorrectionCandidates(

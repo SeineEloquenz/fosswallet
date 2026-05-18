@@ -13,6 +13,8 @@ import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
@@ -70,18 +72,43 @@ class ScanActivity : AppCompatActivity() {
     private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
     private var isTorchEnabled by mutableStateOf(false)
+    private var scannerFeedback by mutableStateOf(ScannerFeedback.None)
     private var lensFacing by mutableIntStateOf(CameraSelector.LENS_FACING_BACK)
     private var hasDeliveredResult = false
     private var cameraProvider: ProcessCameraProvider? = null
     private var boundCamera: Camera? = null
     private var isCameraBound = false
+    private var analyzedFrameCount = 0
     private val cameraExecutor = Executors.newSingleThreadExecutor()
-    private val barcodeReader =
+    private val barcodeReaders =
+        listOf(
+            BarcodeReader(
+                BarcodeReader.Options(
+                    tryHarder = true,
+                    tryRotate = true,
+                    tryInvert = true,
+                ),
+            ),
+            BarcodeReader(
+                BarcodeReader.Options(
+                    tryHarder = true,
+                    tryRotate = true,
+                    tryInvert = true,
+                    tryDenoise = true,
+                    tryDownscale = false,
+                    binarizer = BarcodeReader.Binarizer.GLOBAL_HISTOGRAM,
+                ),
+            ),
+        )
+    private val symbolLocator =
         BarcodeReader(
             BarcodeReader.Options(
                 tryHarder = true,
                 tryRotate = true,
                 tryInvert = true,
+                tryDenoise = true,
+                tryDownscale = false,
+                returnErrors = true,
             ),
         )
 
@@ -126,6 +153,7 @@ class ScanActivity : AppCompatActivity() {
                 QrScannerContent(
                     permissionState = cameraPermissionState,
                     isTorchEnabled = isTorchEnabled,
+                    scannerFeedback = scannerFeedback,
                     onPreviewReady = { view ->
                         previewView = view
                         if (cameraPermissionState == CameraPermissionState.Granted) {
@@ -179,9 +207,17 @@ class ScanActivity : AppCompatActivity() {
                 it.surfaceProvider = boundPreviewView.surfaceProvider
             }
 
+        val resolutionSelector =
+            ResolutionSelector
+                .Builder()
+                .setAllowedResolutionMode(ResolutionSelector.PREFER_HIGHER_RESOLUTION_OVER_CAPTURE_RATE)
+                .setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY)
+                .build()
+
         val analyzer =
             ImageAnalysis
                 .Builder()
+                .setResolutionSelector(resolutionSelector)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
@@ -191,14 +227,43 @@ class ScanActivity : AppCompatActivity() {
                 return@setAnalyzer
             }
 
-            // Prevent crashes due to failing barcode reader
-            val result =
+            val scanResult =
                 try {
-                    image.use { barcodeReader.read(it).firstOrNull() }
+                    image.use {
+                        analyzedFrameCount += 1
+                        val decodedResult =
+                            barcodeReaders
+                                .asSequence()
+                                .flatMap { reader -> reader.read(it).asSequence() }
+                                .firstOrNull { result -> result.error == null && !result.text.isNullOrBlank() }
+                        if (decodedResult != null) return@use CameraScanResult.Decoded(decodedResult)
+
+                        if (analyzedFrameCount % 8 != 0) return@use CameraScanResult.NoFeedbackChange
+
+                        val locatedResult = symbolLocator.read(it).firstOrNull()
+                        if (locatedResult != null) CameraScanResult.SymbolLocated else CameraScanResult.NoSymbol
+                    }
                 } catch (_: RuntimeException) {
                     return@setAnalyzer
                 }
-            val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
+
+            if (scanResult == CameraScanResult.SymbolLocated && scannerFeedback != ScannerFeedback.SymbolLocated) {
+                runOnUiThread {
+                    scannerFeedback = ScannerFeedback.SymbolLocated
+                }
+                return@setAnalyzer
+            }
+
+            if (scanResult == CameraScanResult.NoSymbol && scannerFeedback != ScannerFeedback.None) {
+                runOnUiThread {
+                    scannerFeedback = ScannerFeedback.None
+                }
+                return@setAnalyzer
+            }
+
+            val result = (scanResult as? CameraScanResult.Decoded)?.result ?: return@setAnalyzer
+            val text = result.text!!.takeIf { it.isNotBlank() } ?: return@setAnalyzer
+
             // Prevent crashes due to unsupported formats in zxing
             val format =
                 try {
@@ -297,10 +362,28 @@ private enum class CameraPermissionState {
     Denied,
 }
 
+private enum class ScannerFeedback {
+    None,
+    SymbolLocated,
+}
+
+private sealed class CameraScanResult {
+    data object NoFeedbackChange : CameraScanResult()
+
+    data object NoSymbol : CameraScanResult()
+
+    data object SymbolLocated : CameraScanResult()
+
+    data class Decoded(
+        val result: BarcodeReader.Result,
+    ) : CameraScanResult()
+}
+
 @Composable
 private fun QrScannerContent(
     permissionState: CameraPermissionState,
     isTorchEnabled: Boolean,
+    scannerFeedback: ScannerFeedback,
     onPreviewReady: (PreviewView) -> Unit,
     onRequestCameraPermission: () -> Unit,
     onOpenGallery: () -> Unit,
@@ -322,6 +405,13 @@ private fun QrScannerContent(
                 )
 
                 ScannerOverlay(modifier = Modifier.fillMaxSize())
+                ScannerFeedbackChip(
+                    scannerFeedback = scannerFeedback,
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 96.dp),
+                )
             }
 
             CameraPermissionState.Requesting,
@@ -419,6 +509,27 @@ private fun QrScannerContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ScannerFeedbackChip(
+    scannerFeedback: ScannerFeedback,
+    modifier: Modifier = Modifier,
+) {
+    if (scannerFeedback == ScannerFeedback.None) return
+
+    Box(
+        modifier =
+            modifier
+                .clip(CircleShape)
+                .background(Color.White.copy(alpha = 0.92f))
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.barcode_detected_keep_steady),
+            color = Color.Black,
+        )
     }
 }
 
