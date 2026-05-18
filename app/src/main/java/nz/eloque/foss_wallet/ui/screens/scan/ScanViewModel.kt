@@ -58,7 +58,7 @@ class ScanViewModel
 
             val auxiliaryFields =
                 listOfNotNull(
-                    plainField("flight", "Flight", bcbp.flightCode()),
+                    plainField("flight", "Flight", bcbp.flightCode),
                     flightDate?.let { flightDate ->
                         PassField(
                             key = "date",
@@ -80,7 +80,7 @@ class ScanViewModel
                     type = PassType.Boarding(TransitType.AIR),
                     barCode = barcode,
                     organization = bcbp.carrierCode,
-                    serialNumber = bcbp.ticketIndicator,
+                    serialNumber = bcbp.ticketIndicator ?: barcode.message,
                     relevantDates = flightDate?.let { listOf(PassRelevantDate.Date(it)) } ?: emptyList(),
                     expirationDate = flightDate?.plusDays(2),
                     headerFields = headerFields,
@@ -117,9 +117,9 @@ class ScanViewModel
         private fun plainField(
             key: String,
             label: String,
-            value: String,
+            value: String?,
         ): PassField? {
-            if (value.isBlank()) return null
+            if (value.isNullOrBlank()) return null
             return PassField(
                 key = key,
                 label = label,
