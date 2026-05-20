@@ -27,4 +27,8 @@
     <string name="thumbnail">صورة مصغرة</string>
     <string name="pass_background_color">لون الخلفية</string>
     <string name="attachments">مرفقات</string>
+    <string name="barcode_value">قيمة الرمز الشريطي</string>
+    <string name="barcode_format">تنسيق الرمز الشريطي</string>
+    <string name="logo">الشعار</string>
+    <string name="pass_expiration_date">تاريخ الانتهاء</string>
 </resources>
