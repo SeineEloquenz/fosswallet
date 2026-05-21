@@ -56,7 +56,7 @@ fun PassCardFooter(
 
         if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
             val interval: PassRelevantDate.DateInterval =
-                pass.relevantDates.filterIsInstance<PassRelevantDate.DateInterval>()[0] as PassRelevantDate.DateInterval
+                pass.relevantDates.filterIsInstance<PassRelevantDate.DateInterval>()[0]
             CalendarButton(
                 title = pass.description,
                 start = interval.startDate,
@@ -69,7 +69,7 @@ fun PassCardFooter(
             }
         } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
             val date: PassRelevantDate.Date =
-                pass.relevantDates.filterIsInstance<PassRelevantDate.Date>()[0] as PassRelevantDate.Date
+                pass.relevantDates.filterIsInstance<PassRelevantDate.Date>()[0]
             CalendarButton(
                 title = pass.description,
                 start = date.date,
