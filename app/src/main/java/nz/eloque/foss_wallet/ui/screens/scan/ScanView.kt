@@ -45,9 +45,15 @@ fun ScanView(
     var initialScanHandled by remember { mutableStateOf(false) }
 
     val scanLauncher =
-        ScanLauncher.launch {
+        ScanLauncher.launch(onScanned = {
             scannedBarcode = it
-        }
+        }, onCanceled = {
+            navController.popBackStack(
+                route = Screen.Wallet.route,
+                inclusive = false,
+                saveState = false,
+            )
+        })
 
     LaunchedEffect(initialScanHandled) {
         if (!initialScanHandled) {

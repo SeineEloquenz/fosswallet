@@ -17,40 +17,46 @@ import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 
 object ScanLauncher {
     @Composable
-    fun launch(onScanned: (BarCode) -> Unit): ManagedActivityResultLauncher<Intent, ActivityResult> {
+    fun launch(
+        onScanned: (BarCode) -> Unit,
+        onCanceled: () -> Unit,
+    ): ManagedActivityResultLauncher<Intent, ActivityResult> {
         val context = LocalContext.current
         val resources = LocalResources.current
 
         return rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult(),
             onResult = { activityResult ->
-                if (activityResult.resultCode == Activity.RESULT_OK) {
-                    val resultData = activityResult.data
-                    val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
-                    if (contents != null) {
-                        val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
+                if (activityResult.resultCode != Activity.RESULT_OK) {
+                    onCanceled()
+                    return@rememberLauncherForActivityResult
+                }
 
-                        val scannedFormat =
-                            try {
-                                BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
-                            } catch (_: IllegalArgumentException) {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        resources.getString(R.string.no_barcode_format_given),
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                                BarcodeFormat.QR_CODE
-                            }
-                        val barcode =
-                            BarCode(
-                                message = contents,
-                                altText = contents,
-                                format = scannedFormat,
-                                encoding = Charsets.UTF_8,
-                            )
-                        onScanned(barcode)
-                    }
+                val resultData = activityResult.data
+                val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
+                if (contents != null) {
+                    val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
+
+                    val scannedFormat =
+                        try {
+                            BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
+                        } catch (_: IllegalArgumentException) {
+                            Toast
+                                .makeText(
+                                    context,
+                                    resources.getString(R.string.no_barcode_format_given),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            BarcodeFormat.QR_CODE
+                        }
+                    val barcode =
+                        BarCode(
+                            message = contents,
+                            altText = contents,
+                            format = scannedFormat,
+                            encoding = Charsets.UTF_8,
+                        )
+                    onScanned(barcode)
                 }
             },
         )
