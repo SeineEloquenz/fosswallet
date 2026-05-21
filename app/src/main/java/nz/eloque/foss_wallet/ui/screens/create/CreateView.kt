@@ -175,7 +175,7 @@ fun CreateView(
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
     val scanLauncher =
-        ScanLauncher.launch {
+        ScanLauncher.launch(onScanned = {
             if (activeBarcodeIndex !in barcodes.indices) return@launch
             barcodes =
                 barcodes.mapIndexed { index, barcode ->
@@ -190,7 +190,13 @@ fun CreateView(
                     }
                 }
             detailsExpanded = true
-        }
+        }, onCanceled = {
+            navController.popBackStack(
+                route = Screen.Wallet.route,
+                inclusive = false,
+                saveState = false,
+            )
+        })
 
     if (showLocationPicker) {
         LocationPickerDialog(
