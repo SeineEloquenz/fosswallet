@@ -13,6 +13,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
+import nz.eloque.foss_wallet.utils.prettyDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +42,7 @@ fun PassCardFooter(
     onTagAdd: (Tag) -> Unit = {},
     onTagCreate: (Tag) -> Unit = {},
     readOnly: Boolean = false,
+    showDates: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -53,24 +56,30 @@ fun PassCardFooter(
 
         if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
             val interval: PassRelevantDate.DateInterval =
-                pass.relevantDates.filter {
-                    it is PassRelevantDate.DateInterval
-                }[0] as PassRelevantDate.DateInterval
+                pass.relevantDates.filterIsInstance<PassRelevantDate.DateInterval>()[0]
             CalendarButton(
                 title = pass.description,
                 start = interval.startDate,
                 end = interval.endDate,
             )
+            if (showDates) {
+                Text(
+                    text = interval.startDate.prettyDate(),
+                )
+            }
         } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
             val date: PassRelevantDate.Date =
-                pass.relevantDates.filter {
-                    it is PassRelevantDate.Date
-                }[0] as PassRelevantDate.Date
+                pass.relevantDates.filterIsInstance<PassRelevantDate.Date>()[0]
             CalendarButton(
                 title = pass.description,
                 start = date.date,
                 end = pass.expirationDate,
             )
+            if (showDates) {
+                Text(
+                    text = date.date.prettyDate(),
+                )
+            }
         }
         pass.locations.firstOrNull()?.let { LocationButton(it) }
 
