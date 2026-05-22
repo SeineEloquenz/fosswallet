@@ -57,8 +57,11 @@ fun TagRow(
                 val contentColor = it.contentColor()
                 FilterChipDefaults.filterChipColors().copy(
                     containerColor = it.color,
+                    selectedContainerColor = it.color,
                     labelColor = contentColor,
+                    selectedLabelColor = contentColor,
                     leadingIconColor = contentColor,
+                    selectedLeadingIconColor = contentColor,
                 )
             },
             modifier = Modifier.weight(1f),
