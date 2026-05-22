@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -65,8 +66,8 @@ fun PassContent(
             model = pass.stripFile(context),
             modifier = Modifier.fillMaxWidth(),
         )
-        FieldsRow(pass.secondaryFields)
-        FieldsRow(pass.auxiliaryFields)
+        FieldsRow(pass.secondaryFields, pass.colors?.label ?: Color.Unspecified)
+        FieldsRow(pass.auxiliaryFields, pass.colors?.label ?: Color.Unspecified)
         content()
     }
 }
