@@ -57,6 +57,7 @@ val passFieldContentStyle: TextStyle
 fun PassField(
     field: PassField,
     modifier: Modifier = Modifier,
+    labelColor: Color,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     fontSize: TextUnit = TextUnit.Unspecified,
     maxLines: Int = 1,
@@ -76,6 +77,7 @@ fun PassField(
     ) {
         AbbreviatingText(
             text = field.label?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
+            color = labelColor,
             textAlign = textAlign,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
             useTooltip = isSelectable,
@@ -250,6 +252,7 @@ private fun PreviewPassFieldBack() {
                  Lorem Ipsum
                 """.trimIndent(),
             ),
+        labelColor = Color.Unspecified,
         maxLines = Int.MAX_VALUE,
     )
 }
@@ -264,6 +267,7 @@ private fun PreviewPassFieldBackHtml() {
                 "Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n"
                     .trimIndent(),
             ),
+        labelColor = Color.Unspecified,
         maxLines = Int.MAX_VALUE,
     )
 }
@@ -303,6 +307,7 @@ private fun PreviewAutoSizePassFields() {
         passFieldsData.forEach {
             FieldsRow(
                 fields = it,
+                labelColor = Color.Unspecified,
                 modifier = Modifier.border(Dp.Hairline, Color.Magenta),
             )
         }
