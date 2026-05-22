@@ -52,7 +52,14 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
-            chipColors = { it.color to it.contentColor() },
+            chipColors = {
+                val contentColor = it.contentColor()
+                FilterChipDefaults.filterChipColors().copy(
+                    containerColor = it.color,
+                    labelColor = contentColor,
+                    leadingIconColor = contentColor,
+                )
+            },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
