@@ -24,27 +24,6 @@ data class BarCode(
             it.put("altText", altText)
         }
 
-    fun is1d(): Boolean =
-        when (format) {
-            BarcodeFormat.AZTEC -> false
-            BarcodeFormat.CODABAR -> true
-            BarcodeFormat.CODE_39 -> true
-            BarcodeFormat.CODE_93 -> true
-            BarcodeFormat.CODE_128 -> true
-            BarcodeFormat.DATA_MATRIX -> false
-            BarcodeFormat.EAN_8 -> true
-            BarcodeFormat.EAN_13 -> true
-            BarcodeFormat.ITF -> true
-            BarcodeFormat.MAXICODE -> false
-            BarcodeFormat.PDF_417 -> true
-            BarcodeFormat.QR_CODE -> false
-            BarcodeFormat.RSS_14 -> true
-            BarcodeFormat.RSS_EXPANDED -> true
-            BarcodeFormat.UPC_A -> true
-            BarcodeFormat.UPC_E -> true
-            BarcodeFormat.UPC_EAN_EXTENSION -> true
-        }
-
     fun hasLegacyRepresentation(): Boolean {
         val legacyRepresentation = encode(legacyRendering = true) ?: return false
         val representation = encode(legacyRendering = false) ?: return false
@@ -59,10 +38,12 @@ data class BarCode(
         height: Int = 0,
         legacyRendering: Boolean = false,
     ): BitMatrix? {
-        val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
+        val marginHint = Pair(EncodeHintType.MARGIN, 0)
+        val characterSetHint = Pair(EncodeHintType.CHARACTER_SET, encoding)
+        val encodeHints = if (legacyRendering) mapOf(marginHint) else mapOf(marginHint, characterSetHint)
 
         return try {
-            MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
+            MultiFormatWriter().encode(message, format, width, height, encodeHints)
         } catch (_: Exception) {
             null
         }
