@@ -30,7 +30,7 @@ fun <T> ChipSelector(
     optionLabel: (T) -> String,
     modifier: Modifier = Modifier,
     selectedIcon: ImageVector = Icons.Default.Check,
-    chipColors: (T) -> SelectableChipColors = { FilterChipDefaults.filterChipColors() },
+    optionColors: (T) -> SelectableChipColors = { FilterChipDefaults.filterChipColors() },
 ) {
     val hasSelection = selectedOptions.isNotEmpty()
 
