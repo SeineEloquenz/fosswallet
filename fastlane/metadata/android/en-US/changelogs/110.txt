@@ -1,0 +1,6 @@
+* Show event dates on the wallet view
+* Make links in descriptions clickable
+* Support dashed locale codes (e.g. en-us)
+* Render label colors
+* Slightly optimize barcode display
+* Fix back navigation from scan view
