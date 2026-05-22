@@ -53,7 +53,7 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
-            chipColors = {
+            optionColors = {
                 val contentColor = it.contentColor()
                 FilterChipDefaults.filterChipColors().copy(
                     containerColor = it.color,
