@@ -5,7 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
-import java.util.Locale
+import nz.eloque.foss_wallet.utils.toMapping
 
 private const val CHANGE_MESSAGE_FORMAT = "%@"
 
@@ -40,7 +40,7 @@ data class PassWithMetadata(
     val attachments: List<Attachment>,
 ) {
     fun applyLocalization(locale: String): LocalizedPassWithTags {
-        val mapping = localeMapping(locale)
+        val mapping = localizations.toMapping(locale)
         val localizedPass =
             pass.copy(
                 description = mapping[pass.description]?.text ?: pass.description,
@@ -74,22 +74,4 @@ data class PassWithMetadata(
         } else {
             this
         }
-
-    private fun localeMapping(locale: String): Map<String, PassLocalization> {
-        val availableLanguageTags = localizations.map { it.lang.normalizedLanguageTag() }.distinct()
-        val preferredLanguages = listOf(locale, "en")
-        val bestMatch =
-            Locale.lookupTag(
-                preferredLanguages.mapNotNull { it.normalizedLanguageTag().toLanguageRangeOrNull() },
-                availableLanguageTags,
-            ) ?: "en"
-
-        return localizations
-            .filter { it.lang.normalizedLanguageTag().equals(bestMatch, ignoreCase = true) }
-            .associateBy { it.label }
-    }
-
-    private fun String.normalizedLanguageTag(): String = replace('_', '-')
-
-    private fun String.toLanguageRangeOrNull(): Locale.LanguageRange? = runCatching { Locale.LanguageRange(this) }.getOrNull()
 }

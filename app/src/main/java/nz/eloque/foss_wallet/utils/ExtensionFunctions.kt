@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.createBitmap
+import nz.eloque.foss_wallet.model.PassLocalization
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -26,6 +27,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.LinkedList
+import java.util.Locale
 
 fun <T> JSONArray.map(action: (JSONObject) -> T): List<T> {
     val list: MutableList<T> = LinkedList()
@@ -154,3 +156,19 @@ fun File.getMimeType(): String {
         .getMimeTypeFromExtension(extension)
         ?: "application/octet-stream"
 }
+
+fun List<PassLocalization>.toMapping(locale: String): Map<String, PassLocalization> {
+    val availableLanguageTags = this.map { it.lang() }.distinct()
+    val preferredLanguages = listOf(locale, "en")
+    val bestMatch =
+        Locale.lookupTag(
+            preferredLanguages.mapNotNull { it.toLanguageRangeOrNull() },
+            availableLanguageTags,
+        ) ?: "en"
+
+    return this
+        .filter { it.lang().equals(bestMatch, ignoreCase = true) }
+        .associateBy { it.label }
+}
+
+private fun String.toLanguageRangeOrNull(): Locale.LanguageRange? = runCatching { Locale.LanguageRange(this) }.getOrNull()
