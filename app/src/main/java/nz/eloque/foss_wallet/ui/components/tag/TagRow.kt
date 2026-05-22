@@ -52,6 +52,7 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
+            chipColors = { it.color to it.contentColor() },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
