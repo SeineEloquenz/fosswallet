@@ -13,6 +13,8 @@ object ImageScanner {
                 tryHarder = true,
                 tryRotate = true,
                 tryInvert = true,
+                tryDenoise = true,
+                tryDownscale = true,
             ),
         )
 
