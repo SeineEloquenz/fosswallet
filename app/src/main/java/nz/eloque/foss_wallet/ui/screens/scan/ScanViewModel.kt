@@ -18,7 +18,7 @@ import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
-import nz.eloque.foss_wallet.utils.linkifyUrls
+import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.toBitmap
 import java.time.ZoneId
 import java.time.format.FormatStyle
@@ -39,7 +39,6 @@ class ScanViewModel
 
             val headerFields =
                 listOfNotNull(
-                    plainField("group", "Grp", bcbp.checkInSequence),
                     plainField("seat", "Seat", bcbp.seat),
                 )
 
@@ -73,6 +72,24 @@ class ScanViewModel
                         )
                     },
                 )
+            val electronicTicketNumber = bcbp.electronicTicketNumber(0)
+            val etktField =
+                if (electronicTicketNumber != null) {
+                    plainField(
+                        "etkt",
+                        "eTKT",
+                        electronicTicketNumber,
+                    )
+                } else {
+                    null
+                }
+
+            val backFields =
+                listOfNotNull(
+                    plainField("checkInSequence", "Check-in sequence", bcbp.checkInSequence),
+                    plainField("bookingId", "Booking reference", bcbp.pnr),
+                    etktField,
+                )
 
             val pass =
                 PassCreator.create(
@@ -87,6 +104,7 @@ class ScanViewModel
                     primaryFields = primaryFields,
                     secondaryFields = secondaryFields,
                     auxiliaryFields = auxiliaryFields,
+                    backFields = backFields,
                 )!!
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
@@ -123,7 +141,7 @@ class ScanViewModel
             return PassField(
                 key = key,
                 label = label,
-                content = PassContent.Plain(linkifyUrls(value)),
+                content = PassContent.Plain(linkify(value)),
             )
         }
     }
