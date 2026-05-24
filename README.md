@@ -29,7 +29,7 @@ Features (non-exhaustive):
 ### Gadgetbridge integration
 FossWallet integrates with Gadgetbridge, so that you can use your passes' barcodes on supported gadgets.
 To sync your passes to a gadget, select it in the Gadgetbridge device list, press the cogwheel to
-get to device settings, and go to the ‚Loyalty Cards' menu. There you'll find options to sync passes.
+get to device settings, and go to the 'Loyalty Cards' menu. There you'll find options to sync passes.
 
 ## Installation
 
