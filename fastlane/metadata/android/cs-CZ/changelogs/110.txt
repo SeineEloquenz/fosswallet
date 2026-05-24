@@ -1,0 +1,6 @@
+* Zobrazení dat událostí v zobrazení peněženky
+* Umožnění klikání na odkazy v popisech
+* Podpora kódů lokalit s pomlčkou (např. en-us)
+* Zobrazení barev popisků
+* Mírná optimalizace zobrazení čárových kódů
+* Oprava navigace zpět z obrazovky skenování
