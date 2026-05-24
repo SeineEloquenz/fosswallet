@@ -5,7 +5,7 @@
 >
 > [**Keep Android Open**](https://keepandroidopen.org/).
 
-# <img alt="Logo" src="fosswallet-icon.svg" width="40" height="40"/> FossWallet
+# <img alt="Logo" src="fosswallet-icon.svg" width="36" height="36"/> FossWallet
 
 FossWallet is a free and open source (FOSS) .pkpass application.
 Inspired by the venerable [PassAndroid](https://github.com/ligi/PassAndroid) app,
