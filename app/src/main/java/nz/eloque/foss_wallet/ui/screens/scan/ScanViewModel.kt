@@ -72,23 +72,40 @@ class ScanViewModel
                         )
                     },
                 )
-            val electronicTicketNumber = bcbp.electronicTicketNumber(0)
-            val etktField =
-                if (electronicTicketNumber != null) {
+            val eTicketNumber = bcbp.electronicTicketNumber(0)
+            val eTicketNumberField =
+                if (eTicketNumber != null) {
                     plainField(
                         "etkt",
-                        "eTKT",
-                        electronicTicketNumber,
+                        "e-ticket number",
+                        eTicketNumber,
                     )
                 } else {
                     null
                 }
 
+            val checkInSequenceField =
+                bcbp.checkInSequence?.let {
+                    plainField("checkInSequence", "Check-in sequence", bcbp.checkInSequence)
+                }
+
+            val bookingReferenceField =
+                bcbp.pnr?.let {
+                    plainField("bookingId", "Booking reference", it)
+                }
+
+            val frequentFlyerNumber = bcbp.firstLeg.repeatedConditional?.frequentFlyerNumber
+            val frequentFlyerNumberField =
+                frequentFlyerNumber?.let {
+                    plainField("frequentFlyerNumber", "Frequent flyer number", it)
+                }
+
             val backFields =
                 listOfNotNull(
-                    plainField("checkInSequence", "Check-in sequence", bcbp.checkInSequence),
-                    plainField("bookingId", "Booking reference", bcbp.pnr),
-                    etktField,
+                    bookingReferenceField,
+                    checkInSequenceField,
+                    eTicketNumberField,
+                    frequentFlyerNumberField,
                 )
 
             val pass =
