@@ -118,7 +118,7 @@ fun TagCreator(
                     isError = !isHexValid,
                     singleLine = true,
                     textStyle = TextStyle(fontFamily = FontFamily.Monospace),
-                    modifier = Modifier.width(120.dp),
+                    modifier = Modifier.width(80.dp),
                 )
             }
         }
