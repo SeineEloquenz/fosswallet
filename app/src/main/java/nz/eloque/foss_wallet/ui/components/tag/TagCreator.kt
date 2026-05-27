@@ -12,8 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TonedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,13 +52,16 @@ fun TagCreator(
         var label by remember { mutableStateOf("") }
         var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
         var hexInput by remember { mutableStateOf("ffffff") }
+        var isEditingHex by remember { mutableStateOf(false) }
 
         val hexRegex = Regex("^(?:ff[0-9a-f]{4}|[0-9a-f]{2}ff[0-9a-f]{2}|[0-9a-f]{4}ff)$", RegexOption.IGNORE_CASE)
         val isHexValid = hexInput.matches(hexRegex)
         val valid = label.isNotEmpty() && label.length < 30
 
         LaunchedEffect(colorEnvelope) {
-            hexInput = colorEnvelope.hexCode.drop(2)
+            if (!isEditingHex) {
+                hexInput = colorEnvelope.hexCode.drop(2)
+            }
         }
 
         OutlinedTextField(
@@ -91,9 +94,10 @@ fun TagCreator(
                     controller = controller,
                 )
 
-                OutlinedTextField(
+                TonedTextField(
                     value = hexInput,
                     onValueChange = { input ->
+                        isEditingHex = true
                         hexInput = input
                         if (input.matches(hexRegex)) {
                             val color = Color(
@@ -103,6 +107,7 @@ fun TagCreator(
                             )
                             controller.selectByColor(color, true)
                         }
+                        isEditingHex = false
                     },
                     leadingIcon = {
                         Icon(
