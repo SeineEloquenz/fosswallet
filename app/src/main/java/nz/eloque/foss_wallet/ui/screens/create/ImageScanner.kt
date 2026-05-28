@@ -13,6 +13,9 @@ object ImageScanner {
                 tryHarder = true,
                 tryRotate = true,
                 tryInvert = true,
+                tryDenoise = true,
+                tryDownscale = true,
+                binarizer = BarcodeReader.Binarizer.GLOBAL_HISTOGRAM,
             ),
         )
 
