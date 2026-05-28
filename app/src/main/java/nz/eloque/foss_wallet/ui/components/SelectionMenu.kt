@@ -45,9 +45,10 @@ fun <T, F> SelectionMenu(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
-            singleOptions.forEach { option -> // single select
+            singleOptions.forEach { option ->
+                // single select
                 DropdownMenuItem(
                     text = { Text(singleOptionLabel(option)) },
                     leadingIcon = {
@@ -55,13 +56,14 @@ fun <T, F> SelectionMenu(
                             Icon(Icons.Default.RadioButtonChecked, stringResource(R.string.selected))
                         }
                     },
-                    onClick = { onSingleOptionSelected(option) }
+                    onClick = { onSingleOptionSelected(option) },
                 )
             }
 
             HorizontalDivider()
 
-            multiOptions.forEach { option -> // multi select
+            multiOptions.forEach { option ->
+                // multi select
                 val selected = selectedMultiOptions.contains(option)
                 DropdownMenuItem(
                     text = { Text(multiOptionLabel(option)) },
@@ -70,7 +72,7 @@ fun <T, F> SelectionMenu(
                             Icon(Icons.Default.Check, contentDescription = stringResource(R.string.selected))
                         }
                     },
-                    onClick = { if (selected) onMultiOptionDeselected(option) else onMultiOptionSelected(option) }
+                    onClick = { if (selected) onMultiOptionDeselected(option) else onMultiOptionSelected(option) },
                 )
             }
         }
