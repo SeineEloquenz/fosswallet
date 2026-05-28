@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -33,36 +35,47 @@ import nz.eloque.foss_wallet.ui.components.AbbreviatingText
 fun WalletScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    title: String = stringResource(R.string.wallet),
+    title: String? = null,
     toolWindow: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    filterBar: @Composable RowScope.() -> Unit = {},
+    subRow: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    AbbreviatingText(
-                        title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        maxLines = 1,
-                    )
-                },
-                navigationIcon = {
-                    if (toolWindow) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(R.string.back))
+            Column {
+                TopAppBar(
+                    title = {
+                        if (title != null) {
+                            AbbreviatingText(
+                                title,
+                                style = MaterialTheme.typography.headlineMedium,
+                                maxLines = 1,
+                            )
+                        } else {
+                            Row {
+                                filterBar()
+                            }
                         }
-                    }
-                },
-                actions = actions,
-                scrollBehavior = scrollBehavior,
-            )
+                    },
+                    navigationIcon = {
+                        if (toolWindow) {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = stringResource(R.string.back))
+                            }
+                        }
+                    },
+                    actions = actions,
+                    scrollBehavior = scrollBehavior,
+                )
+                subRow?.let { Row { it() } }
+            }
         },
         contentWindowInsets = WindowInsets.statusBars,
         bottomBar = bottomBar,
