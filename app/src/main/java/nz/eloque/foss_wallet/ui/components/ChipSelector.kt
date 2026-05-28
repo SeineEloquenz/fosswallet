@@ -10,11 +10,13 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SelectableChipColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,47 +32,65 @@ fun <T> ChipSelector(
     optionLabel: (T) -> String,
     modifier: Modifier = Modifier,
     selectedIcon: ImageVector = Icons.Default.Check,
-    optionColors: (T) -> SelectableChipColors = { FilterChipDefaults.filterChipColors() },
+    optionColor: ((T) -> Color)? = null,
 ) {
     val hasSelection = selectedOptions.isNotEmpty()
+    val defaultColor = MaterialTheme.colorScheme.secondaryContainer
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier =
-            modifier
-                .horizontalScroll(rememberScrollState()),
+        modifier = modifier.horizontalScroll(rememberScrollState()),
     ) {
         options.forEach { option ->
-            val selected = selectedOptions.contains(option)
-            val isDimmed = hasSelection && !selected
-            val colors = chipColors(option)
-
-            val containerColor by animateColorAsState(if (isDimmed) colors.containerColor(selected).darken() else colors.containerColor(selected))
-            val labelColor by animateColorAsState(if (isDimmed) colors.labelColor(selected).darken() else colors.labelColor(selected))
-
-            FilterChip(
-                selected = selected,
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = containerColor,
-                    labelColor = labelColor,
-                ),
-                leadingIcon = {
-                    if (selected) {
-                        Icon(
-                            imageVector = selectedIcon,
-                            contentDescription = stringResource(R.string.selected),
-                        )
-                    }
-                },
-                onClick = {
-                    if (selected) {
-                        onOptionDeselected(option)
-                    } else {
-                        onOptionSelected(option)
-                    }
-                },
-                label = { Text(optionLabel(option)) },
+            SelectableChip(
+                option = option,
+                selected = selectedOptions.contains(option),
+                isDimmed = hasSelection && !selectedOptions.contains(option),
+                optionColor = { optionColor?.invoke(it) ?: defaultColor },
+                optionLabel = optionLabel,
+                selectedIcon = selectedIcon,
+                onOptionSelected = onOptionSelected,
+                onOptionDeselected = onOptionDeselected,
             )
         }
     }
+}
+
+@Composable
+private fun <T> SelectableChip(
+    option: T,
+    selected: Boolean,
+    isDimmed: Boolean,
+    optionColor: (T) -> Color,
+    optionLabel: (T) -> String,
+    selectedIcon: ImageVector,
+    onOptionSelected: (T) -> Unit,
+    onOptionDeselected: (T) -> Unit,
+) {
+    val baseColor = optionColor(option)
+    val containerColor by animateColorAsState(if (isDimmed) baseColor.darken() else baseColor)
+    val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
+
+    FilterChip(
+        selected = selected,
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = containerColor,
+            selectedContainerColor = containerColor,
+            labelColor = labelColor,
+            selectedLabelColor = labelColor,
+        ),
+        leadingIcon = {
+            if (selected) {
+                Icon(
+                    imageVector = selectedIcon,
+                    contentDescription = stringResource(R.string.selected),
+                )
+            }
+        },
+        onClick = {
+            if (selected) onOptionDeselected(option)
+            else onOptionSelected(option)
+        },
+        label = { Text(optionLabel(option)) },
+    )
 }

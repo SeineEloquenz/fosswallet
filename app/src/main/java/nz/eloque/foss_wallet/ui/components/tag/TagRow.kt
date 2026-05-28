@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -53,17 +52,7 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
-            optionColors = {
-                val contentColor = it.contentColor()
-                FilterChipDefaults.filterChipColors().copy(
-                    containerColor = it.color,
-                    selectedContainerColor = it.color,
-                    labelColor = contentColor,
-                    selectedLabelColor = contentColor,
-                    leadingIconColor = contentColor,
-                    selectedLeadingIconColor = contentColor,
-                )
-            },
+            optionColor = { it.color },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
