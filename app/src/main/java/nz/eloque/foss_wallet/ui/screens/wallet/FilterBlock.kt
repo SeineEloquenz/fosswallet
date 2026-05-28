@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
@@ -20,7 +20,7 @@ fun FilterBlock(
     tags: Set<Tag>,
 ) {
     val resources = LocalResources.current
-    
+
     val sortOption = walletViewModel.sortOptionState.collectAsState().value
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }

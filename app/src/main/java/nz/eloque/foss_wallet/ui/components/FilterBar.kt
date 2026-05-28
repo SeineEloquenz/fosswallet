@@ -43,7 +43,12 @@ fun FilterBar(
         inputField = {
             SearchBarDefaults.InputField(
                 query = query,
-                leadingIcon = { Icon(imageVector = if (archive) Icons.Default.SearchArchive else Icons.Default.Search, contentDescription = stringResource(R.string.search)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = if (archive) Icons.Default.SearchArchive else Icons.Default.Search,
+                        contentDescription = stringResource(R.string.search),
+                    )
+                },
                 placeholder = { Text(stringResource(R.string.search) + if (archive) "(${stringResource(R.string.archive)})" else "") },
                 onQueryChange = {
                     query = it
