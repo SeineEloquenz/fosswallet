@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -47,9 +48,10 @@ fun FilterBar(
                     Icon(
                         imageVector = if (archive) Icons.Default.SearchArchive else Icons.Default.Search,
                         contentDescription = stringResource(R.string.search),
+                        tint = LocalContentColor.current,
                     )
                 },
-                placeholder = { Text(stringResource(R.string.search) + if (archive) "(${stringResource(R.string.archive)})" else "") },
+                placeholder = { Text(stringResource(R.string.search) + if (archive) " (${stringResource(R.string.archive)})" else "") },
                 onQueryChange = {
                     query = it
                     onSearch.invoke(it)

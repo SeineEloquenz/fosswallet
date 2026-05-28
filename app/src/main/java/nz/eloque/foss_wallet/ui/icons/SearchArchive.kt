@@ -17,7 +17,7 @@ val Icons.Filled.SearchArchive: ImageVector
                 viewportWidth = 24f,
                 viewportHeight = 24f,
             ).apply {
-                path(fill = SolidColor(Color.Unspecified)) {
+                path(fill = SolidColor(Color.Black)) {
                     // Search glass outline
                     moveTo(15.5f, 14f)
                     horizontalLineTo(14.71f)
@@ -45,7 +45,7 @@ val Icons.Filled.SearchArchive: ImageVector
                     scaleX = 0.22f,
                     scaleY = 0.22f,
                 ) {
-                    path(fill = SolidColor(Color.Unspecified)) {
+                    path(fill = SolidColor(Color.Black)) {
                         // Archive icon
                         moveTo(20.54f, 5.23f)
                         lineTo(19.15f, 3.55f)
