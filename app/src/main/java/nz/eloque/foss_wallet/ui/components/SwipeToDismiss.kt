@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.ui.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,13 +7,14 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 @Composable
 fun SwipeToDismiss(
@@ -29,6 +29,7 @@ fun SwipeToDismiss(
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val swipeState = rememberSwipeToDismissBoxState()
+    val coroutineScope = rememberCoroutineScope()
 
     val (background, alignment) =
         when (swipeState.dismissDirection) {
@@ -38,7 +39,7 @@ fun SwipeToDismiss(
         }
 
     SwipeToDismissBox(
-        modifier = Modifier.animateContentSize(),
+        modifier = modifier,
         state = swipeState,
         enableDismissFromStartToEnd = allowRightSwipe,
         enableDismissFromEndToStart = allowLeftSwipe,
@@ -50,32 +51,12 @@ fun SwipeToDismiss(
                 background()
             }
         },
+        onDismiss = { dismissDirection ->
+            if (dismissDirection == SwipeToDismissBoxValue.StartToEnd) onRightSwipe() else onLeftSwipe()
+            coroutineScope.launch { swipeState.reset() }
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
+        },
     ) {
-        Box(
-            modifier = modifier,
-        ) {
-            content()
-        }
-    }
-
-    when (swipeState.currentValue) {
-        SwipeToDismissBoxValue.EndToStart -> {
-            LaunchedEffect(swipeState) {
-                onLeftSwipe()
-                swipeState.snapTo(SwipeToDismissBoxValue.Settled)
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
-            }
-        }
-
-        SwipeToDismissBoxValue.StartToEnd -> {
-            LaunchedEffect(swipeState) {
-                onRightSwipe()
-                swipeState.snapTo(SwipeToDismissBoxValue.Settled)
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
-            }
-        }
-
-        SwipeToDismissBoxValue.Settled -> {
-        }
+        content()
     }
 }

@@ -169,7 +169,10 @@ fun WalletView(
                 selectedPasses = selectedPasses,
             )
         }
-        items(ungrouped) { pass ->
+        items(
+            items = ungrouped,
+            key = { it.pass.id },
+        ) { pass ->
             val isSelectionMode = selectedPasses.isNotEmpty()
             SwipeToDismiss(
                 leftSwipeBackground = {
@@ -182,7 +185,6 @@ fun WalletView(
                 allowRightSwipe = !isSelectionMode,
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
                 onRightSwipe = { passToDelete.value = pass },
-                modifier = Modifier.padding(2.dp),
             ) {
                 ShortPassCard(
                     pass = pass,

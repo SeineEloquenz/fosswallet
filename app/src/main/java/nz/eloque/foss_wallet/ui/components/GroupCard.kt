@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,7 +61,6 @@ fun GroupCard(
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.padding(10.dp),
         ) {
             val pagerState =
                 rememberPagerState(
@@ -69,6 +69,7 @@ fun GroupCard(
                 )
             HorizontalPager(
                 state = pagerState,
+                contentPadding = PaddingValues(10.dp),
                 pageSpacing = 28.dp,
             ) { index ->
                 val item = passes[index]
