@@ -40,13 +40,14 @@ fun <T> ChipSelector(
                 .horizontalScroll(rememberScrollState()),
     ) {
         options.forEach { option ->
+            val chipColor = optionColor(option)
             val selected = selectedOptions.contains(option)
             val isDarken = !selected && selectedOptions.isNotEmpty()
             val containerColor by animateColorAsState(
                 targetValue =
-                    if (isDarken) optionColor.darken() else optionColor,
+                    if (isDarken) chipColor.darken() else chipColor,
             )
-            val labelColor = if (optionColor.luminance() > 0.5f) Color.Black else Color.White
+            val labelColor = if (chipColor.luminance() > 0.5f) Color.Black else Color.White
 
             FilterChip(
                 selected = selected,
