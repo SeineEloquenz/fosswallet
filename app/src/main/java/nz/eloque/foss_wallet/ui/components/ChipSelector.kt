@@ -33,8 +33,6 @@ fun <T> ChipSelector(
     selectedIcon: ImageVector = Icons.Default.Check,
     optionColor: (T) -> Color = { Color.Black },
 ) {
-    val hasSelection = selectedOptions.isNotEmpty()
-
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier =
@@ -43,7 +41,7 @@ fun <T> ChipSelector(
     ) {
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
-            val isDarken = hasSelection && !selected
+            val isDarken = !selected && selectedOptions.isNotEmpty()
             val containerColor by animateColorAsState(
                 targetValue =
                     if (isDarken) optionColor.darken() else optionColor,
