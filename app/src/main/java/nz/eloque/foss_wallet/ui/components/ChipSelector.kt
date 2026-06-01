@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,7 +34,6 @@ fun <T> ChipSelector(
     optionColor: ((T) -> Color)? = null,
 ) {
     val hasSelection = selectedOptions.isNotEmpty()
-    val defaultColor = MaterialTheme.colorScheme.secondaryContainer
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -46,7 +44,7 @@ fun <T> ChipSelector(
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
             val isDarken = hasSelection && !selected
-            val baseColor = optionColor?.invoke(option) ?: defaultColor
+            val baseColor = optionColor?.invoke(option) ?: Color.Black
             val containerColor by animateColorAsState(
                 targetValue =
                     if (isDarken) baseColor.darken() else baseColor,
