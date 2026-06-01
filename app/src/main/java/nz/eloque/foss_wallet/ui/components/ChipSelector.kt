@@ -42,62 +42,41 @@ fun <T> ChipSelector(
         modifier = modifier.horizontalScroll(rememberScrollState()),
     ) {
         options.forEach { option ->
-            SelectableChip(
-                option = option,
-                selected = selectedOptions.contains(option),
-                isDimmed = hasSelection && !selectedOptions.contains(option),
-                optionColor = { optionColor?.invoke(it) ?: defaultColor },
-                optionLabel = optionLabel,
-                selectedIcon = selectedIcon,
-                onOptionSelected = onOptionSelected,
-                onOptionDeselected = onOptionDeselected,
+            val selected = selectedOptions.contains(option)
+            val isDimmed = hasSelection && !selected
+            val baseColor = optionColor?.invoke(option) ?: defaultColor
+            val containerColor by animateColorAsState(
+                targetValue =
+                    if (isDimmed) baseColor.darken() else baseColor,
+            )
+            val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
+
+            FilterChip(
+                selected = selected,
+                colors =
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = containerColor,
+                        selectedContainerColor = containerColor,
+                        labelColor = labelColor,
+                        selectedLabelColor = labelColor,
+                    ),
+                leadingIcon = {
+                    if (selected) {
+                        Icon(
+                            imageVector = selectedIcon,
+                            contentDescription = stringResource(R.string.selected),
+                        )
+                    }
+                },
+                onClick = {
+                    if (selected) {
+                        onOptionDeselected(option)
+                    } else {
+                        onOptionSelected(option)
+                    }
+                },
+                label = { Text(optionLabel(option)) },
             )
         }
     }
-}
-
-@Composable
-private fun <T> SelectableChip(
-    option: T,
-    selected: Boolean,
-    isDimmed: Boolean,
-    optionColor: (T) -> Color,
-    optionLabel: (T) -> String,
-    selectedIcon: ImageVector,
-    onOptionSelected: (T) -> Unit,
-    onOptionDeselected: (T) -> Unit,
-) {
-    val baseColor = optionColor(option)
-    val containerColor by animateColorAsState(
-        targetValue =
-            if (isDimmed) baseColor.darken() else baseColor,
-    )
-    val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
-
-    FilterChip(
-        selected = selected,
-        colors =
-            FilterChipDefaults.filterChipColors(
-                containerColor = containerColor,
-                selectedContainerColor = containerColor,
-                labelColor = labelColor,
-                selectedLabelColor = labelColor,
-            ),
-        leadingIcon = {
-            if (selected) {
-                Icon(
-                    imageVector = selectedIcon,
-                    contentDescription = stringResource(R.string.selected),
-                )
-            }
-        },
-        onClick = {
-            if (selected) {
-                onOptionDeselected(option)
-            } else {
-                onOptionSelected(option)
-            }
-        },
-        label = { Text(optionLabel(option)) },
-    )
 }
