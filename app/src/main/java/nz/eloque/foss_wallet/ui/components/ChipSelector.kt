@@ -31,7 +31,7 @@ fun <T> ChipSelector(
     optionLabel: (T) -> String,
     modifier: Modifier = Modifier,
     selectedIcon: ImageVector = Icons.Default.Check,
-    optionColor: ((T) -> Color)? = null,
+    optionColor: (T) -> Color = { Color.Black },
 ) {
     val hasSelection = selectedOptions.isNotEmpty()
 
@@ -44,12 +44,11 @@ fun <T> ChipSelector(
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
             val isDarken = hasSelection && !selected
-            val chipColor = optionColor?.invoke(option) ?: Color.Black
             val containerColor by animateColorAsState(
                 targetValue =
-                    if (isDarken) chipColor.darken() else chipColor,
+                    if (isDarken) optionColor.darken() else optionColor,
             )
-            val labelColor = if (chipColor.luminance() > 0.5f) Color.Black else Color.White
+            val labelColor = if (optionColor.luminance() > 0.5f) Color.Black else Color.White
 
             FilterChip(
                 selected = selected,
