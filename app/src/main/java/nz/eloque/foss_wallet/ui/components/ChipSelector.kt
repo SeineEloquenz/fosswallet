@@ -88,8 +88,11 @@ private fun <T> SelectableChip(
             }
         },
         onClick = {
-            if (selected) onOptionDeselected(option)
-            else onOptionSelected(option)
+            if (selected) {
+                onOptionDeselected(option)
+            } else {
+                onOptionSelected(option)
+            }
         },
         label = { Text(optionLabel(option)) },
     )
