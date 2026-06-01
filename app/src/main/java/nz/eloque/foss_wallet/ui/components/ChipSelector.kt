@@ -68,7 +68,9 @@ private fun <T> SelectableChip(
     onOptionDeselected: (T) -> Unit,
 ) {
     val baseColor = optionColor(option)
-    val containerColor by animateColorAsState(if (isDimmed) baseColor.darken() else baseColor)
+    val containerColor by animateColorAsState(
+        if (isDimmed) baseColor.darken() else baseColor,
+    )
     val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
 
     FilterChip(
