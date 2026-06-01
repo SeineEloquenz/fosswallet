@@ -69,18 +69,20 @@ private fun <T> SelectableChip(
 ) {
     val baseColor = optionColor(option)
     val containerColor by animateColorAsState(
-        if (isDimmed) baseColor.darken() else baseColor,
+        targetValue =
+            if (isDimmed) baseColor.darken() else baseColor,
     )
     val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
 
     FilterChip(
         selected = selected,
-        colors = FilterChipDefaults.filterChipColors(
-            containerColor = containerColor,
-            selectedContainerColor = containerColor,
-            labelColor = labelColor,
-            selectedLabelColor = labelColor,
-        ),
+        colors =
+            FilterChipDefaults.filterChipColors(
+                containerColor = containerColor,
+                selectedContainerColor = containerColor,
+                labelColor = labelColor,
+                selectedLabelColor = labelColor,
+            ),
         leadingIcon = {
             if (selected) {
                 Icon(
