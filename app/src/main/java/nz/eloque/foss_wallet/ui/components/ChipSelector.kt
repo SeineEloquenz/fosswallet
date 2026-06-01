@@ -44,12 +44,12 @@ fun <T> ChipSelector(
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
             val isDarken = hasSelection && !selected
-            val baseColor = optionColor?.invoke(option) ?: Color.Black
+            val chipColor = optionColor?.invoke(option) ?: Color.Black
             val containerColor by animateColorAsState(
                 targetValue =
-                    if (isDarken) baseColor.darken() else baseColor,
+                    if (isDarken) chipColor.darken() else chipColor,
             )
-            val labelColor = if (baseColor.luminance() > 0.5f) Color.Black else Color.White
+            val labelColor = if (chipColor.luminance() > 0.5f) Color.Black else Color.White
 
             FilterChip(
                 selected = selected,
