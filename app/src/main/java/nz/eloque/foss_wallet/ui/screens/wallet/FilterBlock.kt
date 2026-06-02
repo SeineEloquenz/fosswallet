@@ -100,7 +100,7 @@ fun FilterBlock(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 val defaultColor = MaterialTheme.colorScheme.secondaryContainer
-                
+
                 ChipSelector(
                     options = PassType.all(),
                     selectedOptions = passTypesToShow,
