@@ -29,9 +29,9 @@ fun <T> ChipSelector(
     onOptionSelected: (T) -> Unit,
     onOptionDeselected: (T) -> Unit,
     optionLabel: (T) -> String,
+    optionColor: (T) -> Color,
     modifier: Modifier = Modifier,
     selectedIcon: ImageVector = Icons.Default.Check,
-    optionColor: (T) -> Color = { Color.Black },
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
