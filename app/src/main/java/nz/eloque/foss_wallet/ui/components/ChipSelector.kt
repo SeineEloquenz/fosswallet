@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -7,14 +8,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.utils.darken
 
 @Composable
 fun <T> ChipSelector(
@@ -23,6 +29,7 @@ fun <T> ChipSelector(
     onOptionSelected: (T) -> Unit,
     onOptionDeselected: (T) -> Unit,
     optionLabel: (T) -> String,
+    optionColor: (T) -> Color,
     modifier: Modifier = Modifier,
     selectedIcon: ImageVector = Icons.Default.Check,
 ) {
@@ -34,8 +41,22 @@ fun <T> ChipSelector(
     ) {
         options.forEach { option ->
             val selected = selectedOptions.contains(option)
+            val chipColor = optionColor(option)
+            val containerColor by animateColorAsState(
+                targetValue =
+                    if (!selected && selectedOptions.isNotEmpty()) chipColor.darken() else chipColor,
+            )
+            val labelColor = if (chipColor.luminance() > 0.5f) Color.Black else Color.White
+
             FilterChip(
                 selected = selected,
+                colors =
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = containerColor,
+                        selectedContainerColor = containerColor,
+                        labelColor = labelColor,
+                        selectedLabelColor = labelColor,
+                    ),
                 leadingIcon = {
                     if (selected) {
                         Icon(
