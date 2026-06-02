@@ -99,13 +99,15 @@ fun FilterBlock(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth(),
             ) {
+                val defaultColor = MaterialTheme.colorScheme.secondaryContainer
+                
                 ChipSelector(
                     options = PassType.all(),
                     selectedOptions = passTypesToShow,
                     onOptionSelected = { passTypesToShow.add(it) },
                     onOptionDeselected = { passTypesToShow.remove(it) },
                     optionLabel = { resources.getString(it.label) },
-                    optionColor = { MaterialTheme.colorScheme.secondaryContainer },
+                    optionColor = { defaultColor },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 TagRow(
