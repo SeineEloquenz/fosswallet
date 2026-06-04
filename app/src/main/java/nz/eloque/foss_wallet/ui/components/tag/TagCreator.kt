@@ -81,19 +81,21 @@ fun TagCreator(
                 controller = controller,
                 initialColor = colorEnvelope.color,
                 onColorChanged = { colorEnvelope = it },
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp),
+                modifier =
+                    Modifier
+                        .width(150.dp)
+                        .height(150.dp),
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.height(150.dp),
             ) {
                 AlphaTile(
-                    modifier = Modifier
-                        .weight(1f)
-                        .width(150.dp)
-                        .clip(RoundedCornerShape(6.dp)),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .width(150.dp)
+                            .clip(RoundedCornerShape(6.dp)),
                     controller = controller,
                 )
 
@@ -105,11 +107,12 @@ fun TagCreator(
                         isEditingHex = true
                         hexInput = input
                         if (input.matches(hexRegex)) {
-                            val color = Color(
-                                red = input.substring(0, 2).toInt(16) / 255f,
-                                green = input.substring(2, 4).toInt(16) / 255f,
-                                blue = input.substring(4, 6).toInt(16) / 255f,
-                            )
+                            val color =
+                                Color(
+                                    red = input.substring(0, 2).toInt(16) / 255f,
+                                    green = input.substring(2, 4).toInt(16) / 255f,
+                                    blue = input.substring(4, 6).toInt(16) / 255f,
+                                )
                             controller.selectByColor(color, true)
                         }
                         isEditingHex = false
