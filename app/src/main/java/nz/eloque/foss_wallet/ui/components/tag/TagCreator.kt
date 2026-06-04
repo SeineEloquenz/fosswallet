@@ -59,10 +59,10 @@ fun TagCreator(
         val hexRegex = Regex("^[0-9a-f]{6}$", RegexOption.IGNORE_CASE)
         val isHexValid =
             hexInput.matches(hexRegex) && (
-                hexInput.substring(0, 2) == "ff" ||
-                    hexInput.substring(2, 4) == "ff" ||
-                    hexInput.substring(4, 6) == "ff"
-            )
+                hexInput.substring(0, 2) == "ff"
+                    || hexInput.substring(2, 4) == "ff"
+                    || hexInput.substring(4, 6) == "ff"
+        )
 
         LaunchedEffect(colorEnvelope) {
             if (!isEditingHex) {
