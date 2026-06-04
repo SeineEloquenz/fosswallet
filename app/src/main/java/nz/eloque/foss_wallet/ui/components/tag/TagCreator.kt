@@ -3,9 +3,9 @@ package nz.eloque.foss_wallet.ui.components.tag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -87,13 +87,17 @@ fun TagCreator(
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.height(150.dp),
             ) {
                 AlphaTile(
                     modifier = Modifier
-                        .size(80.dp)
+                        .weight(1f)
+                        .width(150.dp)
                         .clip(RoundedCornerShape(6.dp)),
                     controller = controller,
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 TextField(
                     value = hexInput,
@@ -119,7 +123,7 @@ fun TagCreator(
                     isError = !isHexValid,
                     singleLine = true,
                     textStyle = TextStyle(fontFamily = FontFamily.Monospace),
-                    modifier = Modifier.width(80.dp),
+                    modifier = Modifier.width(150.dp),
                 )
             }
         }
