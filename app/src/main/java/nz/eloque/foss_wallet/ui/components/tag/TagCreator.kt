@@ -136,7 +136,7 @@ fun TagCreator(
                 val tag = Tag(label.trim(), colorEnvelope.color)
                 onCreate(tag)
             },
-            enabled = valid,
+            enabled = valid && isHexValid,
         ) {
             Text(text = stringResource(R.string.add_tag))
         }
