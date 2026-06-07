@@ -1,15 +1,12 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -66,71 +63,46 @@ fun SubmittableTextField(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            TextField(
-                label = { Text(text = label) },
-                value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
-                singleLine = singleLine,
-                enabled = enabled,
-                isError = isError,
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodyLarge,
-                leadingIcon = {
-                    Icon(
-                        imageVector = imageVector,
-                        contentDescription = contentDescription,
-                        tint = if (buttonEnabled) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        },
-                    )
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = { handleSubmit() },
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                ),
-                supportingText =
-                    if (isError && text.isNotBlank()) {
-                        { Text(stringResource(R.string.invalid_input)) }
-                    } else null,
-            )
-
-            if (errorMessage != null) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = MaterialTheme.colorScheme.error,
-                    ),
+        
+        TextField(
+            label = { Text(text = label) },
+            value = text,
+            onValueChange = {
+                text = it
+                onValueChange(it)
+            },
+            singleLine = singleLine,
+            enabled = enabled,
+            isError = isError,
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyLarge,
+            leadingIcon = {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDescription,
+                    tint = if (buttonEnabled) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
                 )
-            }
-        }
-
-        IconButton(
-            onClick = handleSubmit,
-            enabled = buttonEnabled,
-        ) {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = contentDescription,
-                tint = if (buttonEnabled) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                },
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { handleSubmit() },
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+            ),
+            supportingText =
+                if (isError && text.isNotBlank()) {
+                    { Text(stringResource(R.string.invalid_input)) }
+                } else null,
             )
         }
     }
