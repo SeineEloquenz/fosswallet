@@ -95,10 +95,6 @@ fun SubmittableTextField(
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    disabledIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                    errorIndicatorColor = MaterialTheme.colorScheme.error,
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = { handleSubmit() },
