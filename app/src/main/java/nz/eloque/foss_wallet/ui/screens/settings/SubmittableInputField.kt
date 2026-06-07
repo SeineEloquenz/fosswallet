@@ -83,38 +83,38 @@ fun SubmittableTextField(
                     Icon(
                         imageVector = imageVector,
                         contentDescription = contentDescription,
-                        tint =
-                            if (buttonEnabled) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            },
+                        tint = if (buttonEnabled) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                     )
                 },
-                colors =
-                    TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.primary,
-                    ),
-                keyboardActions =
-                    KeyboardActions(
-                        onDone = { handleSubmit() },
-                    ),
-                keyboardOptions =
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
+                    errorIndicatorColor = MaterialTheme.colorScheme.error,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { handleSubmit() },
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
             )
 
             if (errorMessage != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = errorMessage,
-                    style =
-                        MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.error,
-                        ),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.error,
+                    ),
                 )
             }
         }
@@ -126,12 +126,11 @@ fun SubmittableTextField(
             Icon(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
-                tint =
-                    if (buttonEnabled) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
+                tint = if (buttonEnabled) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
             )
         }
     }
