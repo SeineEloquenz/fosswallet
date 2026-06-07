@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,29 +52,32 @@ fun SubmittableTextField(
     val errorMessage = if (isError && text.isNotBlank()) "Invalid input" else null
     val buttonEnabled = enabled && !isError && text != initialValue
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        TextField(
-            label = { Text(text = label) },
-            value = text,
-            onValueChange = {
-                text = it
-                onValueChange(it)
-            },
-            singleLine = singleLine,
-            enabled = enabled,
-            isError = isError,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyLarge,
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        if (!isError) {
-                            onSubmit(text)
-                            if (clearOnSubmit) text = ""
-                        }
-                    },
-                    enabled = buttonEnabled,
-                ) {
+    val handleSubmit = {
+        if (!isError) {
+            onSubmit(text)
+            if (clearOnSubmit) text = ""
+        }
+    }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            TextField(
+                label = { Text(text = label) },
+                value = text,
+                onValueChange = {
+                    text = it
+                    onValueChange(it)
+                },
+                singleLine = singleLine,
+                enabled = enabled,
+                isError = isError,
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyLarge,
+                leadingIcon = {
                     Icon(
                         imageVector = imageVector,
                         contentDescription = contentDescription,
@@ -82,33 +88,44 @@ fun SubmittableTextField(
                                 MaterialTheme.colorScheme.onSurfaceVariant
                             },
                     )
-                }
-            },
-            colors =
-                TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                ),
-            keyboardActions =
-                KeyboardActions(
-                    onDone = {
-                        if (!isError) {
-                            onSubmit(text)
-                            if (clearOnSubmit) text = ""
-                        }
-                    },
-                ),
-        )
-
-        if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = errorMessage,
-                style =
-                    MaterialTheme.typography.bodySmall.copy(
-                        color = MaterialTheme.colorScheme.error,
+                },
+                colors =
+                    TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        cursorColor = MaterialTheme.colorScheme.primary,
                     ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = { handleSubmit() },
+                    ),
+            )
+
+            if (errorMessage != null) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = errorMessage,
+                    style =
+                        MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.error,
+                        ),
+                )
+            }
+        }
+
+        IconButton(
+            onClick = handleSubmit,
+            enabled = buttonEnabled,
+        ) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+                tint =
+                    if (buttonEnabled) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
             )
         }
     }
