@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import nz.eloque.foss_wallet.R
 
 @Composable
 fun SubmittableTextField(
@@ -51,7 +52,6 @@ fun SubmittableTextField(
         }
     }
 
-    val errorMessage = if (isError && text.isNotBlank()) stringResource(R.string.invalid_input) else null
     val buttonEnabled = enabled && !isError && text != initialValue
 
     val handleSubmit = {
@@ -102,6 +102,10 @@ fun SubmittableTextField(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                 ),
+                supportingText =
+                    if (isError && text.isNotBlank()) {
+                        { Text(stringResource(R.string.invalid_input)) }
+                    } else null,
             )
 
             if (errorMessage != null) {
