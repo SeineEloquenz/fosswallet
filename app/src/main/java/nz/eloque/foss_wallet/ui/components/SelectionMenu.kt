@@ -3,7 +3,7 @@ package nz.eloque.foss_wallet.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material3.DropdownMenu
@@ -69,7 +69,7 @@ fun <T, F> SelectionMenu(
                     text = { Text(multiOptionLabel(option)) },
                     leadingIcon = {
                         if (selected) {
-                            Icon(Icons.Default.Check, contentDescription = stringResource(R.string.selected))
+                            Icon(Icons.Default.CheckBox, contentDescription = stringResource(R.string.selected))
                         }
                     },
                     onClick = { if (selected) onMultiOptionDeselected(option) else onMultiOptionSelected(option) },
