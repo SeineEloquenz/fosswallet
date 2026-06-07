@@ -73,7 +73,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 initialValue =
                     settings.value.syncInterval.inWholeMinutes
                         .toString(),
-                imageVector = Icons.Default.Save,
+                imageVector = Icons.Default.Update,
                 inputValidator = { isNaturalNumber(it) },
                 onSubmit = {
                     coroutineScope.launch(Dispatchers.IO) {
