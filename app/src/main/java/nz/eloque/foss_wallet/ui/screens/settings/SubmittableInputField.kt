@@ -51,7 +51,7 @@ fun SubmittableTextField(
         }
     }
 
-    val errorMessage = if (isError && text.isNotBlank()) "Invalid input" else null
+    val errorMessage = if (isError && text.isNotBlank()) stringResource(R.string.invalid_input) else null
     val buttonEnabled = enabled && !isError && text != initialValue
 
     val handleSubmit = {
