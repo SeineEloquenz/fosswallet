@@ -1,9 +1,10 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -22,13 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import nz.eloque.foss_wallet.R
 
 @Composable
-fun SubmittableTextField(
-    label: String,
+fun SettingsTextField(
+    title: String,
     imageVector: ImageVector,
     onSubmit: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -49,7 +51,8 @@ fun SubmittableTextField(
         }
     }
 
-    val buttonEnabled = enabled && !isError && text != initialValue
+    val interactionSource = remember { MutableInteractionSource() }
+    val focused by interactionSource.collectIsFocusedAsState()
 
     val handleSubmit = {
         if (!isError) {
@@ -59,13 +62,15 @@ fun SubmittableTextField(
     }
 
     Row(
-        modifier = modifier,
+        modifier =
+            modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        
+        Text(text = title, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+
         TextField(
-            label = { Text(text = label) },
             value = text,
             onValueChange = {
                 text = it
@@ -74,36 +79,46 @@ fun SubmittableTextField(
             singleLine = singleLine,
             enabled = enabled,
             isError = isError,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.weight(.5f),
             textStyle = MaterialTheme.typography.bodyLarge,
+            interactionSource = interactionSource,
             leadingIcon = {
                 Icon(
                     imageVector = imageVector,
                     contentDescription = contentDescription,
-                    tint = if (buttonEnabled) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
+                    tint =
+                        if (!enabled) {
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        } else if (isError) {
+                            MaterialTheme.colorScheme.error
+                        } else if (focused) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                 )
             },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { handleSubmit() },
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-            ),
+            colors =
+                TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onDone = { handleSubmit() },
+                ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
             supportingText =
                 if (isError && text.isNotBlank()) {
                     { Text(stringResource(R.string.invalid_input)) }
-                } else null,
-            )
-        }
+                } else {
+                    null
+                },
+        )
     }
 }
