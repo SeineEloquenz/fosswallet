@@ -71,7 +71,7 @@ fun SettingsTextField(
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(0.6875f)
+            modifier = Modifier.weight(0.6875f),
         )
 
         TextField(
