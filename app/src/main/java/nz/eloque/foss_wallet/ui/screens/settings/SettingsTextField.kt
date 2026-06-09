@@ -68,7 +68,11 @@ fun SettingsTextField(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = title, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(0.6875f)
+        )
 
         TextField(
             value = text,
@@ -79,7 +83,7 @@ fun SettingsTextField(
             singleLine = singleLine,
             enabled = enabled,
             isError = isError,
-            modifier = Modifier.weight(.5f),
+            modifier = Modifier.weight(.3125f),
             textStyle = MaterialTheme.typography.bodyLarge,
             interactionSource = interactionSource,
             leadingIcon = {
