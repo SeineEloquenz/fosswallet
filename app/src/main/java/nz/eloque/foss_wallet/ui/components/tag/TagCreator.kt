@@ -1,5 +1,7 @@
 package nz.eloque.foss_wallet.ui.components.tag
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -103,6 +105,9 @@ fun TagCreator(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                val interactionSource = remember { MutableInteractionSource() }
+                val focused by interactionSource.collectIsFocusedAsState()
+
                 TextField(
                     value = hexInput,
                     onValueChange = { input ->
@@ -119,15 +124,18 @@ fun TagCreator(
                         }
                         isEditingHex = false
                     },
+                    interactionSource = interactionSource,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Tag,
                             contentDescription = null,
                             tint =
-                                if (isHexValid) {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                } else {
+                                if (!isHexValid) {
                                     MaterialTheme.colorScheme.error
+                                } else if (focused) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
                                 },
                         )
                     },
