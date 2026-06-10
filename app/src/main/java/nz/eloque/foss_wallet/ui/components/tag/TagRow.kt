@@ -52,6 +52,7 @@ fun TagRow(
                 }
             },
             optionLabel = { it.label },
+            optionColor = { it.color },
             modifier = Modifier.weight(1f),
             selectedIcon = Icons.Default.FilterAlt,
         )
