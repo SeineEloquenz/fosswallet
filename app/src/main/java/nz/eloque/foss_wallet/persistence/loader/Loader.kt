@@ -82,6 +82,11 @@ class Loader(
                             .makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
                             .show()
                     }
+                    is ImportResult.AutoArchived -> {
+                        Toast
+                            .makeText(context, context.getString(R.string.pass_imported_into_the_archive), Toast.LENGTH_LONG)
+                            .show()
+                    }
                     else -> {
                         Toast
                             .makeText(context, context.getString(R.string.pass_imported), Toast.LENGTH_SHORT)

@@ -12,6 +12,7 @@ import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
@@ -19,6 +20,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
+import nz.eloque.foss_wallet.persistence.pass.AutoArchiver
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import java.util.Locale
@@ -53,17 +55,28 @@ class PassStore
             passRepository.insert(pass, bitmaps, null)
         }
 
-        suspend fun add(loadResult: PassLoadResult): ImportResult {
-            val existing = passRepository.findById(loadResult.pass.pass.id)
-            val result = if (existing != null) ImportResult.Replaced else ImportResult.New
-
+    suspend fun add(loadResult: PassLoadResult): ImportResult {
+        val existing = passRepository.findById(loadResult.pass.pass.id)
+        if (existing != null) {
             insert(loadResult)
-            if (loadResult.pass.pass.updatable()) {
-                updateScheduler.scheduleUpdate(loadResult.pass.pass)
-            }
-
-            return result
+            return ImportResult.Replaced
         }
+
+        insert(loadResult)
+
+        passDao.insert(pass)
+        val passMetadata = passDao.metadata(pass.id) ?: PassMetadata(pass.id)
+        if (AutoArchiver.shouldBeAutoArchived(loadResult.pass.pass, passMetadata)) {
+            passRepository.archive(loadResult.pass.pass)
+            return ImportResult.AutoArchived
+        }
+
+        if (loadResult.pass.pass.updatable()) {
+            updateScheduler.scheduleUpdate(loadResult.pass.pass)
+        }
+
+        return ImportResult.New
+    }
 
         suspend fun update(pass: Pass): UpdateResult {
             val updated = PassbookApi.getUpdated(pass)
