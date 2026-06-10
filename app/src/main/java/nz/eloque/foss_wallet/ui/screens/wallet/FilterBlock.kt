@@ -29,13 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import nz.eloque.compose_kit.chip.ChipSelector
+import nz.eloque.compose_kit.components.FilterBar
+import nz.eloque.compose_kit.components.SelectionMenu
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.ui.components.ChipSelector
-import nz.eloque.foss_wallet.ui.components.FilterBar
-import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @Composable

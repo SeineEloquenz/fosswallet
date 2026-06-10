@@ -57,7 +57,6 @@
     <string name="date_added">Ημερομηνία προσθήκης</string>
     <string name="relevant_date_latest">Μεταγενέστερη σχετική ημερομηνία</string>
     <string name="relevant_date_earliest">Νεότερη σχετική ημερομηνία</string>
-    <string name="selected">Επιλεγμένα</string>
     <string name="filter">Ταξινόμηση κατά</string>
     <string name="wallet">Πορτοφόλι</string>
     <string name="pass_deleted">Το πάσο διεγράφη επιτυχημένα</string>
