@@ -10,8 +10,8 @@
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = [ pkgs.android-studio ];
 
-      # Use the local ../compose-kit source via composite build (see settings.gradle.kts).
-      FOSSWALLET_LOCAL_COMPOSE_KIT = "true";
+      # Path to the local compose-kit checkout; enables the composite build (see settings.gradle.kts).
+      FOSSWALLET_LOCAL_COMPOSE_KIT = "../compose-kit";
     };
 
   };
