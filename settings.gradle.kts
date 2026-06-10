@@ -30,3 +30,11 @@ buildCache {
 
 rootProject.name = "FossWallet"
 include(":app")
+
+if (providers.environmentVariable("FOSSWALLET_LOCAL_COMPOSE_KIT").map { it.toBoolean() }.getOrElse(false)) {
+    includeBuild("../compose-kit") {
+        dependencySubstitution {
+            substitute(module("com.github.SeineEloquenz:compose-kit")).using(project(":lib"))
+        }
+    }
+}

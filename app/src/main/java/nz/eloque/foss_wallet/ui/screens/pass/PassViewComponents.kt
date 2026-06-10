@@ -38,14 +38,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import nz.eloque.compose_kit.dialog.FullscreenDialog
+import nz.eloque.compose_kit.effect.UpdateBrightness
+import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.FullscreenDialog
-import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
 
 @Composable

@@ -54,7 +54,7 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
-import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
+import nz.eloque.compose_kit.components.SwipeToDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

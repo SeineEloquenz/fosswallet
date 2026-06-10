@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.ui.components.SelectionIndicator
+import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.foss_wallet.utils.darken
 
 @Composable

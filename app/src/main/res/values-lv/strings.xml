@@ -22,7 +22,6 @@
     <string name="barcode_position_bottom">Apakšgalā</string>
     <string name="archive">Arhivēt</string>
     <string name="export">Izgūt</string>
-    <string name="selected">Atlasītās</string>
     <string name="request_permissions">Pieprasīt atļauju</string>
     <string name="serial_number">Sērijas numurs</string>
     <string name="add_pass">Pievienot caurlaidi</string>

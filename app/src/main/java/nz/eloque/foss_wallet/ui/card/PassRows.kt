@@ -21,7 +21,7 @@ import coil.compose.AsyncImage
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.components.FairRow
+import nz.eloque.compose_kit.layout.FairRow
 
 @Composable
 fun HeaderRow(

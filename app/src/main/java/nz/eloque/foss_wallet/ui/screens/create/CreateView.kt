@@ -88,9 +88,9 @@ import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.components.ImagePicker
+import nz.eloque.compose_kit.picker.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
-import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
+import nz.eloque.compose_kit.input.ComboBox
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

@@ -35,7 +35,6 @@
     <string name="more_options">Més opcions</string>
     <string name="relevant_date_latest">Data rellevant més recent</string>
     <string name="relevant_date_earliest">Data rellevant més antiga</string>
-    <string name="selected">Seleccionat</string>
     <string name="barcode_value_invalid">El valor proporcionat no és un codi %1$s vàlid</string>
     <string name="libraries">Biblioteques</string>
     <string name="filter">Ordena per</string>

@@ -27,8 +27,8 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.Tag
+import nz.eloque.compose_kit.chip.ChipRow
 import nz.eloque.foss_wallet.ui.components.CalendarButton
-import nz.eloque.foss_wallet.ui.components.ChipRow
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 import nz.eloque.foss_wallet.utils.prettyDate

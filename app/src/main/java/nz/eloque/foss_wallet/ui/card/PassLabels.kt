@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.FairRow
-import nz.eloque.foss_wallet.ui.components.findMaxAllowedWidth
+import nz.eloque.compose_kit.input.AbbreviatingText
+import nz.eloque.compose_kit.layout.FairRow
+import nz.eloque.compose_kit.layout.findMaxAllowedWidth
 
 private val linkStyle =
     TextLinkStyles(

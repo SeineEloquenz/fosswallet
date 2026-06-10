@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
+import nz.eloque.compose_kit.input.AbbreviatingText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
