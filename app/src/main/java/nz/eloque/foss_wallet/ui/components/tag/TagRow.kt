@@ -19,9 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import nz.eloque.compose_kit.chip.ChipSelector
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.compose_kit.chip.ChipSelector
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
