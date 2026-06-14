@@ -32,7 +32,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.compose_kit.ui.components.FilterBar
+import nz.eloque.compose_kit.components.FilterBar
 import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
