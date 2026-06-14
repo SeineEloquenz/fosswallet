@@ -64,7 +64,6 @@
     <string name="n_passes_imported">%1$d kort importerades</string>
     <string name="pass_deleted">Kortet har tagits bort</string>
     <string name="pass_imported">Kortet har importerats</string>
-    <string name="selected">Markerat</string>
     <string name="webview">Öppna URL</string>
     <string name="create_pass">Skapa kort</string>
     <string name="pass_name">Kortnamn</string>

@@ -25,6 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import nz.eloque.compose_kit.components.Section
+import nz.eloque.compose_kit.effect.ForceOrientation
+import nz.eloque.compose_kit.effect.Orientation
+import nz.eloque.compose_kit.picker.FilePicker
+import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -37,11 +42,6 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.AttachmentList
-import nz.eloque.foss_wallet.ui.components.FilePicker
-import nz.eloque.foss_wallet.ui.components.Section
-import nz.eloque.foss_wallet.ui.effects.ForceOrientation
-import nz.eloque.foss_wallet.ui.effects.Orientation
-import nz.eloque.foss_wallet.ui.screens.settings.SettingsSwitch
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)

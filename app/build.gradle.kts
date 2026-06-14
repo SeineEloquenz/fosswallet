@@ -160,4 +160,6 @@ dependencies {
     implementation(libs.color.picker)
 
     implementation(libs.bcbp.parser)
+
+    implementation(libs.compose.kit)
 }
