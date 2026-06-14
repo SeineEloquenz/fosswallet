@@ -55,28 +55,28 @@ class PassStore
             passRepository.insert(pass, bitmaps, null)
         }
 
-    suspend fun add(loadResult: PassLoadResult): ImportResult {
-        val existing = passRepository.findById(loadResult.pass.pass.id)
-        if (existing != null) {
+        suspend fun add(loadResult: PassLoadResult): ImportResult {
+            val existing = passRepository.findById(loadResult.pass.pass.id)
+            if (existing != null) {
+                insert(loadResult)
+                return ImportResult.Replaced
+            }
+
             insert(loadResult)
-            return ImportResult.Replaced
+
+            passDao.insert(pass)
+            val passMetadata = passDao.metadata(pass.id) ?: PassMetadata(pass.id)
+            if (AutoArchiver.shouldBeAutoArchived(loadResult.pass.pass, passMetadata)) {
+                passRepository.archive(loadResult.pass.pass)
+                return ImportResult.AutoArchived
+            }
+
+            if (loadResult.pass.pass.updatable()) {
+                updateScheduler.scheduleUpdate(loadResult.pass.pass)
+            }
+
+            return ImportResult.New
         }
-
-        insert(loadResult)
-
-        passDao.insert(pass)
-        val passMetadata = passDao.metadata(pass.id) ?: PassMetadata(pass.id)
-        if (AutoArchiver.shouldBeAutoArchived(loadResult.pass.pass, passMetadata)) {
-            passRepository.archive(loadResult.pass.pass)
-            return ImportResult.AutoArchived
-        }
-
-        if (loadResult.pass.pass.updatable()) {
-            updateScheduler.scheduleUpdate(loadResult.pass.pass)
-        }
-
-        return ImportResult.New
-    }
 
         suspend fun update(pass: Pass): UpdateResult {
             val updated = PassbookApi.getUpdated(pass)
