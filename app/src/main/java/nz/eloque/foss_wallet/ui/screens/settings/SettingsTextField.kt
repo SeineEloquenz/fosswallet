@@ -50,6 +50,7 @@ fun SettingsTextField(
             inputValidator = inputValidator,
             initialValue = initialValue,
             contentDescription = contentDescription,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
     }
 }
