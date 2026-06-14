@@ -87,7 +87,6 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                     }
                 },
                 enabled = settings.value.enableSync,
-                clearOnSubmit = false,
             )
         }
         Section(
