@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
@@ -77,19 +75,21 @@ fun TagCreator(
                 controller = controller,
                 initialColor = colorEnvelope.color,
                 onColorChanged = { colorEnvelope = it },
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp),
+                modifier =
+                    Modifier
+                        .width(150.dp)
+                        .height(150.dp),
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.height(150.dp),
             ) {
                 AlphaTile(
-                    modifier = Modifier
-                        .weight(1f)
-                        .width(150.dp)
-                        .clip(RoundedCornerShape(6.dp)),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .width(150.dp)
+                            .clip(RoundedCornerShape(6.dp)),
                     controller = controller,
                 )
 
@@ -103,16 +103,18 @@ fun TagCreator(
                     onValueChange = {
                         hexInput = it
                         if (it.matches(hexRegex)) {
-                            val color = Color(
-                                red = it.substring(0, 2).toInt(16) / 255f,
-                                green = it.substring(2, 4).toInt(16) / 255f,
-                                blue = it.substring(4, 6).toInt(16) / 255f,
-                            )
+                            val color =
+                                Color(
+                                    red = it.substring(0, 2).toInt(16) / 255f,
+                                    green = it.substring(2, 4).toInt(16) / 255f,
+                                    blue = it.substring(4, 6).toInt(16) / 255f,
+                                )
                             controller.selectByColor(color, true)
                         }
                     },
                     inputValidator = { it.matches(hexRegex) && listOf(0, 2, 4).any { i -> it.substring(i, i + 2) == "ff" } },
                     modifier = Modifier.width(150.dp),
+                    textStyle = TextStyle(fontFamily = FontFamily.Monospace),
                 )
             }
         }
