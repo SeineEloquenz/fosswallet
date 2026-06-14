@@ -17,11 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import nz.eloque.foss_wallet.components.FilterBar
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.components.FilterBar
 import nz.eloque.foss_wallet.ui.screens.wallet.FilterBlock
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
@@ -47,7 +47,7 @@ fun ArchiveScreen(
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
                 modifier = Modifier.weight(1f),
-                archive = true,
+                chip = stringResource(R.string.the_archive),
             )
         },
         toolWindow = true,
