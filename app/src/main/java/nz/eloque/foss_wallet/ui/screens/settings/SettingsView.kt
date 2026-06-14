@@ -33,9 +33,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.components.Section
 import nz.eloque.compose_kit.input.ComboBox
-import nz.eloque.compose_kit.input.SubmittableTextField
 import nz.eloque.compose_kit.settings.SettingsButton
 import nz.eloque.compose_kit.settings.SettingsSwitch
+import nz.eloque.compose_kit.settings.SettingsTextField
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.share
