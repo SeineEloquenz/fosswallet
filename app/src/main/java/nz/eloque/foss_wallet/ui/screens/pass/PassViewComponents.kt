@@ -6,14 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -38,14 +35,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import nz.eloque.compose_kit.dialog.FullscreenDialog
+import nz.eloque.compose_kit.effect.UpdateBrightness
+import nz.eloque.compose_kit.input.AbbreviatingText
+import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.FullscreenDialog
-import nz.eloque.foss_wallet.ui.effects.UpdateBrightness
 import java.io.File
 
 @Composable
@@ -82,9 +80,10 @@ fun Barcodes(
         }
 
         if (barcodes.size > 1) {
-            BarcodePagerIndicator(
-                selectedItem = pagerState.currentPage,
-                itemCount = barcodes.size,
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                activeColor = LocalContentColor.current,
+                inactiveColor = LocalContentColor.current.copy(alpha = 0.3f),
             )
         }
     }
@@ -174,30 +173,6 @@ private fun BrokenBarcodeWarning() {
         modifier = Modifier.padding(48.dp).size(48.dp),
         tint = Color.Red,
     )
-}
-
-@Composable
-private fun BarcodePagerIndicator(
-    selectedItem: Int,
-    itemCount: Int,
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        repeat(itemCount) { index ->
-            val isSelected = index == selectedItem
-            Box(
-                modifier =
-                    Modifier
-                        .padding(4.dp)
-                        .width(if (isSelected) 14.dp else 8.dp)
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (isSelected) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.3f)),
-            )
-        }
-    }
 }
 
 @Composable

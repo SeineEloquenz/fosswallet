@@ -57,7 +57,6 @@
     <string name="date_added">Fecha en que se añadió</string>
     <string name="relevant_date_latest">Fecha relevante más reciente</string>
     <string name="relevant_date_earliest">Fecha relevante más vieja</string>
-    <string name="selected">Seleccionado</string>
     <string name="filter">Ordenar por</string>
     <string name="color">Color</string>
     <string name="coupon">Cupón</string>

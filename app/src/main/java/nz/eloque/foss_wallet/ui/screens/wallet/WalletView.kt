@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
+import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
@@ -54,7 +55,6 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
-import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,7 +169,10 @@ fun WalletView(
                 selectedPasses = selectedPasses,
             )
         }
-        items(ungrouped) { pass ->
+        items(
+            items = ungrouped,
+            key = { it.pass.id },
+        ) { pass ->
             val isSelectionMode = selectedPasses.isNotEmpty()
             SwipeToDismiss(
                 leftSwipeBackground = {
@@ -182,7 +185,6 @@ fun WalletView(
                 allowRightSwipe = !isSelectionMode,
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
                 onRightSwipe = { passToDelete.value = pass },
-                modifier = Modifier.padding(2.dp),
             ) {
                 ShortPassCard(
                     pass = pass,

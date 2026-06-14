@@ -70,7 +70,6 @@
     <string name="date_added">Date added</string>
     <string name="relevant_date_latest">Latest relevant date</string>
     <string name="relevant_date_earliest">Earliest relevant date</string>
-    <string name="selected">Selected</string>
     <string name="filter">Sort by</string>
     <string name="libraries">Libraries</string>
     <string name="compatibility_mode">Compatibility mode</string>
