@@ -1,7 +1,5 @@
 package nz.eloque.foss_wallet.ui.components.tag
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,12 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +31,7 @@ import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import nz.eloque.compose_kit.input.SimpleTextField
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Tag
 
@@ -57,16 +52,13 @@ fun TagCreator(
         var label by remember { mutableStateOf("") }
         var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
         var hexInput by remember { mutableStateOf("ffffff") }
-        var isEditingHex by remember { mutableStateOf(false) }
 
         val valid = label.isNotEmpty() && label.length < 30
         val hexRegex = Regex("^[0-9a-f]{6}$", RegexOption.IGNORE_CASE)
         val isHexValid = hexInput.matches(hexRegex) && listOf(0, 2, 4).any { hexInput.substring(it, it + 2) == "ff" }
 
         LaunchedEffect(colorEnvelope) {
-            if (!isEditingHex) {
-                hexInput = colorEnvelope.hexCode.drop(2)
-            }
+            hexInput = colorEnvelope.hexCode.drop(2)
         }
 
         OutlinedTextField(
@@ -85,71 +77,42 @@ fun TagCreator(
                 controller = controller,
                 initialColor = colorEnvelope.color,
                 onColorChanged = { colorEnvelope = it },
-                modifier =
-                    Modifier
-                        .width(150.dp)
-                        .height(150.dp),
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp),
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.height(150.dp),
             ) {
                 AlphaTile(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .width(150.dp)
-                            .clip(RoundedCornerShape(6.dp)),
+                    modifier = Modifier
+                        .weight(1f)
+                        .width(150.dp)
+                        .clip(RoundedCornerShape(6.dp)),
                     controller = controller,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                val interactionSource = remember { MutableInteractionSource() }
-                val focused by interactionSource.collectIsFocusedAsState()
-
-                TextField(
+                SimpleTextField(
+                    title = "",
+                    imageVector = Icons.Default.Tag,
+                    onSubmit = {},
                     value = hexInput,
-                    onValueChange = { input ->
-                        isEditingHex = true
-                        hexInput = input
-                        if (input.matches(hexRegex)) {
-                            val color =
-                                Color(
-                                    red = input.substring(0, 2).toInt(16) / 255f,
-                                    green = input.substring(2, 4).toInt(16) / 255f,
-                                    blue = input.substring(4, 6).toInt(16) / 255f,
-                                )
+                    onValueChange = {
+                        hexInput = it
+                        if (it.matches(hexRegex)) {
+                            val color = Color(
+                                red = it.substring(0, 2).toInt(16) / 255f,
+                                green = it.substring(2, 4).toInt(16) / 255f,
+                                blue = it.substring(4, 6).toInt(16) / 255f,
+                            )
                             controller.selectByColor(color, true)
                         }
-                        isEditingHex = false
                     },
-                    interactionSource = interactionSource,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Tag,
-                            contentDescription = null,
-                            tint =
-                                if (!isHexValid) {
-                                    MaterialTheme.colorScheme.error
-                                } else if (focused) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                },
-                        )
-                    },
-                    isError = !isHexValid,
-                    singleLine = true,
-                    textStyle = TextStyle(fontFamily = FontFamily.Monospace),
+                    inputValidator = { it.matches(hexRegex) && listOf(0, 2, 4).any { i -> it.substring(i, i + 2) == "ff" } },
                     modifier = Modifier.width(150.dp),
-                    colors =
-                        TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            errorContainerColor = Color.Transparent,
-                        ),
                 )
             }
         }
