@@ -7,11 +7,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
+import nz.eloque.compose_kit.components.ExtendedSelectionMenu
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.ui.components.SelectionMenu
 import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @Composable
@@ -25,7 +25,7 @@ fun FilterBlock(
     val passTypesToShow = remember { PassType.all().toMutableStateList() }
     val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
 
-    SelectionMenu(
+    ExtendedSelectionMenu(
         singleOptions = SortOption.all(),
         multiOptions = PassType.all(),
         singleOptionLabel = { resources.getString(it.l18n) },
