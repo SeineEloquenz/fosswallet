@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
@@ -96,7 +98,6 @@ fun TagCreator(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleTextField(
-                    title = "",
                     imageVector = Icons.Default.Tag,
                     onSubmit = {},
                     value = hexInput,
