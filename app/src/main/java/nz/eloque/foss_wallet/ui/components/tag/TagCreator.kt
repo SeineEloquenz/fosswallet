@@ -82,6 +82,7 @@ fun TagCreator(
                         .width(150.dp)
                         .height(150.dp),
             )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.height(150.dp),
