@@ -25,20 +25,24 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.zxing.BarcodeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletApp
-import nz.eloque.foss_wallet.ui.screens.create.ImageScanner
+import nz.eloque.foss_wallet.ui.screens.create.FileScanner
+import nz.eloque.foss_wallet.ui.screens.create.ScanSource
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -48,15 +52,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val isImageShare = intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true
+        val shareSource: ScanSource? =
+            if (intent.action == Intent.ACTION_SEND) {
+                if (intent.type?.startsWith("image/") == true) {
+                    ScanSource.Image
+                } else if (intent.type == "application/pdf") {
+                    ScanSource.Pdf
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
         val dataUri =
             when {
                 Intent.ACTION_VIEW == intent.action -> {
                     intent.data
                 }
 
-                isImageShare -> {
-                    intent.sharedImageUri()
+                shareSource != null -> {
+                    intent.sharedFileUri()
                 }
 
                 Intent.ACTION_SEND == intent.action -> {
@@ -77,20 +92,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
-            var isProcessingImageShare by remember { mutableStateOf(false) }
-            LaunchedEffect(dataUri, isImageShare) {
-                if (isImageShare && dataUri != null) {
-                    isProcessingImageShare = true
+            var isProcessingFileShare by remember { mutableStateOf(false) }
+            LaunchedEffect(dataUri, shareSource != null) {
+                if (shareSource != null && dataUri != null) {
+                    isProcessingFileShare = true
                     coroutineScope.launch(Dispatchers.IO) {
-                        val scanResult = runCatching { ImageScanner.scanFrom(contentResolver, dataUri) }.getOrNull()
-                        val barcode = scanResult?.text
-                        val url = URLEncoder.encode(barcode, Charsets.UTF_8.name())
+                        val barcode =
+                            runCatching { FileScanner.scanFrom(contentResolver, dataUri, shareSource)?.toBarCode() }.getOrNull()
                         withContext(Dispatchers.Main) {
-                            isProcessingImageShare = false
-                            if (!barcode.isNullOrEmpty()) {
-                                navController.navigate(
-                                    "${Screen.Create.route}?barcode=$url",
-                                )
+                            isProcessingFileShare = false
+                            if (barcode != null) {
+                                Screen.Create.navigate(navController, barcode)
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                             }
@@ -126,7 +138,7 @@ class MainActivity : ComponentActivity() {
                         navController,
                     )
 
-                    if (isProcessingImageShare) {
+                    if (isProcessingFileShare) {
                         Box(
                             modifier =
                                 androidx.compose.ui.Modifier
@@ -160,7 +172,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Suppress("DEPRECATION")
-    private fun Intent.sharedImageUri(): Uri? {
+    private fun Intent.sharedFileUri(): Uri? {
         if (action != Intent.ACTION_SEND) return null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
