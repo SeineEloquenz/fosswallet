@@ -1,13 +1,13 @@
 [versions]
-aboutLibraries = "14.2.1"
+aboutLibraries = "14.2.0"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.13.0"
 androidGradlePlugin = "9.2.1"
 bcbpParser = "0.2.0"
 coil = "2.7.0"
-color-picker = "1.2.0"
+color-picker = "1.1.4"
 composeBom = "2026.05.01"
-composeKit = "v0.0.8"
+composeKit = "v0.0.9"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
 zxingcpp = "3.0.2"
@@ -24,10 +24,10 @@ ksp = "2.3.5"
 ktx = "1.18.0"
 ktlint = "14.2.0"
 material = "1.14.0"
-material3 = "1.5.0-alpha21"
+material3 = "1.5.0-alpha20"
 mockito = "5.23.0"
 navigationCompose = "2.9.8"
-okhttp = "5.4.0"
+okhttp = "5.3.2"
 preferenceKtx = "1.2.1"
 room = "2.8.4"
 work = "2.11.2"
@@ -63,7 +63,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 color-picker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "color-picker" }
-compose-kit = { module = "com.github.SeineEloquenz:compose-kit", version.ref = "composeKit" }
+compose-kit = { module = "com.github.SeineEloquenz.compose-kit:lib-android", version.ref = "composeKit" }
 zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 zxingcpp-android = { module = "io.github.zxing-cpp:android", version.ref = "zxingcpp" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
