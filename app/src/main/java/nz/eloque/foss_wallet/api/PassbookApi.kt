@@ -16,12 +16,12 @@ object PassbookApi {
     private const val TAG = "PassbookApi"
     private const val API_VERSION = "v1"
 
+    private val client by lazy { OkHttpClient.Builder().build() }
+
     suspend fun getUpdated(pass: Pass): UpdateResult {
         val webServiceUrl = pass.webServiceUrl!!.trimEnd('/')
         val requestUrl = "$webServiceUrl/${API_VERSION}/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
         val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
-
-        val client = OkHttpClient.Builder().build()
 
         val response =
             try {
@@ -33,17 +33,19 @@ object PassbookApi {
                 Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
                 return UpdateResult.Failed(FailureReason.Exception(e))
             }
-        return if (response.isSuccessful) {
-            try {
-                UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(response.body.bytes(), pass.id, pass.addedAt)))
-            } catch (e: InvalidPassException) {
-                return UpdateResult.Failed(FailureReason.Exception(e))
-            }
-        } else {
-            return when (response.code) {
-                304 -> UpdateResult.NotUpdated
-                403 -> UpdateResult.Failed(FailureReason.Forbidden)
-                else -> UpdateResult.Failed(FailureReason.Status(response.code))
+        return response.use {
+            if (it.isSuccessful) {
+                try {
+                    UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(it.body.bytes(), pass.id, pass.addedAt)))
+                } catch (e: InvalidPassException) {
+                    UpdateResult.Failed(FailureReason.Exception(e))
+                }
+            } else {
+                when (it.code) {
+                    304 -> UpdateResult.NotUpdated
+                    403 -> UpdateResult.Failed(FailureReason.Forbidden)
+                    else -> UpdateResult.Failed(FailureReason.Status(it.code))
+                }
             }
         }
     }
