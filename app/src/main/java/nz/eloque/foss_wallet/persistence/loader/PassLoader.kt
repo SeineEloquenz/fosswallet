@@ -104,7 +104,6 @@ class PassLoader(
                         "pass.json" -> {
                             val content = passBytes.toString(detectEncoding(passBytes))
                             passJson = JsonLoader.load(content)
-                            println("Content:\n$content")
                         }
 
                         in Regex("logo@?.*\\.png") -> {
