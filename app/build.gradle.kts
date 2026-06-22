@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.plugin.compose)
+    alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.hilt.android)
@@ -153,6 +154,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.json.sanitizer)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.aboutlibraries.core)
     implementation(libs.aboutlibraries.compose.m3)

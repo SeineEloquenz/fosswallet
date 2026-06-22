@@ -126,7 +126,6 @@
     <string name="additional_fields">Επιπλέον πεδία</string>
     <string name="location_search_query">Αναζήτηση τοποθεσίας</string>
     <string name="open_in_map_app">Άνοιγμα σε εφαρφογή χάρτη</string>
-    <string name="created_pass_export_warning">Τα πάσα που έχουν δημιουργηθεί δεν μπορούν να εξαχθούν αυτή τη στιγμή</string>
     <string name="show_archived_passes">Εμφάνιση αρχειοθετημένων πάσων</string>
     <string name="permission_read_passes_label">Ανάγνωση Πάσων</string>
     <string name="permission_read_passes_description">Διάβασε τα πάσα σου με τις λεπτομέρειές τους, συμπεριλαμβάνοντας barcodes με τρόπο συμβατό με Catima</string>

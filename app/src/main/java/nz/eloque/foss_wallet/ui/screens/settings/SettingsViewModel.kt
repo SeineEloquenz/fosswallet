@@ -13,6 +13,11 @@ import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
+import nz.eloque.foss_wallet.persistence.backup.BackupExporter
+import nz.eloque.foss_wallet.persistence.backup.BackupImportResult
+import nz.eloque.foss_wallet.persistence.backup.BackupImporter
+import java.io.InputStream
+import java.io.OutputStream
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -33,6 +38,8 @@ class SettingsViewModel
         private val settingsStore: SettingsStore,
         private val passStore: PassStore,
         private val updateScheduler: UpdateScheduler,
+        private val backupExporter: BackupExporter,
+        private val backupImporter: BackupImporter,
     ) : AndroidViewModel(application) {
         private val _uiState = MutableStateFlow(SettingsUiState())
         val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -86,5 +93,16 @@ class SettingsViewModel
         fun setAskBeforeDelete(enabled: Boolean) {
             settingsStore.setDeleteConfirmationEnabled(enabled)
             update()
+        }
+
+        suspend fun exportBackup(out: OutputStream) = backupExporter.export(out)
+
+        suspend fun importBackup(input: InputStream): BackupImportResult {
+            val result = backupImporter.import(input)
+            // Restored updatable passes need to (re)join the update schedule; no-op when sync is off.
+            if (result is BackupImportResult.Success && result.imported > 0) {
+                updateScheduler.enableSync()
+            }
+            return result
         }
     }

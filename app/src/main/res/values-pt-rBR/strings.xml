@@ -126,7 +126,6 @@
     <string name="no_barcode_found">Nenhum código de barras encontrado</string>
     <string name="no_map_app_found">Nenhum aplicativo de mapas encontrado</string>
     <string name="no_calendar_app_found">Nenhum aplicativo de calendário encontrado</string>
-    <string name="created_pass_export_warning">No momento, os passes criados não podem ser exportados</string>
     <string name="show_archived_passes">Exibir passes arquivados</string>
     <string name="permission_read_passes_label">Ler passes</string>
     <string name="permission_read_passes_description">Leia seus cartões e suas informações, incluindo os códigos de barras, de forma compatível com o Catima</string>

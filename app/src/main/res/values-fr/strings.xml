@@ -127,7 +127,6 @@
     <string name="select_all">Sélectionner tout</string>
     <string name="scan_code">Scanner un code</string>
     <string name="the_archive">Archives</string>
-    <string name="created_pass_export_warning">Les cartes créées ne peuvent pas être actuellement exportées</string>
     <string name="show_archived_passes">Montrer les cartes archivées</string>
     <string name="create_boarding_pass">Créer une carte d\'embarquement</string>
     <string name="permission_read_passes_label">Lire les cartes</string>

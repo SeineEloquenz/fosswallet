@@ -4,6 +4,8 @@ import android.content.Context
 import android.location.Location
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import java.io.File
@@ -12,6 +14,7 @@ import java.time.ZonedDateTime
 import java.util.LinkedList
 import java.util.UUID
 
+@Serializable
 @Entity(tableName = "Pass")
 data class Pass(
     @PrimaryKey val id: String,
@@ -21,7 +24,7 @@ data class Pass(
     val serialNumber: String,
     val type: PassType,
     val barCodes: Set<BarCode>,
-    val addedAt: Instant,
+    @Contextual val addedAt: Instant,
     val hasLogo: Boolean = false,
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
@@ -30,15 +33,15 @@ data class Pass(
      * Device UUID used for updating passes.
      * We use a unique UUID per pass so devices can not be linked across servers from the UUID
      */
-    val deviceId: UUID = UUID.randomUUID(),
+    @Contextual val deviceId: UUID = UUID.randomUUID(),
     val colors: PassColors? = null,
     val relevantDates: List<PassRelevantDate> = LinkedList(),
-    val expirationDate: ZonedDateTime? = null,
+    @Contextual val expirationDate: ZonedDateTime? = null,
     val logoText: String? = null,
     val authToken: String? = null,
     val webServiceUrl: String? = null,
     val passTypeIdentifier: String? = null,
-    val locations: List<Location> = LinkedList(),
+    val locations: List<@Contextual Location> = LinkedList(),
     val headerFields: List<PassField> = LinkedList(),
     val primaryFields: List<PassField> = LinkedList(),
     val secondaryFields: List<PassField> = LinkedList(),

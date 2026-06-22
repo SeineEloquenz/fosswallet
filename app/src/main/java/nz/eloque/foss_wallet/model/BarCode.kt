@@ -7,13 +7,16 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.nio.charset.Charset
 
+@Serializable
 data class BarCode(
-    val format: BarcodeFormat,
+    @Contextual val format: BarcodeFormat,
     val message: String,
-    val encoding: Charset,
+    @Contextual val encoding: Charset,
     val altText: String?,
 ) {
     fun toJson(): JSONObject =

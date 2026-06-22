@@ -2,7 +2,9 @@ package nz.eloque.foss_wallet.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(
     tableName = "localization",
     primaryKeys = ["passId", "lang", "label"],

@@ -623,7 +623,7 @@ fun CreateView(
                     Text(stringResource(R.string.create_pass))
                 }
                 Text(
-                    text = stringResource(R.string.created_pass_export_warning),
+                    text = stringResource(R.string.share_hint),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.fillMaxWidth(),
                 )

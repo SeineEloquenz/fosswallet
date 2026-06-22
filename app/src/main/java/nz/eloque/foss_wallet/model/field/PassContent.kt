@@ -1,5 +1,9 @@
 package nz.eloque.foss_wallet.model.field
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.prettyDate
@@ -8,9 +12,12 @@ import nz.eloque.foss_wallet.utils.prettyTime
 import java.time.ZonedDateTime
 import java.time.format.FormatStyle
 
+@Serializable
 sealed class PassContent(
-    val id: Int,
+    @Transient val id: Int = 0,
 ) {
+    @Serializable
+    @SerialName("plain")
     data class Plain(
         val text: String,
     ) : PassContent(PLAIN) {
@@ -21,6 +28,8 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = text.isEmpty()
     }
 
+    @Serializable
+    @SerialName("currency")
     data class Currency(
         val amount: String,
         val currency: String,
@@ -41,9 +50,11 @@ sealed class PassContent(
             }
     }
 
+    @Serializable
+    @SerialName("dateField")
     data class Date(
-        val date: ZonedDateTime,
-        val format: FormatStyle,
+        @Contextual val date: ZonedDateTime,
+        @Contextual val format: FormatStyle,
         val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(DATE) {
@@ -54,9 +65,11 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = false
     }
 
+    @Serializable
+    @SerialName("timeField")
     data class Time(
-        val time: ZonedDateTime,
-        val format: FormatStyle,
+        @Contextual val time: ZonedDateTime,
+        @Contextual val format: FormatStyle,
         val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(TIME) {
@@ -67,9 +80,11 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = false
     }
 
+    @Serializable
+    @SerialName("dateTimeField")
     data class DateTime(
-        val dateTime: ZonedDateTime,
-        val format: FormatStyle,
+        @Contextual val dateTime: ZonedDateTime,
+        @Contextual val format: FormatStyle,
         val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(DATE_TIME) {
