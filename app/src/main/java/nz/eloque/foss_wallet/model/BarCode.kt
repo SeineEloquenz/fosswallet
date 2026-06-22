@@ -75,12 +75,14 @@ data class BarCode(
         other as BarCode
         if (format != other.format) return false
         if (message != other.message) return false
+        if (encoding != other.encoding) return false
         return altText == other.altText
     }
 
     override fun hashCode(): Int {
         var result = format.hashCode()
         result = 31 * result + message.hashCode()
+        result = 31 * result + encoding.hashCode()
         result = 31 * result + (altText?.hashCode() ?: 0)
         return result
     }
