@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.DirectionsBoat
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.ui.graphics.vector.ImageVector
+import kotlinx.serialization.Serializable
 import nz.eloque.foss_wallet.ui.icons.Flight
 
 private const val AIR_KEY = "PKTransitTypeAir"
@@ -14,6 +15,7 @@ private const val BUS_KEY = "PKTransitTypeBus"
 private const val TRAIN_KEY = "PKTransitTypeTrain"
 private const val GENERIC_KEY = "PKTransitTypeGeneric"
 
+@Serializable
 enum class TransitType(
     val jsonKey: String,
     val icon: ImageVector,

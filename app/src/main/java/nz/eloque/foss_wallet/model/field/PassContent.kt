@@ -1,5 +1,9 @@
 package nz.eloque.foss_wallet.model.field
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.linkify
@@ -8,9 +12,12 @@ import nz.eloque.foss_wallet.utils.prettyDateTime
 import nz.eloque.foss_wallet.utils.prettyTime
 import java.time.format.FormatStyle
 
+@Serializable
 sealed class PassContent(
-    val id: Int,
+    @Transient val id: Int = 0,
 ) {
+    @Serializable
+    @SerialName("plain")
     data class Plain(
         val text: String,
     ) : PassContent(PLAIN) {
@@ -21,6 +28,8 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = text.isEmpty()
     }
 
+    @Serializable
+    @SerialName("currency")
     data class Currency(
         val amount: String,
         val currency: String,
@@ -41,9 +50,11 @@ sealed class PassContent(
             }
     }
 
+    @Serializable
+    @SerialName("dateField")
     data class Date(
         val date: PassDateTime,
-        val format: FormatStyle,
+        @Contextual val format: FormatStyle,
         val isRelative: Boolean,
     ) : PassContent(DATE) {
         override fun contains(query: String) = query inIgnoreCase prettyPrint()
@@ -53,9 +64,11 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = false
     }
 
+    @Serializable
+    @SerialName("timeField")
     data class Time(
         val time: PassDateTime,
-        val format: FormatStyle,
+        @Contextual val format: FormatStyle,
         val isRelative: Boolean,
     ) : PassContent(TIME) {
         override fun contains(query: String) = query inIgnoreCase prettyPrint()
@@ -65,9 +78,11 @@ sealed class PassContent(
         override fun isEmpty(): Boolean = false
     }
 
+    @Serializable
+    @SerialName("dateTimeField")
     data class DateTime(
         val dateTime: PassDateTime,
-        val format: FormatStyle,
+        @Contextual val format: FormatStyle,
         val isRelative: Boolean,
     ) : PassContent(DATE_TIME) {
         override fun contains(query: String) = query inIgnoreCase prettyPrint()

@@ -4,11 +4,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PassColors(
-    val background: Color,
-    val foreground: Color,
-    val label: Color,
+    @Contextual val background: Color,
+    @Contextual val foreground: Color,
+    @Contextual val label: Color,
 ) {
     companion object {
         val Fallback: PassColors

@@ -2,27 +2,39 @@ package nz.eloque.foss_wallet.model
 
 import androidx.annotation.StringRes
 import androidx.room.Entity
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import nz.eloque.foss_wallet.R
 
+@Serializable
 sealed class PassType(
-    val jsonKey: String,
-    @param:StringRes val label: Int,
+    @Transient val jsonKey: String = "",
+    @Transient @param:StringRes val label: Int = 0,
 ) {
+    @Serializable
+    @SerialName("generic")
     @Entity
     object Generic : PassType(GENERIC, R.string.generic_pass) {
         override fun isSameType(passType: PassType): Boolean = this == passType
     }
 
+    @Serializable
+    @SerialName("event")
     @Entity
     object Event : PassType(EVENT, R.string.event) {
         override fun isSameType(passType: PassType): Boolean = this == passType
     }
 
+    @Serializable
+    @SerialName("coupon")
     @Entity
     object Coupon : PassType(COUPON, R.string.coupon) {
         override fun isSameType(passType: PassType): Boolean = this == passType
     }
 
+    @Serializable
+    @SerialName("boarding")
     @Entity
     data class Boarding(
         val transitType: TransitType,
@@ -30,6 +42,8 @@ sealed class PassType(
         override fun isSameType(passType: PassType): Boolean = this.javaClass == passType.javaClass
     }
 
+    @Serializable
+    @SerialName("storeCard")
     @Entity
     object StoreCard : PassType(STORE_CARD, R.string.store_card) {
         override fun isSameType(passType: PassType) = this == passType

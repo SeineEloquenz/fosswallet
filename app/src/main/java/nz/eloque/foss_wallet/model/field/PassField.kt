@@ -1,10 +1,12 @@
 package nz.eloque.foss_wallet.model.field
 
 import androidx.room.Entity
+import kotlinx.serialization.Serializable
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
 
+@Serializable
 @Entity
 data class PassField(
     val key: String,

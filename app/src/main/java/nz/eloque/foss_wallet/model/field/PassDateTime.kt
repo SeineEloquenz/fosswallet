@@ -1,5 +1,8 @@
 package nz.eloque.foss_wallet.model.field
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -16,10 +19,13 @@ import java.time.ZonedDateTime
  *  - A **floating** wall-clock reading. Either `ignoresTimeZone` is true, or the source string
  *    carried no offset at all. The value must be rendered exactly as written, in every time zone.
  */
+@Serializable
 sealed interface PassDateTime {
     /** A point on the timeline; displayed in the reader's time zone. */
+    @Serializable
+    @SerialName("absolute")
     data class Absolute(
-        val value: ZonedDateTime,
+        @Contextual val value: ZonedDateTime,
     ) : PassDateTime {
         override fun zonedAt(zone: ZoneId): ZonedDateTime = value.withZoneSameInstant(zone)
 
@@ -29,8 +35,10 @@ sealed interface PassDateTime {
     }
 
     /** A wall-clock reading with no zone; displayed as written, wherever it is read. */
+    @Serializable
+    @SerialName("floating")
     data class Floating(
-        val value: LocalDateTime,
+        @Contextual val value: LocalDateTime,
     ) : PassDateTime {
         override fun zonedAt(zone: ZoneId): ZonedDateTime = value.atZone(zone)
 
