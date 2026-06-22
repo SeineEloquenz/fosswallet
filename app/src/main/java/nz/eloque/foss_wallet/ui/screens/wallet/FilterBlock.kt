@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import nz.eloque.compose_kit.components.ExtendedSelectionMenu
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
@@ -34,7 +35,7 @@ fun FilterBlock(
         onSingleOptionSelected = { walletViewModel.setSortOption(it) },
         onMultiOptionSelected = { passTypesToShow.add(it) },
         onMultiOptionDeselected = { passTypesToShow.remove(it) },
-        contentDescription = R.string.filter,
+        contentDescription = stringResource(R.string.filter),
     )
     TagRow(
         tags = tags,
