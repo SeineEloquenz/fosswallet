@@ -64,8 +64,8 @@ class PassStore
 
             insert(loadResult)
 
-            passDao.insert(pass)
-            val passMetadata = passDao.metadata(pass.id) ?: PassMetadata(pass.id)
+            var passMetadata = passRepository.metadata(loadResult.pass.pass.id) ?: PassMetadata(loadResult.pass.pass.id)
+            passMetadata = passMetadata.copy(archived = AutoArchiver.shouldBeAutoArchived(loadResult.pass.pass, passMetadata))
             if (AutoArchiver.shouldBeAutoArchived(loadResult.pass.pass, passMetadata)) {
                 passRepository.archive(loadResult.pass.pass)
                 return ImportResult.AutoArchived

@@ -100,6 +100,8 @@ class PassRepository
             groupId: Long,
         ) = passDao.dissociate(pass, groupId)
 
+        suspend fun metadata(id: String) = passDao.metadata(id)
+
         suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
 
         suspend fun associate(
