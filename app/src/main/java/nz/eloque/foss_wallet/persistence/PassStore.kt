@@ -55,12 +55,11 @@ class PassStore
 
         suspend fun add(loadResult: PassLoadResult): ImportResult {
             val pass = loadResult.pass.pass
-            val passId = pass.id
-            val existing = passRepository.findById(passId)
+            val existing = passRepository.findById(pass.id)
 
             insert(loadResult)
             if (existing != null) return ImportResult.Replaced
-            if (passRepository.metadata(passId)?.archived == true) {
+            if (passRepository.metadata(pass.id)?.archived == true) {
                 passRepository.archive(pass)
                 return ImportResult.AutoArchived
             }
