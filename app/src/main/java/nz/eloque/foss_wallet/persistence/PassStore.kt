@@ -58,12 +58,12 @@ class PassStore
             val existing = passRepository.findById(pass.id)
 
             insert(loadResult)
+            if (pass.updatable()) updateScheduler.scheduleUpdate(pass)
             if (existing != null) return ImportResult.Replaced
             if (passRepository.metadata(pass.id)?.archived == true) {
                 passRepository.archive(pass)
                 return ImportResult.AutoArchived
             }
-            if (pass.updatable()) updateScheduler.scheduleUpdate(pass)
             return ImportResult.New
         }
 
