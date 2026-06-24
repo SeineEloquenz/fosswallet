@@ -12,7 +12,6 @@ import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
-import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
@@ -20,7 +19,6 @@ import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
-import nz.eloque.foss_wallet.persistence.pass.AutoArchiver
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.shortcut.Shortcut
 import java.util.Locale
