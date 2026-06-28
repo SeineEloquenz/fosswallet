@@ -62,10 +62,10 @@ class PassRepository
             originalPass: OriginalPass?,
         ) {
             val id = pass.id
+            val metadata = passDao.metadata(id) ?: PassMetadata(id)
+
             passDao.insert(pass)
-            var passMetadata = passDao.metadata(id) ?: PassMetadata(pass.id)
-            passMetadata = passMetadata.copy(archived = AutoArchiver.shouldBeAutoArchived(pass, passMetadata))
-            passDao.insert(passMetadata)
+            passDao.insert(metadata.copy(archived = AutoArchiver.shouldBeAutoArchived(pass, metadata)))
             bitmaps.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
         }
