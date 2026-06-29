@@ -35,6 +35,7 @@ android {
     }
     namespace = "nz.eloque.foss_wallet"
     compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     buildFeatures {
         compose = true
