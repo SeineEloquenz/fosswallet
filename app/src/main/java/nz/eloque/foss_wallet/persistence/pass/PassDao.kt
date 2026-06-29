@@ -33,6 +33,16 @@ interface PassDao {
     @Query("SELECT * FROM pass WHERE id=:id")
     fun findById(id: String): PassWithMetadata?
 
+    @Transaction
+    @Query(
+        """
+        SELECT p.* FROM Pass p
+        INNER JOIN PassMetadata m ON p.id = m.passId
+        WHERE m.groupId = :groupId
+    """,
+    )
+    fun flowByGroup(groupId: Long): Flow<List<PassWithMetadata>>
+
     @Query(
         """
         UPDATE PassMetadata
