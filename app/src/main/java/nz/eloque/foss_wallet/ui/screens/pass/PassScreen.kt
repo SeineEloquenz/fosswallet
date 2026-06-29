@@ -125,11 +125,11 @@ fun PassScreen(
                 Column(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     HorizontalPagerIndicator(
                         pagerState = pagerState,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
                     )
                     HorizontalPager(
                         state = pagerState,
