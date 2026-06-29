@@ -1,0 +1,1 @@
+* Aumentar a confiabilidade do leitor de código de barras
