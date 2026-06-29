@@ -82,7 +82,6 @@
     <string name="date_added">Data adicionada</string>
     <string name="relevant_date_latest">Data relevante mais recente</string>
     <string name="relevant_date_earliest">Data relevante mais antiga</string>
-    <string name="selected">Selecionado</string>
     <string name="filter">Ordenar por</string>
     <string name="create_pass">Criar passe</string>
     <string name="manual_entry">Entrada manual</string>
