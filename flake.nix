@@ -1,18 +1,33 @@
 {
   description = "FossWallet";
 
-  outputs = { self, nixpkgs }:
-  let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; config = { allowUnfree = true; }; };
-  in {
-
-    devShells.${system}.default = pkgs.mkShell {
-      buildInputs = [ pkgs.android-studio ];
-
-      # Path to the local compose-kit checkout; enables the composite build (see settings.gradle.kts).
-      LOCAL_COMPOSE_KIT = "../compose-kit";
-    };
-
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
+
+  outputs =
+    { self, nixpkgs }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+
+      forAllSystems =
+        f:
+        builtins.listToAttrs (
+          map (system: {
+            name = system;
+            value = f system;
+          }) systems
+        );
+    in
+    {
+      devShells = forAllSystems (
+        system:
+        import ./shell.nix {
+          inherit system nixpkgs;
+        }
+      );
+    };
 }

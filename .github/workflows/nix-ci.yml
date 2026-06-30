@@ -1,0 +1,10 @@
+name: Nix CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  nix-ci:
+    uses: SeineEloquenz/ci/.github/workflows/nix-ci.yml@main
