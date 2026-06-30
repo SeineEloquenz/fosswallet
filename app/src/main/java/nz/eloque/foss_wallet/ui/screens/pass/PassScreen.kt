@@ -128,10 +128,12 @@ fun PassScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    HorizontalPagerIndicator(
-                        pagerState = pagerState,
-                        modifier = Modifier.padding(8.dp),
-                    )
+                    if (passes.size > 1) {
+                        HorizontalPagerIndicator(
+                            pagerState = pagerState,
+                            modifier = Modifier.padding(8.dp),
+                        )
+                    }
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
