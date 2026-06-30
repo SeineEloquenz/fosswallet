@@ -9,7 +9,7 @@ color-picker = "1.1.4"
 composeBom = "2026.05.01"
 composeKit = "0.1.2"
 #noinspection NewerVersionAvailable
-zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
+zxing = "3.5.4" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
 zxingcpp = "3.0.2"
 cameraX = "1.6.1"
 espressoCore = "3.7.0"
