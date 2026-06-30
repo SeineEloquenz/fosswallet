@@ -67,6 +67,7 @@ import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
+import kotlin.collections.emptyList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,9 +89,9 @@ fun PassScreen(
     val groupPasses by remember(groupId) {
         groupId?.let { passViewModel.passesInGroup(it).map { passes -> passes.sortedWith(passViewModel.sortOption().comparator) } }
             ?: emptyFlow()
-    }.collectAsState(initial = listOf(localizedPass))
+    }.collectAsState(initial = emptyList())
 
-    val passes = remember(groupPasses, localizedPass) { groupPasses }
+    val passes = remember(groupPasses, localizedPass) { groupPasses.ifEmpty { listOf(localizedPass) } }
 
     val tagFlow = passViewModel.allTags
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
