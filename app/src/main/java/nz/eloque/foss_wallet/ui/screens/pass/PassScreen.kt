@@ -1,12 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
 import android.widget.Toast
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +13,6 @@ import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -41,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
@@ -68,7 +60,6 @@ import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
-import kotlin.collections.emptyList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
