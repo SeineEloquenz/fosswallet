@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import nz.eloque.compose_kit.components.UpdateButton
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
@@ -331,38 +332,5 @@ fun Actions(
                 },
             )
         }
-    }
-}
-
-@Composable
-fun UpdateButton(
-    isLoading: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val infiniteTransition = rememberInfiniteTransition(label = "updateButtonAnimation")
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 360f,
-        targetValue = 0f,
-        animationSpec =
-            infiniteRepeatable(
-                animation = tween(1500, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Restart,
-            ),
-        label = "spin",
-    )
-
-    IconButton(
-        onClick = { if (!isLoading) onClick() },
-        modifier = modifier,
-    ) {
-        Icon(
-            imageVector = Icons.Default.Sync,
-            contentDescription = stringResource(R.string.update),
-            modifier =
-                Modifier.graphicsLayer(
-                    rotationZ = if (isLoading) rotation else 0f,
-                ),
-        )
     }
 }
