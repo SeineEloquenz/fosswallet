@@ -138,6 +138,7 @@ fun PassScreen(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
                         pageSpacing = 8.dp,
+                        verticalAlignment = Alignment.Top,
                     ) { page ->
                         val pagePass = passes[page]
                         PassView(
