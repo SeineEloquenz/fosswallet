@@ -132,4 +132,9 @@
     <string name="create_boarding_pass">Créer une carte d\'embarquement</string>
     <string name="permission_read_passes_label">Lire les cartes</string>
     <string name="permission_read_passes_description">Lire vos cartes et leurs détails, en incluant les code-barres dans un mode compatible avec Catima</string>
+    <string name="attachment_name">Nom de la pièce jointe</string>
+    <string name="choose_attachment_name">Choisir le nom de la pièce jointe</string>
+    <string name="add_attachment">Ajouter une pièce jointe</string>
+    <string name="delete_attachment">Supprimer la pièce jointe</string>
+    <string name="attachments">Pièces jointes</string>
 </resources>
