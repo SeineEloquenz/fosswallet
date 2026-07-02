@@ -53,9 +53,9 @@ fun TagCreator(
         var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
         var hexInput by remember { mutableStateOf("ffffff") }
 
-        val valid = label.isNotEmpty() && label.length < 30
         val hexRegex = Regex("^[0-9a-f]{6}$", RegexOption.IGNORE_CASE)
         val isHexValid = hexInput.matches(hexRegex) && listOf(0, 2, 4).any { hexInput.substring(it, it + 2) == "ff" }
+        val isLabelValid = label.isNotEmpty() && label.length < 30
 
         LaunchedEffect(colorEnvelope) {
             hexInput = colorEnvelope.hexCode.drop(2)
@@ -63,7 +63,7 @@ fun TagCreator(
 
         OutlinedTextField(
             label = { Text(stringResource(R.string.tag_label)) },
-            isError = !valid,
+            isError = !isLabelValid,
             value = label,
             onValueChange = { label = it },
         )
@@ -113,7 +113,7 @@ fun TagCreator(
                             controller.selectByColor(color, true)
                         }
                     },
-                    inputValidator = { it.matches(hexRegex) && listOf(0, 2, 4).any { i -> it.substring(i, i + 2) == "ff" } },
+                    isError = !isHexValid,
                     modifier = Modifier.width(150.dp),
                     textStyle = TextStyle(fontFamily = FontFamily.Monospace),
                 )
@@ -125,7 +125,7 @@ fun TagCreator(
                 val tag = Tag(label.trim(), colorEnvelope.color)
                 onCreate(tag)
             },
-            enabled = valid && isHexValid,
+            enabled = isHexValid && isLabelValid,
         ) {
             Text(text = stringResource(R.string.add_tag))
         }
