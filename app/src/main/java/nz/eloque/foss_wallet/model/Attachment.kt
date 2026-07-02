@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.model
 import android.content.Context
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.io.File
 import java.io.FileOutputStream
@@ -15,6 +16,9 @@ import java.io.FileOutputStream
             childColumns = arrayOf("passId"),
             onDelete = ForeignKey.CASCADE,
         ),
+    ],
+    indices = [
+        Index(value = ["passId"]),
     ],
 )
 data class Attachment(

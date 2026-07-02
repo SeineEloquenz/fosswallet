@@ -97,6 +97,7 @@
     <string name="strip">Strip</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="footer">Footer</string>
+    <string name="background">Background</string>
     <string name="no_url_in_clipboard">No URL in clipboard</string>
     <string name="no_text_in_clipboard">No text in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>

@@ -31,6 +31,7 @@ data class PassBitmaps(
     val strip: Bitmap?,
     val thumbnail: Bitmap?,
     val footer: Bitmap?,
+    val background: Bitmap?,
 ) {
     fun saveToDisk(
         context: Context,
@@ -45,6 +46,7 @@ data class PassBitmaps(
         save(directory, "strip.png", strip)
         save(directory, "thumbnail.png", thumbnail)
         save(directory, "footer.png", footer)
+        save(directory, "background.png", background)
     }
 
     private fun save(
@@ -87,6 +89,7 @@ class PassLoader(
         var strip: Bitmap? = null
         var thumbnail: Bitmap? = null
         var footer: Bitmap? = null
+        var background: Bitmap? = null
         ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             var entry = zip.nextEntry
             do {
@@ -126,6 +129,10 @@ class PassLoader(
                             footer = chooseBetter(footer, loadImage(baos))
                         }
 
+                        in Regex("background@?.*\\.png") -> {
+                            background = chooseBetter(background, loadImage(baos))
+                        }
+
                         in LOCALIZATION_FILE_REGEX -> {
                             localizations.addAll(parseLocalization(entry.name.substringBefore(".lproj"), baos))
                         }
@@ -138,7 +145,7 @@ class PassLoader(
         }
         // TODO check signature before returning
         if (passJson != null) {
-            val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer)
+            val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer, background)
             val pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt)
             return PassLoadResult(PassWithLocalization(pass, localizations.toList()), bitmaps, OriginalPass(bytes))
         } else {
