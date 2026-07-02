@@ -25,7 +25,7 @@ import nz.eloque.foss_wallet.R
 fun WalletScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    title: String? = null,
+    title: @Composable () -> Unit = {},
     toolWindow: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
