@@ -63,6 +63,7 @@ class CreateViewModel
             stripUrl: Uri?,
             thumbnailUrl: Uri?,
             footerUrl: Uri?,
+            backgroundUrl: Uri?,
         ): String {
             val pass =
                 PassCreator.create(
@@ -95,6 +96,7 @@ class CreateViewModel
                     strip = loadBitmapFromUrl(context, stripUrl, STRIP_SIZE),
                     thumbnail = loadBitmapFromUrl(context, thumbnailUrl, THUMBNAIL_SIZE),
                     footer = loadBitmapFromUrl(context, footerUrl, FOOTER_SIZE),
+                    background = loadBitmapFromUrl(context, backgroundUrl, BACKGROUND_SIZE),
                 )
 
             passStore.create(
@@ -104,6 +106,7 @@ class CreateViewModel
                         hasStrip = bitmaps.strip != null,
                         hasThumbnail = bitmaps.thumbnail != null,
                         hasFooter = bitmaps.footer != null,
+                        hasBackground = bitmaps.background != null,
                     ),
                 bitmaps = bitmaps,
             )
@@ -147,6 +150,7 @@ class CreateViewModel
             private const val STRIP_SIZE = 1024
             private const val THUMBNAIL_SIZE = 512
             private const val FOOTER_SIZE = 768
+            private const val BACKGROUND_SIZE = 512
         }
 
         suspend fun geocode(query: String): List<GeocodeResult> {
