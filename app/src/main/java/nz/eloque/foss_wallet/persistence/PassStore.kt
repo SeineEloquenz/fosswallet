@@ -56,15 +56,17 @@ class PassStore
         }
 
         suspend fun add(loadResult: PassLoadResult): ImportResult {
-            val existing = passRepository.findById(loadResult.pass.pass.id)
-            val result = if (existing != null) ImportResult.Replaced else ImportResult.New
+            val pass = loadResult.pass.pass
+            val existing = passRepository.findById(pass.id)
 
             insert(loadResult)
-            if (loadResult.pass.pass.updatable()) {
-                updateScheduler.scheduleUpdate(loadResult.pass.pass)
+            if (pass.updatable()) updateScheduler.scheduleUpdate(pass)
+            if (existing != null) return ImportResult.Replaced
+            if (passRepository.metadata(pass.id)?.archived == true) {
+                passRepository.archive(pass)
+                return ImportResult.AutoArchived
             }
-
-            return result
+            return ImportResult.New
         }
 
         suspend fun update(pass: Pass): UpdateResult {
