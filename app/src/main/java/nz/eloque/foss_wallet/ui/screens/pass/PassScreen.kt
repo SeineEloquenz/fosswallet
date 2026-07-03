@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
@@ -111,7 +112,7 @@ fun PassScreen(
             WalletScaffold(
                 snackbarHostState = snackbarHostState,
                 navController = navController,
-                title = currentPass.pass.description,
+                title = { AbbreviatingText(currentPass.pass.description) },
                 toolWindow = true,
                 actions = {
                     Actions(
