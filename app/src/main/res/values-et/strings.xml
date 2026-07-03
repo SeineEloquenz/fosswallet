@@ -137,4 +137,5 @@
     <string name="add_attachment">Lisa manus</string>
     <string name="delete_attachment">Kustuta manus</string>
     <string name="attachments">Failid/manused</string>
+    <string name="background">Taust</string>
 </resources>
