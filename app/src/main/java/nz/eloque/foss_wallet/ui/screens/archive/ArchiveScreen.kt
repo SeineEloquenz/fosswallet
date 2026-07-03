@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.archive
 
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
@@ -47,7 +47,7 @@ fun ArchiveScreen(
         title = {
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 imageVector = Icons.Default.Archive,
             )
         },
