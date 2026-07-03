@@ -43,12 +43,13 @@ fun ArchiveScreen(
 
     WalletScaffold(
         navController = navController,
-        title =
+        title = {
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
                 modifier = Modifier.weight(1f),
                 imageVector = Icon.Default.Archive,
-            ),
+            )
+        },
         toolWindow = true,
         actions = {
             if (selectedPasses.isNotEmpty()) {
