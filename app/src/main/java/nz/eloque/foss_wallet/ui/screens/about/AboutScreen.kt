@@ -14,7 +14,7 @@ fun AboutScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = { Text(stringResource(id = R.string.about) },
+        title = { Text(stringResource(id = R.string.about)) },
     ) {
         AboutView(navController)
     }
