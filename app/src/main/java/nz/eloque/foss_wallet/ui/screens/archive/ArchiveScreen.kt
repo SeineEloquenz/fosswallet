@@ -47,7 +47,7 @@ fun ArchiveScreen(
             FilterBar(
                 onSearch = { walletViewModel.filter(it) },
                 modifier = Modifier.weight(1f),
-                imageVector = Icon.Default.Archive,
+                imageVector = Icons.Default.Archive,
             )
         },
         toolWindow = true,
