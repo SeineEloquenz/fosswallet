@@ -38,7 +38,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(R.string.advanced),
+        title = { Text(stringResource(R.string.advanced)) },
     ) {
         Column(
             modifier =
