@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.archive
 
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
