@@ -89,6 +89,7 @@ fun WalletScreen(
 
     WalletScaffoldWithFilterBar(
         navController = navController,
+        imageVector = Icons.Default.Search,
         onSearch = { walletViewModel.filter(it) },
         actions = {
             if (selectedPasses.isNotEmpty()) {
