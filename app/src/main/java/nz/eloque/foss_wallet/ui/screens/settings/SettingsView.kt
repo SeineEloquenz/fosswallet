@@ -118,6 +118,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
         ) {
             SettingsSwitch(
                 title = stringResource(R.string.oled_dark_theme),
+                subtitle = stringResource(R.string.oled_dark_theme_hint),
                 checked = settings.value.oledDark,
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setOledDark(it) } },
             )
