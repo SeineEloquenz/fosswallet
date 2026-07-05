@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportResult
+import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.bundle.TagsSerializer
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -59,7 +61,7 @@ class Loader(
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {
-        val loadResults =
+        val bundle =
             try {
                 this.load(inputStream)
             } catch (e: InvalidInputException) {
@@ -71,6 +73,7 @@ class Loader(
                 }
                 return LoaderResult.Invalid
             }
+        val loadResults = bundle.passes
         if (loadResults.isEmpty()) {
             coroutineScope.launch(Dispatchers.Main) {
                 Toast
@@ -82,6 +85,7 @@ class Loader(
         if (loadResults.size == 1) {
             val loadResult = loadResults.first()
             val importResult = walletViewModel.add(loadResult)
+            applyTags(loadResult, bundle.tagsByPass, walletViewModel)
             val id: String = loadResult.pass.pass.id
             coroutineScope.launch(Dispatchers.Main) {
                 when (importResult) {
@@ -99,7 +103,10 @@ class Loader(
             }
             return LoaderResult.Single(id)
         } else {
-            loadResults.forEach { result -> walletViewModel.add(result) }
+            loadResults.forEach { result ->
+                walletViewModel.add(result)
+                applyTags(result, bundle.tagsByPass, walletViewModel)
+            }
 
             walletViewModel.group(loadResults.map { it.pass.pass }.toSet())
 
@@ -112,14 +119,24 @@ class Loader(
         }
     }
 
+    private suspend fun applyTags(
+        loadResult: PassLoadResult,
+        tagsByPass: Map<String, Set<Tag>>,
+        walletViewModel: WalletViewModel,
+    ) {
+        tagsByPass[loadResult.pass.pass.id]?.forEach { tag ->
+            walletViewModel.importTag(loadResult.pass.pass, tag)
+        }
+    }
+
     @Throws(InvalidInputException::class)
-    private fun load(input: InputStream): Set<PassLoadResult> {
+    private fun load(input: InputStream): LoadedBundle {
         val passParser = PassParser(context)
         val bytes = input.readBytes()
 
         val type = detectFileType(bytes)
         return when (type) {
-            Input.PKPASS -> setOf(PassLoader(passParser).load(bytes))
+            Input.PKPASS -> LoadedBundle(setOf(PassLoader(passParser).load(bytes)), emptyMap())
             Input.PKPASSES -> PassesLoader(PassLoader(passParser)).load(bytes)
         }
     }
@@ -135,7 +152,8 @@ class Loader(
         zipStream.close()
         return when {
             entries.contains("pass.json") -> Input.PKPASS
-            entries.isNotEmpty() && entries.all { it.endsWith(".pkpass") } -> Input.PKPASSES
+            entries.any { it.endsWith(".pkpass") } &&
+                entries.all { it.endsWith(".pkpass") || it == TagsSerializer.BUNDLE_ENTRY } -> Input.PKPASSES
             else -> throw UnknownInputException()
         }
     }

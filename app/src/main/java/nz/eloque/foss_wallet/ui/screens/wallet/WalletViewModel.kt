@@ -75,6 +75,14 @@ class WalletViewModel
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 
+        suspend fun importTag(
+            pass: Pass,
+            tag: Tag,
+        ) {
+            tagRepository.insert(tag)
+            passStore.tag(pass, tag)
+        }
+
         fun removeTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.remove(tag) }
 
         fun delete(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.delete(pass) }
