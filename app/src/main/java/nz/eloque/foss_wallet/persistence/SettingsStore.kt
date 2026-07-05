@@ -23,6 +23,7 @@ private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 private const val SORT_OPTION = "walletViewSortOption"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
 private const val OLED_DARK = "oledDarkTheme"
+private const val THEME_MODE = "themeMode"
 
 sealed class BarcodePosition(
     val alignment: Alignment,
@@ -48,6 +49,28 @@ sealed class BarcodePosition(
     }
 }
 
+sealed class ThemeMode(
+    val key: String,
+    @param:StringRes val label: Int,
+) {
+    object System : ThemeMode("SYSTEM", R.string.theme_system)
+
+    object Light : ThemeMode("LIGHT", R.string.theme_light)
+
+    object Dark : ThemeMode("DARK", R.string.theme_dark)
+
+    companion object {
+        fun all(): List<ThemeMode> = listOf(System, Light, Dark)
+
+        fun of(representation: String): ThemeMode =
+            when (representation) {
+                Light.key -> Light
+                Dark.key -> Dark
+                else -> System
+            }
+    }
+}
+
 @Singleton
 class SettingsStore
     @Inject
@@ -62,6 +85,17 @@ class SettingsStore
         fun setOledDark(enabled: Boolean) {
             prefs.edit { putBoolean(OLED_DARK, enabled) }
             _oledDarkState.value = enabled
+        }
+
+        private val _themeModeState: MutableStateFlow<ThemeMode> =
+            MutableStateFlow(ThemeMode.of(prefs.getString(THEME_MODE, ThemeMode.System.key)!!))
+        val themeModeState: StateFlow<ThemeMode> = _themeModeState.asStateFlow()
+
+        fun themeMode(): ThemeMode = ThemeMode.of(prefs.getString(THEME_MODE, ThemeMode.System.key)!!)
+
+        fun setThemeMode(themeMode: ThemeMode) {
+            prefs.edit { putString(THEME_MODE, themeMode.key) }
+            _themeModeState.value = themeMode
         }
 
         fun isSyncEnabled(): Boolean = prefs.getBoolean(SYNC_ENABLED, false)

@@ -13,6 +13,7 @@ import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
+import nz.eloque.foss_wallet.persistence.ThemeMode
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -24,6 +25,7 @@ data class SettingsUiState(
     val increasePassViewBrightness: Boolean = false,
     val askBeforeDelete: Boolean = true,
     val oledDark: Boolean = false,
+    val themeMode: ThemeMode = ThemeMode.System,
 )
 
 @HiltViewModel
@@ -53,6 +55,7 @@ class SettingsViewModel
                         increasePassViewBrightness = settingsStore.increasePassViewBrightness(),
                         askBeforeDelete = settingsStore.deleteConfirmationEnabled(),
                         oledDark = settingsStore.oledDark(),
+                        themeMode = settingsStore.themeMode(),
                     )
             }
         }
@@ -92,6 +95,11 @@ class SettingsViewModel
 
         fun setOledDark(enabled: Boolean) {
             settingsStore.setOledDark(enabled)
+            update()
+        }
+
+        fun setThemeMode(themeMode: ThemeMode) {
+            settingsStore.setThemeMode(themeMode)
             update()
         }
     }
