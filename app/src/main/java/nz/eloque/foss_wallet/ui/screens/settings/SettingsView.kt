@@ -1,6 +1,9 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +44,9 @@ import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.BundleShareResult
+import nz.eloque.foss_wallet.share.save
 import nz.eloque.foss_wallet.share.share
+import java.time.LocalDate
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -56,6 +61,44 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
     val passes by remember(passFlow) { passFlow.map { it } }.collectAsState(listOf())
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { settingsViewModel.refresh() }
+
+    val saveLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/vnd.apple.pkpasses")) { uri ->
+            uri?.let { target ->
+                coroutineScope.launch(Dispatchers.IO) {
+                    val result =
+                        try {
+                            save(passes.map { it.pass }, target, context)
+                        } catch (e: Exception) {
+                            Log.w("SettingsView", "Failed saving export: $e")
+                            null
+                        }
+                    withContext(Dispatchers.Main) {
+                        when (result) {
+                            null ->
+                                Toast
+                                    .makeText(context, resources.getString(R.string.export_failed), Toast.LENGTH_LONG)
+                                    .show()
+                            is BundleShareResult.NothingToShare ->
+                                Toast
+                                    .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
+                                    .show()
+                            is BundleShareResult.Shared ->
+                                Toast
+                                    .makeText(
+                                        context,
+                                        if (result.skipped > 0) {
+                                            resources.getString(R.string.export_skipped_passes, result.shared, result.skipped)
+                                        } else {
+                                            resources.getString(R.string.export_saved)
+                                        },
+                                        Toast.LENGTH_LONG,
+                                    ).show()
+                        }
+                    }
+                }
+            }
+        }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -153,6 +196,20 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                                     }
                             }
                         }
+                    }
+                },
+            )
+            HorizontalDivider()
+            SettingsButton(
+                title = stringResource(R.string.save_to_device) + " (.pkpasses)",
+                icon = Icons.Default.Save,
+                onClick = {
+                    if (passes.none { it.pass.originalPassFile(context) != null }) {
+                        Toast
+                            .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
+                            .show()
+                    } else {
+                        saveLauncher.launch("fosswallet-export-${LocalDate.now()}.pkpasses")
                     }
                 },
             )
