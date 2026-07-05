@@ -46,6 +46,12 @@ class WalletViewModel
         private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
         val sortOptionState = _sortOptionState.asStateFlow()
 
+        private val _tagFilterState: MutableStateFlow<String?> = MutableStateFlow(null)
+        val tagFilterState = _tagFilterState.asStateFlow()
+
+        private val _filtersExpandedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val filtersExpandedState = _filtersExpandedState.asStateFlow()
+
         init {
             update()
             viewModelScope.launch(Dispatchers.IO) {
@@ -56,12 +62,24 @@ class WalletViewModel
         private fun update() {
             viewModelScope.launch {
                 _sortOptionState.value = settingsStore.sortOption()
+                _tagFilterState.value = settingsStore.tagFilter()
+                _filtersExpandedState.value = settingsStore.filtersExpanded()
             }
         }
 
         fun setSortOption(sortOption: SortOption) {
             settingsStore.setSortOption(sortOption)
             update()
+        }
+
+        fun setTagFilter(tag: Tag?) {
+            settingsStore.setTagFilter(tag?.label)
+            _tagFilterState.value = tag?.label
+        }
+
+        fun setFiltersExpanded(expanded: Boolean) {
+            settingsStore.setFiltersExpanded(expanded)
+            _filtersExpandedState.value = expanded
         }
 
         fun group(passes: Set<Pass>) = viewModelScope.launch(Dispatchers.IO) { passStore.group(passes) }
