@@ -37,7 +37,7 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilterBar
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -87,9 +87,9 @@ fun WalletScreen(
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
-    WalletScaffold(
+    WalletScaffoldWithFilterBar(
         navController = navController,
-        title = stringResource(id = Screen.Wallet.resourceId),
+        onSearch = { walletViewModel.filter(it) },
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
@@ -172,6 +172,12 @@ fun WalletScreen(
                         ),
                 )
             }
+        },
+        subRow = {
+            FilterBlock(
+                walletViewModel = walletViewModel,
+                tags = tags,
+            )
         },
     ) { scrollBehavior ->
         WalletView(
