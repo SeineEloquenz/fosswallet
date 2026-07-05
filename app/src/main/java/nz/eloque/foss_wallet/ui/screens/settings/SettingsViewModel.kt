@@ -23,6 +23,7 @@ data class SettingsUiState(
     val barcodePosition: BarcodePosition = BarcodePosition.Center,
     val increasePassViewBrightness: Boolean = false,
     val askBeforeDelete: Boolean = true,
+    val oledDark: Boolean = false,
 )
 
 @HiltViewModel
@@ -51,6 +52,7 @@ class SettingsViewModel
                         barcodePosition = settingsStore.barcodePosition(),
                         increasePassViewBrightness = settingsStore.increasePassViewBrightness(),
                         askBeforeDelete = settingsStore.deleteConfirmationEnabled(),
+                        oledDark = settingsStore.oledDark(),
                     )
             }
         }
@@ -85,6 +87,11 @@ class SettingsViewModel
 
         fun setAskBeforeDelete(enabled: Boolean) {
             settingsStore.setDeleteConfirmationEnabled(enabled)
+            update()
+        }
+
+        fun setOledDark(enabled: Boolean) {
+            settingsStore.setOledDark(enabled)
             update()
         }
     }

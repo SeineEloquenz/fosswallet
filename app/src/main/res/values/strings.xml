@@ -130,6 +130,8 @@
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
     <string name="created_pass_export_warning">Created passes can currently not be exported</string>
+    <string name="appearance">Appearance</string>
+    <string name="oled_dark_theme">Pure black dark theme (OLED)</string>
     <string name="show_archived_passes">Show archived passes</string>
     <string name="permission_read_passes_label">Read Passes</string>
     <string name="permission_read_passes_description">Read your passes and their details, including barcodes in a Catima compatible way</string>
