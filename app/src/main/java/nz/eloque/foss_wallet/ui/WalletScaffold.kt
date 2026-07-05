@@ -28,7 +28,6 @@ fun WalletScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    filterBar: @Composable RowScope.() -> Unit = {},
     subRow: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
