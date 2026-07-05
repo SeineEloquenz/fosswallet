@@ -35,7 +35,8 @@ fun ArchiveScreen(
 
     WalletScaffold(
         navController = navController,
-        title = stringResource(id = R.string.the_archive),
+        imageVector = Icons.Default.Archive,
+        onSearch = { walletViewModel.filter(it) },
         toolWindow = true,
         actions = {
             if (selectedPasses.isNotEmpty()) {
@@ -78,6 +79,12 @@ fun ArchiveScreen(
                     walletViewModel,
                 )
             }
+        },
+        subRow = {
+            FilterBlock(
+                walletViewModel = walletViewModel,
+                tags = tags,
+            )
         },
     ) { scrollBehavior ->
         WalletView(
