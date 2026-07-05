@@ -113,6 +113,7 @@ fun CreateView(
     var stripUrl by remember { mutableStateOf<Uri?>(null) }
     var thumbnailUrl by remember { mutableStateOf<Uri?>(null) }
     var footerUrl by remember { mutableStateOf<Uri?>(null) }
+    var backgroundUrl by remember { mutableStateOf<Uri?>(null) }
 
     var name by remember { mutableStateOf("") }
     var nameTouched by remember { mutableStateOf(false) }
@@ -553,6 +554,15 @@ fun CreateView(
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
                             )
+
+                            ImagePicker(
+                                imageUrl = backgroundUrl,
+                                onClear = { backgroundUrl = null },
+                                onChoose = { backgroundUrl = it },
+                                label = stringResource(R.string.background),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
                     }
                 }
@@ -609,6 +619,7 @@ fun CreateView(
                                     stripUrl = stripUrl,
                                     thumbnailUrl = thumbnailUrl,
                                     footerUrl = footerUrl,
+                                    backgroundUrl = backgroundUrl,
                                 )
                             withContext(Dispatchers.Main) {
                                 isSaving = false
