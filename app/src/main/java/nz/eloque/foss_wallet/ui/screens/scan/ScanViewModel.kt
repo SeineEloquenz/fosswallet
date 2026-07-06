@@ -133,6 +133,7 @@ class ScanViewModel
                     strip = null,
                     thumbnail = null,
                     footer = null,
+                    background = null,
                 )
 
             passStore.create(
@@ -142,6 +143,7 @@ class ScanViewModel
                         hasStrip = bitmaps.strip != null,
                         hasThumbnail = bitmaps.thumbnail != null,
                         hasFooter = bitmaps.footer != null,
+                        hasBackground = bitmaps.background != null,
                     ),
                 bitmaps = bitmaps,
             )

@@ -81,6 +81,8 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import nz.eloque.compose_kit.input.ComboBox
+import nz.eloque.compose_kit.picker.ImagePicker
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassColors
@@ -88,9 +90,7 @@ import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.components.ImagePicker
 import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
-import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -113,6 +113,7 @@ fun CreateView(
     var stripUrl by remember { mutableStateOf<Uri?>(null) }
     var thumbnailUrl by remember { mutableStateOf<Uri?>(null) }
     var footerUrl by remember { mutableStateOf<Uri?>(null) }
+    var backgroundUrl by remember { mutableStateOf<Uri?>(null) }
 
     var name by remember { mutableStateOf("") }
     var nameTouched by remember { mutableStateOf(false) }
@@ -553,6 +554,15 @@ fun CreateView(
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
                             )
+
+                            ImagePicker(
+                                imageUrl = backgroundUrl,
+                                onClear = { backgroundUrl = null },
+                                onChoose = { backgroundUrl = it },
+                                label = stringResource(R.string.background),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
                     }
                 }
@@ -609,6 +619,7 @@ fun CreateView(
                                     stripUrl = stripUrl,
                                     thumbnailUrl = thumbnailUrl,
                                     footerUrl = footerUrl,
+                                    backgroundUrl = backgroundUrl,
                                 )
                             withContext(Dispatchers.Main) {
                                 isSaving = false

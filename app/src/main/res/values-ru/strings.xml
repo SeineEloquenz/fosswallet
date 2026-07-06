@@ -57,7 +57,6 @@
     <string name="date_added">Дата добавления</string>
     <string name="relevant_date_latest">Ближайшая дата</string>
     <string name="relevant_date_earliest">Старейшая дата</string>
-    <string name="selected">Выбрано</string>
     <string name="filter">Сортировать по</string>
     <string name="wallet">Кошелёк</string>
     <string name="libraries">Библиотеки</string>

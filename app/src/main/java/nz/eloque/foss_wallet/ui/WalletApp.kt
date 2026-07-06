@@ -3,8 +3,6 @@
 package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
@@ -29,6 +27,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.zxing.BarcodeFormat
+import nz.eloque.compose_kit.navigation.slideBackward
+import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.shortcut.Shortcut
@@ -112,10 +112,10 @@ fun WalletApp(
         NavHost(
             navController = navController,
             startDestination = Screen.Wallet.route,
-            enterTransition = { slideIntoContainer(SlideDirection.Start, tween()) },
-            exitTransition = { slideOutOfContainer(SlideDirection.Start, tween()) },
-            popEnterTransition = { slideIntoContainer(SlideDirection.End, tween()) },
-            popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) },
+            enterTransition = { slideForward().targetContentEnter },
+            exitTransition = { slideForward().initialContentExit },
+            popEnterTransition = { slideBackward().targetContentEnter },
+            popExitTransition = { slideBackward().initialContentExit },
         ) {
             composable(Screen.Wallet.route) {
                 WalletScreen(navController, walletViewModel)
