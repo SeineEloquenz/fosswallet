@@ -65,7 +65,7 @@ fun FilterBlock(
             )
             SelectionMenu(
                 icon = Icons.AutoMirrored.Default.Sort,
-                contentDescription = R.string.filter,
+                contentDescription = stringResource(R.string.filter),
                 options = SortOption.all(),
                 selectedOption = sortOption,
                 onOptionSelected = onSortChange,

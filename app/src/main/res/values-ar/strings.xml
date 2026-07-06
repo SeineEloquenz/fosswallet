@@ -31,4 +31,14 @@
     <string name="barcode_format">تنسيق الرمز الشريطي</string>
     <string name="logo">الشعار</string>
     <string name="pass_expiration_date">تاريخ الانتهاء</string>
+    <string name="boarding_pass">بطاقة الصعود</string>
+    <string name="no_url_in_clipboard">لا يوجد رابط في الحافظة</string>
+    <string name="no_text_in_clipboard">لا يوجد نص في الحافظة</string>
+    <string name="pass_foreground_color">لون المقدمة</string>
+    <string name="pass_relevant_end">نهاية</string>
+    <string name="pass_relevant_start">بداية</string>
+    <string name="no_search_results">لا نتائج بحث</string>
+    <string name="image">صورة</string>
+    <string name="footer">تذييل</string>
+    <string name="attachment_name">اسم المرفق</string>
 </resources>

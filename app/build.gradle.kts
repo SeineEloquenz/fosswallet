@@ -35,6 +35,7 @@ android {
     }
     namespace = "nz.eloque.foss_wallet"
     compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     buildFeatures {
         compose = true
@@ -45,8 +46,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 37
-        versionCode = 111
-        versionName = "0.46.1"
+        versionCode = 114
+        versionName = "0.47.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
