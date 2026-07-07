@@ -74,7 +74,7 @@ fun WalletScaffoldWithFilterBar(
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     subRow: (@Composable RowScope.() -> Unit)? = null,
-    content: @Composable(scrollBehavior: TopAppBarScrollBehavior) -> Unit,
+    content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     AppScaffold(
         title = {
