@@ -10,7 +10,7 @@ composeBom = "2026.06.00"
 composeKit = "0.4.0"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
-zxingcpp = "3.0.2"
+zxingcpp = "3.1.0"
 cameraX = "1.6.1"
 espressoCore = "3.7.0"
 hiltAndroid = "2.60"
