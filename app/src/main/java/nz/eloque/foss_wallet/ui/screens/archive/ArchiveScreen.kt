@@ -33,7 +33,7 @@ fun ArchiveScreen(
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
-    WalletScaffold(
+    WalletScaffoldWithFilterBar(
         navController = navController,
         imageVector = Icons.Default.Archive,
         onSearch = { walletViewModel.filter(it) },
