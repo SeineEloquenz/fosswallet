@@ -18,6 +18,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilterBar
+import nz.eloque.foss_wallet.ui.screens.wallet.FilterBlock
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletView
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
@@ -32,6 +33,9 @@ fun ArchiveScreen(
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
+
+    val tagFlow = walletViewModel.allTags
+    val tags by tagFlow.collectAsState(setOf())
 
     WalletScaffoldWithFilterBar(
         navController = navController,
