@@ -182,7 +182,6 @@ fun BackFields(fields: List<PassField>) {
         fields.forEach {
             PassField(
                 field = it,
-                labelColor = Color.Unspecified,
                 maxLines = Int.MAX_VALUE,
                 style = MaterialTheme.typography.bodyLarge,
             )

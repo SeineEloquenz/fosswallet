@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,8 @@ object PassCardDefaults {
         @Composable @ReadOnlyComposable
         get() = MaterialTheme.typography.bodyLarge
 }
+
+val LocalPassLabelColor = compositionLocalOf { Color.Unspecified }
 
 @Composable
 fun PassCard(
@@ -130,7 +133,6 @@ fun PassCard(
                     modifier = horizontalPaddingModifier.height(90.dp),
                     secondaryFields = if (pass.type is PassType.Event) pass.secondaryFields else null,
                     isSelectable = showEntirePass,
-                    labelColor = pass.colors?.label ?: Color.Unspecified,
                 )
                 passFields =
                     if (pass.type is PassType.Event) {
@@ -151,7 +153,6 @@ fun PassCard(
                             boardingPassCutoutOffset = it.positionInParent().y + it.size.height + passCardPaddingPx
                         },
                     isSelectable = showEntirePass,
-                    labelColor = pass.colors?.label ?: Color.Unspecified,
                 )
                 passFields = listOf(pass.auxiliaryFields, pass.secondaryFields)
             }
@@ -171,7 +172,6 @@ fun PassCard(
             passFields.forEach {
                 FieldsRow(
                     fields = it,
-                    labelColor = pass.colors?.label ?: Color.Unspecified,
                     modifier = horizontalPaddingModifier,
                 )
             }
@@ -209,6 +209,7 @@ private fun PassCardBase(
 
     CompositionLocalProvider(
         LocalDensity provides Density(density = fixedDensity, fontScale = 1f),
+        LocalPassLabelColor provides colors.label,
     ) {
         Surface(
             modifier = modifier,

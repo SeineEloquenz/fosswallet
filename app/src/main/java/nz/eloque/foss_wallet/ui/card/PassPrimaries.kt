@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,6 @@ import java.io.File
 fun ThumbnailPrimary(
     primaryFields: List<PassField>,
     thumbnail: File?,
-    labelColor: Color,
     modifier: Modifier = Modifier,
     secondaryFields: List<PassField>? = null,
     isSelectable: Boolean = true,
@@ -52,7 +50,6 @@ fun ThumbnailPrimary(
             ) { fontSize ->
                 PassField(
                     field = primaryField,
-                    labelColor = labelColor,
                     fontSize = fontSize,
                     maxLines = maxLines,
                     isSelectable = isSelectable,
@@ -62,7 +59,6 @@ fun ThumbnailPrimary(
             secondaryFields?.let {
                 FieldsRow(
                     fields = it,
-                    labelColor = labelColor,
                     isSelectable = isSelectable,
                 )
             }
@@ -114,7 +110,6 @@ fun StripImagePrimary(
 fun BoardingPrimary(
     primaryFields: List<PassField>,
     transitType: TransitType,
-    labelColor: Color,
     modifier: Modifier = Modifier,
     isSelectable: Boolean = true,
 ) {
@@ -136,7 +131,6 @@ fun BoardingPrimary(
         ) {
             PassField(
                 field = departureField,
-                labelColor = labelColor,
                 modifier = Modifier.weight(1f),
                 fontSize = fontSize,
                 isSelectable = isSelectable,
@@ -154,7 +148,6 @@ fun BoardingPrimary(
 
             PassField(
                 field = destinationField,
-                labelColor = labelColor,
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End,
                 fontSize = fontSize,
