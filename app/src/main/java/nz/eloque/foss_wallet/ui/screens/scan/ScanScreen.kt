@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.scan
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -16,7 +17,7 @@ fun ScanScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = Screen.Create.resourceId),
+        title = { Text(stringResource(id = Screen.Create.resourceId)) },
     ) {
         ScanView(
             navController = navController,

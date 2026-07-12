@@ -24,12 +24,13 @@ import nz.eloque.foss_wallet.R
 fun WalletScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
-    title: String = stringResource(R.string.wallet),
+    title: @Composable () -> Unit = {},
     toolWindow: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    subRow: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     AppScaffold(

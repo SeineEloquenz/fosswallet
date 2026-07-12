@@ -37,7 +37,7 @@ fun UpdateFailureScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(R.string.details),
+        title = { Text(stringResource(R.string.details)) },
         actions = {
             IconButton(onClick = {
                 clipboard.nativeClipboard.setPrimaryClip(ClipData.newPlainText(reason, rationale))
