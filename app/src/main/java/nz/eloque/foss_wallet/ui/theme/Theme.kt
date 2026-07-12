@@ -11,6 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -43,6 +44,7 @@ onSurface = Color(0xFF1C1B1F),
 fun WalletTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
+    oledDark: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme =
@@ -54,6 +56,16 @@ fun WalletTheme(
 
             darkTheme -> DarkColorScheme
             else -> LightColorScheme
+        }.let {
+            if (darkTheme && oledDark) {
+                it.copy(
+                    background = Color.Black,
+                    surface = Color.Black,
+                    surfaceContainerLowest = Color.Black,
+                )
+            } else {
+                it
+            }
         }
     val view = LocalView.current
     if (!view.isInEditMode) {

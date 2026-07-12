@@ -11,11 +11,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +28,13 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import nz.eloque.foss_wallet.persistence.SettingsStore
+import nz.eloque.foss_wallet.persistence.ThemeMode
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.Shortcut
@@ -43,6 +48,9 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val walletViewModel: WalletViewModel by viewModels()
+
+    @Inject
+    lateinit var settingsStore: SettingsStore
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,7 +132,15 @@ class MainActivity : ComponentActivity() {
                     coroutineScope.launch(Dispatchers.IO) { permissionState.launchPermissionRequest() }
                 }
             }
-            WalletTheme {
+            val oledDark by settingsStore.oledDarkState.collectAsState()
+            val themeMode by settingsStore.themeModeState.collectAsState()
+            val darkTheme =
+                when (themeMode) {
+                    ThemeMode.Light -> false
+                    ThemeMode.Dark -> true
+                    else -> isSystemInDarkTheme()
+                }
+            WalletTheme(darkTheme = darkTheme, oledDark = oledDark) {
                 Box(
                     modifier =
                         androidx.compose.ui.Modifier

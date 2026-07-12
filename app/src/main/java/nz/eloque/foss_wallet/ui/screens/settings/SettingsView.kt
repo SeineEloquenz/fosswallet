@@ -38,6 +38,7 @@ import nz.eloque.compose_kit.settings.SettingsButton
 import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.persistence.ThemeMode
 import nz.eloque.foss_wallet.share.share
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -111,6 +112,28 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                     }
                 },
                 optionLabel = { resources.getString(it.label) },
+            )
+        }
+        Section(
+            heading = stringResource(R.string.appearance),
+        ) {
+            ComboBox(
+                title = stringResource(R.string.theme),
+                options = ThemeMode.all(),
+                selectedOption = settings.value.themeMode,
+                onOptionSelected = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        settingsViewModel.setThemeMode(it)
+                    }
+                },
+                optionLabel = { resources.getString(it.label) },
+            )
+            HorizontalDivider()
+            SettingsSwitch(
+                title = stringResource(R.string.oled_dark_theme),
+                subtitle = stringResource(R.string.oled_dark_theme_hint),
+                checked = settings.value.oledDark,
+                onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setOledDark(it) } },
             )
         }
         Section(
