@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import nz.eloque.compose_kit.components.Section
 import nz.eloque.compose_kit.input.ComboBox
 import nz.eloque.compose_kit.input.SubmittableTextField
@@ -38,6 +40,7 @@ import nz.eloque.compose_kit.settings.SettingsButton
 import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.share.BundleShareResult
 import nz.eloque.foss_wallet.share.share
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -132,7 +135,24 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        share(passes.map { it.pass }, context)
+                        val result = share(passes.map { it.pass }, context)
+                        withContext(Dispatchers.Main) {
+                            when (result) {
+                                is BundleShareResult.NothingToShare ->
+                                    Toast
+                                        .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
+                                        .show()
+                                is BundleShareResult.Shared ->
+                                    if (result.skipped > 0) {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                resources.getString(R.string.export_skipped_passes, result.shared, result.skipped),
+                                                Toast.LENGTH_LONG,
+                                            ).show()
+                                    }
+                            }
+                        }
                     }
                 },
             )
