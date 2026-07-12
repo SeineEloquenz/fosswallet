@@ -7,15 +7,47 @@ import androidx.core.content.FileProvider
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.bundle.PassBundler
 import java.io.File
+import java.io.IOException
+
+sealed class BundleShareResult {
+    data class Shared(
+        val shared: Int,
+        val skipped: Int,
+    ) : BundleShareResult()
+
+    object NothingToShare : BundleShareResult()
+}
 
 fun share(
     passes: Collection<Pass>,
     context: Context,
-) {
+): BundleShareResult {
+    val exportable = passes.filter { it.originalPassFile(context) != null }
+    if (exportable.isEmpty()) {
+        return BundleShareResult.NothingToShare
+    }
     val bundler = PassBundler(context)
-    val passesFile = bundler.bundle(passes)
+    val passesFile = bundler.bundle(exportable)
     val uri = uri(context, passesFile)
     shareFile(uri, "application/vnd.apple.pkpasses", context)
+    return BundleShareResult.Shared(exportable.size, passes.size - exportable.size)
+}
+
+fun save(
+    passes: Collection<Pass>,
+    target: Uri,
+    context: Context,
+): BundleShareResult {
+    val exportable = passes.filter { it.originalPassFile(context) != null }
+    if (exportable.isEmpty()) {
+        return BundleShareResult.NothingToShare
+    }
+    val bundle = PassBundler(context).bundle(exportable)
+    val output = context.contentResolver.openOutputStream(target) ?: throw IOException("Could not open $target for writing")
+    output.use { out ->
+        bundle.inputStream().use { it.copyTo(out) }
+    }
+    return BundleShareResult.Shared(exportable.size, passes.size - exportable.size)
 }
 
 fun share(
