@@ -16,9 +16,6 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven {
-            url = uri("https://raw.githubusercontent.com/SeineEloquenz/compose-kit/maven/")
-        }
-        maven {
             url = uri("https://jitpack.io")
         }
     }
