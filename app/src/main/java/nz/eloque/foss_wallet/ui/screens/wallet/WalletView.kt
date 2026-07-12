@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -47,13 +49,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.map
+import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,21 +189,27 @@ fun WalletView(
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
                 onRightSwipe = { passToDelete.value = pass },
             ) {
-                ShortPassCard(
-                    pass = pass,
-                    allTags = tags,
-                    onClick = {
-                        if (selectedPasses.isNotEmpty()) {
+                val isSelected = selectedPasses.contains(pass)
+                val scale by animateFloatAsState(if (isSelected) 0.95f else 1f)
+                Box {
+                    PassCard(
+                        localizedPass = pass,
+                        allTags = tags,
+                        modifier = Modifier.scale(scale),
+                        onClick = {
+                            if (selectedPasses.isNotEmpty()) {
+                                if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
+                            } else {
+                                navController.navigate("pass/${pass.pass.id}")
+                            }
+                        },
+                        onLongClick = {
                             if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
-                        } else {
-                            navController.navigate("pass/${pass.pass.id}")
-                        }
-                    },
-                    onLongClick = {
-                        if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
-                    },
-                    selected = selectedPasses.contains(pass),
-                )
+                        },
+                        showEntirePass = false,
+                    )
+                    if (isSelected) SelectionIndicator(Modifier.align(Alignment.TopEnd))
+                }
             }
         }
         if (!archive) {

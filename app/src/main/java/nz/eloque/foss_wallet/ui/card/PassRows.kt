@@ -26,14 +26,15 @@ import nz.eloque.foss_wallet.model.field.PassField
 @Composable
 fun HeaderRow(
     pass: Pass,
+    modifier: Modifier = Modifier,
     isSelectable: Boolean = true,
 ) {
     val context = LocalContext.current
 
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier) {
         Row(
             modifier = Modifier.height(38.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(PassCardDefaults.spacing),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             pass.logoFile(context)?.let {
@@ -77,16 +78,14 @@ fun FieldsRow(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     isSelectable: Boolean = true,
 ) {
-    val space = 10.dp
-
     if (fields.isNotEmpty()) {
         AutoSizePassFields(
             fields = fields,
             modifier = modifier.height(38.dp),
-            spacing = space,
+            spacing = PassCardDefaults.spacing,
         ) { fontSize ->
             FairRow(
-                spacing = space,
+                spacing = PassCardDefaults.spacing,
                 arrangeWithSpaceBetween = arrangeWithSpaceBetween,
             ) {
                 fields.forEach {
