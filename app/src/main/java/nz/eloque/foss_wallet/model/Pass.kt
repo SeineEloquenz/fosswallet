@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.model
 
 import android.content.Context
 import android.location.Location
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import nz.eloque.foss_wallet.model.field.PassField
@@ -26,6 +27,8 @@ data class Pass(
     val hasStrip: Boolean = false,
     val hasThumbnail: Boolean = false,
     val hasFooter: Boolean = false,
+    @ColumnInfo(defaultValue = "0")
+    val hasBackground: Boolean = false,
     /**
      * Device UUID used for updating passes.
      * We use a unique UUID per pass so devices can not be linked across servers from the UUID
@@ -54,6 +57,8 @@ data class Pass(
     fun thumbnailFile(context: Context): File? = coilImageModel(context, "thumbnail", hasThumbnail)
 
     fun footerFile(context: Context): File? = coilImageModel(context, "footer", hasFooter)
+
+    fun backgroundFile(context: Context): File? = coilImageModel(context, "background", hasBackground)
 
     fun contains(query: String): Boolean =
         when {
@@ -101,6 +106,7 @@ data class Pass(
         stripFile(context)?.delete()
         thumbnailFile(context)?.delete()
         footerFile(context)?.delete()
+        backgroundFile(context)?.delete()
         File(context.filesDir, id).delete()
     }
 

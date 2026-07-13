@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.persistence.loader
 
+import android.util.Log
 import nz.eloque.foss_wallet.utils.toByteArray
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipEntry
@@ -17,8 +18,11 @@ class PassesLoader(
                 while (entry != null) {
                     if (!entry.isDirectory && entry.name.endsWith(".pkpass", ignoreCase = true)) {
                         val passBytes = zip.toByteArray()
-                        val result = passLoader.load(passBytes)
-                        results.add(result)
+                        try {
+                            results.add(passLoader.load(passBytes))
+                        } catch (e: InvalidPassException) {
+                            Log.w(TAG, "Skipping invalid pass ${entry.name} in bundle: $e")
+                        }
                     }
                     entry = zip.nextEntry
                 }
@@ -28,4 +32,8 @@ class PassesLoader(
         } catch (e: Exception) {
             throw InvalidPassesException(e)
         }
+
+    companion object {
+        private const val TAG = "PassesLoader"
+    }
 }

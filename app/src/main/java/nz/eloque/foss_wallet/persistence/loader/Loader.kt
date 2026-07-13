@@ -71,6 +71,14 @@ class Loader(
                 }
                 return LoaderResult.Invalid
             }
+        if (loadResults.isEmpty()) {
+            coroutineScope.launch(Dispatchers.Main) {
+                Toast
+                    .makeText(context, context.getString(R.string.no_passes_found_in_file), Toast.LENGTH_SHORT)
+                    .show()
+            }
+            return LoaderResult.Invalid
+        }
         if (loadResults.size == 1) {
             val loadResult = loadResults.first()
             val importResult = walletViewModel.add(loadResult)
@@ -132,7 +140,7 @@ class Loader(
         zipStream.close()
         return when {
             entries.contains("pass.json") -> Input.PKPASS
-            entries.all { it.endsWith(".pkpass") } -> Input.PKPASSES
+            entries.isNotEmpty() && entries.all { it.endsWith(".pkpass") } -> Input.PKPASSES
             else -> throw UnknownInputException()
         }
     }

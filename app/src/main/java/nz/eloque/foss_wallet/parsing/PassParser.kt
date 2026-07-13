@@ -100,6 +100,7 @@ class PassParser(
             hasStrip = bitmaps.strip != null,
             hasThumbnail = bitmaps.thumbnail != null,
             hasFooter = bitmaps.footer != null,
+            hasBackground = bitmaps.background != null,
             addedAt = addedAt,
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),

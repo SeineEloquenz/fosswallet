@@ -41,6 +41,9 @@ class PassRepository
 
         fun findById(id: String): LocalizedPassWithTags? = passDao.findById(id)?.applyLocalization(Locale.getDefault().language)
 
+        fun flowByGroup(groupId: Long): Flow<List<LocalizedPassWithTags>> =
+            passDao.flowByGroup(groupId).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+
         suspend fun associate(
             pass: Pass,
             group: PassGroup,

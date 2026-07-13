@@ -1,0 +1,12 @@
+name: Dependabot Auto-Merge
+
+on: pull_request
+
+jobs:
+  auto-merge:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: SeineEloquenz/ci/.github/workflows/dependabot-auto-merge.yml@main
+    with:
+      merge-method: squash

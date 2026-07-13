@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
@@ -27,6 +28,10 @@ class PassViewModel
         val allTags = tagRepository.all()
 
         fun passFlowById(id: String) = passStore.passFlowById(id)
+
+        fun passesInGroup(groupId: Long) = passStore.passesInGroup(groupId)
+
+        fun sortOption(): SortOption = settingsStore.sortOption()
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 

@@ -39,6 +39,8 @@ class PassStore
 
         fun passFlowById(id: String) = passRepository.flowById(id)
 
+        fun passesInGroup(groupId: Long) = passRepository.flowByGroup(groupId)
+
         fun filtered(query: String) =
             passRepository.filtered(query).map { passes ->
                 passes.map {
