@@ -130,4 +130,5 @@
     <string name="create_boarding_pass">Crea targeta d\'embarcament</string>
     <string name="attachments">Adjunts</string>
     <string name="attachment_name">Nom de l\'adjunt</string>
+    <string name="background">Fons</string>
 </resources>

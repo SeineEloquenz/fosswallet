@@ -137,4 +137,5 @@
     <string name="add_attachment">Lägg till bilaga</string>
     <string name="choose_attachment_name">Välj namn på bilagan</string>
     <string name="attachment_name">Bilagans namn</string>
+    <string name="background">Bakgrund</string>
 </resources>

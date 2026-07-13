@@ -137,4 +137,8 @@
     <string name="add_attachment">Engadir anexo</string>
     <string name="delete_attachment">Eliminar anexo</string>
     <string name="attachments">Anexos</string>
+    <string name="background">Segundo plano</string>
+    <string name="no_passes_found_in_file">Non se atopan pases neste ficheiro</string>
+    <string name="nothing_to_export">Nada que exportar: actualmente os pases creados non se poden exportar</string>
+    <string name="export_skipped_passes">Exportados %1$d pases, omitidos %2$d pases creados</string>
 </resources>

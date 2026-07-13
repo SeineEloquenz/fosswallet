@@ -128,7 +128,7 @@
     <string name="permission_read_passes_description">Lee los pases y sus detalles, incluyendo los códigos de barras de manera compatible con Catima</string>
     <string name="choose_attachment_name">Elegir nombre del archivo adjunto</string>
     <string name="add_attachment">Adjuntar archivo</string>
-    <string name="strip">Strip</string>
+    <string name="strip">Franja</string>
     <string name="open_in_map_app">Abrir en app de mapas</string>
     <string name="select_image_with_barcode">Seleccionar imagen con código de barras</string>
     <string name="no_barcode_found">Código de barras no encontrado</string>
@@ -137,4 +137,5 @@
     <string name="created_pass_export_warning">Los pases creados no pueden exportarse en este momento</string>
     <string name="show_archived_passes">Mostrar pases archivados</string>
     <string name="pass_foreground_color">Color de primer plano</string>
+    <string name="background">Fondo</string>
 </resources>

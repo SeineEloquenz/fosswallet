@@ -106,4 +106,7 @@
     <string name="thumbnail">Küçük resim</string>
     <string name="barcode_alt_text">Alternatif barkod metni</string>
     <string name="pass_relevant_start">Başlangıç</string>
+    <string name="background">Arka plan</string>
+    <string name="attachments">Ekler</string>
+    <string name="attachment_name">Ek adı</string>
 </resources>

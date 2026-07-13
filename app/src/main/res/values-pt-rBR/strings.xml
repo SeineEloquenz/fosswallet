@@ -137,4 +137,5 @@
     <string name="delete_attachment">Excluir anexo</string>
     <string name="attachments">Anexos</string>
     <string name="strip">Faixa</string>
+    <string name="background">Fundo</string>
 </resources>

@@ -137,4 +137,5 @@
     <string name="add_attachment">新增附件</string>
     <string name="delete_attachment">刪除附件</string>
     <string name="attachments">附件</string>
+    <string name="background">背景</string>
 </resources>
