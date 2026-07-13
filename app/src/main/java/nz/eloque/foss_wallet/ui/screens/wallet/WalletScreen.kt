@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,8 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -33,7 +30,6 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.compose_kit.components.FilterBar
 import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
@@ -58,9 +54,6 @@ fun WalletScreen(
     val listState = rememberLazyListState()
 
     val loading = remember { mutableStateOf(false) }
-
-    val tagFlow = walletViewModel.allTags
-    val tags by tagFlow.collectAsState(setOf())
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
@@ -96,12 +89,7 @@ fun WalletScreen(
 
     WalletScaffold(
         navController = navController,
-        title = {
-            FilterBar(
-                onSearch = { walletViewModel.filter(it) },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
+        title = stringResource(id = Screen.Wallet.resourceId),
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
@@ -184,12 +172,6 @@ fun WalletScreen(
                         ),
                 )
             }
-        },
-        subRow = {
-            FilterBlock(
-                walletViewModel = walletViewModel,
-                tags = tags,
-            )
         },
     ) { scrollBehavior ->
         WalletView(
