@@ -140,8 +140,11 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                             when (result) {
                                 is BundleShareResult.NothingToShare ->
                                     Toast
-                                        .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
-                                        .show()
+                                        .makeText(
+                                            context,
+                                            resources.getString(R.string.nothing_to_export).joinToStringRtlAware(resources.getString(R.string.created_pass_export_warning), separator = ": "),
+                                            Toast.LENGTH_LONG,
+                                        ).show()
                                 is BundleShareResult.Shared ->
                                     if (result.skipped > 0) {
                                         Toast
