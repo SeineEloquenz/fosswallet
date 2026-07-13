@@ -137,4 +137,5 @@
     <string name="add_attachment">Ajouter une pièce jointe</string>
     <string name="delete_attachment">Supprimer la pièce jointe</string>
     <string name="attachments">Pièces jointes</string>
+    <string name="background">Arrière-plan</string>
 </resources>

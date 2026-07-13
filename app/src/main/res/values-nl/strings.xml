@@ -137,4 +137,5 @@
     <string name="choose_attachment_name">Naam van de bijlage kiezen</string>
     <string name="permission_read_passes_description">Je pasjes en hun details lezen, inclusief barcodes op een met Catima compatibele manier</string>
     <string name="permission_read_passes_label">Pasjes lezen</string>
+    <string name="background">Achtergrond</string>
 </resources>

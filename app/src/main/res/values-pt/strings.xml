@@ -24,7 +24,7 @@
     <string name="attachments">Anexos</string>
     <string name="barcode_position_top">Topo</string>
     <string name="barcode_position_center">Centro</string>
-    <string name="barcode_position_bottom">Fundo</string>
+    <string name="barcode_position_bottom">Base</string>
     <string name="compatibility_mode">Modo de compatibilidade</string>
     <string name="icon">Ícone</string>
     <string name="pass_foreground_color">Cor de primeiro plano</string>
@@ -137,4 +137,5 @@
     <string name="choose_attachment_name">Escolha o nome do anexo</string>
     <string name="add_attachment">Adicionar anexo</string>
     <string name="delete_attachment">Apagar anexo</string>
+    <string name="background">Fundo</string>
 </resources>

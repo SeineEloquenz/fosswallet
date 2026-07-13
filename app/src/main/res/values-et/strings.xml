@@ -137,4 +137,8 @@
     <string name="add_attachment">Lisa manus</string>
     <string name="delete_attachment">Kustuta manus</string>
     <string name="attachments">Failid/manused</string>
+    <string name="background">Taust</string>
+    <string name="no_passes_found_in_file">Selles failis ei leidunud ühtegi dokumenti</string>
+    <string name="nothing_to_export">Mitte midagi pole eksportida: loodud dokumente ei saa hetkel eksportida</string>
+    <string name="export_skipped_passes">Eksportisin %1$d dokumenti, jätsin vahele %2$d loodud dokumenti</string>
 </resources>

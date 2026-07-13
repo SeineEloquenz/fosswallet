@@ -137,4 +137,8 @@
     <string name="add_attachment">Anhang hinzufügen</string>
     <string name="attachment_name">Name des Anhangs</string>
     <string name="choose_attachment_name">Wähle den Namen des Anhangs</string>
+    <string name="background">Hintergrund</string>
+    <string name="no_passes_found_in_file">Keine Pässe in dieser Datei gefunnden</string>
+    <string name="nothing_to_export">Nichts zu Exportieren: Erstellte Pässe können aktuell nicht exportiert werden</string>
+    <string name="export_skipped_passes">%1$d Pässe exportiert, %2$d erstellte Pässe übersprungen</string>
 </resources>

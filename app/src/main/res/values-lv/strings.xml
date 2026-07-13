@@ -71,4 +71,5 @@
     <string name="searching">Meklēšana…</string>
     <string name="pass_expiration_date">Derīguma termiņš</string>
     <string name="attachments">Pielikumi</string>
+    <string name="background">Fons</string>
 </resources>

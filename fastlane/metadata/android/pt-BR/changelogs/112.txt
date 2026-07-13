@@ -1,0 +1,4 @@
+* Permitir deslizar entre cartões agrupados na visualização de cartões
+* Mostrar números de programas de milhagem nos cartões de embarque
+* Suporte inicial para compartilhar PDFs com o FossWallet
+Observação: no momento, o PDF original não será adicionado como anexo, e o primeiro código de barras encontrado será usado para o cartão

@@ -72,4 +72,9 @@
     <string name="icon">Piktograma</string>
     <string name="searching">Ieškoma…</string>
     <string name="attachments">Priedai</string>
+    <string name="background">Fonas</string>
+    <string name="attachment_name">Priedo pavadinimas</string>
+    <string name="boarding_pass">Įlaipinimo kortelė</string>
+    <string name="event">Renginio bilietas</string>
+    <string name="filter">Rūšiuoti pagal</string>
 </resources>
