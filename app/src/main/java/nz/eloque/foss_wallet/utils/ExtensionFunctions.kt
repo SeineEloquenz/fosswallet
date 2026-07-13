@@ -13,7 +13,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.graphics.createBitmap
+import androidx.core.os.ConfigurationCompat
+import androidx.core.text.TextUtilsCompat
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -153,4 +156,21 @@ fun File.getMimeType(): String {
         .getSingleton()
         .getMimeTypeFromExtension(extension)
         ?: "application/octet-stream"
+}
+
+@Composable
+fun CharSequence.joinToStringRtlAware(
+    other: CharSequence,
+    separator: CharSequence = ""
+): String {
+    val configuration = LocalConfiguration.current
+    val isRtl = ConfigurationCompat.getLocales(configuration)[0]?.let {
+        TextUtilsCompat.getLayoutDirectionFromLocale(it) == View.LAYOUT_DIRECTION_RTL
+    } ?: false
+
+    return if (isRtl) {
+        "$other${separator.reversed()}$this"
+    } else {
+        "$this$separator$other"
+    }
 }
