@@ -6,6 +6,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.scaffold.AppScaffold
 import nz.eloque.foss_wallet.R
 
@@ -32,7 +34,13 @@ fun WalletScaffold(
     content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
 ) {
     AppScaffold(
-        title = title,
+        title = {
+            AbbreviatingText(
+                title,
+                style = MaterialTheme.typography.headlineMedium,
+                maxLines = 1,
+            )
+        },
         modifier = modifier,
         navigationIcon = {
             if (toolWindow) {
