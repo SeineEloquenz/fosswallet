@@ -128,10 +128,10 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
             )
         }
         Section(
-            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
+            heading = stringResource(R.string.export).joinToStringRtlAware(stringResource(R.string.share_passes), seperator = " / "),
         ) {
             SettingsButton(
-                title = stringResource(R.string.export) + " (.pkpasses)",
+                title = stringResource(R.string.export).joinToStringRtlAware("(.pkpasses)", separator = " "),
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
