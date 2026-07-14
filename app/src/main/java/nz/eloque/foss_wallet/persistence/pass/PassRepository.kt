@@ -65,10 +65,10 @@ class PassRepository
             originalPass: OriginalPass?,
         ) {
             val id = pass.id
+            val metadata = passDao.metadata(id) ?: PassMetadata(id)
+            val archived = AutoArchiver.shouldBeAutoArchived(pass, metadata)
             passDao.insert(pass)
-            var passMetadata = passDao.metadata(id) ?: PassMetadata(pass.id)
-            passMetadata = passMetadata.copy(archived = AutoArchiver.shouldBeAutoArchived(pass, passMetadata))
-            passDao.insert(passMetadata)
+            passDao.insert(metadata.copy(archived = archived))
             bitmaps.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
         }
@@ -102,6 +102,8 @@ class PassRepository
             pass: Pass,
             groupId: Long,
         ) = passDao.dissociate(pass, groupId)
+
+        suspend fun metadata(id: String) = passDao.metadata(id)
 
         suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
 

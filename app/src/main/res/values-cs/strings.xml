@@ -137,4 +137,5 @@
     <string name="add_attachment">Přidat přílohu</string>
     <string name="delete_attachment">Odstranit přílohu</string>
     <string name="attachments">Přílohy</string>
+    <string name="background">Pozadí</string>
 </resources>

@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -19,7 +18,7 @@ fun CreateScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = { Text(stringResource(id = Screen.Create.resourceId)) },
+        title = stringResource(id = Screen.Create.resourceId),
     ) {
         CreateView(
             navController,

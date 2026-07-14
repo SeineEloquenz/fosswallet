@@ -137,4 +137,5 @@
     <string name="choose_attachment_name">Scegli nome dell\'allegato</string>
     <string name="permission_read_passes_label">Biglietti di lettura</string>
     <string name="permission_read_passes_description">Leggere i tuoi biglietti e i loro dettagli, inclusi i codici a barre in modo compatibile con Catima</string>
+    <string name="background">Sfondo</string>
 </resources>

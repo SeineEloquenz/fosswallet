@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.about
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -14,7 +13,7 @@ fun AboutScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = { Text(stringResource(id = R.string.about)) },
+        title = stringResource(id = R.string.about),
     ) {
         AboutView(navController)
     }

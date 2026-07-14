@@ -63,6 +63,7 @@
     <string name="n_passes_imported">%1$d passes imported</string>
     <string name="pass_deleted">Pass successfully deleted</string>
     <string name="pass_imported">Pass successfully imported</string>
+    <string name="pass_imported_into_the_archive">Pass imported into the archive</string>
     <string name="save">Save</string>
     <string name="export">Export</string>
     <string name="share_passes">Share passes</string>
@@ -129,9 +130,9 @@
     <string name="no_barcode_found">No barcode found</string>
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
-    <string name="created_pass_export_warning">Created passes can currently not be exported</string>
+    <string name="created_pass_export_warning">Created passes cannot currently be exported</string>
     <string name="no_passes_found_in_file">No passes found in this file</string>
-    <string name="nothing_to_export">Nothing to export: created passes can currently not be exported</string>
+    <string name="nothing_to_export">Nothing to export: created passes cannot currently be exported</string>
     <string name="export_skipped_passes">Exported %1$d passes, skipped %2$d created passes</string>
     <string name="show_archived_passes">Show archived passes</string>
     <string name="permission_read_passes_label">Read Passes</string>

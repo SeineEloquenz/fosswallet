@@ -137,4 +137,5 @@
     <string name="delete_attachment">Διαγραφή συναπτόμενου</string>
     <string name="attachments">Συναπτόμενα</string>
     <string name="strip">Λωρίδες</string>
+    <string name="background">Φόντο</string>
 </resources>

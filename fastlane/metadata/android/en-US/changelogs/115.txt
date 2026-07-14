@@ -1,0 +1,5 @@
+* Support for pass background images
+* Improve visibility of pkpasses export results
+* Show when a pass has been imported into the archive because its date is in the past
+* Restyle settings input fields
+* Fix vertical alignment of short passes
