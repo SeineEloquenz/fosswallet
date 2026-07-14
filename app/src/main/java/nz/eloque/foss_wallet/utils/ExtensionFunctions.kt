@@ -1,9 +1,11 @@
 package nz.eloque.foss_wallet.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
+import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
@@ -13,10 +15,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.graphics.createBitmap
-import androidx.core.os.ConfigurationCompat
-import androidx.core.text.TextUtilsCompat
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -158,15 +157,12 @@ fun File.getMimeType(): String {
         ?: "application/octet-stream"
 }
 
-@Composable
-fun CharSequence.joinToStringRtlAware(
+fun CharSequence.concatRtlAware(
     other: CharSequence,
-    separator: CharSequence = ""
+    context: Context,
+    separator: CharSequence = "",
 ): String {
-    val configuration = LocalConfiguration.current
-    val isRtl = ConfigurationCompat.getLocales(configuration)[0]?.let {
-        TextUtilsCompat.getLayoutDirectionFromLocale(it) == View.LAYOUT_DIRECTION_RTL
-    } ?: false
+    val isRtl = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
 
     return if (isRtl) {
         "$other${separator.reversed()}$this"
