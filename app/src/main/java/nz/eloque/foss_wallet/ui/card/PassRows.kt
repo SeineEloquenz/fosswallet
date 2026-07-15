@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,14 +25,15 @@ import nz.eloque.foss_wallet.model.field.PassField
 @Composable
 fun HeaderRow(
     pass: Pass,
+    modifier: Modifier = Modifier,
     isSelectable: Boolean = true,
 ) {
     val context = LocalContext.current
 
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier) {
         Row(
             modifier = Modifier.height(38.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(PassCardDefaults.spacing),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             pass.logoFile(context)?.let {
@@ -46,7 +46,6 @@ fun HeaderRow(
 
             pass.logoText?.let {
                 Text(
-                    color = pass.colors?.label ?: Color.Unspecified,
                     text = it,
                     modifier = Modifier.weight(1f),
                     overflow = TextOverflow.Ellipsis,
@@ -58,7 +57,6 @@ fun HeaderRow(
 
             FieldsRow(
                 fields = pass.headerFields.reversed(),
-                labelColor = pass.colors?.label ?: Color.Unspecified,
                 modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth * 0.5f),
                 arrangeWithSpaceBetween = false,
                 horizontalAlignment = Alignment.End,
@@ -71,28 +69,24 @@ fun HeaderRow(
 @Composable
 fun FieldsRow(
     fields: List<PassField>,
-    labelColor: Color,
     modifier: Modifier = Modifier,
     arrangeWithSpaceBetween: Boolean = true,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     isSelectable: Boolean = true,
 ) {
-    val space = 10.dp
-
     if (fields.isNotEmpty()) {
         AutoSizePassFields(
             fields = fields,
             modifier = modifier.height(38.dp),
-            spacing = space,
+            spacing = PassCardDefaults.spacing,
         ) { fontSize ->
             FairRow(
-                spacing = space,
+                spacing = PassCardDefaults.spacing,
                 arrangeWithSpaceBetween = arrangeWithSpaceBetween,
             ) {
                 fields.forEach {
                     PassField(
                         field = it,
-                        labelColor = labelColor,
                         horizontalAlignment = horizontalAlignment,
                         fontSize = fontSize,
                         isSelectable = isSelectable,

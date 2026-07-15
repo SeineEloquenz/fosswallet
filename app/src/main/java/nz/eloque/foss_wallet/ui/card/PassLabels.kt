@@ -18,7 +18,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.Hyphens
@@ -57,7 +56,6 @@ val passFieldContentStyle: TextStyle
 fun PassField(
     field: PassField,
     modifier: Modifier = Modifier,
-    labelColor: Color,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     fontSize: TextUnit = TextUnit.Unspecified,
     maxLines: Int = 1,
@@ -77,9 +75,9 @@ fun PassField(
     ) {
         AbbreviatingText(
             text = field.label?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
-            color = labelColor,
+            color = LocalPassLabelColor.current,
             textAlign = textAlign,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+            style = PassCardDefaults.labelStyle,
             useTooltip = isSelectable,
         )
         val content = @Composable {
@@ -93,6 +91,33 @@ fun PassField(
             )
         }
         if (isSelectable) SelectionContainer { content() } else content()
+    }
+}
+
+@Composable
+fun StripImagePrimaryField(
+    field: PassField,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    isSelectable: Boolean = true,
+) {
+    Column(modifier = modifier) {
+        val content = @Composable {
+            Text(
+                text = field.content.parseHtml(),
+                fontSize = fontSize,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = passFieldContentStyle,
+            )
+        }
+
+        if (isSelectable) SelectionContainer { content() } else content()
+        AbbreviatingText(
+            text = field.label.orEmpty(),
+            style = PassCardDefaults.labelStyleStripImage,
+            useTooltip = isSelectable,
+        )
     }
 }
 
@@ -122,6 +147,7 @@ fun AutoSizePassFields(
     maxLines: Int = 1,
     spacing: Dp = 0.dp,
     useFixedWidth: Boolean = false,
+    labelStyle: TextStyle = PassCardDefaults.labelStyle,
     content: @Composable (fontSize: TextUnit) -> Unit,
 ) {
     BoxWithConstraints(modifier = modifier) {
@@ -129,7 +155,6 @@ fun AutoSizePassFields(
 
         val density = LocalDensity.current
         val locale = LocalLocale.current.platformLocale
-        val labelStyle = MaterialTheme.typography.labelMedium
         val contentStyle = passFieldContentStyle
         val textMeasurer = rememberTextMeasurer(0)
 
@@ -176,7 +201,11 @@ fun AutoSizePassFields(
                                     text = it,
                                     style = contentStyle.copy(fontSize = currentFontSize),
                                     maxLines = maxLines,
-                                    constraints = Constraints(maxHeight = contentHeight, maxWidth = maxItemWidth),
+                                    constraints =
+                                        Constraints(
+                                            maxHeight = if (constraints.hasBoundedHeight) contentHeight else Constraints.Infinity,
+                                            maxWidth = if (constraints.hasBoundedWidth) maxItemWidth else Constraints.Infinity,
+                                        ),
                                 )
                             if (result.hasVisualOverflow) return@binarySearch true else result.size.width
                         }
@@ -252,7 +281,6 @@ private fun PreviewPassFieldBack() {
                  Lorem Ipsum
                 """.trimIndent(),
             ),
-        labelColor = Color.Unspecified,
         maxLines = Int.MAX_VALUE,
     )
 }
@@ -267,7 +295,6 @@ private fun PreviewPassFieldBackHtml() {
                 "Panne und Unfall telefonisch melden\r\n👉 Pannenhilfe Deutschland: <a href=\"tel:+498920204000\">089 20 20 40 00</a>\r\n👉 Pannenhilfe Ausland: <a href=\"tel:+4989222222\">+49 89 22 22 22</a> \r\n\r\nPanne oder Unfall bequem online melden \r\n👉 <a href=\"https://www.adac.de/der-adac/verein/pannenhilfe/pannenhilfe-online/eingabeseite/\">Panne melden</a>\r\n\r\nAmbulanz-Service \r\n<a href=\"tel:+4989767676\">+49 89 76 76 76</a>\r\nbei akuten Erkrankungen und Verletzungen\r\n"
                     .trimIndent(),
             ),
-        labelColor = Color.Unspecified,
         maxLines = Int.MAX_VALUE,
     )
 }
@@ -307,7 +334,6 @@ private fun PreviewAutoSizePassFields() {
         passFieldsData.forEach {
             FieldsRow(
                 fields = it,
-                labelColor = Color.Unspecified,
                 modifier = Modifier.border(Dp.Hairline, Color.Magenta),
             )
         }
