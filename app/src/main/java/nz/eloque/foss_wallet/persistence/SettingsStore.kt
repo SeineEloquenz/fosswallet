@@ -17,6 +17,8 @@ private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
 private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 private const val SORT_OPTION = "walletViewSortOption"
+private const val TAG_FILTER = "walletViewTagFilter"
+private const val FILTERS_EXPANDED = "walletViewFiltersExpanded"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
 
 sealed class BarcodePosition(
@@ -73,6 +75,17 @@ class SettingsStore
         fun sortOption(): SortOption = SortOptionSerializer.deserialize(prefs.getString(SORT_OPTION, "")!!) ?: SortOption.TimeAdded
 
         fun setSortOption(sortOption: SortOption) = prefs.edit { putString(SORT_OPTION, SortOptionSerializer.serialize(sortOption)) }
+
+        fun tagFilter(): String? = prefs.getString(TAG_FILTER, null)
+
+        fun setTagFilter(label: String?) =
+            prefs.edit {
+                if (label == null) remove(TAG_FILTER) else putString(TAG_FILTER, label)
+            }
+
+        fun filtersExpanded(): Boolean = prefs.getBoolean(FILTERS_EXPANDED, false)
+
+        fun setFiltersExpanded(expanded: Boolean) = prefs.edit { putBoolean(FILTERS_EXPANDED, expanded) }
 
         fun deleteConfirmationEnabled(): Boolean = prefs.getBoolean(DELETE_CONFIRMATION_ENABLED, true)
 
