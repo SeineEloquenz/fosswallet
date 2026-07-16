@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
@@ -42,36 +43,39 @@ fun TagCreator(
     onCreate: (Tag) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var label by remember { mutableStateOf("") }
+    var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
+    var hexInput by remember { mutableStateOf("ffffff") }
+
     val controller = rememberColorPickerController()
+
+    val hexRegex = Regex("^[0-9a-f]{6}$", RegexOption.IGNORE_CASE)
+    val isHexValid = hexInput.matches(hexRegex) && listOf(0, 2, 4).any { hexInput.substring(it, it + 2) == "ff" }
+    val isLabelValid = label.isNotEmpty() && label.length < 30
+
+    LaunchedEffect(colorEnvelope) {
+        hexInput = colorEnvelope.hexCode.drop(2)
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .width(308.dp),
     ) {
-        var label by remember { mutableStateOf("") }
-        var colorEnvelope by remember { mutableStateOf(INITIAL_ENVELOPE) }
-        var hexInput by remember { mutableStateOf("ffffff") }
-
-        val hexRegex = Regex("^[0-9a-f]{6}$", RegexOption.IGNORE_CASE)
-        val isHexValid = hexInput.matches(hexRegex) && listOf(0, 2, 4).any { hexInput.substring(it, it + 2) == "ff" }
-        val isLabelValid = label.isNotEmpty() && label.length < 30
-
-        LaunchedEffect(colorEnvelope) {
-            hexInput = colorEnvelope.hexCode.drop(2)
-        }
-
         OutlinedTextField(
             label = { Text(stringResource(R.string.tag_label)) },
             isError = !isLabelValid,
             value = label,
             onValueChange = { label = it },
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             HsvColorPicker(
                 controller = controller,
