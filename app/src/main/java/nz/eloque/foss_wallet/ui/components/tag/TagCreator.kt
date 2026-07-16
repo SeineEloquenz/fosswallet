@@ -60,10 +60,11 @@ fun TagCreator(
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
-            .width(308.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .width(308.dp),
     ) {
         OutlinedTextField(
             label = { Text(stringResource(R.string.tag_label)) },
