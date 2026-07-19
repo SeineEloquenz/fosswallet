@@ -33,7 +33,7 @@
     <string name="share">分享凭证</string>
     <string name="passes">凭证</string>
     <string name="sync_interval">凭证更新间隔（分钟）</string>
-    <string name="pass_already_imported">通行证已导入</string>
+    <string name="pass_already_imported">凭证已导入</string>
     <string name="wallet">钱包</string>
     <string name="pass_view_brightness">提高亮度</string>
     <string name="n_passes_imported">已导入 %1$d 个凭证</string>
@@ -141,4 +141,5 @@
     <string name="no_passes_found_in_file">在此文件中未找到凭证</string>
     <string name="nothing_to_export">没有可导出的内容：当前无法导出已创建的凭证</string>
     <string name="export_skipped_passes">已导出 %1$d 个凭证，跳过 %2$d 个已创建的凭证</string>
+    <string name="pass_imported_into_the_archive">凭证已导入到归档中</string>
 </resources>

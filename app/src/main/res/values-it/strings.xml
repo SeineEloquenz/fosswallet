@@ -138,4 +138,8 @@
     <string name="permission_read_passes_label">Biglietti di lettura</string>
     <string name="permission_read_passes_description">Leggere i tuoi biglietti e i loro dettagli, inclusi i codici a barre in modo compatibile con Catima</string>
     <string name="background">Sfondo</string>
+    <string name="pass_imported_into_the_archive">Biglietto importato nell\'archivio</string>
+    <string name="no_passes_found_in_file">In questo file non sono stati trovati pass</string>
+    <string name="nothing_to_export">Niente da esportare: Al momento non è possibile esportare i pass creati</string>
+    <string name="export_skipped_passes">Esportati %1$d biglietti, saltati %2$d biglietti creati</string>
 </resources>

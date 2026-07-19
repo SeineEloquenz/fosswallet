@@ -138,4 +138,7 @@
     <string name="delete_attachment">Supprimer la pièce jointe</string>
     <string name="attachments">Pièces jointes</string>
     <string name="background">Arrière-plan</string>
+    <string name="no_passes_found_in_file">Aucune carte trouvée dans ce fichier</string>
+    <string name="nothing_to_export">Rien à exporter. Les cartes créées ne peuvent pas être exportées actuellement</string>
+    <string name="export_skipped_passes">%1$d cartes exportées, %2$d cartes ignorées</string>
 </resources>

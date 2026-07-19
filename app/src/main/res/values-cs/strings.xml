@@ -138,4 +138,8 @@
     <string name="delete_attachment">Odstranit přílohu</string>
     <string name="attachments">Přílohy</string>
     <string name="background">Pozadí</string>
+    <string name="pass_imported_into_the_archive">Lístek importován do archivu</string>
+    <string name="no_passes_found_in_file">V tomto souboru nebyly nalezeny žádné lístky</string>
+    <string name="nothing_to_export">Nic k exportu: vytvořené lístky v současné době nelze exportovat</string>
+    <string name="export_skipped_passes">Exportováno %1$d lístků, přeskočeno %2$d vytvořených lístků</string>
 </resources>

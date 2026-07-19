@@ -1,0 +1,5 @@
+* Suporte para imagens de fundo de passes
+* Melhoria na visibilidade dos resultados da exportação do pkpasses
+* Exibição de um aviso quando um passe for importado para o arquivo porque sua data é anterior à atual
+* Reformulação do estilo dos campos de entrada das configurações
+* Correção do alinhamento vertical de passes curtos
