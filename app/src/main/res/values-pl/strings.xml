@@ -141,4 +141,5 @@
     <string name="no_passes_found_in_file">W tym pliku nie znaleziono żadnych przepustek</string>
     <string name="nothing_to_export">Brak możliwości eksportu: utworzone przepustki nie mogą być obecnie eksportowane</string>
     <string name="export_skipped_passes">Wyeksportowano %1$d przepustek, pominięto %2$d utworzonych przepustek</string>
+    <string name="pass_imported_into_the_archive">Przepustka zaimportowana do archiwum</string>
 </resources>
