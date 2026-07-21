@@ -65,7 +65,7 @@ fun WalletScaffold(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WalletScaffoldWithFilterBar(
+fun WalletScaffoldWithFilter(
     navController: NavController,
     imageVector: ImageVector,
     onSearch: (String) -> Unit,
