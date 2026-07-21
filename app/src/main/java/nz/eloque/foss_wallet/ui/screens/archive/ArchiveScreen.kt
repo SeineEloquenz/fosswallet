@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilterBar
+import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilter
 import nz.eloque.foss_wallet.ui.icons.ArchiveSearch
 import nz.eloque.foss_wallet.ui.screens.wallet.FilterBlock
 import nz.eloque.foss_wallet.ui.screens.wallet.SelectionActions
@@ -40,7 +40,7 @@ fun ArchiveScreen(
     val tagFlow = walletViewModel.allTags
     val tags by tagFlow.collectAsState(setOf())
 
-    WalletScaffoldWithFilterBar(
+    WalletScaffoldWithFilter(
         navController = navController,
         imageVector = Icons.Default.ArchiveSearch,
         onSearch = { walletViewModel.filter(it) },
