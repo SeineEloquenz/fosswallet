@@ -1,0 +1,5 @@
+* Podpora pro obrázky lístků na pozadí
+* Zlepšení viditelnosti výsledů exportu pkpasses
+* Zobrazení, když byl lístek importován do archivu z důvodu jeho data v minulosti
+* Změna stylu vstupních polí nastavení
+* Opraveno vertikální zarovnání krátkých lístků

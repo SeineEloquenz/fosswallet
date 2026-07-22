@@ -141,4 +141,5 @@
     <string name="no_passes_found_in_file">Non se atopan pases neste ficheiro</string>
     <string name="nothing_to_export">Nada que exportar: actualmente os pases creados non se poden exportar</string>
     <string name="export_skipped_passes">Exportados %1$d pases, omitidos %2$d pases creados</string>
+    <string name="pass_imported_into_the_archive">Importouse o pase ao arquivo</string>
 </resources>

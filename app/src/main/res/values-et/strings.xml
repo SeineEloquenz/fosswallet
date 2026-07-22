@@ -141,4 +141,5 @@
     <string name="no_passes_found_in_file">Selles failis ei leidunud ühtegi dokumenti</string>
     <string name="nothing_to_export">Mitte midagi pole eksportida: loodud dokumente ei saa hetkel eksportida</string>
     <string name="export_skipped_passes">Eksportisin %1$d dokumenti, jätsin vahele %2$d loodud dokumenti</string>
+    <string name="pass_imported_into_the_archive">Dokument on imporditud arhiivi</string>
 </resources>
