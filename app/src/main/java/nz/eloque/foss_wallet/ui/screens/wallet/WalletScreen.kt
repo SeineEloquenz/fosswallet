@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
@@ -37,7 +40,7 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilter
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -54,6 +57,9 @@ fun WalletScreen(
     val listState = rememberLazyListState()
 
     val loading = remember { mutableStateOf(false) }
+
+    val tagFlow = walletViewModel.allTags
+    val tags by tagFlow.collectAsState(setOf())
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
@@ -87,9 +93,10 @@ fun WalletScreen(
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
-    WalletScaffold(
+    WalletScaffoldWithFilter(
         navController = navController,
-        title = stringResource(id = Screen.Wallet.resourceId),
+        imageVector = Icons.Default.Search,
+        onSearch = { walletViewModel.filter(it) },
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
@@ -172,6 +179,12 @@ fun WalletScreen(
                         ),
                 )
             }
+        },
+        subRow = {
+            FilterBlock(
+                walletViewModel = walletViewModel,
+                tags = tags,
+            )
         },
     ) { scrollBehavior ->
         WalletView(
