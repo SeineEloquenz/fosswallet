@@ -1,9 +1,11 @@
 package nz.eloque.foss_wallet.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
+import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
@@ -153,4 +155,18 @@ fun File.getMimeType(): String {
         .getSingleton()
         .getMimeTypeFromExtension(extension)
         ?: "application/octet-stream"
+}
+
+fun CharSequence.concatRtlAware(
+    other: CharSequence,
+    context: Context,
+    separator: CharSequence = "",
+): String {
+    val isRtl = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+
+    return if (isRtl) {
+        "$other${separator.reversed()}$this"
+    } else {
+        "$this$separator$other"
+    }
 }

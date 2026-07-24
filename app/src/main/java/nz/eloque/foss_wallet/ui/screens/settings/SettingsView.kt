@@ -42,6 +42,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.share.BundleShareResult
 import nz.eloque.foss_wallet.share.share
+import nz.eloque.foss_wallet.utils.concatRtlAware
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -127,21 +128,33 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
             )
         }
         Section(
-            heading = stringResource(R.string.export) + " / " + stringResource(R.string.share_passes),
+            heading =
+                stringResource(
+                    R.string.export,
+                ).concatRtlAware(stringResource(R.string.share_passes), context = context, separator = " / "),
         ) {
             SettingsButton(
-                title = stringResource(R.string.export) + " (.pkpasses)",
+                title = stringResource(R.string.export).concatRtlAware("(.pkpasses)", context = context, separator = " "),
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
                         val result = share(passes.map { it.pass }, context)
                         withContext(Dispatchers.Main) {
                             when (result) {
-                                is BundleShareResult.NothingToShare ->
+                                is BundleShareResult.NothingToShare -> {
                                     Toast
-                                        .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
-                                        .show()
-                                is BundleShareResult.Shared ->
+                                        .makeText(
+                                            context,
+                                            resources.getString(R.string.nothing_to_export).concatRtlAware(
+                                                resources.getString(R.string.created_pass_export_warning),
+                                                context = context,
+                                                separator = ": ",
+                                            ),
+                                            Toast.LENGTH_LONG,
+                                        ).show()
+                                }
+
+                                is BundleShareResult.Shared -> {
                                     if (result.skipped > 0) {
                                         Toast
                                             .makeText(
@@ -150,6 +163,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                                                 Toast.LENGTH_LONG,
                                             ).show()
                                     }
+                                }
                             }
                         }
                     }
