@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.model.field
 
 import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
+import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.prettyDate
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import nz.eloque.foss_wallet.utils.prettyTime
@@ -16,7 +17,7 @@ sealed class PassContent(
     ) : PassContent(PLAIN) {
         override fun contains(query: String) = query inIgnoreCase text
 
-        override fun prettyPrint(): String = text
+        override fun prettyPrint(): String = linkify(text)
 
         override fun isEmpty(): Boolean = text.isEmpty()
     }
