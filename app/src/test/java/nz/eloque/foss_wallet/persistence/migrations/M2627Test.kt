@@ -8,7 +8,7 @@ import org.junit.Test
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
-class M26_27Test {
+class M2627Test {
     @Test
     fun `ignoresTimeZone rows become bare local date-times`() {
         assertEquals(
