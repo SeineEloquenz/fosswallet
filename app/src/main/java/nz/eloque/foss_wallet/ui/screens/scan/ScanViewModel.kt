@@ -15,6 +15,7 @@ import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.model.field.PassDateTime
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
@@ -63,9 +64,9 @@ class ScanViewModel
                             label = "DATE",
                             content =
                                 PassContent.Date(
-                                    date = flightDate,
+                                    // A BCBP date carries no zone at all, so it is a wall-clock reading
+                                    date = PassDateTime.Floating(flightDate.toLocalDateTime()),
                                     format = FormatStyle.MEDIUM,
-                                    ignoresTimeZone = true,
                                     isRelative = false,
                                 ),
                         )

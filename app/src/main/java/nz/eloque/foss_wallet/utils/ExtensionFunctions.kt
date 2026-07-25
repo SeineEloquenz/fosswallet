@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.createBitmap
+import nz.eloque.foss_wallet.model.field.PassDateTime
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -45,43 +46,37 @@ fun JSONArray.forEach(action: (JSONObject) -> Unit) {
     }
 }
 
-fun ZonedDateTime.prettyDateTime(
+fun PassDateTime.prettyDateTime(
     style: FormatStyle = FormatStyle.SHORT,
-    ignoresTimezone: Boolean = false,
     isRelative: Boolean = false,
-): String {
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(style)
-    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
-}
+): String = this.pretty(DateTimeFormatter.ofLocalizedDateTime(style), isRelative)
 
-fun ZonedDateTime.prettyDate(
+fun PassDateTime.prettyDate(
     style: FormatStyle = FormatStyle.SHORT,
-    ignoresTimezone: Boolean = false,
+    isRelative: Boolean = false,
+): String = this.pretty(DateTimeFormatter.ofLocalizedDate(style), isRelative)
+
+fun PassDateTime.prettyTime(
+    style: FormatStyle = FormatStyle.SHORT,
+    isRelative: Boolean = false,
+): String = this.pretty(DateTimeFormatter.ofLocalizedTime(style), isRelative)
+
+private fun PassDateTime.pretty(
+    formatter: DateTimeFormatter,
     isRelative: Boolean = false,
 ): String {
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(style)
-    return this.pretty(dateFormatter, ignoresTimezone, isRelative)
-}
-
-fun ZonedDateTime.prettyTime(style: FormatStyle = FormatStyle.SHORT): String {
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(style)
-    return this.format(dateFormatter)
-}
-
-private fun ZonedDateTime.pretty(
-    dateFormatter: DateTimeFormatter,
-    ignoresTimezone: Boolean = false,
-    isRelative: Boolean = false,
-): String {
+    val zone = ZoneId.systemDefault()
     if (isRelative) {
-        return DateUtils.getRelativeTimeSpanString(this.toInstant().toEpochMilli()).toString()
+        return DateUtils.getRelativeTimeSpanString(this.toInstant(zone).toEpochMilli()).toString()
     }
-    return if (ignoresTimezone) {
-        this.toLocalDateTime().format(dateFormatter)
-    } else {
-        this.withZoneSameInstant(ZoneId.systemDefault()).format(dateFormatter)
-    }
+    return this.atZone(zone).format(formatter)
 }
+
+fun ZonedDateTime.prettyDate(style: FormatStyle = FormatStyle.SHORT): String =
+    this.withZoneSameInstant(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(style))
+
+fun ZonedDateTime.prettyDateTime(style: FormatStyle = FormatStyle.SHORT): String =
+    this.withZoneSameInstant(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(style))
 
 fun Color.darken(factor: Float = 0.3f): Color =
     copy(
