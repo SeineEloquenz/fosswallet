@@ -18,11 +18,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,11 +42,11 @@ fun FilterBlock(
     onSortChange: (SortOption) -> Unit,
     passTypesToShow: SnapshotStateList<PassType>,
     tags: Set<Tag>,
-    tagToFilterFor: MutableState<Tag?>,
+    selectedTag: Tag?,
 ) {
     val resources = LocalResources.current
 
-    var filtersShown by remember { mutableStateOf(false) }
+    val filtersShown by walletViewModel.filtersExpandedState.collectAsState()
 
     Column {
         Row(
@@ -72,7 +69,7 @@ fun FilterBlock(
                 optionLabel = { resources.getString(it.l18n) },
             )
             IconButton(onClick = {
-                filtersShown = !filtersShown
+                walletViewModel.setFiltersExpanded(!filtersShown)
             }) {
                 if (filtersShown) {
                     Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.collapse))
@@ -108,9 +105,9 @@ fun FilterBlock(
                 )
                 TagRow(
                     tags = tags,
-                    selectedTag = tagToFilterFor.value,
-                    onTagSelected = { tagToFilterFor.value = it },
-                    onTagDeselected = { tagToFilterFor.value = null },
+                    selectedTag = selectedTag,
+                    onTagSelected = { walletViewModel.setTagFilter(it) },
+                    onTagDeselected = { walletViewModel.setTagFilter(null) },
                     walletViewModel = walletViewModel,
                     modifier = Modifier.fillMaxWidth(),
                 )

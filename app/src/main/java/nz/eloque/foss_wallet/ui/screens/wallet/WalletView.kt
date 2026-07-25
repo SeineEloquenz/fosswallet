@@ -51,7 +51,6 @@ import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.card.ShortPassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
@@ -87,13 +86,14 @@ fun WalletView(
 
     val sortOption = walletViewModel.sortOptionState.collectAsState().value
 
-    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
+    val tagFilterLabel by walletViewModel.tagFilterState.collectAsState()
+    val tagToFilterFor = tags.firstOrNull { it.label == tagFilterLabel }
     val passToDelete = remember { mutableStateOf<LocalizedPassWithTags?>(null) }
 
     val sortedPasses =
         passes
             .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
+            .filter { localizedPass -> tagToFilterFor == null || localizedPass.tags.contains(tagToFilterFor) }
             .sortedWith(sortOption.comparator)
             .groupBy { it.metadata.groupId }
             .toList()
@@ -155,7 +155,7 @@ fun WalletView(
                 onSortChange = { walletViewModel.setSortOption(it) },
                 passTypesToShow = passTypesToShow,
                 tags = tags,
-                tagToFilterFor = tagToFilterFor,
+                selectedTag = tagToFilterFor,
             )
         }
 
