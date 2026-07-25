@@ -163,4 +163,6 @@ dependencies {
     implementation(libs.bcbp.parser)
 
     implementation(libs.compose.kit)
+
+    implementation(libs.dd.plist)
 }
