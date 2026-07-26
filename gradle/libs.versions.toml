@@ -8,6 +8,7 @@ coil = "2.7.0"
 color-picker = "1.2.0"
 composeBom = "2026.06.00"
 composeKit = "v0.4.0"
+dd-plist = "1.29"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
 zxingcpp = "3.1.0"
@@ -64,6 +65,7 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 color-picker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "color-picker" }
 compose-kit = { module = "com.github.SeineEloquenz.compose-kit:lib-android", version.ref = "composeKit" }
+dd-plist = { module = "com.googlecode.plist:dd-plist", version.ref = "dd-plist" }
 zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 zxingcpp-android = { module = "io.github.zxing-cpp:android", version.ref = "zxingcpp" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
