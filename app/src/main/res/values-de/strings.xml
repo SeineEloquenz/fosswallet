@@ -53,7 +53,7 @@
     <string name="archive">Archivieren</string>
     <string name="unarchive">Wiederherstellen</string>
     <string name="n_passes_imported">%1$d Pässe importiert</string>
-    <string name="export">Export</string>
+    <string name="export">Exportieren</string>
     <string name="share_passes">Pässe teilen</string>
     <string name="more_options">Mehr Optionen</string>
     <string name="date_added">Datum hinzugefügt</string>
@@ -138,7 +138,8 @@
     <string name="attachment_name">Name des Anhangs</string>
     <string name="choose_attachment_name">Wähle den Namen des Anhangs</string>
     <string name="background">Hintergrund</string>
-    <string name="no_passes_found_in_file">Keine Pässe in dieser Datei gefunnden</string>
+    <string name="no_passes_found_in_file">Keine Pässe in dieser Datei gefunden</string>
     <string name="nothing_to_export">Nichts zu Exportieren: Erstellte Pässe können aktuell nicht exportiert werden</string>
     <string name="export_skipped_passes">%1$d Pässe exportiert, %2$d erstellte Pässe übersprungen</string>
+    <string name="pass_imported_into_the_archive">Pass ins Archiv importiert</string>
 </resources>

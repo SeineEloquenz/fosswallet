@@ -138,4 +138,8 @@
     <string name="choose_attachment_name">Välj namn på bilagan</string>
     <string name="attachment_name">Bilagans namn</string>
     <string name="background">Bakgrund</string>
+    <string name="pass_imported_into_the_archive">Kort importerat till arkivet</string>
+    <string name="no_passes_found_in_file">Inga kort hittades i denna fil</string>
+    <string name="nothing_to_export">Inget att exportera: skapade kort kan för närvarande inte exporteras</string>
+    <string name="export_skipped_passes">Exporterade %1$d kort, hoppade över %2$d skapade kort</string>
 </resources>
