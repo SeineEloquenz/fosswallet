@@ -8,10 +8,10 @@ coil = "2.7.0"
 color-picker = "1.2.0"
 composeBom = "2026.06.00"
 composeKit = "v0.4.0"
-dd-plist = "1.29"
+dd-plist = "1.30"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
-zxingcpp = "3.1.0"
+zxingcpp = "3.1.1"
 cameraX = "1.6.1"
 espressoCore = "3.7.0"
 hiltAndroid = "2.60.1"
