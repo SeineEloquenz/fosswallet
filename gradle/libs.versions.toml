@@ -7,7 +7,7 @@ bcbpParser = "0.2.0"
 coil = "2.7.0"
 color-picker = "1.2.0"
 composeBom = "2026.06.01"
-composeKit = "v0.5.3"
+composeKit = "v0.5.4"
 dd-plist = "1.30"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
