@@ -6,7 +6,6 @@ import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.prettyDate
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import nz.eloque.foss_wallet.utils.prettyTime
-import java.time.ZonedDateTime
 import java.time.format.FormatStyle
 
 sealed class PassContent(
@@ -43,40 +42,37 @@ sealed class PassContent(
     }
 
     data class Date(
-        val date: ZonedDateTime,
+        val date: PassDateTime,
         val format: FormatStyle,
-        val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(DATE) {
-        override fun contains(query: String) = query inIgnoreCase date.prettyDate(format, ignoresTimeZone, isRelative)
+        override fun contains(query: String) = query inIgnoreCase prettyPrint()
 
-        override fun prettyPrint(): String = date.prettyDate(format, ignoresTimeZone, isRelative)
+        override fun prettyPrint(): String = date.prettyDate(format, isRelative)
 
         override fun isEmpty(): Boolean = false
     }
 
     data class Time(
-        val time: ZonedDateTime,
+        val time: PassDateTime,
         val format: FormatStyle,
-        val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(TIME) {
-        override fun contains(query: String) = query inIgnoreCase time.prettyTime(format)
+        override fun contains(query: String) = query inIgnoreCase prettyPrint()
 
-        override fun prettyPrint(): String = time.prettyTime(format)
+        override fun prettyPrint(): String = time.prettyTime(format, isRelative)
 
         override fun isEmpty(): Boolean = false
     }
 
     data class DateTime(
-        val dateTime: ZonedDateTime,
+        val dateTime: PassDateTime,
         val format: FormatStyle,
-        val ignoresTimeZone: Boolean,
         val isRelative: Boolean,
     ) : PassContent(DATE_TIME) {
-        override fun contains(query: String) = query inIgnoreCase dateTime.prettyDateTime(format, ignoresTimeZone, isRelative)
+        override fun contains(query: String) = query inIgnoreCase prettyPrint()
 
-        override fun prettyPrint(): String = dateTime.prettyDateTime(format, ignoresTimeZone, isRelative)
+        override fun prettyPrint(): String = dateTime.prettyDateTime(format, isRelative)
 
         override fun isEmpty(): Boolean = false
     }
@@ -89,53 +85,52 @@ sealed class PassContent(
         const val DATE_TIME = 4
 
         fun deserialize(content: String): PassContent {
-            return if (content.length >= 2 && content[0].isDigit() && content[1] == '|') {
-                val id = content[0].digitToInt()
-                val content = content.substring(2)
-                val components = content.split("|")
-                return when (id) {
-                    CURRENCY -> Currency(components[0], components[1])
-                    DATE ->
-                        Date(
-                            TimeParser.parse(components[0]),
-                            FormatStyle.valueOf(components[1]),
-                            components.safeBool(2),
-                            components.safeBool(3),
-                        )
-                    TIME ->
-                        Time(
-                            TimeParser.parse(components[0]),
-                            FormatStyle.valueOf(components[1]),
-                            components.safeBool(2),
-                            components.safeBool(3),
-                        )
-                    DATE_TIME ->
-                        DateTime(
-                            TimeParser.parse(components[0]),
-                            FormatStyle.valueOf(components[1]),
-                            components.safeBool(2),
-                            components.safeBool(3),
-                        )
-                    else -> Plain(content)
-                }
-            } else {
-                Plain(content)
+            if (content.length < 2 || !content[0].isDigit() || content[1] != '|') {
+                return Plain(content)
+            }
+            val id = content[0].digitToInt()
+            val body = content.substring(2)
+            val components = body.split("|")
+            return when (id) {
+                CURRENCY -> Currency(components[0], components.getOrElse(1) { "" })
+                DATE, TIME, DATE_TIME -> components.toTemporal(id) ?: Plain(body)
+                else -> Plain(body)
             }
         }
 
-        private fun List<String>.safeBool(index: Int): Boolean = this.getOrNull(index)?.toBoolean() ?: false
+        private fun List<String>.toTemporal(id: Int): PassContent? {
+            val date = getOrNull(0)?.let { TimeParser.parseOrNull(it) } ?: return null
+            val format = getOrNull(1)?.toFormatStyleOrNull() ?: FormatStyle.MEDIUM
+            val isRelative = getOrNull(2)?.toBoolean() ?: false
+            return when (id) {
+                DATE -> Date(date, format, isRelative)
+                TIME -> Time(date, format, isRelative)
+                else -> DateTime(date, format, isRelative)
+            }
+        }
+
+        private fun String.toFormatStyleOrNull(): FormatStyle? =
+            try {
+                FormatStyle.valueOf(this)
+            } catch (_: IllegalArgumentException) {
+                null
+            }
     }
 
     fun serialize(): String =
         when (this) {
-            is Plain -> this.id.toString() + "|" + this.text
-            is Currency -> this.id.toString() + "|" + this.amount + "|" + this.currency
-            is Date -> this.id.toString() + "|" + this.date + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" + this.isRelative
-            is Time -> this.id.toString() + "|" + this.time + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" + this.isRelative
-            is DateTime ->
-                this.id.toString() + "|" + this.dateTime + "|" + this.format.name + "|" + this.ignoresTimeZone + "|" +
-                    this.isRelative
+            is Plain -> "$id|$text"
+            is Currency -> "$id|$amount|$currency"
+            is Date -> temporal(date, format, isRelative)
+            is Time -> temporal(time, format, isRelative)
+            is DateTime -> temporal(dateTime, format, isRelative)
         }
+
+    private fun temporal(
+        value: PassDateTime,
+        format: FormatStyle,
+        isRelative: Boolean,
+    ): String = "$id|${value.serialize()}|${format.name}|$isRelative"
 
     abstract fun contains(query: String): Boolean
 

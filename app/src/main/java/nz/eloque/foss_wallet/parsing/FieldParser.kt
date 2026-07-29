@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.parsing
 
 import nz.eloque.foss_wallet.model.field.PassContent
+import nz.eloque.foss_wallet.model.field.PassDateTime.Companion.ignoringTimeZone
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
@@ -20,41 +21,45 @@ object FieldParser {
             }
         val changeMessage = if (field.has("changeMessage")) field.getString("changeMessage") else null
 
+        val parsedDate =
+            if (field.hasDateStyle() || field.hasTimeStyle()) {
+                TimeParser.parseOrNull(value)?.let { if (field.ignoresTimezone()) it.ignoringTimeZone() else it }
+            } else {
+                null
+            }
+
         val content =
             when {
                 field.has("currencyCode") -> {
                     PassContent.Currency(value, field.getString("currencyCode"))
                 }
 
+                parsedDate == null -> {
+                    PassContent.Plain(value)
+                }
+
                 field.hasDateStyle() && field.hasTimeStyle() -> {
                     PassContent.DateTime(
-                        TimeParser.parse(value),
+                        parsedDate,
                         chooseBetter(field.getDateStyle(), field.getTimeStyle()),
-                        field.ignoresTimezone(),
                         field.isRelative(),
                     )
                 }
 
                 field.hasDateStyle() -> {
                     PassContent.Date(
-                        TimeParser.parse(value),
+                        parsedDate,
                         field.getDateStyle(),
-                        field.ignoresTimezone(),
-                        field.isRelative(),
-                    )
-                }
-
-                field.hasTimeStyle() -> {
-                    PassContent.Time(
-                        TimeParser.parse(value),
-                        field.getTimeStyle(),
-                        field.ignoresTimezone(),
                         field.isRelative(),
                     )
                 }
 
                 else -> {
-                    PassContent.Plain(value)
+                    PassContent.Time(
+                        parsedDate,
+                        field.getTimeStyle(),
+                        field.isRelative(),
+                    )
                 }
             }
 

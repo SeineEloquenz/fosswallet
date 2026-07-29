@@ -10,11 +10,13 @@ import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.ZonedDateTime
+import java.time.format.DateTimeParseException
 import java.util.UUID
 
 class TypeConverters {
@@ -22,7 +24,8 @@ class TypeConverters {
     fun fromZonedDateTime(dateTime: ZonedDateTime): String = dateTime.toString()
 
     @TypeConverter
-    fun toZonedDateTime(dateTime: String): ZonedDateTime = ZonedDateTime.parse(dateTime)
+    fun toZonedDateTime(dateTime: String): ZonedDateTime =
+        TimeParser.parseAbsoluteOrNull(dateTime) ?: throw DateTimeParseException("Not a timestamp: $dateTime", dateTime, 0)
 
     @TypeConverter
     fun fromRelevantDates(relevantDates: List<PassRelevantDate>): String {
@@ -45,12 +48,12 @@ class TypeConverters {
         JSONArray(str).map {
             if (it.has("date")) {
                 PassRelevantDate.Date(
-                    ZonedDateTime.parse(it.getString("date")),
+                    toZonedDateTime(it.getString("date")),
                 )
             } else {
                 PassRelevantDate.DateInterval(
-                    ZonedDateTime.parse(it.getString("startDate")),
-                    ZonedDateTime.parse(it.getString("endDate")),
+                    toZonedDateTime(it.getString("startDate")),
+                    toZonedDateTime(it.getString("endDate")),
                 )
             }
         }
