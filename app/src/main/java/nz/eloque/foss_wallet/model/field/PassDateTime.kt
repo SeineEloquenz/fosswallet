@@ -23,6 +23,8 @@ sealed interface PassDateTime {
     ) : PassDateTime {
         override fun atZone(zone: ZoneId): LocalDateTime = value.withZoneSameInstant(zone).toLocalDateTime()
 
+        override fun zonedAt(zone: ZoneId): ZonedDateTime = value.withZoneSameInstant(zone)
+
         override fun toInstant(zone: ZoneId): Instant = value.toInstant()
 
         override fun serialize(): String = value.toString()
@@ -34,6 +36,8 @@ sealed interface PassDateTime {
     ) : PassDateTime {
         override fun atZone(zone: ZoneId): LocalDateTime = value
 
+        override fun zonedAt(zone: ZoneId): ZonedDateTime = value.atZone(zone)
+
         override fun toInstant(zone: ZoneId): Instant = value.atZone(zone).toInstant()
 
         override fun serialize(): String = value.toString()
@@ -41,6 +45,11 @@ sealed interface PassDateTime {
 
     /** The local date/time to render, given the zone the reader is in. */
     fun atZone(zone: ZoneId = ZoneId.systemDefault()): LocalDateTime
+
+    /**
+     * The date/time to render, with zone information
+     */
+    fun zonedAt(zone: ZoneId): ZonedDateTime
 
     /**
      * The instant this value refers to. A [Floating] value only denotes an instant once a zone is

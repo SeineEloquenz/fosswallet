@@ -68,6 +68,20 @@ class TimeParserTest {
     }
 
     @Test
+    fun `every style renders without crashing on a time-bearing field`() {
+        val absolute = TimeParser.parse("2013-04-24T10:00-05:00")
+        val floating = PassDateTime.Floating(LocalDateTime.of(2013, 4, 24, 10, 0))
+
+        for (value in listOf(absolute, floating)) {
+            for (style in FormatStyle.entries) {
+                assertTrue(PassContent.Date(value, style, false).prettyPrint().isNotBlank())
+                assertTrue(PassContent.Time(value, style, false).prettyPrint().isNotBlank())
+                assertTrue(PassContent.DateTime(value, style, false).prettyPrint().isNotBlank())
+            }
+        }
+    }
+
+    @Test
     fun `a malformed value degrades to a plain field instead of failing the pass`() {
         val field = JSONObject("""{"key":"depart","value":"see itinerary","dateStyle":"PKDateStyleShort"}""")
         assertTrue(FieldParser.parse(field).content is PassContent.Plain)
