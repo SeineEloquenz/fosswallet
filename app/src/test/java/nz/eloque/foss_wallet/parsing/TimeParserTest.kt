@@ -9,6 +9,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.FormatStyle
 
 class TimeParserTest {
@@ -46,7 +47,11 @@ class TimeParserTest {
     @Test
     fun `absolute values render in the reader's zone`() {
         val departure = TimeParser.parse("2013-04-24T10:00-05:00")
-        assertEquals(LocalDateTime.of(2013, 4, 24, 17, 0), departure.atZone(berlin))
+
+        assertEquals(
+            ZonedDateTime.of(2013, 4, 24, 17, 0, 0, 0, berlin),
+            departure.zonedAt(berlin),
+        )
     }
 
     @Test
@@ -56,15 +61,53 @@ class TimeParserTest {
                 """{"key":"depart","value":"2013-04-24T10:00-05:00","timeStyle":"PKDateStyleShort","ignoresTimeZone":true}""",
             )
         val content = FieldParser.parse(field).content as PassContent.Time
-        assertEquals(LocalDateTime.of(2013, 4, 24, 10, 0), content.time.atZone(berlin))
-        assertEquals(LocalDateTime.of(2013, 4, 24, 10, 0), content.time.atZone(ZoneId.of("Pacific/Auckland")))
+
+        assertEquals(
+            ZonedDateTime.of(2013, 4, 24, 10, 0, 0, 0, berlin),
+            content.time.zonedAt(berlin),
+        )
+
+        assertEquals(
+            ZonedDateTime.of(
+                2013,
+                4,
+                24,
+                10,
+                0,
+                0,
+                0,
+                ZoneId.of("Pacific/Auckland"),
+            ),
+            content.time.zonedAt(ZoneId.of("Pacific/Auckland")),
+        )
     }
 
     @Test
     fun `time-only fields convert to the reader's zone by default`() {
-        val field = JSONObject("""{"key":"depart","value":"2013-04-24T10:00-05:00","timeStyle":"PKDateStyleShort"}""")
+        val field =
+            JSONObject(
+                """{"key":"depart","value":"2013-04-24T10:00-05:00","timeStyle":"PKDateStyleShort"}""",
+            )
         val content = FieldParser.parse(field).content as PassContent.Time
-        assertEquals(LocalDateTime.of(2013, 4, 24, 17, 0), content.time.atZone(berlin))
+
+        assertEquals(
+            ZonedDateTime.of(2013, 4, 24, 17, 0, 0, 0, berlin),
+            content.time.zonedAt(berlin),
+        )
+    }
+
+    @Test
+    fun `every style renders without crashing on a time-bearing field`() {
+        val absolute = TimeParser.parse("2013-04-24T10:00-05:00")
+        val floating = PassDateTime.Floating(LocalDateTime.of(2013, 4, 24, 10, 0))
+
+        for (value in listOf(absolute, floating)) {
+            for (style in FormatStyle.entries) {
+                assertTrue(PassContent.Date(value, style, false).prettyPrint().isNotBlank())
+                assertTrue(PassContent.Time(value, style, false).prettyPrint().isNotBlank())
+                assertTrue(PassContent.DateTime(value, style, false).prettyPrint().isNotBlank())
+            }
+        }
     }
 
     @Test

@@ -69,7 +69,7 @@ private fun PassDateTime.pretty(
     if (isRelative) {
         return DateUtils.getRelativeTimeSpanString(this.toInstant(zone).toEpochMilli()).toString()
     }
-    return this.atZone(zone).format(formatter)
+    return this.zonedAt(zone).format(formatter)
 }
 
 fun ZonedDateTime.prettyDate(style: FormatStyle = FormatStyle.SHORT): String =
