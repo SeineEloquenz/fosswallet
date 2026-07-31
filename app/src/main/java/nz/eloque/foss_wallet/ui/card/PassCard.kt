@@ -118,7 +118,7 @@ fun PassCard(
         when (pass.type) {
             PassType.Event if pass.hasStrip -> {
                 StripImagePrimary(
-                    primaryFields = pass.primaryFields,
+                    primaryFields = listOf(),
                     stripImage = pass.stripFile(context),
                     modifier = Modifier.height(90.dp),
                     isSelectable = showEntirePass,
