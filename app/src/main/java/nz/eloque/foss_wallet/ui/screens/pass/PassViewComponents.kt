@@ -94,7 +94,7 @@ fun Barcode(
     legacyRendering: Boolean = false,
     barcodePosition: BarcodePosition = BarcodePosition.Center,
 ) {
-    val barcodeBitmap = barcode.toBitmap(legacyRendering = legacyRendering)
+    val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
 
     Column(
         modifier =
@@ -106,6 +106,7 @@ fun Barcode(
     ) {
         if (barcodeBitmap != null) {
             var showFullscreen by remember { mutableStateOf(false) }
+            val imageBitmap = remember(barcodeBitmap) { barcodeBitmap.asImageBitmap() }
             val scaledWidth = (2.5.dp * barcodeBitmap.width).coerceIn(125.dp, 300.dp)
             val isLinearBarcode = barcodeBitmap.height == 1
             val aspectRatio =
@@ -116,7 +117,7 @@ fun Barcode(
                 }
 
             Image(
-                bitmap = barcodeBitmap.asImageBitmap(),
+                bitmap = imageBitmap,
                 contentDescription = stringResource(R.string.barcode),
                 modifier =
                     Modifier
@@ -136,7 +137,7 @@ fun Barcode(
                     contentAlignment = barcodePosition.alignment,
                 ) {
                     Image(
-                        bitmap = barcodeBitmap.asImageBitmap(),
+                        bitmap = imageBitmap,
                         contentDescription = stringResource(R.string.barcode),
                         modifier =
                             Modifier
