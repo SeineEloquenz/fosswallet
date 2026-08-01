@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import nz.eloque.compose_kit.dialog.FullscreenDialog
 import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
@@ -44,7 +43,6 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
-import java.io.File
 
 @Composable
 fun Barcodes(
@@ -176,26 +174,6 @@ private fun BrokenBarcodeWarning() {
 }
 
 @Composable
-fun AsyncPassImage(
-    model: File?,
-    modifier: Modifier = Modifier,
-) {
-    model?.let {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            AsyncImage(
-                model = it,
-                contentDescription = stringResource(R.string.image),
-                contentScale = ContentScale.FillWidth,
-                modifier = modifier,
-            )
-        }
-    }
-}
-
-@Composable
 fun BackFields(fields: List<PassField>) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -204,7 +182,6 @@ fun BackFields(fields: List<PassField>) {
         fields.forEach {
             PassField(
                 field = it,
-                labelColor = Color.Unspecified,
                 maxLines = Int.MAX_VALUE,
                 style = MaterialTheme.typography.bodyLarge,
             )
