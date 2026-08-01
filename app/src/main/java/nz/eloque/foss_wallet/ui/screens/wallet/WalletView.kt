@@ -35,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateSet
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -48,13 +47,10 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.map
 import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
@@ -76,31 +72,18 @@ fun WalletView(
     val resources = LocalResources.current
 
     val emptyState = rememberLazyListState()
-    val passFlow = walletViewModel.filteredPasses
-    val passes: List<LocalizedPassWithTags> by remember(passFlow) {
-        passFlow.map { passes ->
-            passes.filter { archive == it.metadata.archived }
-        }
-    }.collectAsState(listOf())
 
-    val tagFlow = walletViewModel.allTags
-    val tags by tagFlow.collectAsState(setOf())
+    val displayedPasses by walletViewModel.displayedPasses.collectAsState()
+    val sortedPasses = displayedPasses[archive].orEmpty()
 
-    val passTypesToShow = remember { PassType.all().toMutableStateList() }
+    val tags by walletViewModel.allTags.collectAsState(setOf())
+    val sortOption by walletViewModel.sortOptionState.collectAsState()
+    val selectedPassTypes by walletViewModel.selectedPassTypes.collectAsState()
+    val tagToFilterFor by walletViewModel.tagFilter.collectAsState()
 
-    val sortOption = walletViewModel.sortOptionState.collectAsState().value
-
-    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
     val passToDelete = remember { mutableStateOf<LocalizedPassWithTags?>(null) }
 
-    val sortedPasses =
-        passes
-            .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-            .sortedWith(sortOption.comparator)
-            .groupBy { it.metadata.groupId }
-            .toList()
-    val visiblePasses = sortedPasses.flatMap { it.second }.toSet()
+    val visiblePasses = remember(sortedPasses) { sortedPasses.flatMap { it.second }.toSet() }
 
     LaunchedEffect(visiblePasses) {
         selectedPasses.removeAll { it !in visiblePasses }
@@ -138,7 +121,7 @@ fun WalletView(
     }
 
     LazyColumn(
-        state = if (passes.isEmpty()) emptyState else listState,
+        state = if (sortedPasses.isEmpty()) emptyState else listState,
         verticalArrangement =
             Arrangement
                 .spacedBy(8.dp),
@@ -156,7 +139,7 @@ fun WalletView(
                 walletViewModel = walletViewModel,
                 sortOption = sortOption,
                 onSortChange = { walletViewModel.setSortOption(it) },
-                passTypesToShow = passTypesToShow,
+                selectedPassTypes = selectedPassTypes,
                 tags = tags,
                 tagToFilterFor = tagToFilterFor,
             )

@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -60,7 +61,7 @@ fun PassView(
     val pass = localizedPass.pass
     val metadata = localizedPass.metadata
 
-    val hasLegacyRepresentation = pass.barCodes.any { it.hasLegacyRepresentation() }
+    val hasLegacyRepresentation = remember(pass.barCodes) { pass.barCodes.any { it.hasLegacyRepresentation() } }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
