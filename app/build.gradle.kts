@@ -82,6 +82,11 @@ android {
     }
 }
 
+aboutLibraries {
+    // Prevent about libraries from pulling licenses at build time (see #695)
+    offlineMode = true
+}
+
 room {
     schemaDirectory("$projectDir/schemas")
 }
