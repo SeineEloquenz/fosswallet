@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +46,7 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    walletViewModel: WalletViewModel,
+    walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver

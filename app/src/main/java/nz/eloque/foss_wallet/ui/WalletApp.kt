@@ -46,7 +46,6 @@ import nz.eloque.foss_wallet.ui.screens.scan.ScanViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
-import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 import java.net.URLDecoder
 import java.nio.charset.Charset
@@ -100,7 +99,6 @@ fun WalletApp(
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
-    walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
     scanViewModel: ScanViewModel = viewModel(),
 ) {
@@ -118,13 +116,13 @@ fun WalletApp(
             popExitTransition = { slideBackward().initialContentExit },
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, walletViewModel)
+                WalletScreen(navController)
             }
             composable(Screen.Scan.route) {
                 ScanScreen(navController, scanViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, walletViewModel)
+                ArchiveScreen(navController)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
@@ -135,7 +133,7 @@ fun WalletApp(
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
                 val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, walletViewModel, url)
+                WebviewScreen(navController, url)
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, settingsViewModel)
