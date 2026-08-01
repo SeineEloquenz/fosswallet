@@ -132,4 +132,14 @@
     <string name="permission_read_passes_label">Считывать пропуска</string>
     <string name="permission_read_passes_description">Считывание ваших пропусков и их данных, включая штрихкоды, способом, совместимым с Catima</string>
     <string name="create_boarding_pass">Создать посадочный талон</string>
+    <string name="pass_imported_into_the_archive">Пропуск импортирован в архив</string>
+    <string name="background">Фон</string>
+    <string name="no_passes_found_in_file">В этом файле пропусков не найдено</string>
+    <string name="nothing_to_export">Экспортировать нечего: созданные пропуска в нельзя экспортировать в данный момент</string>
+    <string name="export_skipped_passes">Экспортировано пропусков: %1$d, пропущено созданных пропусков: %2$d</string>
+    <string name="attachment_name">Имя вложения</string>
+    <string name="choose_attachment_name">Выбрать имя вложения</string>
+    <string name="add_attachment">Добавить вложение</string>
+    <string name="delete_attachment">Удалить вложение</string>
+    <string name="attachments">Вложения</string>
 </resources>
