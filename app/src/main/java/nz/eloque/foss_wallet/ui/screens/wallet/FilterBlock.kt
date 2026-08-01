@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import nz.eloque.compose_kit.components.ExtendedSelectionMenu
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
