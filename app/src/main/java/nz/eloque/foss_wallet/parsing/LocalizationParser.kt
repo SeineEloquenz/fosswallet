@@ -1,5 +1,7 @@
 package nz.eloque.foss_wallet.parsing
 
+import com.dd.plist.ASCIIPropertyListParser
+import com.dd.plist.NSDictionary
 import nz.eloque.foss_wallet.model.PassLocalization
 
 object LocalizationParser {
@@ -7,27 +9,18 @@ object LocalizationParser {
         lang: String,
         content: String,
     ): Set<PassLocalization> {
-        val withoutComments =
-            content
-                .replace(Regex("/\\*.*?\\*/", RegexOption.DOT_MATCHES_ALL), "")
-                .replace(Regex("//.*?$", RegexOption.MULTILINE), "")
-
-        val localeRegex = Regex("\"(.*?)\"\\s*=\\s*\"((?:[^\"\\\\]|\\\\.)*?)\"\\s*;", RegexOption.DOT_MATCHES_ALL)
-        val result = mutableSetOf<PassLocalization>()
-
-        localeRegex.findAll(withoutComments).forEach { match ->
-            val label = match.groupValues[1]
-            val rawValue = match.groupValues[2]
-            val text = unescapeString(rawValue)
-            result.add(PassLocalization("", lang, label, text))
-        }
-
-        return result
+        val dict =
+            ASCIIPropertyListParser.parse(
+                // strings files only differ from plist files by them not being enclosed in curly braces
+                """
+                {
+                $content
+                }
+                """.trimIndent(),
+            ) as NSDictionary
+        return dict
+            .map { (key, value) ->
+                PassLocalization("", lang, key, value.toString())
+            }.toSet()
     }
-
-    private fun unescapeString(input: String): String =
-        input
-            .replace("\\n", "\n")
-            .replace("\\\"", "\"")
-            .replace("\\\\", "\\")
 }

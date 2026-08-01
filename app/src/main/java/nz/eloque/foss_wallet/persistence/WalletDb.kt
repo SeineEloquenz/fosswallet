@@ -20,6 +20,7 @@ import nz.eloque.foss_wallet.persistence.migrations.M_17_18
 import nz.eloque.foss_wallet.persistence.migrations.M_18_19
 import nz.eloque.foss_wallet.persistence.migrations.M_19_20
 import nz.eloque.foss_wallet.persistence.migrations.M_23_24
+import nz.eloque.foss_wallet.persistence.migrations.M_26_27
 import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.tag.TagDao
@@ -32,10 +33,11 @@ fun buildDb(context: Context) =
         .addMigrations(M_18_19)
         .addMigrations(M_19_20)
         .addMigrations(M_23_24)
+        .addMigrations(M_26_27)
         .build()
 
 @Database(
-    version = 26,
+    version = 27,
     entities = [
         Pass::class, PassMetadata::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class, Attachment::class,
     ],

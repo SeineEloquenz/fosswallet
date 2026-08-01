@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -30,7 +31,7 @@ import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 @Composable
 fun ArchiveScreen(
     navController: NavHostController,
-    walletViewModel: WalletViewModel,
+    walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val listState = rememberLazyListState()
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }

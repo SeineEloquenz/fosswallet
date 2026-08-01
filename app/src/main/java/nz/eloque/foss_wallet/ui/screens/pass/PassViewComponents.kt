@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import nz.eloque.compose_kit.dialog.FullscreenDialog
 import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
@@ -44,7 +43,6 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
-import java.io.File
 
 @Composable
 fun Barcodes(
@@ -96,7 +94,7 @@ fun Barcode(
     legacyRendering: Boolean = false,
     barcodePosition: BarcodePosition = BarcodePosition.Center,
 ) {
-    val barcodeBitmap = barcode.toBitmap(legacyRendering = legacyRendering)
+    val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
 
     Column(
         modifier =
@@ -108,6 +106,7 @@ fun Barcode(
     ) {
         if (barcodeBitmap != null) {
             var showFullscreen by remember { mutableStateOf(false) }
+            val imageBitmap = remember(barcodeBitmap) { barcodeBitmap.asImageBitmap() }
             val scaledWidth = (2.5.dp * barcodeBitmap.width).coerceIn(125.dp, 300.dp)
             val isLinearBarcode = barcodeBitmap.height == 1
             val aspectRatio =
@@ -118,7 +117,7 @@ fun Barcode(
                 }
 
             Image(
-                bitmap = barcodeBitmap.asImageBitmap(),
+                bitmap = imageBitmap,
                 contentDescription = stringResource(R.string.barcode),
                 modifier =
                     Modifier
@@ -138,7 +137,7 @@ fun Barcode(
                     contentAlignment = barcodePosition.alignment,
                 ) {
                     Image(
-                        bitmap = barcodeBitmap.asImageBitmap(),
+                        bitmap = imageBitmap,
                         contentDescription = stringResource(R.string.barcode),
                         modifier =
                             Modifier
@@ -176,26 +175,6 @@ private fun BrokenBarcodeWarning() {
 }
 
 @Composable
-fun AsyncPassImage(
-    model: File?,
-    modifier: Modifier = Modifier,
-) {
-    model?.let {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            AsyncImage(
-                model = it,
-                contentDescription = stringResource(R.string.image),
-                contentScale = ContentScale.FillWidth,
-                modifier = modifier,
-            )
-        }
-    }
-}
-
-@Composable
 fun BackFields(fields: List<PassField>) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -204,7 +183,6 @@ fun BackFields(fields: List<PassField>) {
         fields.forEach {
             PassField(
                 field = it,
-                labelColor = Color.Unspecified,
                 maxLines = Int.MAX_VALUE,
                 style = MaterialTheme.typography.bodyLarge,
             )

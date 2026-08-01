@@ -120,7 +120,7 @@ class PassParser(
     private fun parseRelevantDate(passJson: JSONObject): PassRelevantDate? =
         try {
             if (passJson.has("relevantDate")) {
-                passJson.stringOrNull("relevantDate")?.let { ZonedDateTime.parse(it) }?.let { PassRelevantDate.Date(it) }
+                passJson.stringOrNull("relevantDate")?.let { TimeParser.parseAbsoluteOrNull(it) }?.let { PassRelevantDate.Date(it) }
             } else {
                 null
             }
@@ -153,14 +153,11 @@ class PassParser(
 
     private fun parseRelevantDateElement(relevantDateJson: JSONObject): PassRelevantDate? =
         if (relevantDateJson.has("startDate") && relevantDateJson.has("endDate")) {
-            PassRelevantDate.DateInterval(
-                ZonedDateTime.parse(relevantDateJson.getString("startDate")),
-                ZonedDateTime.parse(relevantDateJson.getString("endDate")),
-            )
+            val start = TimeParser.parseAbsoluteOrNull(relevantDateJson.getString("startDate"))
+            val end = TimeParser.parseAbsoluteOrNull(relevantDateJson.getString("endDate"))
+            if (start != null && end != null) PassRelevantDate.DateInterval(start, end) else null
         } else if (relevantDateJson.has("date")) {
-            PassRelevantDate.Date(
-                ZonedDateTime.parse(relevantDateJson.getString("date")),
-            )
+            TimeParser.parseAbsoluteOrNull(relevantDateJson.getString("date"))?.let { PassRelevantDate.Date(it) }
         } else {
             null
         }
@@ -168,7 +165,7 @@ class PassParser(
     private fun parseExpiration(passJson: JSONObject): ZonedDateTime? =
         try {
             if (passJson.has("expirationDate")) {
-                passJson.stringOrNull("expirationDate")?.let { ZonedDateTime.parse(it) }
+                passJson.stringOrNull("expirationDate")?.let { TimeParser.parseAbsoluteOrNull(it) }
             } else {
                 null
             }

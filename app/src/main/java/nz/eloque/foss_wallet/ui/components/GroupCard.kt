@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,20 +23,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.share.share
-import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 
 @Composable
@@ -67,32 +71,37 @@ fun GroupCard(
                 pageSpacing = 28.dp,
             ) { index ->
                 val item = passes[index]
-                ShortPassCard(
-                    pass = item,
-                    allTags = allTags,
-                    onClick = {
-                        if (selectedPasses.isNotEmpty()) {
+                val isSelected = selectedPasses.contains(item)
+                val scale by animateFloatAsState(if (isSelected) 0.95f else 1f)
+                Box {
+                    PassCard(
+                        localizedPass = item,
+                        allTags = allTags,
+                        modifier = Modifier.scale(scale),
+                        onClick = {
+                            if (selectedPasses.isNotEmpty()) {
+                                val allGroupPassesSelected = passes.all { selectedPasses.contains(it) }
+                                if (allGroupPassesSelected) {
+                                    selectedPasses.removeAll(passes.toSet())
+                                } else {
+                                    selectedPasses.addAll(passes)
+                                }
+                            } else {
+                                onClick.invoke(item.pass)
+                            }
+                        },
+                        onLongClick = {
                             val allGroupPassesSelected = passes.all { selectedPasses.contains(it) }
                             if (allGroupPassesSelected) {
                                 selectedPasses.removeAll(passes.toSet())
                             } else {
                                 selectedPasses.addAll(passes)
                             }
-                        } else {
-                            onClick.invoke(item.pass)
-                        }
-                    },
-                    onLongClick = {
-                        val allGroupPassesSelected = passes.all { selectedPasses.contains(it) }
-                        if (allGroupPassesSelected) {
-                            selectedPasses.removeAll(passes.toSet())
-                        } else {
-                            selectedPasses.addAll(passes)
-                        }
-                    },
-                    selected = selectedPasses.contains(item),
-                    toned = true,
-                )
+                        },
+                        showEntirePass = false,
+                    )
+                    if (isSelected) SelectionIndicator(Modifier.align(Alignment.TopEnd))
+                }
             }
             Box(
                 modifier =

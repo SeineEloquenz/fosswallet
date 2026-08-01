@@ -46,8 +46,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 37
-        versionCode = 115
-        versionName = "0.48.0"
+        versionCode = 118
+        versionName = "0.49.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -80,6 +80,11 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+}
+
+aboutLibraries {
+    // Prevent about libraries from pulling licenses at build time (see #695)
+    offlineMode = true
 }
 
 room {
@@ -163,4 +168,6 @@ dependencies {
     implementation(libs.bcbp.parser)
 
     implementation(libs.compose.kit)
+
+    implementation(libs.dd.plist)
 }

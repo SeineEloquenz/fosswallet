@@ -5,6 +5,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import nz.eloque.compose_kit.components.ExtendedSelectionMenu
@@ -17,7 +23,11 @@ import nz.eloque.foss_wallet.ui.components.tag.TagRow
 @Composable
 fun FilterBlock(
     walletViewModel: WalletViewModel,
+    sortOption: SortOption,
+    onSortChange: (SortOption) -> Unit,
+    selectedPassTypes: Set<PassType>,
     tags: Set<Tag>,
+    tagToFilterFor: Tag?,
 ) {
     val resources = LocalResources.current
 
