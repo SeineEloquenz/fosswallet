@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.charset.Charset
 import java.time.Instant
 import java.util.zip.ZipInputStream
 
@@ -105,8 +104,7 @@ class PassLoader(
                     val passBytes = baos.toByteArray()
                     when (entry.name) {
                         "pass.json" -> {
-                            val content = passBytes.toString(detectEncoding(passBytes))
-                            passJson = JsonLoader.load(content)
+                            passJson = JsonLoader.load(TextDecoder.decode(passBytes))
                         }
 
                         in Regex("logo@?.*\\.png") -> {
@@ -134,7 +132,11 @@ class PassLoader(
                         }
 
                         in LOCALIZATION_FILE_REGEX -> {
-                            localizations.addAll(parseLocalization(entry.name.substringBefore(".lproj"), baos))
+                            try {
+                                localizations.addAll(parseLocalization(entry.name.substringBefore(".lproj"), baos))
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Failed to parse localization ${entry.name}, skipping", e)
+                            }
                         }
                     }
                 }
@@ -169,19 +171,7 @@ class PassLoader(
     private fun parseLocalization(
         lang: String,
         baos: ByteArrayOutputStream,
-    ): Set<PassLocalization> {
-        val bytes = baos.toByteArray()
-        val content = bytes.toString(detectEncoding(bytes))
-        return LocalizationParser.parseStrings(lang, content)
-    }
-
-    fun detectEncoding(bytes: ByteArray): Charset =
-        when {
-            bytes.startsWith(byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())) -> Charset.forName("UTF-8")
-            bytes.startsWith(byteArrayOf(0xFF.toByte(), 0xFE.toByte())) -> Charset.forName("UTF-16LE")
-            bytes.startsWith(byteArrayOf(0xFE.toByte(), 0xFF.toByte())) -> Charset.forName("UTF-16BE")
-            else -> Charset.forName("UTF-8") // fallback (could be wrong, but UTF-8 is common)
-        }
+    ): Set<PassLocalization> = LocalizationParser.parseStrings(lang, TextDecoder.decode(baos.toByteArray()))
 
     private fun chooseBetter(
         left: Bitmap?,
@@ -196,11 +186,6 @@ class PassLoader(
         }
 
     private fun Bitmap.pixels(): Int = this.height * this.width
-
-    private fun ByteArray.startsWith(prefix: ByteArray): Boolean {
-        if (this.size < prefix.size) return false
-        return prefix.indices.all { this[it] == prefix[it] }
-    }
 
     companion object {
         private const val TAG = "PassLoader"
