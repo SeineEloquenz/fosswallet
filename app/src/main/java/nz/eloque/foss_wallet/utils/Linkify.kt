@@ -2,12 +2,12 @@ package nz.eloque.foss_wallet.utils
 
 import androidx.core.util.PatternsCompat
 
-fun linkify(text: String): String {
-    val tagPattern = Regex("<[^>]+>")
-    val urlPattern = Regex(PatternsCompat.WEB_URL.pattern(), RegexOption.IGNORE_CASE)
-    val mailPattern = Regex(PatternsCompat.EMAIL_ADDRESS.pattern(), RegexOption.IGNORE_CASE)
-    val combined = Regex("${tagPattern.pattern}|${mailPattern.pattern}|${urlPattern.pattern}", RegexOption.IGNORE_CASE)
+private val tagPattern = Regex("<[^>]+>")
+private val urlPattern = Regex(PatternsCompat.WEB_URL.pattern(), RegexOption.IGNORE_CASE)
+private val mailPattern = Regex(PatternsCompat.EMAIL_ADDRESS.pattern(), RegexOption.IGNORE_CASE)
+private val combined = Regex("${tagPattern.pattern}|${mailPattern.pattern}|${urlPattern.pattern}", RegexOption.IGNORE_CASE)
 
+fun linkify(text: String): String {
     return combined.replace(text) {
         when {
             tagPattern.matches(it.value) -> it.value
