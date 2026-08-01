@@ -1,0 +1,2 @@
+* Rework the style of passes to resemble apple wallet more closely
+* Improve performance of wallet and pass rendering
