@@ -7,8 +7,8 @@ private val urlPattern = Regex(PatternsCompat.WEB_URL.pattern(), RegexOption.IGN
 private val mailPattern = Regex(PatternsCompat.EMAIL_ADDRESS.pattern(), RegexOption.IGNORE_CASE)
 private val combined = Regex("${tagPattern.pattern}|${mailPattern.pattern}|${urlPattern.pattern}", RegexOption.IGNORE_CASE)
 
-fun linkify(text: String): String {
-    return combined.replace(text) {
+fun linkify(text: String): String =
+    combined.replace(text) {
         when {
             tagPattern.matches(it.value) -> it.value
             mailPattern.matches(it.value) -> {
@@ -26,4 +26,3 @@ fun linkify(text: String): String {
             }
         }
     }
-}
