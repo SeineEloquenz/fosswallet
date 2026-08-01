@@ -3,33 +3,24 @@ package nz.eloque.foss_wallet.ui.screens.wallet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import nz.eloque.compose_kit.components.ExtendedSelectionMenu
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.tag.TagRow
 
 @Composable
 fun FilterBlock(
     walletViewModel: WalletViewModel,
-    sortOption: SortOption,
-    onSortChange: (SortOption) -> Unit,
-    selectedPassTypes: Set<PassType>,
     tags: Set<Tag>,
-    tagToFilterFor: Tag?,
 ) {
     val resources = LocalResources.current
 
-    val sortOption = walletViewModel.sortOptionState.collectAsState().value
-    val passTypesToShow = remember { PassType.all().toMutableStateList() }
-    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
+    val sortOption by walletViewModel.sortOptionState.collectAsState()
+    val selectedPassTypes by walletViewModel.selectedPassTypes.collectAsState()
+    val tagToFilterFor by walletViewModel.tagFilter.collectAsState()
 
     ExtendedSelectionMenu(
         singleOptions = SortOption.all(),
@@ -37,17 +28,17 @@ fun FilterBlock(
         singleOptionLabel = { resources.getString(it.l18n) },
         multiOptionLabel = { resources.getString(it.label) },
         selectedSingleOption = sortOption,
-        selectedMultiOptions = passTypesToShow,
+        selectedMultiOptions = selectedPassTypes.toList(),
         onSingleOptionSelected = { walletViewModel.setSortOption(it) },
-        onMultiOptionSelected = { passTypesToShow.add(it) },
-        onMultiOptionDeselected = { passTypesToShow.remove(it) },
+        onMultiOptionSelected = { walletViewModel.selectPassType(it) },
+        onMultiOptionDeselected = { walletViewModel.deselectPassType(it) },
         contentDescription = stringResource(R.string.filter),
     )
     TagRow(
         tags = tags,
-        selectedTag = tagToFilterFor.value,
-        onTagSelected = { tagToFilterFor.value = it },
-        onTagDeselected = { tagToFilterFor.value = null },
+        selectedTag = tagToFilterFor,
+        onTagSelected = { walletViewModel.setTagFilter(it) },
+        onTagDeselected = { walletViewModel.setTagFilter(null) },
         walletViewModel = walletViewModel,
     )
 }
