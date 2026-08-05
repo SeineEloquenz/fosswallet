@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    2:1-Ratio: minWidth/minHeight und minResizeWidth/minResizeHeight sind identisch UND
+    resizeMode="none" -> der Nutzer kann die Größe im Launcher nicht verändern, die Karte
+    bleibt also garantiert im 2:1-Verhältnis.
+
+    initialLayout referenziert das von androidx.glance.appwidget mitgelieferte Default-
+    Loading-Layout (kein eigenes XML nötig, Ressource wird beim Build gemerged).
+
+    TODO: 180dp x 90dp ist eine grobe Annahme (kleinste sinnvolle Widget-Zellengröße
+    auf den meisten Launchern, ca. 4 Zellen breit x 1 Zelle hoch bei Standard-Grids).
+    Ggf. an das tatsächliche Grid-System / gewünschte Zielgröße anpassen.
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="180dp"
+    android:minHeight="90dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="90dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
+    android:resizeMode="none"
+    android:updatePeriodMillis="0"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:configure="nz.eloque.foss_wallet.widget.PassCardWidgetConfigActivity"
+    android:widgetCategory="home_screen"
+    android:description="@string/passcard_widget_description" />
