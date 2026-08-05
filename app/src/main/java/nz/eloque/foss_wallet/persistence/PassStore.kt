@@ -33,6 +33,7 @@ class PassStore
         private val localizationRepository: PassLocalizationRepository,
         private val updateScheduler: UpdateScheduler,
         private val shortcutService: ShortcutService,
+        private val passbookApi: PassbookApi,
     ) {
         fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
@@ -71,7 +72,7 @@ class PassStore
         }
 
         suspend fun update(pass: Pass): UpdateResult {
-            val updated = PassbookApi.getUpdated(pass)
+            val updated = passbookApi.getUpdated(pass)
             return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
                 insert(updated.content.result)
                 passRepository.setUpdatedAt(pass)
