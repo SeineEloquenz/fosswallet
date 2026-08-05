@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
@@ -55,7 +54,6 @@ import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
-import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
@@ -271,15 +269,7 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
         ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-                },
-                onClick = {
-                    Shortcut.create(context, pass, pass.description)
-                },
-            )
+            AddToHomeScreenMenuItem(pass = pass, settingsStore = passViewModel.settingsStore)
 
             val passFile = pass.originalPassFile(context)
             if (passFile != null) {
