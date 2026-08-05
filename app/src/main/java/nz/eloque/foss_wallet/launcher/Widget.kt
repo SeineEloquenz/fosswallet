@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.widget
+package nz.eloque.foss_wallet.launcher
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -51,7 +51,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.contentprovider.ProviderEntrypoint
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
-import nz.eloque.foss_wallet.ui.card.glance.PassCardGlance
+import nz.eloque.foss_wallet.ui.glance.PassCardGlance
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.Locale
 
@@ -77,7 +77,7 @@ object PassCardWidgetPrefs {
  * `context` is available - via the same ProviderEntrypoint Hilt interface CatimaContentProvider.kt
  * already uses for the same purpose.
  */
-class PassCardGlanceWidget : GlanceAppWidget() {
+class Widget : GlanceAppWidget() {
 
     override val sizeMode: SizeMode = SizeMode.Single
 
@@ -125,13 +125,13 @@ private fun UnconfiguredWidgetContent() {
     }
 }
 
-class PassCardGlanceWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = PassCardGlanceWidget()
+class WidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = Widget()
 }
 
 /** Same pattern as WalletViewModel: Hilt @Inject constructor, PassRepository.all() mapped to LocalizedPassWithTags. */
 @HiltViewModel
-class PassCardWidgetConfigViewModel
+class WidgetConfigViewModel
     @Inject
     constructor(
         passRepository: PassRepository,
@@ -145,7 +145,7 @@ class PassCardWidgetConfigViewModel
 
 /** Started by Android when the user drags the widget onto the home screen (android:configure in passcard_widget_info.xml). */
 @AndroidEntryPoint
-class PassCardWidgetConfigActivity : ComponentActivity() {
+class WidgetConfigActivity : ComponentActivity() {
 
     private val viewModel: PassCardWidgetConfigViewModel by viewModels()
 
