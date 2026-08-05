@@ -79,6 +79,7 @@ json-sanitizer = { module = "com.mikesamuel:json-sanitizer", version.ref = "json
 junit = { module = "junit:junit", version.ref = "junit" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver3", version.ref = "okhttp" }
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 bcbp-parser = { module = "com.github.nielstron:BCBPParser", version.ref = "bcbpParser" }
 

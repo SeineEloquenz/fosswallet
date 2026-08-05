@@ -91,7 +91,7 @@ class PassLoader(
         var background: Bitmap? = null
         ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             var entry = zip.nextEntry
-            do {
+            while (entry != null) {
                 if (!entry.isDirectory) {
                     Log.d(TAG, "Found file: ${entry.name}")
                     val buffer = ByteArray(1024)
@@ -140,7 +140,8 @@ class PassLoader(
                         }
                     }
                 }
-            } while (zip.nextEntry.also { entry = it } != null)
+                entry = zip.nextEntry
+            }
         }
         if (icon == null) {
             icon = logo ?: createBitmap(100, 100)
