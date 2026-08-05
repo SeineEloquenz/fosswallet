@@ -34,18 +34,23 @@ object PassbookApi {
                 return UpdateResult.Failed(FailureReason.Exception(e))
             }
         return response.use {
-            if (it.isSuccessful) {
-                try {
-                    UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(it.body.bytes(), pass.id, pass.addedAt)))
-                } catch (e: InvalidPassException) {
-                    UpdateResult.Failed(FailureReason.Exception(e))
+            when {
+                it.code == 204 -> UpdateResult.NotUpdated
+                it.code == 200 -> {
+                    val body = it.body.bytes()
+                    if (body.isEmpty()) {
+                        UpdateResult.NotUpdated
+                    } else {
+                        try {
+                            UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(body, pass.id, pass.addedAt)))
+                        } catch (e: InvalidPassException) {
+                            UpdateResult.Failed(FailureReason.Exception(e))
+                        }
+                    }
                 }
-            } else {
-                when (it.code) {
-                    304 -> UpdateResult.NotUpdated
-                    403 -> UpdateResult.Failed(FailureReason.Forbidden)
-                    else -> UpdateResult.Failed(FailureReason.Status(it.code))
-                }
+                it.code == 304 -> UpdateResult.NotUpdated
+                it.code == 403 -> UpdateResult.Failed(FailureReason.Forbidden)
+                else -> UpdateResult.Failed(FailureReason.Status(it.code))
             }
         }
     }
