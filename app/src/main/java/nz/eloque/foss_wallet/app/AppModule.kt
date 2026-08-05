@@ -11,6 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
+import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.persistence.TransactionalExecutor
 import nz.eloque.foss_wallet.persistence.WalletDb
 import nz.eloque.foss_wallet.persistence.buildDb
@@ -39,6 +40,10 @@ object AppModule {
         @ApplicationContext context: Context,
         tagDao: TagDao,
     ): TagRepository = TagRepository(context, tagDao)
+
+    @Provides
+    @Singleton
+    fun providePassbookApi(): PassbookApi = PassbookApi()
 
     @Provides
     @Singleton
