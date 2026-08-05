@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -28,6 +29,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassType
@@ -38,9 +40,15 @@ import java.io.File
  * Glance-Pendant zu PassCard.
  *
  * WICHTIGE EINSCHRÄNKUNGEN von Glance ggü. normalem Compose (Grund für die Abweichungen unten):
- *  - Keine beliebigen Custom-Shapes (Path-basierte Formen wie BoardingPassShape,
- *    EventTicketShape, CouponShape gibt es nicht). Es bleibt nur ein Rechteck mit
- *    cornerRadius() – der Ausschnitt/die Kerbe der Boarding-Karte entfällt also.
+ *  - Kein Canvas/Path/Outline-API: Glance rendert zu RemoteViews, das kann keinen beliebigen
+ *    Compose-Shape-Code ausführen. GenericPassShape/StoreCardShape (reines RoundedCornerShape)
+ *    bilden wir über cornerRadius() nach. EventTicketShape und CouponShape (vereinfacht) werden
+ *    als statische, zur Laufzeit eingefärbte Vector-Drawables nachgebaut, weil unsere
+ *    Widget-Größe wegen resizeMode="none" in der Provider-XML fix ist (180x90dp) - die
+ *    Geometrie kann also einmalig vorberechnet werden. BoardingPassShape bleibt bewusst als
+ *    einfaches Rechteck (siehe Kommentar bei isEventTicket/isCoupon in PassCardGlance()): die
+ *    Cutout-Position hängt im Original von onPlaced()/positionInParent() der BoardingPrimary-Row
+ *    ab, die es in dieser Mini-Karte gar nicht mehr gibt.
  *  - Kein blur()-Modifier -> das unscharfe Hintergrundbild (Event ohne Strip) entfällt.
  *  - Kein combinedClickable -> nur ein einfacher clickable()-Callback, Long-Click gibt
  *    es in Glance-Widgets nicht.
@@ -49,9 +57,8 @@ import java.io.File
  *  - showEntirePass ist hier fest = false: Es werden nur Header + Primary-Bereich
  *    gerendert, keine Felder-Zeilen, kein Footer-Bild, kein Barcode, keine Tags.
  *  - Die feste 2:1-Ratio wird nicht vom Composable selbst erzwungen (Glance kennt kein
- *    aspectRatio()), sondern muss über die Widget-Größe (z. B. targetCellWidth = 2,
- *    targetCellHeight = 1 bzw. minWidth/minHeight im Verhältnis 2:1, etwa 180dp x 90dp)
- *    in der AppWidgetProviderInfo / GlanceAppWidget.sizeMode festgelegt werden.
+ *    aspectRatio()), sondern kommt aus der Widget-Größe (targetCellWidth=2, targetCellHeight=1,
+ *    minWidth/minHeight=180dp/90dp, resizeMode="none") in der AppWidgetProviderInfo.
  */
 
 private object PassCardGlanceDefaults {
@@ -83,16 +90,66 @@ fun PassCardGlance(
 ) {
     val pass = localizedPass.pass
     val colors = pass.colors ?: PassCardGlanceDefaults.fallbackColors()
+    val isEventTicket = pass.type is PassType.Event
+    val isCoupon = pass.type is PassType.Coupon
+    // PassType.Boarding, PassType.Generic und PassType.StoreCard fallen bewusst in den
+    // Else-Zweig unten (abgerundetes Rechteck) - BoardingPassShape bekommt hier absichtlich
+    // KEINE eigene Form (siehe Rückfrage im Chat: "BoardingPassShape als GenericPassShape").
+    // Grund: die Cutout-Position im Original hängt von onPlaced()/positionInParent() der
+    // BoardingPrimary-Row ab, die es in dieser reduzierten Widget-Karte (showEntirePass=false)
+    // gar nicht mehr gibt - ein statischer Cutout hätte also keinen sinnvollen Ankerpunkt.
 
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(ColorProvider(colors.background))
-            .cornerRadius(PassCardGlanceDefaults.cornerRadius)
-            .padding(PassCardGlanceDefaults.padding)
             .let { base -> if (onClick != null) base.clickable(onClick) else base },
     ) {
-        Column(modifier = GlanceModifier.fillMaxSize()) {
+        when {
+            isEventTicket -> {
+                // Statischer Nachbau von EventTicketShape, siehe res/drawable/event_ticket_shape.xml.
+                Image(
+                    provider = ImageProvider(R.drawable.event_ticket_shape),
+                    contentDescription = null,
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(ColorProvider(colors.background)),
+                )
+            }
+            isCoupon -> {
+                // Vereinfachter statischer Nachbau von CouponShape, siehe
+                // res/drawable/coupon_shape.xml (symmetrische statt versetzte Perforation).
+                Image(
+                    provider = ImageProvider(R.drawable.coupon_shape),
+                    contentDescription = null,
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(ColorProvider(colors.background)),
+                )
+            }
+            else -> {
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .background(ColorProvider(colors.background))
+                        .cornerRadius(PassCardGlanceDefaults.cornerRadius),
+                ) {}
+            }
+        }
+
+        Column(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .padding(
+                    start = PassCardGlanceDefaults.padding,
+                    end = PassCardGlanceDefaults.padding,
+                    bottom = PassCardGlanceDefaults.padding,
+                    // Die Kerbe von event_ticket_shape.xml dippt an der oberen Kantenmitte um
+                    // 11.72dp nach innen - zusätzliches Top-Padding verhindert Kollision mit dem
+                    // Header. Bei coupon_shape.xml sind die Perforationen nur 4dp tief, das
+                    // normale Padding (8dp) reicht dort bereits aus.
+                    top = PassCardGlanceDefaults.padding + if (isEventTicket) 12.dp else 0.dp,
+                ),
+        ) {
             HeaderRowGlance(
                 localizedPass = localizedPass,
                 context = context,
