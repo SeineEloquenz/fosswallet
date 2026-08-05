@@ -44,9 +44,13 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 class MainActivity : ComponentActivity() {
     private val walletViewModel: WalletViewModel by viewModels()
 
+    private var pendingWidgetPassId by mutableStateOf<String?>(null)
+
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        pendingWidgetPassId = intent.getStringExtra(EXTRA_PASS_ID)
 
         val shareSource: ScanSource? =
             if (intent.action == Intent.ACTION_SEND) {
@@ -89,6 +93,14 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
             var isProcessingFileShare by remember { mutableStateOf(false) }
+
+            LaunchedEffect(pendingWidgetPassId) {
+                pendingWidgetPassId?.let { passId ->
+                    navController.navigate("pass/$passId")
+                    pendingWidgetPassId = null
+                }
+            }
+
             LaunchedEffect(dataUri, shareSource != null) {
                 if (shareSource != null && dataUri != null) {
                     isProcessingFileShare = true
@@ -150,6 +162,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Requires android:launchMode="singleTop" in the manifest, otherwise this is never called.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        pendingWidgetPassId = intent.getStringExtra(EXTRA_PASS_ID)
+    }
+
     private suspend fun Uri.handleIntent(
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
@@ -178,5 +197,9 @@ class MainActivity : ComponentActivity() {
         }
 
         return clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+    }
+
+    companion object {
+        const val EXTRA_PASS_ID = "pass_id"
     }
 }
