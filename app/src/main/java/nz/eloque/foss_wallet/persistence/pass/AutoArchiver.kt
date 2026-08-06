@@ -11,8 +11,11 @@ internal object AutoArchiver {
         now: Instant = Instant.now(),
     ): Boolean {
         if (metadata.archived) return true
+        if (!metadata.autoArchive) return false
 
-        val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
-        return metadata.autoArchive && expired
+        val expiration = pass.expirationDate?.toInstant() ?: return false
+        val expired = !expiration.isAfter(now)
+        val expiredWhileHeld = pass.addedAt.isBefore(expiration)
+        return expired && expiredWhileHeld
     }
 }
