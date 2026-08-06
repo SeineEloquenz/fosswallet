@@ -197,12 +197,10 @@ private fun PrimaryContentGlance(
     labelColor: Color,
 ) {
     val pass = localizedPass.pass
-    // getOrElse(0) { PassField.Empty } wie im Compose-Original (ThumbnailPrimary/BoardingPrimary),
-    // damit auch bei fehlendem primaryField sauber "leer" statt null gerendert wird.
     val primaryField = pass.primaryFields.getOrElse(0) { PassField.Empty }
 
     val previewFile: File? = when (pass.type) {
-        is PassType.Boarding -> null // Kerbe/Cutout-Form entfällt in Glance, daher kein Extra-Bild
+        is PassType.Boarding -> null
         is PassType.Coupon, PassType.StoreCard -> pass.stripFile(context)
         is PassType.Event -> if (pass.hasStrip) pass.stripFile(context) else pass.thumbnailFile(context)
         is PassType.Generic -> pass.thumbnailFile(context)
