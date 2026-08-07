@@ -22,6 +22,7 @@ import java.time.ZoneOffset
 class AutoArchiveBehaviorTest {
     private val fixedNow = Instant.parse("2026-01-01T00:00:00Z")
     private val fixedExpiredDate = fixedNow.minusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
+    private val fixedAddedBeforeExpiry = fixedNow.minusSeconds(2 * 24 * 60 * 60)
     private val fixedFutureDate = fixedNow.plusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
 
     private lateinit var db: WalletDb
@@ -57,7 +58,7 @@ class AutoArchiveBehaviorTest {
                     serialNumber = "123",
                     type = PassType.Generic,
                     barCodes = setOf(),
-                    addedAt = fixedNow,
+                    addedAt = fixedAddedBeforeExpiry,
                     expirationDate = fixedExpiredDate,
                 )
             passDao.insert(pass)
@@ -82,6 +83,32 @@ class AutoArchiveBehaviorTest {
             assertNotNull(afterAutoArchiveRun)
             assertFalse(afterAutoArchiveRun!!.archived)
             assertFalse(afterAutoArchiveRun.autoArchive)
+        }
+
+    @Test
+    fun passAddedAfterExpirationIsNotArchived() =
+        runTest {
+            val pass =
+                Pass(
+                    id = "already-expired-pass",
+                    description = "Deliberately added expired pass",
+                    formatVersion = 1,
+                    organization = "Test Org",
+                    serialNumber = "124",
+                    type = PassType.Generic,
+                    barCodes = setOf(),
+                    addedAt = fixedNow,
+                    expirationDate = fixedExpiredDate,
+                )
+            passDao.insert(pass)
+            passDao.insert(PassMetadata(pass.id))
+
+            passRepository.archiveExpiredPasses(now = fixedNow)
+
+            val afterAutoArchiveRun = passDao.findById(pass.id)?.metadata
+            assertNotNull(afterAutoArchiveRun)
+            assertFalse(afterAutoArchiveRun!!.archived)
+            assertTrue(afterAutoArchiveRun.autoArchive)
         }
 
     @Test

@@ -122,7 +122,9 @@ class PassRepository
             passDao
                 .nonArchivedWithExpirationDate()
                 .filter { pass ->
-                    pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
+                    pass.expirationDate?.toInstant()?.let { expiration ->
+                        !expiration.isAfter(now) && pass.addedAt.isBefore(expiration)
+                    } ?: false
                 }.forEach { passDao.archive(it.id) }
         }
     }

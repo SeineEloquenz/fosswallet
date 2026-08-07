@@ -13,7 +13,10 @@ import java.time.ZonedDateTime
 class AutoArchiverTest {
     private val now: Instant = Instant.parse("2024-01-01T12:00:00Z")
 
-    private fun pass(expiration: Instant? = null): Pass =
+    private fun pass(
+        expiration: Instant? = null,
+        added: Instant = now.minusSeconds(3600),
+    ): Pass =
         Pass(
             id = "id",
             description = "desc",
@@ -22,7 +25,7 @@ class AutoArchiverTest {
             serialNumber = "serial",
             type = PassType.Generic,
             barCodes = emptySet(),
-            addedAt = now,
+            addedAt = added,
             expirationDate = expiration?.atZone(ZoneOffset.UTC),
         )
 
@@ -123,6 +126,34 @@ class AutoArchiverTest {
             )
 
         assertTrue(result)
+    }
+
+    @Test
+    fun `returns false when already expired at time of adding`() {
+        val expired = now.minusSeconds(60)
+
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass(expiration = expired, added = now),
+                metadata = metadata(autoArchive = true),
+                now = now,
+            )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `returns false when added exactly at expiration`() {
+        val expired = now.minusSeconds(60)
+
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass(expiration = expired, added = expired),
+                metadata = metadata(autoArchive = true),
+                now = now,
+            )
+
+        assertFalse(result)
     }
 
     @Test

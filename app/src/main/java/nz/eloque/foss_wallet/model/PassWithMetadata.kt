@@ -3,11 +3,7 @@ package nz.eloque.foss_wallet.model
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import nz.eloque.foss_wallet.model.field.PassContent
-import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.utils.toMapping
-
-private const val CHANGE_MESSAGE_FORMAT = "%@"
 
 data class PassWithMetadata(
     @Embedded
@@ -40,38 +36,7 @@ data class PassWithMetadata(
     val attachments: List<Attachment>,
 ) {
     fun applyLocalization(locale: String): LocalizedPassWithTags {
-        val mapping = localizations.toMapping(locale)
-        val localizedPass =
-            pass.copy(
-                description = mapping[pass.description]?.text ?: pass.description,
-                headerFields = pass.headerFields.applyLocalization(mapping),
-                primaryFields = pass.primaryFields.applyLocalization(mapping),
-                secondaryFields = pass.secondaryFields.applyLocalization(mapping),
-                auxiliaryFields = pass.auxiliaryFields.applyLocalization(mapping),
-                backFields = pass.backFields.applyLocalization(mapping),
-            )
-
+        val localizedPass = pass.applyLocalization(localizations.toMapping(locale))
         return LocalizedPassWithTags(localizedPass, metadata, tags.toSet(), attachments)
     }
-
-    private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> =
-        this.map { field ->
-
-            val content = field.content.applyLocalization(mapping)
-
-            val localizedLabel = mapping[field.label]?.text ?: field.label
-            val localizedChangeMessage =
-                (mapping[field.changeMessage]?.text ?: field.changeMessage) ?.replace(
-                    CHANGE_MESSAGE_FORMAT,
-                    content.prettyPrint(),
-                )
-            field.copy(label = localizedLabel, changeMessage = localizedChangeMessage, content = content)
-        }
-
-    private fun PassContent.applyLocalization(mapping: Map<String, PassLocalization>): PassContent =
-        if (this is PassContent.Plain && mapping.containsKey(this.text)) {
-            PassContent.Plain(mapping[this.text]!!.text)
-        } else {
-            this
-        }
 }
