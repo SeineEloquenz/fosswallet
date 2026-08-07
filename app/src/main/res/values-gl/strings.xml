@@ -32,7 +32,6 @@
     <string name="enable">Activar</string>
     <string name="search">Buscar</string>
     <string name="add_shortcut">Engadir atallo</string>
-    <string name="shortcut_exists">O atallo xa existe!</string>
     <string name="privacy">Privacidade</string>
     <string name="details">Detalles</string>
     <string name="timeout">Esgotouse o tempo de espera intentando conectar co servidor de actualizacións</string>

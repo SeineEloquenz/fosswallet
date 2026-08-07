@@ -32,7 +32,6 @@
     <string name="enable">Включить</string>
     <string name="search">Поиск</string>
     <string name="add_shortcut">Добавить ярлык</string>
-    <string name="shortcut_exists">Ярлык уже существует!</string>
     <string name="privacy">Конфиденциальность</string>
     <string name="details">Подробности</string>
     <string name="timeout">Превышено время ожидания подключения к серверу обновлений</string>

@@ -55,7 +55,6 @@ import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
-import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
@@ -277,7 +276,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                 },
                 onClick = {
-                    Shortcut.create(context, pass, pass.description)
+                    passViewModel.addShortcut(pass)
                 },
             )
 

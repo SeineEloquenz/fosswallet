@@ -44,7 +44,6 @@
     <string name="group">Gruppera kort</string>
     <string name="ungroup">Avgruppera kort</string>
     <string name="passes">Kort</string>
-    <string name="shortcut_exists">Genvägen finns redan!</string>
     <string name="pass_view">Kortvy</string>
     <string name="pass_view_brightness">Öka ljusstyrkan</string>
     <string name="pass_already_imported">Kortet har redan importerats</string>

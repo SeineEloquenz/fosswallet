@@ -32,7 +32,6 @@
     <string name="enable">Activar</string>
     <string name="search">Buscar</string>
     <string name="add_shortcut">Añadir atajo</string>
-    <string name="shortcut_exists">¡El acceso directo ya existe!</string>
     <string name="privacy">Privacidad</string>
     <string name="details">Detalles</string>
     <string name="timeout">Se agotó el tiempo de espera al intentar conectar con el servidor de actualizaciones</string>

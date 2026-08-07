@@ -40,7 +40,8 @@
     <string name="enable">Enable</string>
     <string name="search">Search</string>
     <string name="add_shortcut">Add shortcut</string>
-    <string name="shortcut_exists">Shortcut already exists!</string>
+    <string name="shortcut_unsupported">Your launcher does not support pinning shortcuts</string>
+    <string name="shortcut_failed">Could not create shortcut</string>
     <string name="privacy">Privacy</string>
     <string name="details">Details</string>
     <string name="timeout">A timeout occurred while calling the update server</string>

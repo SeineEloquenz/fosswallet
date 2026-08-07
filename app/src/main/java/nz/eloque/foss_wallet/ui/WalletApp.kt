@@ -31,7 +31,7 @@ import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
@@ -173,7 +173,7 @@ fun WalletApp(
                 deepLinks =
                     listOf(
                         navDeepLink {
-                            uriPattern = "${Shortcut.BASE_URI}/{passId}"
+                            uriPattern = "${ShortcutService.BASE_URI}/{passId}"
                         },
                     ),
                 arguments = listOf(navArgument("passId") { type = NavType.StringType }),

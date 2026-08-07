@@ -34,7 +34,6 @@
     <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
     <string name="enable">Aktivieren</string>
     <string name="add_shortcut">Verknüpfung hinzufügen</string>
-    <string name="shortcut_exists">Es existiert bereits eine Verknüpfung!</string>
     <string name="privacy">Privatsphäre</string>
     <string name="details">Details</string>
     <string name="timeout">Es ist eine Zeitüberschreitung bei der Verbindung aufgetreten</string>

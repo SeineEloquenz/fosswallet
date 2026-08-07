@@ -32,7 +32,6 @@
     <string name="enable">啟用</string>
     <string name="search">搜尋</string>
     <string name="add_shortcut">新增捷徑</string>
-    <string name="shortcut_exists">捷徑已存在！</string>
     <string name="privacy">隱私</string>
     <string name="details">細節</string>
     <string name="timeout">呼叫更新伺服器時發生逾時</string>

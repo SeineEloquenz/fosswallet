@@ -14,7 +14,6 @@
     <string name="license">Litsents</string>
     <string name="search">Otsi</string>
     <string name="add_shortcut">Lisa otselink</string>
-    <string name="shortcut_exists">Otselink on juba olemas!</string>
     <string name="request_permissions">Küsi õigusi</string>
     <string name="enable">Võta kasutusele</string>
     <string name="permission_rationale">Ilma vajalike õigusteta FossWallet ei toimi korralikult</string>
