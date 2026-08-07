@@ -20,7 +20,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
-import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.shortcut.ShortcutService
 import java.util.Locale
 
 class PassStore
@@ -32,6 +32,7 @@ class PassStore
         private val passRepository: PassRepository,
         private val localizationRepository: PassLocalizationRepository,
         private val updateScheduler: UpdateScheduler,
+        private val shortcutService: ShortcutService,
     ) {
         fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
@@ -109,7 +110,7 @@ class PassStore
         suspend fun delete(pass: Pass) {
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
-            Shortcut.remove(context, pass)
+            shortcutService.disable(pass)
         }
 
         suspend fun delete(attachment: Attachment) {

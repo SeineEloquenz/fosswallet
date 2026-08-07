@@ -32,7 +32,6 @@
     <string name="enable">Povolit</string>
     <string name="search">Hledat</string>
     <string name="add_shortcut">Přidat zkratku</string>
-    <string name="shortcut_exists">Zkratka již existuje!</string>
     <string name="privacy">Soukromí</string>
     <string name="details">Podrobnosti</string>
     <string name="timeout">Při dotazu na aktualizační server vypršel čas</string>

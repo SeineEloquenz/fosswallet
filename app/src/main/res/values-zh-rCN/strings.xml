@@ -56,7 +56,6 @@
     <string name="pass_view">凭证视图</string>
     <string name="open">打开</string>
     <string name="add_shortcut">添加快捷方式</string>
-    <string name="shortcut_exists">快捷方式已存在！</string>
     <string name="ungroup">取消分组凭证</string>
     <string name="group">分组凭证</string>
     <string name="made_with_love">德国匠心制作 ❤</string>

@@ -32,7 +32,6 @@
     <string name="enable">Ενεργοποίηση</string>
     <string name="search">Αναζήτηση</string>
     <string name="add_shortcut">Προσθήκη συντόμευσης</string>
-    <string name="shortcut_exists">Η συντόμευση υπάρχει ήδη!</string>
     <string name="privacy">Απόρρητο</string>
     <string name="details">Λεπτομέρειες</string>
     <string name="timeout">Η σύνδεση στον διακομιστή διεκόπη</string>

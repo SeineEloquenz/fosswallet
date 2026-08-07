@@ -38,7 +38,6 @@
     <string name="date_added">Pievienošanas datums</string>
     <string name="filter">Kārtot pēc</string>
     <string name="compatibility_mode">Saderības režīms</string>
-    <string name="shortcut_exists">Saīsne jau pastāv!</string>
     <string name="n_passes_imported">Ievietotas %1$d caurlaides</string>
     <string name="pass_deleted">Caurlaide veiksmīgi dzēsta</string>
     <string name="pass_imported">Caurlaide veiksmīgi ievietota</string>
