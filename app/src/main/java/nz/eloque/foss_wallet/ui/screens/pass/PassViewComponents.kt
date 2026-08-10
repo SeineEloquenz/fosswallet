@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.compose_kit.dialog.FullscreenDialog
-import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
@@ -49,12 +48,9 @@ fun Barcodes(
     barcodes: List<BarCode>,
     legacyRendering: Boolean,
     barcodePosition: BarcodePosition,
-    increaseBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { barcodes.size }
-
-    if (increaseBrightness) UpdateBrightness()
 
     Column(
         modifier = modifier,

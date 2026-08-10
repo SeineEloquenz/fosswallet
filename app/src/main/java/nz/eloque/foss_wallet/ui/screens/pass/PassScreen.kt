@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.components.UpdateButton
+import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
@@ -89,6 +90,8 @@ fun PassScreen(
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
+
+        if (passViewModel.increasePassViewBrightness()) UpdateBrightness()
 
         // Recreate the pager whenever the set or order of group passes changes
         key(passes.map { it.pass.id }) {
@@ -140,7 +143,6 @@ fun PassScreen(
                             onTagCreate = { passViewModel.addTag(it) },
                             barcodePosition = passViewModel.barcodePosition(),
                             scrollBehavior = scrollBehavior,
-                            increaseBrightness = passViewModel.increasePassViewBrightness(),
                             onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
                             onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
