@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.ui.card.glance
+package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -14,6 +14,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
+import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -49,6 +50,16 @@ private object PassCardGlanceDefaults {
         )
 }
 
+/**
+ * Wraps a fixed [Color] in a [ColorProvider].
+ *
+ * Glance's `ColorProvider(color: Color)` shorthand is restricted to the
+ * `androidx.glance` library group. The public, documented way to get a
+ * ColorProvider for a single fixed color is to supply the same value for
+ * both `day` and `night`.
+ */
+private fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
+
 @Composable
 fun PassCardGlance(
     localizedPass: LocalizedPassWithTags,
@@ -72,7 +83,7 @@ fun PassCardGlance(
                     contentDescription = null,
                     modifier = GlanceModifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(ColorProvider(colors.background)),
+                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
                 )
             }
             isCoupon -> {
@@ -81,14 +92,14 @@ fun PassCardGlance(
                     contentDescription = null,
                     modifier = GlanceModifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(ColorProvider(colors.background)),
+                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
                 )
             }
             else -> {
                 Box(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        .background(ColorProvider(colors.background))
+                        .background(fixedColorProvider(colors.background))
                         .cornerRadius(PassCardGlanceDefaults.cornerRadius),
                 ) {}
             }
@@ -154,7 +165,7 @@ private fun HeaderRowGlance(
                 maxLines = 1,
                 modifier = GlanceModifier.defaultWeight(),
                 style = TextStyle(
-                    color = ColorProvider(foreground),
+                    color = fixedColorProvider(foreground),
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                 ),
@@ -170,7 +181,7 @@ private fun HeaderRowGlance(
                         text = label,
                         maxLines = 1,
                         style = TextStyle(
-                            color = ColorProvider(labelColor),
+                            color = fixedColorProvider(labelColor),
                             fontWeight = FontWeight.Bold,
                             fontSize = 9.sp,
                         ),
@@ -180,7 +191,7 @@ private fun HeaderRowGlance(
                     text = firstHeaderField.content.prettyPrint(),
                     maxLines = 1,
                     style = TextStyle(
-                        color = ColorProvider(foreground),
+                        color = fixedColorProvider(foreground),
                         fontSize = 11.sp,
                     ),
                 )
@@ -208,7 +219,7 @@ private fun PrimaryContentGlance(
     val previewBitmap = remember(previewFile) { previewFile?.let { loadBitmap(it) } }
 
     Row(
-        modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
+        modifier = GlanceModifier.fillMaxWidth().defaultWeight,
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         Column(modifier = GlanceModifier.defaultWeight()) {
@@ -217,7 +228,7 @@ private fun PrimaryContentGlance(
                     text = label,
                     maxLines = 1,
                     style = TextStyle(
-                        color = ColorProvider(labelColor),
+                        color = fixedColorProvider(labelColor),
                         fontWeight = FontWeight.Bold,
                         fontSize = 10.sp,
                     ),
@@ -227,7 +238,7 @@ private fun PrimaryContentGlance(
                 text = primaryField.content.prettyPrint(),
                 maxLines = 1,
                 style = TextStyle(
-                    color = ColorProvider(foreground),
+                    color = fixedColorProvider(foreground),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                 ),
@@ -251,7 +262,7 @@ private fun loadBitmap(file: File?): android.graphics.Bitmap? {
     if (file == null || !file.exists()) return null
     return try {
         BitmapFactory.decodeFile(file.absolutePath)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 }

@@ -153,6 +153,11 @@ dependencies {
 
     implementation(libs.androidx.hilt.work)
 
+    // Glance (widgets)
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
     // (Java only)
     implementation(libs.androidx.work.runtime)
     // Kotlin + coroutines

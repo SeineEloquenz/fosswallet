@@ -1,6 +1,5 @@
 package nz.eloque.foss_wallet.launcher
 
-import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,18 +24,17 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
+import androidx.glance.action.actionStartActivity
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
-import androidx.glance.text.Text as GlanceText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -58,6 +57,7 @@ import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.ui.glance.PassCardGlance
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.Locale
+import androidx.glance.text.Text as GlanceText
 
 object PassCardWidgetPrefs {
     val PASS_ID_KEY = stringPreferencesKey("pass_id")
@@ -85,16 +85,21 @@ class Widget : GlanceAppWidget() {
         provideContent {
             val prefs = currentState<Preferences>()
             val passId = prefs[PassCardWidgetPrefs.PASS_ID_KEY]
-            val localizedPass = passId?.let { withContext(Dispatchers.IO) { passRepository.findById(it) } }
+
+            // provideContent's lambda is @Composable, not suspend — the async
+            // repository lookup has to happen inside produceState's coroutine.
+            val localizedPassState by produceState<LocalizedPassWithTags?>(initialValue = null, key1 = passId) {
+                value = passId?.let { withContext(Dispatchers.IO) { passRepository.findById(it) } }
+            }
+            val localizedPass = localizedPassState
 
             if (localizedPass != null) {
                 PassCardGlance(
                     localizedPass = localizedPass,
                     context = context,
-                    onClick =
-                        actionStartActivity<MainActivity>(
-                            parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
-                        ),
+                    onClick = actionStartActivity<MainActivity>(
+                        parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
+                    ),
                 )
             } else {
                 UnconfiguredWidgetContent()
@@ -116,16 +121,16 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
 
 @HiltViewModel
 class WidgetConfigViewModel
-    @Inject
-    constructor(
-        passRepository: PassRepository,
-    ) : ViewModel() {
-        val passes: StateFlow<List<LocalizedPassWithTags>> =
-            passRepository
-                .all()
-                .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-    }
+@Inject
+constructor(
+    passRepository: PassRepository,
+) : ViewModel() {
+    val passes: StateFlow<List<LocalizedPassWithTags>> =
+        passRepository
+            .all()
+            .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+}
 
 // Started via android:configure in passcard_widget_info.xml.
 @AndroidEntryPoint
@@ -138,7 +143,7 @@ class WidgetConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setResult(Activity.RESULT_CANCELED)
+        setResult(RESULT_CANCELED)
 
         appWidgetId =
             intent?.extras?.getInt(
@@ -173,7 +178,7 @@ class WidgetConfigActivity : ComponentActivity() {
             Widget().update(this@WidgetConfigActivity, glanceId)
 
             val resultValue = android.content.Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            setResult(Activity.RESULT_OK, resultValue)
+            setResult(RESULT_OK, resultValue)
             finish()
         }
     }
@@ -187,9 +192,10 @@ private fun PassPickerScreen(
     LazyColumn {
         items(passes, key = { it.pass.id }) { pass ->
             ListItem(
-                headlineContent = { Text(pass.pass.description) },
                 modifier = Modifier.clickable { onPassSelected(pass) },
-            )
+            ) {
+                Text(pass.pass.description)
+            }
         }
     }
 }
