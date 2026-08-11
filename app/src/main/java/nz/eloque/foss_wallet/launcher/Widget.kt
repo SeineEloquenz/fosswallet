@@ -70,7 +70,6 @@ private val PASS_ID_PARAM = ActionParameters.Key<String>(MainActivity.EXTRA_PASS
 // getter without a Context, so it's resolved here in provideGlance() via ProviderEntrypoint
 // instead (same pattern as CatimaContentProvider.kt).
 class Widget : GlanceAppWidget() {
-
     override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(
@@ -97,9 +96,10 @@ class Widget : GlanceAppWidget() {
                 PassCardGlance(
                     localizedPass = localizedPass,
                     context = context,
-                    onClick = actionStartActivity<MainActivity>(
-                        parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
-                    ),
+                    onClick =
+                        actionStartActivity<MainActivity>(
+                            parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
+                        ),
                 )
             } else {
                 UnconfiguredWidgetContent()
@@ -121,21 +121,20 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
 
 @HiltViewModel
 class WidgetConfigViewModel
-@Inject
-constructor(
-    passRepository: PassRepository,
-) : ViewModel() {
-    val passes: StateFlow<List<LocalizedPassWithTags>> =
-        passRepository
-            .all()
-            .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-}
+    @Inject
+    constructor(
+        passRepository: PassRepository,
+    ) : ViewModel() {
+        val passes: StateFlow<List<LocalizedPassWithTags>> =
+            passRepository
+                .all()
+                .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    }
 
 // Started via android:configure in passcard_widget_info.xml.
 @AndroidEntryPoint
 class WidgetConfigActivity : ComponentActivity() {
-
     private val viewModel: WidgetConfigViewModel by viewModels()
 
     private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID

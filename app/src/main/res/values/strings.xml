@@ -145,4 +145,5 @@
     <string name="delete_attachment">Delete attachment</string>
     <string name="attachments">Attachments</string>
     <string name="widget_unconfigured">The widget is not configured</string>
+    <string name="passcard_widget_description">Shows a selected pass on the start screen</string>
 </resources>
