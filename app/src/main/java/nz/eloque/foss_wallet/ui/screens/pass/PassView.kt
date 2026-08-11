@@ -53,7 +53,6 @@ fun PassView(
     onTagAdd: (Tag) -> Unit,
     onTagCreate: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
-    increaseBrightness: Boolean,
     onRenderingChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
@@ -79,7 +78,6 @@ fun PassView(
                     barcodes = pass.barCodes.toList(),
                     legacyRendering = metadata.renderLegacy && hasLegacyRepresentation,
                     barcodePosition = barcodePosition,
-                    increaseBrightness = increaseBrightness,
                 )
             },
             onTagClick = onTagClick,
@@ -179,7 +177,6 @@ private fun PassPreview() {
         onTagAdd = {},
         onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
-        increaseBrightness = false,
         onRenderingChange = {},
         onAttachmentAdd = { _, _ -> },
         onAttachmentDelete = {},
