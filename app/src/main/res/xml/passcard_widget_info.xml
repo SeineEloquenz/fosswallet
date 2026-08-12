@@ -4,11 +4,14 @@
     android:minHeight="90dp"
     android:minResizeWidth="180dp"
     android:minResizeHeight="90dp"
+    android:maxResizeWidth="360dp"
+    android:maxResizeHeight="180dp"
     android:targetCellWidth="2"
     android:targetCellHeight="1"
-    android:resizeMode="none"
+    android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:configure="nz.eloque.foss_wallet.widget.PassCardWidgetConfigActivity"
+    android:configure="nz.eloque.foss_wallet.launcher.WidgetConfigActivity"
     android:widgetCategory="home_screen"
-    android:description="@string/passcard_widget_description" />
+    android:description="@string/passcard_widget_description"
+/>
