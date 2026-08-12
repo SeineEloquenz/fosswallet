@@ -1,8 +1,6 @@
 package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -233,104 +231,4 @@ private fun HeaderRow(
             }
         }
     }
-}
-
-@Composable
-private fun PrimaryContent(
-    localizedPass: LocalizedPassWithTags,
-    context: Context,
-    foreground: Color,
-    labelColor: Color,
-) {
-    val pass = localizedPass.pass
-    val primaryField = pass.primaryFields.getOrElse(0) { PassField.Empty }
-
-    val previewFile: File? =
-        when (pass.type) {
-            is PassType.Boarding -> null
-            is PassType.Coupon, PassType.StoreCard -> pass.stripFile(context)
-            is PassType.Event -> if (pass.hasStrip) pass.stripFile(context) else pass.thumbnailFile(context)
-            is PassType.Generic -> pass.thumbnailFile(context)
-        }
-    val previewBitmap = remember(previewFile) { previewFile?.let { loadBitmap(it) } }
-
-    Row(
-        modifier = GlanceModifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Vertical.CenterVertically,
-    ) {
-        Column(modifier = GlanceModifier.defaultWeight()) {
-            primaryField.label?.let { label ->
-                Text(
-                    text = label,
-                    maxLines = 1,
-                    style =
-                        TextStyle(
-                            color = fixedColorProvider(labelColor),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
-                        ),
-                )
-            }
-            Text(
-                text = primaryField.content.prettyPrint(),
-                maxLines = 1,
-                style =
-                    TextStyle(
-                        color = fixedColorProvider(foreground),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                    ),
-            )
-        }
-        if (previewBitmap != null) {
-            Image(
-                provider = ImageProvider(previewBitmap),
-                contentDescription = null,
-                modifier =
-                    GlanceModifier
-                        .width(48.dp)
-                        .height(48.dp)
-                        .cornerRadius(6.dp),
-                contentScale = ContentScale.Crop,
-            )
-        }
-    }
-}
-
-private fun loadBitmap(
-    file: File?,
-    targetSizePx: Int = PassCardDefault.bitmapTargetSizePx,
-): Bitmap? {
-    if (file == null || !file.exists()) return null
-    return try {
-        val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(file.absolutePath, boundsOptions)
-
-        val decodeOptions =
-            BitmapFactory.Options().apply {
-                inSampleSize = calculateInSampleSize(boundsOptions, targetSizePx, targetSizePx)
-            }
-        BitmapFactory.decodeFile(file.absolutePath, decodeOptions)
-    } catch (_: Exception) {
-        null
-    }
-}
-
-private fun calculateInSampleSize(
-    options: BitmapFactory.Options,
-    reqWidth: Int,
-    reqHeight: Int,
-): Int {
-    val height = options.outHeight
-    val width = options.outWidth
-    var inSampleSize = 1
-
-    if (height > reqHeight || width > reqWidth) {
-        val halfHeight = height / 2
-        val halfWidth = width / 2
-        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-            inSampleSize *= 2
-        }
-    }
-    return inSampleSize
 }
