@@ -99,6 +99,16 @@ fun PassCardFront(
                 )
             }
 
+            isBoardingPass -> {
+                Image(
+                    provider = ImageProvider(R.drawable.boarding_pass_shape),
+                    contentDescription = null,
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+                )
+            }
+            
             else -> {
                 Box(
                     modifier =
