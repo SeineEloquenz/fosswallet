@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.launcher
 
 import android.appwidget.AppWidgetManager
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -30,6 +33,8 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
@@ -55,15 +60,34 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.contentprovider.ProviderEntrypoint
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
+import nz.eloque.foss_wallet.ui.glance.PassCardBack
 import nz.eloque.foss_wallet.ui.glance.PassCardFront
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.Locale
 import androidx.glance.text.Text as GlanceText
 
-object PassCardWidgetPrefs { val PASS_ID_KEY = stringPreferencesKey("pass_id") }
+object PassCardWidgetPrefs {
+    val PASS_ID_KEY = stringPreferencesKey("pass_id")
+    val SHOWING_BACK_KEY = booleanPreferencesKey("showing_back")
+}
 
 // Glance writes ActionParameters as Intent extras under the same name.
 private val PASS_ID_PARAM = ActionParameters.Key<String>(MainActivity.EXTRA_PASS_ID)
+
+// Flips the widget between front and back for whichever glanceId triggered it.
+class ToggleCardSideAction : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        updateAppWidgetState(context, glanceId) { prefs ->
+            val currentlyShowingBack = prefs[PassCardWidgetPrefs.SHOWING_BACK_KEY] ?: false
+            prefs[PassCardWidgetPrefs.SHOWING_BACK_KEY] = !currentlyShowingBack
+        }
+        Widget().update(context, glanceId)
+    }
+}
 
 // No constructor parameter for PassRepository: GlanceAppWidgetReceiver.glanceAppWidget is a
 // getter without a Context, so it's resolved here in provideGlance() via ProviderEntrypoint
@@ -82,7 +106,7 @@ class Widget : GlanceAppWidget() {
         )
 
     override suspend fun provideGlance(
-        context: android.content.Context,
+        context: Context,
         id: GlanceId,
     ) {
         val passRepository =
@@ -93,6 +117,7 @@ class Widget : GlanceAppWidget() {
         provideContent {
             val prefs = currentState<Preferences>()
             val passId = prefs[PassCardWidgetPrefs.PASS_ID_KEY]
+            val showingBack = prefs[PassCardWidgetPrefs.SHOWING_BACK_KEY] ?: false
 
             // provideContent's lambda is @Composable, not suspend — the async
             // repository lookup has to happen inside produceState's coroutine.
@@ -101,7 +126,24 @@ class Widget : GlanceAppWidget() {
             }
             val localizedPass = localizedPassState
 
-            if (localizedPass != null) {
+            if (localizedPass == null) {
+                UnconfiguredWidgetContent()
+            } else if (showingBack) {
+                val barcodeBitmap =
+                    remember(localizedPass.pass.barCodes) {
+                        localizedPass.pass.barCodes.firstOrNull()?.toBitmap(width = 256, height = 256)
+                    }
+                PassCardBack(
+                    localizedPass = localizedPass,
+                    context = context,
+                    barcodeBitmap = barcodeBitmap,
+                    onClick =
+                        actionStartActivity<MainActivity>(
+                            parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
+                        ),
+                    onFlipToFront = actionRunCallback<ToggleCardSideAction>(),
+                )
+            } else {
                 PassCardFront(
                     localizedPass = localizedPass,
                     context = context,
@@ -109,9 +151,8 @@ class Widget : GlanceAppWidget() {
                         actionStartActivity<MainActivity>(
                             parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
                         ),
+                    onFlipToBack = actionRunCallback<ToggleCardSideAction>(),
                 )
-            } else {
-                UnconfiguredWidgetContent()
             }
         }
     }
@@ -182,6 +223,7 @@ class WidgetConfigActivity : ComponentActivity() {
 
             updateAppWidgetState(this@WidgetConfigActivity, glanceId) { prefs ->
                 prefs[PassCardWidgetPrefs.PASS_ID_KEY] = pass.pass.id
+                prefs[PassCardWidgetPrefs.SHOWING_BACK_KEY] = false
             }
             Widget().update(this@WidgetConfigActivity, glanceId)
 
