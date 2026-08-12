@@ -105,14 +105,15 @@ internal fun BoardingPrimary(
     val transitType = (pass.type as? PassType.Boarding)?.transitType
 
     val iconRes =
-        when (transitType) {
-            TransitType.AIR -> R.drawable.ic_flight
-            TransitType.TRAIN -> R.drawable.ic_train
-            TransitType.BUS -> R.drawable.ic_bus
-            TransitType.BOAT -> R.drawable.ic_boat
-            TransitType.GENERIC -> R.drawable.ic_transit_generic
-            null -> null
-        }
+        val iconRes =
+            when (transitType) {
+                TransitType.AIR -> R.drawable.ic_transit_air
+                TransitType.TRAIN -> R.drawable.ic_transit_train
+                TransitType.BUS -> R.drawable.ic_transit_bus
+                TransitType.BOAT -> R.drawable.ic_transit_boat
+                TransitType.GENERIC -> R.drawable.ic_transit_generic
+                null -> null
+            }
 
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(32.dp),
