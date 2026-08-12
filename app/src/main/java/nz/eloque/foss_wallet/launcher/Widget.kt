@@ -54,7 +54,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.contentprovider.ProviderEntrypoint
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
-import nz.eloque.foss_wallet.ui.glance.PassCardGlance
+import nz.eloque.foss_wallet.ui.glance.PassCardFront
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.Locale
 import androidx.glance.text.Text as GlanceText
@@ -93,7 +93,7 @@ class Widget : GlanceAppWidget() {
             val localizedPass = localizedPassState
 
             if (localizedPass != null) {
-                PassCardGlance(
+                PassCardFront(
                     localizedPass = localizedPass,
                     context = context,
                     onClick =
