@@ -71,6 +71,7 @@ fun PassCardFront(
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
     val isEventTicket = pass.type is PassType.Event
     val isCoupon = pass.type is PassType.Coupon
+    val isBoardingPass = pass.type is PassType.Boarding
 
     Box(
         modifier =
@@ -108,7 +109,7 @@ fun PassCardFront(
                     colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
                 )
             }
-            
+
             else -> {
                 Box(
                     modifier =
@@ -138,12 +139,19 @@ fun PassCardFront(
                 labelColor = colors.label,
             )
             Box(modifier = GlanceModifier.height(4.dp)) {}
-            PrimaryContent(
-                localizedPass = localizedPass,
-                context = context,
-                foreground = colors.foreground,
-                labelColor = colors.label,
-            )
+            if (isBoardingPass) {
+                BoardingPrimary(
+                    localizedPass = localizedPass,
+                    foreground = colors.foreground,
+                )
+            } else {
+                PrimaryContent(
+                    localizedPass = localizedPass,
+                    context = context,
+                    foreground = colors.foreground,
+                    labelColor = colors.label,
+                )
+            }
         }
 
         // Flip-to-back icon overlay, top-end corner.
