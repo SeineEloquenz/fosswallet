@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -36,10 +37,12 @@ import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassField
 import java.io.File
 
-private object PassCardGlanceDefaults {
+private object PassCardDefault {
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
+    val flipIconSize = 20.dp
+    const val bitmapTargetSizePx = 128
 
     fun fallbackColors(): PassColors =
         PassColors(
@@ -60,13 +63,13 @@ private object PassCardGlanceDefaults {
 private fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
 
 @Composable
-fun PassCardGlance(
+fun PassCardFront(
     localizedPass: LocalizedPassWithTags,
     context: Context,
     onClick: Action,
 ) {
     val pass = localizedPass.pass
-    val colors = pass.colors ?: PassCardGlanceDefaults.fallbackColors()
+    val colors = pass.colors ?: PassCardDefault.fallbackColors()
     val isEventTicket = pass.type is PassType.Event
     val isCoupon = pass.type is PassType.Coupon
 
@@ -103,7 +106,7 @@ fun PassCardGlance(
                         GlanceModifier
                             .fillMaxSize()
                             .background(fixedColorProvider(colors.background))
-                            .cornerRadius(PassCardGlanceDefaults.cornerRadius),
+                            .cornerRadius(PassCardDefault.cornerRadius),
                 ) {}
             }
         }
@@ -113,31 +116,53 @@ fun PassCardGlance(
                 GlanceModifier
                     .fillMaxSize()
                     .padding(
-                        start = PassCardGlanceDefaults.padding,
-                        end = PassCardGlanceDefaults.padding,
-                        bottom = PassCardGlanceDefaults.padding,
-                        top = PassCardGlanceDefaults.padding + if (isEventTicket) 12.dp else 0.dp,
+                        start = PassCardDefault.padding,
+                        end = PassCardDefault.padding,
+                        bottom = PassCardDefault.padding,
+                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
                     ),
         ) {
-            HeaderRowGlance(
+            HeaderRow(
                 localizedPass = localizedPass,
                 context = context,
                 foreground = colors.foreground,
                 labelColor = colors.label,
             )
             Box(modifier = GlanceModifier.height(4.dp)) {}
-            PrimaryContentGlance(
+            PrimaryContent(
                 localizedPass = localizedPass,
                 context = context,
                 foreground = colors.foreground,
                 labelColor = colors.label,
             )
         }
+
+        // Flip-to-back icon overlay, top-end corner. No functionality yet.
+        Box(
+            modifier =
+                GlanceModifier
+                    .fillMaxSize()
+                    .padding(
+                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
+                        end = PassCardDefault.padding,
+                    ),
+            contentAlignment = Alignment.TopEnd,
+        ) {
+            Image(
+                provider = ImageProvider(R.drawable.ic_flip_to_back),
+                contentDescription = null,
+                modifier =
+                    GlanceModifier
+                        .width(PassCardDefault.flipIconSize)
+                        .height(PassCardDefault.flipIconSize),
+                colorFilter = ColorFilter.tint(fixedColorProvider(colors.foreground)),
+            )
+        }
     }
 }
 
 @Composable
-private fun HeaderRowGlance(
+private fun HeaderRow(
     localizedPass: LocalizedPassWithTags,
     context: Context,
     foreground: Color,
@@ -157,8 +182,8 @@ private fun HeaderRowGlance(
                 contentDescription = null,
                 modifier =
                     GlanceModifier
-                        .width(PassCardGlanceDefaults.logoSize)
-                        .height(PassCardGlanceDefaults.logoSize),
+                        .width(PassCardDefault.logoSize)
+                        .height(PassCardDefault.logoSize),
                 contentScale = ContentScale.Fit,
             )
             Box(modifier = GlanceModifier.width(6.dp)) {}
@@ -209,7 +234,7 @@ private fun HeaderRowGlance(
 }
 
 @Composable
-private fun PrimaryContentGlance(
+private fun PrimaryContent(
     localizedPass: LocalizedPassWithTags,
     context: Context,
     foreground: Color,
@@ -270,11 +295,40 @@ private fun PrimaryContentGlance(
     }
 }
 
-private fun loadBitmap(file: File?): android.graphics.Bitmap? {
+private fun loadBitmap(
+    file: File?,
+    targetSizePx: Int = PassCardDefault.bitmapTargetSizePx,
+): Bitmap? {
     if (file == null || !file.exists()) return null
     return try {
-        BitmapFactory.decodeFile(file.absolutePath)
+        val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.absolutePath, boundsOptions)
+
+        val decodeOptions =
+            BitmapFactory.Options().apply {
+                inSampleSize = calculateInSampleSize(boundsOptions, targetSizePx, targetSizePx)
+            }
+        BitmapFactory.decodeFile(file.absolutePath, decodeOptions)
     } catch (_: Exception) {
         null
     }
+}
+
+private fun calculateInSampleSize(
+    options: BitmapFactory.Options,
+    reqWidth: Int,
+    reqHeight: Int,
+): Int {
+    val height = options.outHeight
+    val width = options.outWidth
+    var inSampleSize = 1
+
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight = height / 2
+        val halfWidth = width / 2
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
 }
