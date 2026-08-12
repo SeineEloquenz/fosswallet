@@ -41,6 +41,7 @@ fun PassCardBack(
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
     val isEventTicket = pass.type is PassType.Event
     val isCoupon = pass.type is PassType.Coupon
+    val isBoardingPass = pass.type is PassType.Boarding
 
     Box(
         modifier =
@@ -62,6 +63,16 @@ fun PassCardBack(
             isCoupon -> {
                 Image(
                     provider = ImageProvider(R.drawable.coupon_shape),
+                    contentDescription = null,
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+                )
+            }
+
+            isBoardingPass -> {
+                Image(
+                    provider = ImageProvider(R.drawable.boarding_pass_shape),
                     contentDescription = null,
                     modifier = GlanceModifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds,
