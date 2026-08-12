@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -21,9 +22,12 @@ import androidx.glance.layout.height
 import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import java.io.File
 
@@ -86,6 +90,70 @@ internal fun PrimaryContent(
                 contentScale = ContentScale.Crop,
             )
         }
+    }
+}
+
+@Composable
+internal fun BoardingPrimary(
+    localizedPass: LocalizedPassWithTags,
+    foreground: Color,
+) {
+    val pass = localizedPass.pass
+    val primaryFields = pass.primaryFields
+    val departureField = primaryFields.getOrNull(0)
+    val destinationField = primaryFields.getOrNull(1)
+    val transitType = (pass.type as? PassType.Boarding)?.transitType
+
+    val iconRes =
+        when (transitType) {
+            TransitType.AIR -> R.drawable.ic_flight
+            TransitType.TRAIN -> R.drawable.ic_train
+            TransitType.BUS -> R.drawable.ic_bus
+            TransitType.BOAT -> R.drawable.ic_boat
+            TransitType.GENERIC -> R.drawable.ic_transit_generic
+            null -> null
+        }
+
+    Row(
+        modifier = GlanceModifier.fillMaxWidth().height(32.dp),
+        verticalAlignment = Alignment.Vertical.CenterVertically,
+    ) {
+        Text(
+            text = departureField?.content?.prettyPrint().orEmpty(),
+            maxLines = 1,
+            modifier = GlanceModifier.defaultWeight(),
+            style =
+                TextStyle(
+                    color = fixedColorProvider(foreground),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                ),
+        )
+
+        iconRes?.let {
+            Image(
+                provider = ImageProvider(it),
+                contentDescription = null,
+                modifier =
+                    GlanceModifier
+                        .width(20.dp)
+                        .height(20.dp),
+                colorFilter = ColorFilter.tint(fixedColorProvider(foreground)),
+            )
+        }
+
+        Text(
+            text = destinationField?.content?.prettyPrint().orEmpty(),
+            maxLines = 1,
+            modifier = GlanceModifier.defaultWeight(),
+            style =
+                TextStyle(
+                    color = fixedColorProvider(foreground),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    textAlign = TextAlign.End,
+                ),
+        )
     }
 }
 
