@@ -272,23 +272,19 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
         ) {
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.add_shortcut)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AppShortcut,
-                            contentDescription = stringResource(R.string.add_shortcut),
-                        )
-                    },
-                    onClick = {
-                        passViewModel.addShortcut(pass)
-                    },
-                )
-            }
+
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.add_shortcut)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.AppShortcut,
+                        contentDescription = stringResource(R.string.add_shortcut),
+                    )
+                },
+                onClick = {
+                    passViewModel.addShortcut(pass)
+                },
+            )
 
             val passFile = pass.originalPassFile(context)
             if (passFile != null) {
