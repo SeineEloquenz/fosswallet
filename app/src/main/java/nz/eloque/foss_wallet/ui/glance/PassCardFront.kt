@@ -37,7 +37,7 @@ import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.field.PassField
 import java.io.File
 
-private object PassCardDefault {
+internal object PassCardDefault {
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
@@ -60,13 +60,14 @@ private object PassCardDefault {
  * ColorProvider for a single fixed color is to supply the same value for
  * both `day` and `night`.
  */
-private fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
+internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
 
 @Composable
 fun PassCardFront(
     localizedPass: LocalizedPassWithTags,
     context: Context,
     onClick: Action,
+    onFlipToBack: Action,
 ) {
     val pass = localizedPass.pass
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
@@ -137,7 +138,7 @@ fun PassCardFront(
             )
         }
 
-        // Flip-to-back icon overlay, top-end corner. No functionality yet.
+        // Flip-to-back icon overlay, top-end corner.
         Box(
             modifier =
                 GlanceModifier
@@ -154,7 +155,8 @@ fun PassCardFront(
                 modifier =
                     GlanceModifier
                         .width(PassCardDefault.flipIconSize)
-                        .height(PassCardDefault.flipIconSize),
+                        .height(PassCardDefault.flipIconSize)
+                        .clickable(onFlipToBack),
                 colorFilter = ColorFilter.tint(fixedColorProvider(colors.foreground)),
             )
         }
