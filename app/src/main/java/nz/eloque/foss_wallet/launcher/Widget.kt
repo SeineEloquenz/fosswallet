@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -59,9 +60,7 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import java.util.Locale
 import androidx.glance.text.Text as GlanceText
 
-object PassCardWidgetPrefs {
-    val PASS_ID_KEY = stringPreferencesKey("pass_id")
-}
+object PassCardWidgetPrefs { val PASS_ID_KEY = stringPreferencesKey("pass_id") }
 
 // Glance writes ActionParameters as Intent extras under the same name.
 private val PASS_ID_PARAM = ActionParameters.Key<String>(MainActivity.EXTRA_PASS_ID)
@@ -70,7 +69,17 @@ private val PASS_ID_PARAM = ActionParameters.Key<String>(MainActivity.EXTRA_PASS
 // getter without a Context, so it's resolved here in provideGlance() via ProviderEntrypoint
 // instead (same pattern as CatimaContentProvider.kt).
 class Widget : GlanceAppWidget() {
-    override val sizeMode: SizeMode = SizeMode.Single
+    // Stepped resizing while keeping a fixed 2:1 aspect ratio at every stage.
+    // Keep these DpSize buckets in sync with minWidth/minHeight and
+    // maxResizeWidth/maxResizeHeight in passcard_widget_info.xml.
+    override val sizeMode: SizeMode =
+        SizeMode.Responsive(
+            setOf(
+                DpSize(180.dp, 90.dp),
+                DpSize(270.dp, 135.dp),
+                DpSize(360.dp, 180.dp),
+            ),
+        )
 
     override suspend fun provideGlance(
         context: android.content.Context,
