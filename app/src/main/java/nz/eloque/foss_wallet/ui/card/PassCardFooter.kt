@@ -29,7 +29,9 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.CalendarButton
+import nz.eloque.foss_wallet.ui.components.LauncherButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
+import nz.eloque.foss_wallet.ui.components.ShareButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 import nz.eloque.foss_wallet.utils.prettyDate
 
@@ -81,7 +83,13 @@ fun PassCardFooter(
                 )
             }
         }
+        
         pass.locations.firstOrNull()?.let { LocationButton(it) }
+
+        if (!readOnly) {
+            LauncherButton()
+            ShareButton()
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 
