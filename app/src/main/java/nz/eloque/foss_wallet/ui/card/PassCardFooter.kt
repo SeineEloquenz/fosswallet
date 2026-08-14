@@ -53,6 +53,7 @@ fun PassCardFooter(
     ) {
         val pass = localizedPass.pass
         val tags = localizedPass.tags
+        val passFile = pass.originalPassFile(context)
 
         var tagChooserShown by remember { mutableStateOf(false) }
 
@@ -87,8 +88,10 @@ fun PassCardFooter(
         pass.locations.firstOrNull()?.let { LocationButton(it) }
 
         if (!readOnly) {
-            LauncherButton()
-            ShareButton()
+            LauncherButton(pass)
+            if (passFile != null) {
+                ShareButton(passFile)
+            }
         }
 
         Spacer(modifier = Modifier.width(8.dp))
