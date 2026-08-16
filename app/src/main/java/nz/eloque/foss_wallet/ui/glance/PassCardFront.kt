@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -40,7 +41,6 @@ internal object PassCardDefault {
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
-    val flipIconSize = 20.dp
     const val bitmapTargetSizePx = 128
 
     fun fallbackColors(): PassColors =
@@ -168,10 +168,9 @@ fun PassCardFront(
         ) {
             Icon(
                 imageVector = Icons.Filled.FlipToBack,
-                contentDescription = context.getString(R.string.flip_to_back),
+                contentDescription = resources.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
-                size = PassCardDefault.flipIconSize,
             )
         }
     }
