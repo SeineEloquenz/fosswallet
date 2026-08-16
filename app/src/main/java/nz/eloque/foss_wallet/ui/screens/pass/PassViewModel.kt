@@ -15,7 +15,7 @@ import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
-import nz.eloque.foss_wallet.shortcut.ShortcutService
+import nz.eloque.foss_wallet.launcher.LauncherService
 
 @HiltViewModel
 class PassViewModel
@@ -24,12 +24,12 @@ class PassViewModel
         application: Application,
         private val passStore: PassStore,
         private val tagRepository: TagRepository,
-        private val shortcutService: ShortcutService,
+        private val launcherService: LauncherService,
         val settingsStore: SettingsStore,
     ) : AndroidViewModel(application) {
         val allTags = tagRepository.all()
 
-        fun addShortcut(pass: Pass) = shortcutService.create(pass, pass.description)
+        fun addToLauncher(pass: Pass) = launcherService.create(pass)
 
         fun passFlowById(id: String) = passStore.passFlowById(id)
 
