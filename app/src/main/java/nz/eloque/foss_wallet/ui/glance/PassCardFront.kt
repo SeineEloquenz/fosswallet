@@ -34,14 +34,12 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.field.PassField
-import java.io.File
 
 internal object PassCardDefault {
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
-    const val bitmapTargetSizePx = 128
+    const val BITMAP_TARGET_SIZE_PX = 128
 
     fun fallbackColors(): PassColors =
         PassColors(
