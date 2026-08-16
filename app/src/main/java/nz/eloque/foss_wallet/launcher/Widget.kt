@@ -130,7 +130,9 @@ class Widget : GlanceAppWidget() {
             } else if (showingBack) {
                 val barcodeBitmap =
                     remember(localizedPass.pass.barCodes) {
-                        localizedPass.pass.barCodes.firstOrNull()?.toBitmap(width = 256, height = 256)
+                        localizedPass.pass.barCodes
+                            .firstOrNull()
+                            ?.toBitmap(width = 256, height = 256)
                     }
                 PassCardBack(
                     localizedPass = localizedPass,
