@@ -60,13 +60,14 @@ fun Icon(
     val context = LocalContext.current
     val density = Density(context.resources.displayMetrics.density)
 
-    val bitmap = rememberVectorAsBitmap(
-        image = imageVector,
-        density = density,
-        sizeDp = size,
-        tint = tint,
-        layoutDirection = context.layoutDirection(),
-    )
+    val bitmap =
+        rememberVectorAsBitmap(
+            image = imageVector,
+            density = density,
+            sizeDp = size,
+            tint = tint,
+            layoutDirection = context.layoutDirection(),
+        )
 
     Image(
         provider = ImageProvider(bitmap),
