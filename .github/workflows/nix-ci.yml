@@ -8,3 +8,4 @@ on:
 jobs:
   nix-ci:
     uses: SeineEloquenz/ci/.github/workflows/nix-ci.yml@main
+    secrets: inherit
