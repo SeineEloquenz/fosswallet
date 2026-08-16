@@ -17,8 +17,7 @@ fun LauncherButton(pass: Pass) {
 
     IconButton(
         onClick = {
-                launcherService.create(pass)
-            }
+            launcherService.create(pass)
         }
     ) {
         Icon(
