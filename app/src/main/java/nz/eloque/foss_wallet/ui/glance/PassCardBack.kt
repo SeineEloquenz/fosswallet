@@ -154,7 +154,7 @@ fun PassCardBack(
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
-                imageVector = Icons.Filled.FlipToFont,
+                imageVector = Icons.Filled.FlipToFront,
                 contentDescription = context.getString(R.string.flip_to_front),
                 modifier = GlanceModifier.clickable(onFlipToFront),
                 tint = colors.foreground,
