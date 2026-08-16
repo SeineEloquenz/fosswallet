@@ -271,7 +271,6 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
         ) {
-
             if (metadata.archived) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unarchive)) },
