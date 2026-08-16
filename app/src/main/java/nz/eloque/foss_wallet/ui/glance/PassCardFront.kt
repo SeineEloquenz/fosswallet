@@ -165,15 +165,12 @@ fun PassCardFront(
                     ),
             contentAlignment = Alignment.TopEnd,
         ) {
-            Image(
-                provider = ImageProvider(R.drawable.ic_flip_to_back),
-                contentDescription = null,
-                modifier =
-                    GlanceModifier
-                        .width(PassCardDefault.flipIconSize)
-                        .height(PassCardDefault.flipIconSize)
-                        .clickable(onFlipToBack),
-                colorFilter = ColorFilter.tint(fixedColorProvider(colors.foreground)),
+            Icon(
+                imageVector = Icons.Filled.Flip,
+                contentDescription = context.getString(R.string.flip_to_back),
+                modifier = GlanceModifier.clickable(onFlipToBack),
+                tint = colors.foreground,
+                size = PassCardDefault.flipIconSize,
             )
         }
     }
