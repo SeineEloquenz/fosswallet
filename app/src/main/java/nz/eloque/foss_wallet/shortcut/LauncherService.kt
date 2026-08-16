@@ -47,10 +47,7 @@ class LauncherService
          *
          * Re-requesting the same pass is safe, a failed attempt can always be retried.
          */
-        fun createShortcut(
-            pass: Pass,
-            shortcutName: String,
-        ) {
+        fun createShortcut(pass: Pass) {
             if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
                 toast(R.string.shortcut_unsupported)
                 return
@@ -62,6 +59,7 @@ class LauncherService
                 return
             }
 
+            val shortcutName = pass.description
             val shortcut =
                 ShortcutInfoCompat
                     .Builder(context, pass.shortcutId())
