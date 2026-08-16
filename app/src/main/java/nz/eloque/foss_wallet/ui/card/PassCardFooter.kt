@@ -84,7 +84,7 @@ fun PassCardFooter(
                 )
             }
         }
-        
+
         pass.locations.firstOrNull()?.let { LocationButton(it) }
 
         if (!readOnly) {
