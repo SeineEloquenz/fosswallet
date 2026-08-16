@@ -14,4 +14,5 @@
     android:configure="nz.eloque.foss_wallet.launcher.WidgetConfigActivity"
     android:widgetCategory="home_screen"
     android:description="@string/passcard_widget_description"
+    android:previewImage="@drawable/passcard_widget_preview"
 />
