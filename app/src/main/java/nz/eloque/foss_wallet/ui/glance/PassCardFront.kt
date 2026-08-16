@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
+import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -166,7 +167,7 @@ fun PassCardFront(
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
-                imageVector = Icons.Filled.Flip,
+                imageVector = Icons.Filled.FlipToBack,
                 contentDescription = context.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
