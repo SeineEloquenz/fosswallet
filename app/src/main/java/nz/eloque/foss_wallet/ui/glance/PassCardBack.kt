@@ -2,7 +2,8 @@ package nz.eloque.foss_wallet.ui.glance
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.material.icons.filled.Flip
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FlipToFront
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,46 +51,30 @@ fun PassCardBack(
                 .fillMaxSize()
                 .clickable(onClick),
     ) {
-        when {
-            isEventTicket -> {
-                Image(
-                    provider = ImageProvider(R.drawable.event_ticket_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
+        val shapeDrawableRes =
+            when {
+                isEventTicket -> R.drawable.event_ticket_shape
+                isCoupon -> R.drawable.coupon_shape
+                isBoardingPass -> R.drawable.boarding_pass_shape
+                else -> null
             }
 
-            isCoupon -> {
-                Image(
-                    provider = ImageProvider(R.drawable.coupon_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
-            }
-
-            isBoardingPass -> {
-                Image(
-                    provider = ImageProvider(R.drawable.boarding_pass_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
-            }
-
-            else -> {
-                Box(
-                    modifier =
-                        GlanceModifier
-                            .fillMaxSize()
-                            .background(fixedColorProvider(colors.background))
-                            .cornerRadius(PassCardDefault.cornerRadius),
-                ) {}
-            }
+        if (shapeDrawableRes != null) {
+            Image(
+                provider = ImageProvider(shapeDrawableRes),
+                contentDescription = null,
+                modifier = GlanceModifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+            )
+        } else {
+            Box(
+                modifier =
+                    GlanceModifier
+                        .fillMaxSize()
+                        .background(fixedColorProvider(colors.background))
+                        .cornerRadius(PassCardDefault.cornerRadius),
+            ) {}
         }
 
         Row(
@@ -173,7 +158,6 @@ fun PassCardBack(
                 contentDescription = context.getString(R.string.flip_to_front),
                 modifier = GlanceModifier.clickable(onFlipToFront),
                 tint = colors.foreground,
-                size = PassCardDefault.flipIconSize,
             )
         }
     }
