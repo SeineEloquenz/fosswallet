@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Commute
 import androidx.compose.material.icons.filled.DirectionsBoat
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Forward
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -114,9 +114,9 @@ internal fun BoardingPrimary(
         when (transitType) {
             TransitType.AIR -> Icons.Filled.Flight
             TransitType.TRAIN -> Icons.Filled.Train
-            TransitType.BUS -> Icons.Filled.DirectionsBus
-            TransitType.BOAT -> Icons.Filled.DirectionsBoat
-            TransitType.GENERIC -> Icons.Filled.Commute
+            TransitType.BUS -> Icons.AutoMirrored.Filled.DirectionsBus
+            TransitType.BOAT -> Icons.AutoMirrored.Filled.DirectionsBoat
+            TransitType.GENERIC -> Icons.AutoMirrored.Default.Forward
             null -> null
         }
 
