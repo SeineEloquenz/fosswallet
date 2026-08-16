@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.launcher.LauncherService
 import nz.eloque.foss_wallet.model.Pass
-import java.io.File
 
 @Composable
 fun LauncherButton(pass: Pass) {
