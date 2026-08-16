@@ -3,6 +3,11 @@ package nz.eloque.foss_wallet.ui.glance
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.material.icons.filled.Commute
+import androidx.compose.material.icons.filled.DirectionsBoat
+import androidx.compose.material.icons.filled.DirectionsBus
+import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -106,11 +111,11 @@ internal fun BoardingPrimary(
 
     val iconRes =
         when (transitType) {
-            TransitType.AIR -> R.drawable.ic_transit_air
-            TransitType.TRAIN -> R.drawable.ic_transit_train
-            TransitType.BUS -> R.drawable.ic_transit_bus
-            TransitType.BOAT -> R.drawable.ic_transit_boat
-            TransitType.GENERIC -> R.drawable.ic_transit_generic
+            TransitType.AIR -> Icons.Filled.Flight
+            TransitType.TRAIN -> Icons.Filled.Train
+            TransitType.BUS -> Icons.Filled.DirectionsBus
+            TransitType.BOAT -> Icons.Filled.DirectionsBoat
+            TransitType.GENERIC -> Icons.Filled.Commute
             null -> null
         }
 
