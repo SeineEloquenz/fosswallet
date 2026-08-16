@@ -133,6 +133,34 @@
             android:name=".ui.screens.create.ScanActivity"
             android:theme="@style/Theme.FossWallet.NoActionBar"/>
 
+        <!-- Pass-card home screen widget -->
+        <activity
+            android:name=".launcher.WidgetConfigActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FossWallet">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".launcher.WidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/passcard_widget_info" />
+        </receiver>
+
+        <!-- Fires once the launcher pins a widget requested via LauncherService.createWidget,
+             writing the pre-selected pass into that widget instance so WidgetConfigActivity's
+             manual picker is skipped for that flow. -->
+        <receiver
+            android:name=".shortcut.WidgetPinReceiver"
+            android:exported="false" />
+
         <provider
             android:name=".contentprovider.CatimaContentProvider"
             android:authorities="${applicationId}.contentprovider.cards"
