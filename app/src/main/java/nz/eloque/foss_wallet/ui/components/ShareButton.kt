@@ -24,11 +24,11 @@ fun ShareButton(file: File) {
             coroutineScope.launch(Dispatchers.IO) {
                 share(file, context)
             }
-        }
+        },
     ) {
         Icon(
-          imageVector = Icons.Default.Share,
-          contentDescription = stringResource(R.string.share),
+            imageVector = Icons.Default.Share,
+            contentDescription = stringResource(R.string.share),
         )
     }
 }
