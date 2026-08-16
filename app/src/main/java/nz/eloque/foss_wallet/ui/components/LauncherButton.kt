@@ -18,11 +18,11 @@ fun LauncherButton(pass: Pass) {
     IconButton(
         onClick = {
             launcherService.create(pass)
-        }
+        },
     ) {
         Icon(
-          imageVector = Icons.Default.AddToHomescreen,
-          contentDescription = stringResource(R.string.add_to_launcher),
+            imageVector = Icons.Default.AddToHomescreen,
+            contentDescription = stringResource(R.string.add_to_launcher),
         )
     }
 }
