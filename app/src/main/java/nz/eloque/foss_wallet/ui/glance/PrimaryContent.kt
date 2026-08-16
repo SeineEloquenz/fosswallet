@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.glance
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsBoat
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.Flight
@@ -14,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
