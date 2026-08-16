@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.launcher
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,6 +52,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -90,8 +92,8 @@ class ToggleCardSideAction : ActionCallback {
 }
 
 // No constructor parameter for PassRepository: GlanceAppWidgetReceiver.glanceAppWidget is a
-// getter without a Context, so it's resolved here in provideGlance() via ProviderEntrypoint
-// instead (same pattern as CatimaContentProvider.kt).
+// getter without a Context, so it's resolved here in provideGlance()/providePreview() via
+// ProviderEntrypoint instead (same pattern as CatimaContentProvider.kt).
 class Widget : GlanceAppWidget() {
     // Stepped resizing while keeping a fixed 2:1 aspect ratio at every stage.
     // Keep these DpSize buckets in sync with minWidth/minHeight and
@@ -109,10 +111,7 @@ class Widget : GlanceAppWidget() {
         context: Context,
         id: GlanceId,
     ) {
-        val passRepository =
-            EntryPointAccessors
-                .fromApplication(context.applicationContext, ProviderEntrypoint::class.java)
-                .passRepository()
+        val passRepository = context.passRepository()
 
         provideContent {
             val prefs = currentState<Preferences>()
@@ -156,6 +155,54 @@ class Widget : GlanceAppWidget() {
             }
         }
     }
+
+    // Single composition, no recomposition or effects — used only to render the
+    // widget-picker preview on Android 15+ (see GlanceAppWidgetManager.setWidgetPreviews).
+    // Falls back to previewImage in passcard_widget_info.xml on older versions and
+    // whenever the user has no passes yet.
+    override suspend fun providePreview(
+        context: Context,
+        widgetCategory: Int,
+    ) {
+        val passRepository = context.passRepository()
+        val samplePass =
+            withContext(Dispatchers.IO) {
+                passRepository.all().first().firstOrNull()
+            }?.applyLocalization(Locale.getDefault().language)
+
+        provideContent {
+            if (samplePass == null) {
+                UnconfiguredWidgetContent()
+            } else {
+                PassCardFront(
+                    localizedPass = samplePass,
+                    context = context,
+                    onClick = actionStartActivity<MainActivity>(),
+                    onFlipToBack = actionStartActivity<MainActivity>(),
+                )
+            }
+        }
+    }
+
+    private fun Context.passRepository(): PassRepository =
+        EntryPointAccessors
+            .fromApplication(applicationContext, ProviderEntrypoint::class.java)
+            .passRepository()
+}
+
+/**
+ * Publishes an updated widget-picker preview from a real pass, if one exists.
+ *
+ * Call this after data that would change the preview changes (e.g. import, delete)
+ * or on app start. No-op below Android 15. The API is rate-limited to roughly two
+ * calls per hour; a [GlanceAppWidgetManager.SET_WIDGET_PREVIEWS_RESULT_RATE_LIMITED]
+ * result just means the previously published preview stays visible.
+ */
+suspend fun refreshWidgetPreview(context: Context) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        return
+    }
+    GlanceAppWidgetManager(context).setWidgetPreviews(WidgetReceiver::class)
 }
 
 @Composable
