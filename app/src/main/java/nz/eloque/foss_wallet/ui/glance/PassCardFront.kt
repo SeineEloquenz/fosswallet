@@ -61,9 +61,6 @@ fun PassCardFront(
 ) {
     val pass = localizedPass.pass
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
-    val isEventTicket = pass.type is PassType.Event
-    val isCoupon = pass.type is PassType.Coupon
-    val isBoardingPass = pass.type is PassType.Boarding
 
     Box(
         modifier =
@@ -72,10 +69,10 @@ fun PassCardFront(
                 .clickable(onClick),
     ) {
         val shapeDrawable: Int? =
-            when {
-                isEventTicket -> R.drawable.event_ticket_shape
-                isCoupon -> R.drawable.coupon_shape
-                isBoardingPass -> R.drawable.boarding_pass_shape
+            when (pass.type) {
+                is PassType.Event -> R.drawable.event_ticket_shape
+                is PassType.Coupon -> R.drawable.coupon_shape
+                is PassType.Boarding -> R.drawable.boarding_pass_shape
                 else -> null
             }
 
@@ -101,12 +98,7 @@ fun PassCardFront(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(
-                        start = PassCardDefault.padding,
-                        end = PassCardDefault.padding,
-                        bottom = PassCardDefault.padding,
-                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
-                    ),
+                    .padding(PassCardDefault.padding),
         ) {
             HeaderRow(
                 localizedPass = localizedPass,
@@ -136,10 +128,7 @@ fun PassCardFront(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(
-                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
-                        end = PassCardDefault.padding,
-                    ),
+                    .padding(PassCardDefault.padding),
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
