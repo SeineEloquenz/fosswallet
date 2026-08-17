@@ -49,15 +49,8 @@ internal object PassCardDefault {
         )
 }
 
-/**
- * Wraps a fixed [Color] in a [ColorProvider].
- *
- * Glance's `ColorProvider(color: Color)` shorthand is restricted to the
- * `androidx.glance` library group. The public, documented way to get a
- * ColorProvider for a single fixed color is to supply the same value for
- * both `day` and `night`.
- */
-internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
+/** Wraps a fixed [Color] in a [ColorProvider]. */
+internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(color)
 
 @Composable
 fun PassCardFront(
