@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.shortcut.ShortcutService
+import nz.eloque.foss_wallet.shortcut.SCHEME
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.create.FileScanner
@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     return@LaunchedEffect
                 }
 
-                if (ShortcutService.SCHEME != dataUri?.scheme) {
+                if (SCHEME != dataUri?.scheme) {
                     coroutineScope.launch(Dispatchers.IO) {
                         val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
                         if (result is LoaderResult.Single) {
