@@ -78,12 +78,7 @@ fun PassCardBack(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(
-                        start = PassCardDefault.padding,
-                        end = PassCardDefault.padding,
-                        bottom = PassCardDefault.padding,
-                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
-                    ),
+                    .padding(PassCardDefault.padding),
             verticalAlignment = Alignment.Vertical.CenterVertically,
         ) {
             // Left: QR code.
@@ -144,10 +139,7 @@ fun PassCardBack(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(
-                        top = PassCardDefault.padding + if (isEventTicket) 12.dp else 0.dp,
-                        end = PassCardDefault.padding,
-                    ),
+                    .padding(PassCardDefault.padding),
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
