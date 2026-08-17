@@ -39,13 +39,14 @@ internal fun rememberVectorAsBitmap(
         val sizePx = with(density) { sizeDp.toPx() }.roundToInt()
         val bitmap = ImageBitmap(sizePx, sizePx)
         val canvas = Canvas(bitmap)
+        val size = Size(sizePx.toFloat(), sizePx.toFloat())
         CanvasDrawScope().draw(
             density = density,
             layoutDirection = layoutDirection,
             canvas = canvas,
-            size = Size(sizePx.toFloat(), sizePx.toFloat()),
+            size = size,
         ) {
-            with(painter) { draw(size = this.size, colorFilter = colorFilter) }
+            with(painter) { draw(size = drawSize, colorFilter = colorFilter) }
         }
         bitmap.asAndroidBitmap()
     }
