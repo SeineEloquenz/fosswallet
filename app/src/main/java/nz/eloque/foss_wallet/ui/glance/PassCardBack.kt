@@ -41,9 +41,6 @@ fun PassCardBack(
 ) {
     val pass = localizedPass.pass
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
-    val isEventTicket = pass.type is PassType.Event
-    val isCoupon = pass.type is PassType.Coupon
-    val isBoardingPass = pass.type is PassType.Boarding
 
     Box(
         modifier =
@@ -52,10 +49,10 @@ fun PassCardBack(
                 .clickable(onClick),
     ) {
         val shapeDrawableRes =
-            when {
-                isEventTicket -> R.drawable.event_ticket_shape
-                isCoupon -> R.drawable.coupon_shape
-                isBoardingPass -> R.drawable.boarding_pass_shape
+            when (pass.type) {
+                is PassType.Event -> R.drawable.event_ticket_shape
+                is PassType.Coupon -> R.drawable.coupon_shape
+                is PassType.Boarding -> R.drawable.boarding_pass_shape
                 else -> null
             }
 
