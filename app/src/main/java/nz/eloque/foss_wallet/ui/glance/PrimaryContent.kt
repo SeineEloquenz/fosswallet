@@ -115,8 +115,8 @@ internal fun BoardingPrimary(
         when (transitType) {
             TransitType.AIR -> Icons.Filled.Flight
             TransitType.TRAIN -> Icons.Filled.Train
-            TransitType.BUS -> Icons.AutoMirrored.Filled.DirectionsBus
-            TransitType.BOAT -> Icons.AutoMirrored.Filled.DirectionsBoat
+            TransitType.BUS -> Icons.Filled.DirectionsBus
+            TransitType.BOAT -> Icons.Filled.DirectionsBoat
             TransitType.GENERIC -> Icons.AutoMirrored.Filled.Forward
             null -> null
         }
