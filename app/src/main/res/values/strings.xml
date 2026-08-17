@@ -146,4 +146,7 @@
     <string name="attachments">Attachments</string>
     <string name="widget_unconfigured">The widget is not configured</string>
     <string name="passcard_widget_description">Shows a selected pass on the start screen</string>
+    <string name="flip_to_front">Flip to front</string>
+    <string name="flip_to_back">Flip to back</string>
+    <string name="add_to_launcher">Add to home screen</string>
 </resources>
