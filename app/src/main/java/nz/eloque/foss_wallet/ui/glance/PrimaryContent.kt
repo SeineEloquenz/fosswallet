@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Forward
 import androidx.compose.material.icons.filled.DirectionsBoat
 import androidx.compose.material.icons.filled.DirectionsBus
-import androidx.compose.material.icons.automirrored.filled.Forward
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
