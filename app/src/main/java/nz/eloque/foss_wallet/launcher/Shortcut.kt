@@ -1,4 +1,4 @@
-package nz.eloque.foss_wallet.shortcut
+package nz.eloque.foss_wallet.launcher
 
 import android.content.Context
 import android.content.Intent
