@@ -17,9 +17,6 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.shortcut.createShortcut
-import nz.eloque.foss_wallet.shortcut.disableShortcut
-import nz.eloque.foss_wallet.shortcut.toast
 
 /**
  * Home-screen entry points for a single pass: pinned shortcuts (see Shortcut.kt)
