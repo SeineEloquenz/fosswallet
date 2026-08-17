@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddToHomeScreen
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -23,7 +23,7 @@ fun LauncherButton(pass: Pass) {
         },
     ) {
         Icon(
-            imageVector = Icons.Default.AddToHomeScreen,
+            imageVector = Icons.AutoMirrored.Filled.AddToHomeScreen,
             contentDescription = stringResource(R.string.add_to_launcher),
         )
     }
