@@ -107,7 +107,7 @@ fun PassCardFront(
                 labelColor = colors.label,
             )
             Box(modifier = GlanceModifier.height(4.dp)) {}
-            if (isBoardingPass) {
+            if (pass.type is PassType.Boarding) {
                 BoardingPrimary(
                     localizedPass = localizedPass,
                     context = context,
