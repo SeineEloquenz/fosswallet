@@ -17,8 +17,8 @@ import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 
-private const val SCHEME = "fosswallet"
 private const val HOST = "pass"
+const val SCHEME = "fosswallet"
 const val SHORTCUT_BASE_URI = "$SCHEME://$HOST"
 
 /**
