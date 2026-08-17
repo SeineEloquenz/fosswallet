@@ -30,8 +30,8 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.launcher.SHORTCUT_BASE_URI
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.shortcut.SHORTCUT_BASE_URI
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
