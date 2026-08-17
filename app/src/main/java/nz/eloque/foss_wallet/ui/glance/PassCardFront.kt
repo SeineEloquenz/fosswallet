@@ -16,7 +16,6 @@ import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
-import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -30,6 +29,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassColors
@@ -78,46 +78,30 @@ fun PassCardFront(
                 .fillMaxSize()
                 .clickable(onClick),
     ) {
-        when {
-            isEventTicket -> {
-                Image(
-                    provider = ImageProvider(R.drawable.event_ticket_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
+        val shapeDrawable: Int? =
+            when {
+                isEventTicket -> R.drawable.event_ticket_shape
+                isCoupon -> R.drawable.coupon_shape
+                isBoardingPass -> R.drawable.boarding_pass_shape
+                else -> null
             }
 
-            isCoupon -> {
-                Image(
-                    provider = ImageProvider(R.drawable.coupon_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
-            }
-
-            isBoardingPass -> {
-                Image(
-                    provider = ImageProvider(R.drawable.boarding_pass_shape),
-                    contentDescription = null,
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
-                    colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
-                )
-            }
-
-            else -> {
-                Box(
-                    modifier =
-                        GlanceModifier
-                            .fillMaxSize()
-                            .background(fixedColorProvider(colors.background))
-                            .cornerRadius(PassCardDefault.cornerRadius),
-                ) {}
-            }
+        if (shapeDrawable != null) {
+            Image(
+                provider = ImageProvider(shapeDrawable),
+                contentDescription = null,
+                modifier = GlanceModifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+            )
+        } else {
+            Box(
+                modifier =
+                    GlanceModifier
+                        .fillMaxSize()
+                        .background(fixedColorProvider(colors.background))
+                        .cornerRadius(PassCardDefault.cornerRadius),
+            ) {}
         }
 
         Column(
@@ -141,6 +125,7 @@ fun PassCardFront(
             if (isBoardingPass) {
                 BoardingPrimary(
                     localizedPass = localizedPass,
+                    context = context,
                     foreground = colors.foreground,
                 )
             } else {
@@ -166,7 +151,7 @@ fun PassCardFront(
         ) {
             Icon(
                 imageVector = Icons.Filled.FlipToBack,
-                contentDescription = resources.getString(R.string.flip_to_back),
+                contentDescription = context.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
             )
