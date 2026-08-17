@@ -24,6 +24,33 @@ import androidx.glance.LocalContext
 import androidx.glance.layout.size
 import kotlin.math.roundToInt
 
+@package nz.eloque.foss_wallet.ui.glance
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
+import androidx.glance.layout.size
+import kotlin.math.roundToInt
+
 @Composable
 internal fun rememberVectorAsBitmap(
     image: ImageVector,
@@ -32,7 +59,8 @@ internal fun rememberVectorAsBitmap(
     tint: Color = Color.Unspecified,
     layoutDirection: LayoutDirection = LayoutDirection.Ltr,
 ): Bitmap {
-    val painter = rememberVectorPainter(image = image, tintColor = tint)
+    val painter = rememberVectorPainter(image = image)
+    val colorFilter = if (tint != Color.Unspecified) ColorFilter.tint(tint) else null
     return remember(image, tint, sizeDp, layoutDirection) {
         val sizePx = with(density) { sizeDp.toPx() }.roundToInt()
         val bitmap = ImageBitmap(sizePx, sizePx)
@@ -43,7 +71,7 @@ internal fun rememberVectorAsBitmap(
             canvas = canvas,
             size = Size(sizePx.toFloat(), sizePx.toFloat()),
         ) {
-            with(painter) { draw(this.size) }
+            with(painter) { draw(size = this.size, colorFilter = colorFilter) }
         }
         bitmap.asAndroidBitmap()
     }
