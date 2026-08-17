@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.compose_kit.chip.ChipRow
@@ -53,6 +54,8 @@ fun PassCardFooter(
     ) {
         val pass = localizedPass.pass
         val tags = localizedPass.tags
+
+        val context = LocalContext.current
         val passFile = pass.originalPassFile(context)
 
         var tagChooserShown by remember { mutableStateOf(false) }
