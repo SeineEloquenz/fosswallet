@@ -3,14 +3,16 @@ package nz.eloque.foss_wallet.ui.glance
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.material.icons.filled.DirectionsBoat
-import androidx.compose.material.icons.filled.DirectionsBus
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsBoat
+import androidx.compose.material.icons.automirrored.filled.DirectionsBus
+import androidx.compose.material.icons.automirrored.filled.Forward
 import androidx.compose.material.icons.filled.Flight
-import androidx.compose.material.icons.filled.Forward
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -100,6 +102,7 @@ internal fun PrimaryContent(
 @Composable
 internal fun BoardingPrimary(
     localizedPass: LocalizedPassWithTags,
+    context: Context,
     foreground: Color,
 ) {
     val pass = localizedPass.pass
@@ -114,7 +117,7 @@ internal fun BoardingPrimary(
             TransitType.TRAIN -> Icons.Filled.Train
             TransitType.BUS -> Icons.AutoMirrored.Filled.DirectionsBus
             TransitType.BOAT -> Icons.AutoMirrored.Filled.DirectionsBoat
-            TransitType.GENERIC -> Icons.AutoMirrored.Default.Forward
+            TransitType.GENERIC -> Icons.AutoMirrored.Filled.Forward
             null -> null
         }
 
@@ -137,7 +140,7 @@ internal fun BoardingPrimary(
         icon?.let {
             Icon(
                 imageVector = it,
-                contentDescription = resources.getString(R.string.to),
+                contentDescription = context.getString(R.string.to),
                 tint = foreground,
             )
         }
@@ -159,7 +162,7 @@ internal fun BoardingPrimary(
 
 internal fun loadBitmap(
     file: File?,
-    targetSizePx: Int = PassCardDefault.bitmapTargetSizePx,
+    targetSizePx: Int = PassCardDefault.BITMAP_TARGET_SIZE_PX,
 ): Bitmap? {
     if (file == null || !file.exists()) return null
     return try {
