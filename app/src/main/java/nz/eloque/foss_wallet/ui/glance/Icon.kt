@@ -46,7 +46,7 @@ internal fun rememberVectorAsBitmap(
             canvas = canvas,
             size = size,
         ) {
-            with(painter) { draw(size = drawSize, colorFilter = colorFilter) }
+            with(painter) { draw(size = size, colorFilter = colorFilter) }
         }
         bitmap.asAndroidBitmap()
     }
