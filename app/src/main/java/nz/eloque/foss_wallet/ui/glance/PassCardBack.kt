@@ -81,7 +81,7 @@ fun PassCardBack(
                     .padding(PassCardDefault.padding),
             verticalAlignment = Alignment.Vertical.CenterVertically,
         ) {
-            // Left: QR code.
+            // Left: QR code
             if (barcodeBitmap != null) {
                 Image(
                     provider = ImageProvider(barcodeBitmap),
@@ -95,7 +95,7 @@ fun PassCardBack(
                 Box(modifier = GlanceModifier.width(8.dp)) {}
             }
 
-            // Right: title + first secondary field. No footer, no tags, no calendar/card button.
+            // Right: title + first secondary field. No footer, no tags, no calendar/card button
             Column(modifier = GlanceModifier.defaultWeight()) {
                 Text(
                     text = pass.description,
@@ -134,7 +134,7 @@ fun PassCardBack(
             }
         }
 
-        // Flip-to-front icon overlay, top-end corner.
+        // Flip-to-front icon overlay, top-end corner
         Box(
             modifier =
                 GlanceModifier

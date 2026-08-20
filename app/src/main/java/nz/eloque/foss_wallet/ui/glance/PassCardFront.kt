@@ -124,7 +124,7 @@ fun PassCardFront(
             }
         }
 
-        // Flip-to-back icon overlay, top-end corner.
+        // Flip-to-back icon overlay, top-end corner
         Box(
             modifier =
                 GlanceModifier
