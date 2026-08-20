@@ -16,6 +16,7 @@ import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
+import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -50,7 +51,7 @@ internal object PassCardDefault {
 }
 
 /** Wraps a fixed [Color] in a [ColorProvider]. */
-internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(color)
+internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
 
 @Composable
 fun PassCardFront(
