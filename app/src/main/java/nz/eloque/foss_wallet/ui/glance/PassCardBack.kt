@@ -140,7 +140,7 @@ fun PassCardBack(
         // Flip-to-front icon overlay, top-end corner
         Box(
             modifier = GlanceModifier.fillMaxSize(),
-            contentAlignment = Alignment.TopEnd,
+            contentAlignment = Alignment.BottomEnd,
         ) {
             Icon(
                 imageVector = Icons.Filled.FlipToFront,
