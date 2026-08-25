@@ -158,8 +158,8 @@
              writing the pre-selected pass into that widget instance so WidgetConfigActivity's
              manual picker is skipped for that flow. -->
         <receiver
-            android:name=".shortcut.WidgetPinReceiver"
-            android:exported="false" />
+            android:name=".launcher.WidgetPinReceiver"
+            android:exported="true" />
 
         <provider
             android:name=".contentprovider.CatimaContentProvider"

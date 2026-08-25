@@ -6,12 +6,15 @@ import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalSize
 import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.cornerRadius
@@ -37,9 +40,15 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassType
 
 internal object PassCardDefault {
+    // Base values, tuned for the SMALL tier (180x90dp). Scaled up via WidgetSizeTier.scale
+    // for larger widget sizes so bigger widgets actually use their extra space.
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
+    val iconSize = 24.dp
+    const val TITLE_FONT_SP = 13
+    const val LABEL_FONT_SP = 9
+    const val CONTENT_FONT_SP = 11
     const val BITMAP_TARGET_SIZE_PX = 128
 
     fun fallbackColors(): PassColors =
@@ -53,6 +62,28 @@ internal object PassCardDefault {
 /** Wraps a fixed [Color] in a [ColorProvider]. */
 internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
 
+/**
+ * Matches the three [androidx.glance.appwidget.SizeMode.Responsive] buckets declared in
+ * Widget.kt (180x90 / 270x135 / 360x180dp). [LocalSize] snaps to the closest of
+ * these, so this maps 1:1 to whichever bucket the launcher picked.
+ */
+internal enum class WidgetSizeTier(val scale: Float) {
+    SMALL(1f),
+    MEDIUM(1.4f),
+    LARGE(1.8f),
+}
+
+internal fun DpSize.toTier(): WidgetSizeTier =
+    when {
+        width < 270.dp -> WidgetSizeTier.SMALL
+        width < 360.dp -> WidgetSizeTier.MEDIUM
+        else -> WidgetSizeTier.LARGE
+    }
+
+internal fun Dp.scaled(tier: WidgetSizeTier): Dp = this * tier.scale
+
+internal fun Int.scaledSp(tier: WidgetSizeTier) = (this * tier.scale).sp
+
 @Composable
 fun PassCardFront(
     localizedPass: LocalizedPassWithTags,
@@ -62,6 +93,7 @@ fun PassCardFront(
 ) {
     val pass = localizedPass.pass
     val colors = pass.colors ?: PassCardDefault.fallbackColors()
+    val tier = LocalSize.current.toTier()
 
     Box(
         modifier =
@@ -91,7 +123,7 @@ fun PassCardFront(
                     GlanceModifier
                         .fillMaxSize()
                         .background(fixedColorProvider(colors.background))
-                        .cornerRadius(PassCardDefault.cornerRadius),
+                        .cornerRadius(PassCardDefault.cornerRadius.scaled(tier)),
             ) {}
         }
 
@@ -99,16 +131,16 @@ fun PassCardFront(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(PassCardDefault.padding),
-            verticalAlignment = Alignment.Vertical.CenterVertically,
+                    .padding(PassCardDefault.padding.scaled(tier)),
         ) {
             HeaderRow(
                 localizedPass = localizedPass,
                 context = context,
                 foreground = colors.foreground,
                 labelColor = colors.label,
+                tier = tier,
             )
-            Box(modifier = GlanceModifier.height(4.dp)) {}
+            Box(modifier = GlanceModifier.height(4.dp.scaled(tier))) {}
             if (pass.type is PassType.Boarding) {
                 BoardingPrimary(
                     localizedPass = localizedPass,
@@ -130,7 +162,7 @@ fun PassCardFront(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(PassCardDefault.padding),
+                    .padding(PassCardDefault.padding.scaled(tier)),
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
@@ -138,7 +170,7 @@ fun PassCardFront(
                 contentDescription = context.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
-                size = 48.dp,
+                size = PassCardDefault.iconSize.scaled(tier),
             )
         }
     }
@@ -150,6 +182,7 @@ private fun HeaderRow(
     context: Context,
     foreground: Color,
     labelColor: Color,
+    tier: WidgetSizeTier,
 ) {
     val pass = localizedPass.pass
     val logoBitmap = remember(pass.logoFile(context)) { loadBitmap(pass.logoFile(context)) }
@@ -165,11 +198,11 @@ private fun HeaderRow(
                 contentDescription = null,
                 modifier =
                     GlanceModifier
-                        .width(PassCardDefault.logoSize)
-                        .height(PassCardDefault.logoSize),
+                        .width(PassCardDefault.logoSize.scaled(tier))
+                        .height(PassCardDefault.logoSize.scaled(tier)),
                 contentScale = ContentScale.Fit,
             )
-            Box(modifier = GlanceModifier.width(6.dp)) {}
+            Box(modifier = GlanceModifier.width(6.dp.scaled(tier))) {}
         }
 
         if (pass.logoText != null) {
@@ -181,7 +214,7 @@ private fun HeaderRow(
                     TextStyle(
                         color = fixedColorProvider(foreground),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
+                        fontSize = PassCardDefault.TITLE_FONT_SP.scaledSp(tier),
                     ),
             )
         } else {
@@ -198,7 +231,7 @@ private fun HeaderRow(
                             TextStyle(
                                 color = fixedColorProvider(labelColor),
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp,
+                                fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
                             ),
                     )
                 }
@@ -208,7 +241,7 @@ private fun HeaderRow(
                     style =
                         TextStyle(
                             color = fixedColorProvider(foreground),
-                            fontSize = 11.sp,
+                            fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
                         ),
                 )
             }
