@@ -169,17 +169,25 @@ fun WalletApp(
                 AdvancedAddScreen(navController)
             }
             composable(
-                route = "pass/{passId}",
+                route = "pass/{passId}?showBarcode={showBarcode}",
                 deepLinks =
                     listOf(
                         navDeepLink {
                             uriPattern = "$SHORTCUT_BASE_URI/{passId}"
                         },
                     ),
-                arguments = listOf(navArgument("passId") { type = NavType.StringType }),
+                arguments =
+                    listOf(
+                        navArgument("passId") { type = NavType.StringType },
+                        navArgument("showBarcode") {
+                            type = NavType.BoolType
+                            defaultValue = false
+                        },
+                    ),
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                val showBarcode = backStackEntry.arguments?.getBoolean("showBarcode") ?: false
+                PassScreen(passId, navController, passViewModel, initiallyShowBarcode = showBarcode)
             }
             composable(
                 route = "updateFailure/{reason}/{rationale}",

@@ -96,11 +96,12 @@ fun PassCardBack(
                 Box(modifier = GlanceModifier.width(8.dp.scaled(tier))) {}
             }
 
-            // Right: title + first secondary field. No footer, no tags, no calendar/card button
+            // Right: title + first back field (falls back to secondary if no back
+            // fields exist). No footer, no tags, no calendar/card button.
             Column(modifier = GlanceModifier.defaultWeight()) {
                 Text(
                     text = pass.description,
-                    maxLines = 2,
+                    maxLines = 4,
                     style =
                         TextStyle(
                             color = fixedColorProvider(colors.foreground),
@@ -108,12 +109,13 @@ fun PassCardBack(
                             fontSize = PassCardDefault.TITLE_FONT_SP.scaledSp(tier),
                         ),
                 )
-                pass.secondaryFields.firstOrNull()?.let { field ->
+                val backField = pass.backFields.firstOrNull() ?: pass.secondaryFields.firstOrNull()
+                backField?.let { field ->
                     Box(modifier = GlanceModifier.height(4.dp.scaled(tier))) {}
                     field.label?.let { label ->
                         Text(
                             text = label,
-                            maxLines = 1,
+                            maxLines = 4,
                             style =
                                 TextStyle(
                                     color = fixedColorProvider(colors.label),
@@ -124,7 +126,7 @@ fun PassCardBack(
                     }
                     Text(
                         text = field.content.prettyPrint(),
-                        maxLines = 1,
+                        maxLines = 3,
                         style =
                             TextStyle(
                                 color = fixedColorProvider(colors.foreground),
@@ -137,10 +139,7 @@ fun PassCardBack(
 
         // Flip-to-front icon overlay, top-end corner
         Box(
-            modifier =
-                GlanceModifier
-                    .fillMaxSize()
-                    .padding(PassCardDefault.padding.scaled(tier)),
+            modifier = GlanceModifier.fillMaxSize(),
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
@@ -148,7 +147,7 @@ fun PassCardBack(
                 contentDescription = context.getString(R.string.flip_to_front),
                 modifier = GlanceModifier.clickable(onFlipToFront),
                 tint = colors.foreground,
-                size = PassCardDefault.iconSize.scaled(tier),
+                size = PassCardDefault.iconSize,
             )
         }
     }

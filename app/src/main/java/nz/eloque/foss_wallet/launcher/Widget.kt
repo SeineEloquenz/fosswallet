@@ -75,6 +75,7 @@ object PassCardWidgetPrefs {
 
 // Glance writes ActionParameters as Intent extras under the same name.
 private val PASS_ID_PARAM = ActionParameters.Key<String>(MainActivity.EXTRA_PASS_ID)
+private val SHOW_BARCODE_PARAM = ActionParameters.Key<Boolean>(MainActivity.EXTRA_SHOW_BARCODE)
 
 // Flips the widget between front and back for whichever glanceId triggered it.
 class ToggleCardSideAction : ActionCallback {
@@ -140,7 +141,11 @@ class Widget : GlanceAppWidget() {
                     barcodeBitmap = barcodeBitmap,
                     onClick =
                         actionStartActivity<MainActivity>(
-                            parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
+                            parameters =
+                                actionParametersOf(
+                                    PASS_ID_PARAM to localizedPass.pass.id,
+                                    SHOW_BARCODE_PARAM to true,
+                                ),
                         ),
                     onFlipToFront = actionRunCallback<ToggleCardSideAction>(),
                 )

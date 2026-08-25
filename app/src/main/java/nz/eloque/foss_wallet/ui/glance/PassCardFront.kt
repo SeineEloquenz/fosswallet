@@ -45,7 +45,7 @@ internal object PassCardDefault {
     val padding = 8.dp
     val cornerRadius = 12.dp
     val logoSize = 28.dp
-    val iconSize = 24.dp
+    val iconSize = 48.dp
     const val TITLE_FONT_SP = 13
     const val LABEL_FONT_SP = 9
     const val CONTENT_FONT_SP = 11
@@ -155,14 +155,79 @@ fun PassCardFront(
                     labelColor = colors.label,
                 )
             }
+
+            // Show up to two more fields (first secondary + first auxiliary) side
+            // by side so the widget isn't so empty at larger sizes.
+            val secondaryField = pass.secondaryFields.firstOrNull()
+            val auxiliaryField = pass.auxiliaryFields.firstOrNull()
+
+            if (secondaryField != null || auxiliaryField != null) {
+                Box(modifier = GlanceModifier.height(6.dp.scaled(tier))) {}
+                Row(modifier = GlanceModifier.fillMaxWidth()) {
+                    secondaryField?.let { field ->
+                        Column(modifier = GlanceModifier.defaultWeight()) {
+                            field.label?.let { label ->
+                                Text(
+                                    text = label,
+                                    maxLines = 1,
+                                    style =
+                                        TextStyle(
+                                            color = fixedColorProvider(colors.label),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
+                                        ),
+                                )
+                            }
+                            Text(
+                                text = field.content.prettyPrint(),
+                                maxLines = if (tier == WidgetSizeTier.SMALL) 1 else 2,
+                                style =
+                                    TextStyle(
+                                        color = fixedColorProvider(colors.foreground),
+                                        fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
+                                    ),
+                            )
+                        }
+                    }
+
+                    auxiliaryField?.let { field ->
+                        if (secondaryField != null) {
+                            Box(modifier = GlanceModifier.width(8.dp.scaled(tier))) {}
+                        }
+                        Column(
+                            modifier = GlanceModifier.defaultWeight(),
+                            horizontalAlignment = Alignment.Horizontal.End,
+                        ) {
+                            field.label?.let { label ->
+                                Text(
+                                    text = label,
+                                    maxLines = 1,
+                                    style =
+                                        TextStyle(
+                                            color = fixedColorProvider(colors.label),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
+                                        ),
+                                )
+                            }
+                            Text(
+                                text = field.content.prettyPrint(),
+                                maxLines = if (tier == WidgetSizeTier.SMALL) 1 else 2,
+                                style =
+                                    TextStyle(
+                                        color = fixedColorProvider(colors.foreground),
+                                        fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
+                                    ),
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         // Flip-to-back icon overlay, top-end corner
         Box(
-            modifier =
-                GlanceModifier
-                    .fillMaxSize()
-                    .padding(PassCardDefault.padding.scaled(tier)),
+            modifier = GlanceModifier.fillMaxSize(),
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
@@ -170,7 +235,7 @@ fun PassCardFront(
                 contentDescription = context.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
-                size = PassCardDefault.iconSize.scaled(tier),
+                size = PassCardDefault.iconSize,
             )
         }
     }
@@ -208,7 +273,7 @@ private fun HeaderRow(
         if (pass.logoText != null) {
             Text(
                 text = pass.logoText,
-                maxLines = 1,
+                maxLines = if (tier == WidgetSizeTier.SMALL) 1 else 2,
                 modifier = GlanceModifier.defaultWeight(),
                 style =
                     TextStyle(

@@ -45,12 +45,14 @@ class MainActivity : ComponentActivity() {
     private val walletViewModel: WalletViewModel by viewModels()
 
     private var pendingWidgetPassId by mutableStateOf<String?>(null)
+    private var pendingWidgetShowBarcode by mutableStateOf(false)
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         pendingWidgetPassId = intent.getStringExtra(EXTRA_PASS_ID)
+        pendingWidgetShowBarcode = intent.getBooleanExtra(EXTRA_SHOW_BARCODE, false)
 
         val shareSource: ScanSource? =
             if (intent.action == Intent.ACTION_SEND) {
@@ -96,8 +98,10 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(pendingWidgetPassId) {
                 pendingWidgetPassId?.let { passId ->
-                    navController.navigate("pass/$passId")
+                    val route = if (pendingWidgetShowBarcode) "pass/$passId?showBarcode=true" else "pass/$passId"
+                    navController.navigate(route)
                     pendingWidgetPassId = null
+                    pendingWidgetShowBarcode = false
                 }
             }
 
@@ -167,6 +171,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         pendingWidgetPassId = intent.getStringExtra(EXTRA_PASS_ID)
+        pendingWidgetShowBarcode = intent.getBooleanExtra(EXTRA_SHOW_BARCODE, false)
     }
 
     private suspend fun Uri.handleIntent(
@@ -201,5 +206,6 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_PASS_ID = "pass_id"
+        const val EXTRA_SHOW_BARCODE = "show_barcode"
     }
 }

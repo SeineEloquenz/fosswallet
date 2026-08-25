@@ -66,6 +66,7 @@ fun PassScreen(
     passId: String,
     navController: NavHostController,
     passViewModel: PassViewModel,
+    initiallyShowBarcode: Boolean = false,
 ) {
     val passFlow: Flow<LocalizedPassWithTags> =
         remember(passId) {
@@ -145,7 +146,8 @@ fun PassScreen(
                             onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
                             onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
-                        )
+                            initiallyShowBarcode = initiallyShowBarcode && pagePass.pass.id == passId,
+                            )
                     }
                 }
             }
