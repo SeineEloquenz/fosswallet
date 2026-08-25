@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
@@ -12,8 +13,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -33,7 +37,19 @@ internal fun rememberVectorAsBitmap(
     tint: Color = Color.Unspecified,
     layoutDirection: LayoutDirection = LayoutDirection.Ltr,
 ): Bitmap {
-    val painter = rememberVectorPainter(image = image)
+    // rememberVectorPainter reads LocalDensity/LocalLayoutDirection internally.
+    // Glance never sets these (no Activity/View hierarchy), so we provide them
+    // explicitly here. CompositionLocalProvider's content lambda returns Unit,
+    // so we capture the painter via a closure var instead of the return value.
+    var painterResult: Painter? = null
+    CompositionLocalProvider(
+        LocalDensity provides density,
+        LocalLayoutDirection provides layoutDirection,
+    ) {
+        painterResult = rememberVectorPainter(image = image)
+    }
+    val painter = requireNotNull(painterResult) { "Painter was not composed" }
+
     val colorFilter = if (tint != Color.Unspecified) ColorFilter.tint(tint) else null
     return remember(image, tint, sizeDp, layoutDirection) {
         val sizePx = with(density) { sizeDp.toPx() }.roundToInt()
@@ -62,7 +78,6 @@ fun Icon(
 ) {
     val context = LocalContext.current
     val density = Density(context.resources.displayMetrics.density)
-
     val bitmap =
         rememberVectorAsBitmap(
             image = imageVector,
@@ -71,7 +86,6 @@ fun Icon(
             tint = tint,
             layoutDirection = context.layoutDirection(),
         )
-
     Image(
         provider = ImageProvider(bitmap),
         contentDescription = contentDescription,

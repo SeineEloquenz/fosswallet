@@ -147,6 +147,7 @@ fun PassCardBack(
                 contentDescription = context.getString(R.string.flip_to_front),
                 modifier = GlanceModifier.clickable(onFlipToFront),
                 tint = colors.foreground,
+                size = 48.dp,
             )
         }
     }

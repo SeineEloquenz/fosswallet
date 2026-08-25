@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
@@ -27,6 +26,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
@@ -209,8 +209,9 @@ suspend fun refreshWidgetPreview(context: Context) {
 
 @Composable
 private fun UnconfiguredWidgetContent() {
+    val context = LocalContext.current
     Box(modifier = GlanceModifier.fillMaxSize().padding(8.dp)) {
-        GlanceText(text = stringResource(R.string.widget_unconfigured))
+        GlanceText(text = context.getString(R.string.widget_unconfigured))
     }
 }
 

@@ -100,6 +100,7 @@ fun PassCardFront(
                 GlanceModifier
                     .fillMaxSize()
                     .padding(PassCardDefault.padding),
+            verticalAlignment = Alignment.Vertical.CenterVertically,
         ) {
             HeaderRow(
                 localizedPass = localizedPass,
@@ -137,6 +138,7 @@ fun PassCardFront(
                 contentDescription = context.getString(R.string.flip_to_back),
                 modifier = GlanceModifier.clickable(onFlipToBack),
                 tint = colors.foreground,
+                size = 48.dp,
             )
         }
     }
