@@ -141,4 +141,6 @@
     <string name="pass_imported_into_the_archive">Pas geïmporteerd in het archief</string>
     <string name="nothing_to_export">Niets om te exporteren: Aangemaakte pasjes kunnen momenteel niet worden geëxporteerd</string>
     <string name="export_skipped_passes">%1$d passes geëxporteerd, %2$d aangemaakte passes overgeslagen</string>
+    <string name="shortcut_failed">Kan snelkoppeling niet maken</string>
+    <string name="shortcut_unsupported">Je launcher ondersteunt het vastzetten van snelkoppelingen niet</string>
 </resources>
