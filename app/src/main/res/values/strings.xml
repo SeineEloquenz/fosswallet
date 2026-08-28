@@ -147,10 +147,8 @@
     <string name="attachments">Attachments</string>
     <string name="widget_unconfigured">The widget is not configured</string>
     <string name="passcard_widget_description">Shows a selected pass on the start screen</string>
-    <string name="flip_to_front">Flip to front</string>
-    <string name="flip_to_back">Flip to back</string>
-    <string name="add_to_launcher">Add to home screen</string>
-    <string name="add_widget">Add widget</string>
     <string name="barcode_widget_description">Shows selected passes barcode on the start screen</string>
+    <string name="add_to_launcher">Add to home screen</string>
+    <string name="add_card_widget">Add card widget</string>
     <string name="add_barcode_widget">Add barcode widget</string>
 </resources>
