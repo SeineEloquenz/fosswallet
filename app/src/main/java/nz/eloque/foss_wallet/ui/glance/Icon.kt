@@ -74,7 +74,7 @@ fun Icon(
     contentDescription: String?,
     modifier: GlanceModifier = GlanceModifier,
     tint: Color = Color.Unspecified,
-    size: Dp = 24.dp,
+    size: Dp = 36.dp,
 ) {
     val context = LocalContext.current
     val density = Density(context.resources.displayMetrics.density)

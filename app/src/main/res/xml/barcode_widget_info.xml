@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="180dp"
+    android:minWidth="90dp"
     android:minHeight="90dp"
-    android:minResizeWidth="180dp"
+    android:minResizeWidth="90dp"
     android:minResizeHeight="90dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
@@ -10,6 +10,6 @@
     android:configure="nz.eloque.foss_wallet.launcher.WidgetConfigActivity"
     android:widgetCategory="home_screen"
     android:widgetFeatures="reconfigurable"
-    android:description="@string/passcard_widget_description"
-    android:previewImage="@drawable/passcard_widget_preview"
-    />
+    android:description="@string/barcode_widget_description"
+    android:previewImage="@drawable/barcode_widget_preview"
+/>

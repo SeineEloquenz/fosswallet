@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
+import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -59,7 +60,20 @@ fun LauncherButton(pass: Pass) {
                 },
                 onClick = {
                     expanded = false
-                    launcherService.createWidget(pass)
+                    launcherService.createWidget(pass, showBarcode = false)
+                },
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.add_barcode_widget)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.QrCode,
+                        contentDescription = null,
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    launcherService.createWidget(pass, showBarcode = true)
                 },
             )
         }

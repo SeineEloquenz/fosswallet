@@ -34,6 +34,7 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.FossWallet">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -144,7 +145,7 @@
         </activity>
 
         <receiver
-            android:name=".launcher.WidgetReceiver"
+            android:name=".launcher.PassCardWidgetReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -154,12 +155,16 @@
                 android:resource="@xml/passcard_widget_info" />
         </receiver>
 
-        <!-- Fires once the launcher pins a widget requested via LauncherService.createWidget,
-             writing the pre-selected pass into that widget instance so WidgetConfigActivity's
-             manual picker is skipped for that flow. -->
         <receiver
-            android:name=".launcher.WidgetPinReceiver"
-            android:exported="true" />
+            android:name=".launcher.BarcodeWidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/barcode_widget_info" />
+        </receiver>
 
         <provider
             android:name=".contentprovider.CatimaContentProvider"
@@ -205,6 +210,6 @@
                 android:value="true" />
         </service>
 
-</application>
+    </application>
 
 </manifest>
