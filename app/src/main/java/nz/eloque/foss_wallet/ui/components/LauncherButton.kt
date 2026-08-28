@@ -51,7 +51,7 @@ fun LauncherButton(pass: Pass) {
                 },
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.add_widget)) },
+                text = { Text(stringResource(R.string.add_card_widget)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Widgets,
