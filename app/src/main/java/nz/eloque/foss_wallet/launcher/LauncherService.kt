@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.edit
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,6 @@ import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
-import androidx.core.content.edit
 
 private const val EXTRA_SHOW_BARCODE = "nz.eloque.foss_wallet.EXTRA_SHOW_BARCODE"
 private const val TAG = "LauncherService"
@@ -28,60 +28,60 @@ private const val TAG = "LauncherService"
  * and pinned pass-card widgets.
  */
 class LauncherService
-@Inject
-constructor(
-    @param:ApplicationContext private val context: Context,
-) {
-    fun createShortcut(pass: Pass) = context.createShortcut(pass)
-
-    fun disableShortcut(pass: Pass) = context.disableShortcut(pass)
-
-    /**
-     * Asks the launcher to pin the pass-card widget, pre-bound to [pass].
-     * [showBarcode] selects the barcode-side widget instead of the default front widget.
-     *
-     * Two mechanisms try to apply [pass] to the freshly pinned widget without the user
-     * seeing the manual picker:
-     * 1. [WidgetPinReceiver] — fires if the launcher invokes requestPinAppWidget's
-     *    successCallback. Not every launcher does this reliably.
-     * 2. [PendingWidgetConfig] — a short-lived fallback consulted directly in
-     *    PassCardWidget/BarcodeWidget.provideGlance() (Widget.kt) on the widget's first
-     *    render, and again in WidgetConfigActivity if the user taps an unconfigured
-     *    widget before that first render lands.
-     */
-    fun createWidget(
-        pass: Pass,
-        showBarcode: Boolean = false,
+    @Inject
+    constructor(
+        @param:ApplicationContext private val context: Context,
     ) {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        if (!appWidgetManager.isRequestPinAppWidgetSupported) {
-            context.toast(R.string.widget_unsupported)
-            return
-        }
-        val receiverClass =
-            if (showBarcode) BarcodeWidgetReceiver::class.java else PassCardWidgetReceiver::class.java
-        val provider = ComponentName(context, receiverClass)
-        val callbackIntent =
-            Intent(context, WidgetPinReceiver::class.java).apply {
-                putExtra(MainActivity.EXTRA_PASS_ID, pass.id)
-                putExtra(EXTRA_SHOW_BARCODE, showBarcode)
-                // AppWidgetManager.EXTRA_APPWIDGET_ID is appended to this intent by the system.
+        fun createShortcut(pass: Pass) = context.createShortcut(pass)
+
+        fun disableShortcut(pass: Pass) = context.disableShortcut(pass)
+
+        /**
+         * Asks the launcher to pin the pass-card widget, pre-bound to [pass].
+         * [showBarcode] selects the barcode-side widget instead of the default front widget.
+         *
+         * Two mechanisms try to apply [pass] to the freshly pinned widget without the user
+         * seeing the manual picker:
+         * 1. [WidgetPinReceiver] — fires if the launcher invokes requestPinAppWidget's
+         *    successCallback. Not every launcher does this reliably.
+         * 2. [PendingWidgetConfig] — a short-lived fallback consulted directly in
+         *    PassCardWidget/BarcodeWidget.provideGlance() (Widget.kt) on the widget's first
+         *    render, and again in WidgetConfigActivity if the user taps an unconfigured
+         *    widget before that first render lands.
+         */
+        fun createWidget(
+            pass: Pass,
+            showBarcode: Boolean = false,
+        ) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            if (!appWidgetManager.isRequestPinAppWidgetSupported) {
+                context.toast(R.string.widget_unsupported)
+                return
             }
-        val successCallback =
-            PendingIntent.getBroadcast(
-                context,
-                // unique per pass+type, otherwise PendingIntents for the front and
-                // barcode widget of the same pass would overwrite each other
-                31 * pass.id.hashCode() + showBarcode.hashCode(),
-                callbackIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        PendingWidgetConfig.set(context, pass.id)
-        Log.d(TAG, "requestPinAppWidget: provider=$provider passId=${pass.id} showBarcode=$showBarcode")
-        val requested = appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        Log.d(TAG, "requestPinAppWidget returned $requested")
+            val receiverClass =
+                if (showBarcode) BarcodeWidgetReceiver::class.java else PassCardWidgetReceiver::class.java
+            val provider = ComponentName(context, receiverClass)
+            val callbackIntent =
+                Intent(context, WidgetPinReceiver::class.java).apply {
+                    putExtra(MainActivity.EXTRA_PASS_ID, pass.id)
+                    putExtra(EXTRA_SHOW_BARCODE, showBarcode)
+                    // AppWidgetManager.EXTRA_APPWIDGET_ID is appended to this intent by the system.
+                }
+            val successCallback =
+                PendingIntent.getBroadcast(
+                    context,
+                    // unique per pass+type, otherwise PendingIntents for the front and
+                    // barcode widget of the same pass would overwrite each other
+                    31 * pass.id.hashCode() + showBarcode.hashCode(),
+                    callbackIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                )
+            PendingWidgetConfig.set(context, pass.id)
+            Log.d(TAG, "requestPinAppWidget: provider=$provider passId=${pass.id} showBarcode=$showBarcode")
+            val requested = appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+            Log.d(TAG, "requestPinAppWidget returned $requested")
+        }
     }
-}
 
 /**
  * Fires after the launcher successfully pins a widget requested via

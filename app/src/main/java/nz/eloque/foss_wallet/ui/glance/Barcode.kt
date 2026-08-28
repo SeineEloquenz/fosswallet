@@ -37,7 +37,7 @@ fun Barcode(
     barcodeBitmap: Bitmap?,
 ) {
     val pass = localizedPass.pass
-    val colors = pass.colors ?: PassCardDefault.fallbackColors()
+    val colors = pass.colors.toColorProviders()
     val tier = LocalSize.current.toTier()
     Box(
         modifier =
@@ -66,14 +66,14 @@ fun Barcode(
                 contentDescription = null,
                 modifier = GlanceModifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds,
-                colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+                colorFilter = ColorFilter.tint(colors.background),
             )
         } else {
             Box(
                 modifier =
                     GlanceModifier
                         .fillMaxSize()
-                        .background(fixedColorProvider(colors.background))
+                        .background(colors.background)
                         .cornerRadius(PassCardDefault.cornerRadius.scaled(tier)),
             ) {}
         }
@@ -97,7 +97,7 @@ fun Barcode(
                 text = pass.description,
                 style =
                     TextStyle(
-                        color = fixedColorProvider(colors.foreground),
+                        color = colors.foreground,
                         fontWeight = FontWeight.Medium,
                     ),
                 maxLines = 1,

@@ -316,16 +316,16 @@ class BarcodeWidgetReceiver : GlanceAppWidgetReceiver() {
 
 @HiltViewModel
 class WidgetConfigViewModel
-@Inject
-constructor(
-    passRepository: PassRepository,
-) : ViewModel() {
-    val passes: StateFlow<List<LocalizedPassWithTags>> =
-        passRepository
-            .all()
-            .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-}
+    @Inject
+    constructor(
+        passRepository: PassRepository,
+    ) : ViewModel() {
+        val passes: StateFlow<List<LocalizedPassWithTags>> =
+            passRepository
+                .all()
+                .map { list -> list.map { it.applyLocalization(Locale.getDefault().language) } }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    }
 
 // Started via android:configure in each widget's info.xml, and also reachable by
 // tapping an unconfigured widget directly (see UnconfiguredWidgetContent) — needed

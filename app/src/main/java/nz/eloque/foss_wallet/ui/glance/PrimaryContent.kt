@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +29,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassType
@@ -41,8 +41,8 @@ import java.io.File
 internal fun PrimaryContent(
     localizedPass: LocalizedPassWithTags,
     context: Context,
-    foreground: Color,
-    labelColor: Color,
+    foreground: ColorProvider,
+    labelColor: ColorProvider,
 ) {
     val pass = localizedPass.pass
     val primaryField = pass.primaryFields.getOrElse(0) { PassField.Empty }
@@ -67,7 +67,7 @@ internal fun PrimaryContent(
                     maxLines = 1,
                     style =
                         TextStyle(
-                            color = fixedColorProvider(labelColor),
+                            color = labelColor,
                             fontWeight = FontWeight.Bold,
                             fontSize = 10.sp,
                         ),
@@ -78,7 +78,7 @@ internal fun PrimaryContent(
                 maxLines = 1,
                 style =
                     TextStyle(
-                        color = fixedColorProvider(foreground),
+                        color = foreground,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                     ),
@@ -103,7 +103,7 @@ internal fun PrimaryContent(
 internal fun BoardingPrimary(
     localizedPass: LocalizedPassWithTags,
     context: Context,
-    foreground: Color,
+    foreground: ColorProvider,
 ) {
     val pass = localizedPass.pass
     val primaryFields = pass.primaryFields
@@ -131,7 +131,7 @@ internal fun BoardingPrimary(
             modifier = GlanceModifier.defaultWeight(),
             style =
                 TextStyle(
-                    color = fixedColorProvider(foreground),
+                    color = foreground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                 ),
@@ -141,7 +141,7 @@ internal fun BoardingPrimary(
             Icon(
                 imageVector = it,
                 contentDescription = context.getString(R.string.to),
-                tint = foreground,
+                tint = foreground.getColor(context),
             )
         }
 
@@ -151,7 +151,7 @@ internal fun BoardingPrimary(
             modifier = GlanceModifier.defaultWeight(),
             style =
                 TextStyle(
-                    color = fixedColorProvider(foreground),
+                    color = foreground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     textAlign = TextAlign.End,

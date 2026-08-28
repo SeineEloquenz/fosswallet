@@ -48,23 +48,52 @@ internal object PassCardDefault {
     const val CONTENT_FONT_SP = 11
     const val BITMAP_TARGET_SIZE_PX = 128
 
-    fun fallbackColors(): PassColors =
-        PassColors(
-            background = Color(0xFFE7E0EC),
-            foreground = Color(0xFF1D1B20),
-            label = Color(0xFF49454F),
+    // Used only when the pass itself doesn't specify colors (PassColors == null).
+    // Unlike a pass's own brand colors, this should follow the system's day/night
+    // mode — otherwise an unbranded pass renders as a light card even in dark mode.
+    val fallbackColorProviders =
+        PassColorProviders(
+            background = ColorProvider(day = Color(0xFFE7E0EC), night = Color(0xFF2B2930)),
+            foreground = ColorProvider(day = Color(0xFF1D1B20), night = Color(0xFFE6E0E9)),
+            label = ColorProvider(day = Color(0xFF49454F), night = Color(0xFFCAC4D0)),
         )
 }
 
-/** Wraps a fixed [Color] in a [ColorProvider]. */
+/** Wraps a fixed [Color] in a [ColorProvider] — same value for day and night. */
 internal fun fixedColorProvider(color: Color): ColorProvider = ColorProvider(day = color, night = color)
+
+/** [ColorProvider] equivalents of [PassColors]' three fields. */
+internal data class PassColorProviders(
+    val background: ColorProvider,
+    val foreground: ColorProvider,
+    val label: ColorProvider,
+)
+
+/**
+ * Resolves a pass's colors to [PassColorProviders]. A pass's own colors are brand
+ * colors set by the issuer, so they stay fixed regardless of day/night mode. Only the
+ * fallback (no colors on the pass) follows the system theme — see
+ * [PassCardDefault.fallbackColorProviders].
+ */
+internal fun PassColors?.toColorProviders(): PassColorProviders =
+    if (this != null) {
+        PassColorProviders(
+            background = fixedColorProvider(background),
+            foreground = fixedColorProvider(foreground),
+            label = fixedColorProvider(label),
+        )
+    } else {
+        PassCardDefault.fallbackColorProviders
+    }
 
 /**
  * Matches the three [androidx.glance.appwidget.SizeMode.Responsive] buckets declared in
  * Widget.kt (180x90 / 270x135 / 360x180dp). [LocalSize] snaps to the closest of
  * these, so this maps 1:1 to whichever bucket the launcher picked.
  */
-internal enum class WidgetSizeTier(val scale: Float) {
+internal enum class WidgetSizeTier(
+    val scale: Float,
+) {
     SMALL(1f),
     MEDIUM(1.4f),
     LARGE(1.8f),
@@ -88,7 +117,7 @@ fun PassCard(
     onClick: Action,
 ) {
     val pass = localizedPass.pass
-    val colors = pass.colors ?: PassCardDefault.fallbackColors()
+    val colors = pass.colors.toColorProviders()
     val tier = LocalSize.current.toTier()
 
     Box(
@@ -111,14 +140,14 @@ fun PassCard(
                 contentDescription = null,
                 modifier = GlanceModifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds,
-                colorFilter = ColorFilter.tint(fixedColorProvider(colors.background)),
+                colorFilter = ColorFilter.tint(colors.background),
             )
         } else {
             Box(
                 modifier =
                     GlanceModifier
                         .fillMaxSize()
-                        .background(fixedColorProvider(colors.background))
+                        .background(colors.background)
                         .cornerRadius(PassCardDefault.cornerRadius.scaled(tier)),
             ) {}
         }
@@ -168,7 +197,7 @@ fun PassCard(
                                     maxLines = 1,
                                     style =
                                         TextStyle(
-                                            color = fixedColorProvider(colors.label),
+                                            color = colors.label,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
                                         ),
@@ -179,7 +208,7 @@ fun PassCard(
                                 maxLines = if (tier == WidgetSizeTier.SMALL) 1 else 2,
                                 style =
                                     TextStyle(
-                                        color = fixedColorProvider(colors.foreground),
+                                        color = colors.foreground,
                                         fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
                                     ),
                             )
@@ -200,7 +229,7 @@ fun PassCard(
                                     maxLines = 1,
                                     style =
                                         TextStyle(
-                                            color = fixedColorProvider(colors.label),
+                                            color = colors.label,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
                                         ),
@@ -211,7 +240,7 @@ fun PassCard(
                                 maxLines = if (tier == WidgetSizeTier.SMALL) 1 else 2,
                                 style =
                                     TextStyle(
-                                        color = fixedColorProvider(colors.foreground),
+                                        color = colors.foreground,
                                         fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
                                     ),
                             )
@@ -227,8 +256,8 @@ fun PassCard(
 private fun HeaderRow(
     localizedPass: LocalizedPassWithTags,
     context: Context,
-    foreground: Color,
-    labelColor: Color,
+    foreground: ColorProvider,
+    labelColor: ColorProvider,
     tier: WidgetSizeTier,
 ) {
     val pass = localizedPass.pass
@@ -259,7 +288,7 @@ private fun HeaderRow(
                 modifier = GlanceModifier.defaultWeight(),
                 style =
                     TextStyle(
-                        color = fixedColorProvider(foreground),
+                        color = foreground,
                         fontWeight = FontWeight.Bold,
                         fontSize = PassCardDefault.TITLE_FONT_SP.scaledSp(tier),
                     ),
@@ -276,7 +305,7 @@ private fun HeaderRow(
                         maxLines = 1,
                         style =
                             TextStyle(
-                                color = fixedColorProvider(labelColor),
+                                color = labelColor,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = PassCardDefault.LABEL_FONT_SP.scaledSp(tier),
                             ),
@@ -287,7 +316,7 @@ private fun HeaderRow(
                     maxLines = 1,
                     style =
                         TextStyle(
-                            color = fixedColorProvider(foreground),
+                            color = foreground,
                             fontSize = PassCardDefault.CONTENT_FONT_SP.scaledSp(tier),
                         ),
                 )
