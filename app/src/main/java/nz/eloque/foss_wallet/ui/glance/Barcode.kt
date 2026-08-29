@@ -7,6 +7,7 @@ import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
@@ -36,9 +37,12 @@ fun Barcode(
     localizedPass: LocalizedPassWithTags,
     barcodeBitmap: Bitmap?,
 ) {
+    val context = LocalContext.current
+    val tier = LocalSize.current.toTier()
+
     val pass = localizedPass.pass
     val colors = pass.colors.toColorProviders()
-    val tier = LocalSize.current.toTier()
+
     Box(
         modifier =
             GlanceModifier
@@ -55,15 +59,16 @@ fun Barcode(
     ) {
         val shapeDrawableRes =
             when (pass.type) {
+                is PassType.Boarding -> R.drawable.boarding_pass_shape
                 is PassType.Event -> R.drawable.event_ticket_shape
                 is PassType.Coupon -> R.drawable.coupon_shape
-                is PassType.Boarding -> R.drawable.boarding_pass_shape
+                is PassType.StoreCard -> R.drawable.store_card_shape
                 else -> null
             }
         if (shapeDrawableRes != null) {
             Image(
                 provider = ImageProvider(shapeDrawableRes),
-                contentDescription = null,
+                contentDescription = context.getString(R.string.barcode),
                 modifier = GlanceModifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(colors.background),
