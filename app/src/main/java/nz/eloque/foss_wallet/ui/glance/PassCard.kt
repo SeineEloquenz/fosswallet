@@ -128,9 +128,10 @@ fun PassCard(
     ) {
         val shapeDrawable: Int? =
             when (pass.type) {
-                is PassType.Event -> R.drawable.event_ticket_shape
                 is PassType.Coupon -> R.drawable.coupon_shape
                 is PassType.Boarding -> R.drawable.boarding_pass_shape
+                is PassType.Event -> R.drawable.event_ticket_shape
+                is PassType.StoreCard -> R.drawable.store_card_shape
                 else -> null
             }
 
