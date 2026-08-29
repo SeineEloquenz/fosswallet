@@ -100,7 +100,7 @@ fun Barcode(
                         color = colors.foreground,
                         fontWeight = FontWeight.Medium,
                     ),
-                maxLines = 1,
+                maxLines = 2,
             )
         }
     }
