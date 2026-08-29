@@ -68,7 +68,7 @@ fun Barcode(
         if (shapeDrawableRes != null) {
             Image(
                 provider = ImageProvider(shapeDrawableRes),
-                contentDescription = context.getString(R.string.barcode),
+                contentDescription = null,
                 modifier = GlanceModifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(colors.background),
@@ -92,7 +92,7 @@ fun Barcode(
             if (barcodeBitmap != null) {
                 Image(
                     provider = ImageProvider(barcodeBitmap),
-                    contentDescription = null,
+                    contentDescription = context.getString(R.string.barcode),
                     modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
                     contentScale = ContentScale.Fit,
                 )
