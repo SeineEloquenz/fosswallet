@@ -3,7 +3,6 @@ package nz.eloque.foss_wallet.ui.glance
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -30,7 +29,6 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.launcher.PASS_ID_PARAM
 import nz.eloque.foss_wallet.launcher.SHOW_BARCODE_PARAM
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.model.PassType
 
 @Composable
 fun Barcode(
@@ -39,10 +37,8 @@ fun Barcode(
 ) {
     val context = LocalContext.current
     val tier = LocalSize.current.toTier()
-
     val pass = localizedPass.pass
     val colors = pass.colors.toColorProviders()
-
     Box(
         modifier =
             GlanceModifier
@@ -57,31 +53,6 @@ fun Barcode(
                     ),
                 ),
     ) {
-        val shapeDrawableRes =
-            when (pass.type) {
-                is PassType.Boarding -> R.drawable.boarding_pass_shape
-                is PassType.Event -> R.drawable.event_ticket_shape
-                is PassType.Coupon -> R.drawable.coupon_shape
-                is PassType.StoreCard -> R.drawable.store_card_shape
-                else -> null
-            }
-        if (shapeDrawableRes != null) {
-            Image(
-                provider = ImageProvider(shapeDrawableRes),
-                contentDescription = null,
-                modifier = GlanceModifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds,
-                colorFilter = ColorFilter.tint(colors.background),
-            )
-        } else {
-            Box(
-                modifier =
-                    GlanceModifier
-                        .fillMaxSize()
-                        .background(colors.background)
-                        .cornerRadius(PassCardDefault.cornerRadius.scaled(tier)),
-            ) {}
-        }
         Column(
             modifier =
                 GlanceModifier
@@ -90,6 +61,9 @@ fun Barcode(
             horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
         ) {
             if (barcodeBitmap != null) {
+                // No background/card behind the barcode at all — only the text below
+                // gets the pass background, so the barcode's own black-on-white
+                // contrast for scanning is never affected.
                 Image(
                     provider = ImageProvider(barcodeBitmap),
                     contentDescription = context.getString(R.string.barcode),
@@ -98,15 +72,23 @@ fun Barcode(
                 )
                 Box(modifier = GlanceModifier.height(4.dp.scaled(tier))) {}
             }
-            Text(
-                text = pass.description,
-                style =
-                    TextStyle(
-                        color = colors.foreground,
-                        fontWeight = FontWeight.Medium,
-                    ),
-                maxLines = 2,
-            )
+            Box(
+                modifier =
+                    GlanceModifier
+                        .background(colors.background)
+                        .cornerRadius(PassCardDefault.cornerRadius.scaled(tier))
+                        .padding(horizontal = 6.dp.scaled(tier), vertical = 2.dp.scaled(tier)),
+            ) {
+                Text(
+                    text = pass.description,
+                    style =
+                        TextStyle(
+                            color = colors.foreground,
+                            fontWeight = FontWeight.Medium,
+                        ),
+                    maxLines = 2,
+                )
+            }
         }
     }
 }

@@ -158,6 +158,14 @@ class PassCardWidget : GlanceAppWidget() {
             if (localizedPass == null) {
                 UnconfiguredWidgetContent(id)
             } else {
+                // Same barcode bitmap used by BarcodeWidget — passed through so PassCard
+                // can render the QR/barcode itself once the widget is large enough.
+                val barcodeBitmap =
+                    remember(localizedPass.pass.barCodes) {
+                        localizedPass.pass.barCodes
+                            .firstOrNull()
+                            ?.toBitmap(width = 256, height = 256)
+                    }
                 PassCard(
                     localizedPass = localizedPass,
                     context = context,
@@ -165,6 +173,7 @@ class PassCardWidget : GlanceAppWidget() {
                         actionStartActivity<MainActivity>(
                             parameters = actionParametersOf(PASS_ID_PARAM to localizedPass.pass.id),
                         ),
+                    barcodeBitmap = barcodeBitmap,
                 )
             }
         }
@@ -188,10 +197,17 @@ class PassCardWidget : GlanceAppWidget() {
             if (samplePass == null) {
                 UnconfiguredWidgetContent(id = null)
             } else {
+                val barcodeBitmap =
+                    remember(samplePass.pass.barCodes) {
+                        samplePass.pass.barCodes
+                            .firstOrNull()
+                            ?.toBitmap(width = 256, height = 256)
+                    }
                 PassCard(
                     localizedPass = samplePass,
                     context = context,
                     onClick = actionStartActivity<MainActivity>(),
+                    barcodeBitmap = barcodeBitmap,
                 )
             }
         }
