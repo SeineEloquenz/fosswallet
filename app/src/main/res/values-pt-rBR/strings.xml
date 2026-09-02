@@ -141,4 +141,6 @@
     <string name="no_passes_found_in_file">Não foram encontrados passes neste arquivo</string>
     <string name="nothing_to_export">Nada para exportar: no momento, os passes criados não podem ser exportados</string>
     <string name="export_skipped_passes">%1$d passes exportados; %2$d passes criados ignorados</string>
+    <string name="shortcut_unsupported">Seu launcher não oferece suporte à fixação de atalhos</string>
+    <string name="shortcut_failed">Não foi possível criar o atalho</string>
 </resources>

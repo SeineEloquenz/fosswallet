@@ -1,0 +1,2 @@
+* Přepracován styl lístků, aby více odpovídaly Apple Wallet
+* Zlepšen výkon vykreslování peněženky a lístků
