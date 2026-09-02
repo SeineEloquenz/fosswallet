@@ -30,8 +30,8 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.launcher.SHORTCUT_BASE_URI
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
@@ -169,17 +169,25 @@ fun WalletApp(
                 AdvancedAddScreen(navController)
             }
             composable(
-                route = "pass/{passId}",
+                route = "pass/{passId}?showBarcode={showBarcode}",
                 deepLinks =
                     listOf(
                         navDeepLink {
-                            uriPattern = "${ShortcutService.BASE_URI}/{passId}"
+                            uriPattern = "$SHORTCUT_BASE_URI/{passId}"
                         },
                     ),
-                arguments = listOf(navArgument("passId") { type = NavType.StringType }),
+                arguments =
+                    listOf(
+                        navArgument("passId") { type = NavType.StringType },
+                        navArgument("showBarcode") {
+                            type = NavType.BoolType
+                            defaultValue = false
+                        },
+                    ),
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                val showBarcode = backStackEntry.arguments?.getBoolean("showBarcode") ?: false
+                PassScreen(passId, navController, passViewModel, initiallyShowBarcode = showBarcode)
             }
             composable(
                 route = "updateFailure/{reason}/{rationale}",
