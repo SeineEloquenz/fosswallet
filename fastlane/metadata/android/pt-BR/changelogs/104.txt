@@ -1,0 +1,2 @@
+* Adicionar um link adicional ao arquivo
+* Mover o botão de atualização para a barra de aplicativos na visualização de passes

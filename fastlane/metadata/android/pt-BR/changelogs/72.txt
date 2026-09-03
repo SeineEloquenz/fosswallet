@@ -1,0 +1,4 @@
+* Adicionar suporte para arquivos .pkpasses
+* Adicionar a exportação de todos os passes nas configurações
+* Adicionar opções de classificação para a lista de passes (data de adição, data relevante mais recente, data relevante mais antiga, por enquanto)
+* Atualizar traduções

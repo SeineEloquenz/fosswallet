@@ -1,0 +1,1 @@
+* Opraven pád při otevírání některých lístků

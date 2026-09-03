@@ -6,8 +6,8 @@ import java.time.Instant
 import java.time.ZonedDateTime
 
 const val TIME_ADDED = "TimeAdded"
-const val RELEVANT_DATE_NEWEST = "RelevantDateNewest"
-const val RELEVANT_DATE_OLDEST = "RelevantDateOldest"
+const val RELEVANT_DATE_NEWEST = "RelevantDateNewest" // This field has been renamed to Latest
+const val RELEVANT_DATE_OLDEST = "RelevantDateOldest" // This field has been renamed to Earliest
 
 private val timeAdded =
     Comparator.comparing<LocalizedPassWithTags, Instant?>(
@@ -42,12 +42,12 @@ sealed class SortOption(
 ) {
     object TimeAdded : SortOption(TIME_ADDED, R.string.date_added, timeAdded)
 
-    object RelevantDateNewest : SortOption(RELEVANT_DATE_NEWEST, R.string.relevant_date_newest, newestFirst)
+    object RelevantDateLatest : SortOption(RELEVANT_DATE_NEWEST, R.string.relevant_date_latest, newestFirst)
 
-    object RelevantDateOldest : SortOption(RELEVANT_DATE_OLDEST, R.string.relevant_date_oldest, oldestFirst)
+    object RelevantDateEarliest : SortOption(RELEVANT_DATE_OLDEST, R.string.relevant_date_earliest, oldestFirst)
 
     companion object {
-        fun all(): List<SortOption> = listOf(TimeAdded, RelevantDateNewest, RelevantDateOldest)
+        fun all(): List<SortOption> = listOf(TimeAdded, RelevantDateLatest, RelevantDateEarliest)
     }
 }
 

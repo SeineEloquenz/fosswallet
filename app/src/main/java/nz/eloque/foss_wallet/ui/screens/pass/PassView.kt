@@ -2,16 +2,20 @@ package nz.eloque.foss_wallet.ui.screens.pass
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Attachment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -19,18 +23,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nz.eloque.compose_kit.components.Section
+import nz.eloque.compose_kit.effect.ForceOrientation
+import nz.eloque.compose_kit.effect.Orientation
+import nz.eloque.compose_kit.picker.FilePicker
+import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
-import nz.eloque.foss_wallet.ui.effects.ForceOrientation
-import nz.eloque.foss_wallet.ui.effects.Orientation
-import nz.eloque.foss_wallet.ui.screens.settings.SettingsSwitch
+import nz.eloque.foss_wallet.ui.components.AttachmentList
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,19 +47,20 @@ import java.time.Instant
 fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    onAttachmentAdd: (String, ByteArray) -> Unit,
+    onAttachmentDelete: (Attachment) -> Unit,
     onTagClick: (Tag) -> Unit,
     onTagAdd: (Tag) -> Unit,
     onTagCreate: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
-    increaseBrightness: Boolean,
     onRenderingChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val pass = localizedPass.pass
+    val metadata = localizedPass.metadata
 
-    val hasBarcodes = pass.barCodes.isNotEmpty()
-    val hasLegacyRepresentation = pass.barCodes.any { it.hasLegacyRepresentation() }
+    val hasLegacyRepresentation = remember(pass.barCodes) { pass.barCodes.any { it.hasLegacyRepresentation() } }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -63,38 +73,57 @@ fun PassView(
         PassCard(
             localizedPass = localizedPass,
             allTags = allTags,
+            barcode = {
+                Barcodes(
+                    barcodes = pass.barCodes.toList(),
+                    legacyRendering = metadata.renderLegacy && hasLegacyRepresentation,
+                    barcodePosition = barcodePosition,
+                )
+            },
             onTagClick = onTagClick,
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(25.dp),
-            ) {
-                if (hasBarcodes) {
-                    AsyncPassImage(model = pass.footerFile(context))
-                    BarcodesView(
-                        legacyRendering = pass.renderLegacy && hasLegacyRepresentation,
-                        barcodes = pass.barCodes.toList(),
-                        barcodePosition = barcodePosition,
-                        increaseBrightness = increaseBrightness,
-                    )
-                }
-            }
-        }
+        )
 
         if (hasLegacyRepresentation) {
             Card {
                 SettingsSwitch(
                     title = stringResource(R.string.compatibility_mode),
-                    checked = pass.renderLegacy,
+                    checked = metadata.renderLegacy,
                     onCheckedChange = onRenderingChange,
+                )
+            }
+        }
+        Section(stringResource(R.string.attachments)) {
+            AttachmentList(
+                attachments = localizedPass.attachments,
+                onDelete = onAttachmentDelete,
+            )
+            val contentResolver = context.contentResolver
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                FilePicker(
+                    onChoose = { name, uri ->
+                        name?.let { name ->
+                            contentResolver.openInputStream(uri)?.use { inputStream ->
+                                val bytes = inputStream.readBytes()
+                                onAttachmentAdd(name, bytes)
+                            }
+                        }
+                    },
+                    label = stringResource(R.string.add_attachment),
+                    labelIcon = Icons.Default.Attachment,
                 )
             }
         }
 
         BackFields(pass.backFields)
 
-        Spacer(Modifier.padding(16.dp).navigationBarsPadding())
+        Spacer(
+            Modifier
+                .padding(16.dp)
+                .navigationBarsPadding(),
+        )
     }
 }
 
@@ -142,13 +171,14 @@ private fun PassPreview() {
                 ),
         )
     PassView(
-        localizedPass = LocalizedPassWithTags(pass, allTags),
+        localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags, listOf()),
         allTags = allTags,
         onTagClick = {},
         onTagAdd = {},
         onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
-        increaseBrightness = false,
         onRenderingChange = {},
+        onAttachmentAdd = { _, _ -> },
+        onAttachmentDelete = {},
     )
 }

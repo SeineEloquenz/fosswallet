@@ -9,6 +9,7 @@ import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
 import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.api.UpdateScheduler
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.Tag
@@ -19,8 +20,7 @@ import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
-import nz.eloque.foss_wallet.shortcut.Shortcut
-import java.time.Instant
+import nz.eloque.foss_wallet.shortcut.ShortcutService
 import java.util.Locale
 
 class PassStore
@@ -32,12 +32,15 @@ class PassStore
         private val passRepository: PassRepository,
         private val localizationRepository: PassLocalizationRepository,
         private val updateScheduler: UpdateScheduler,
+        private val shortcutService: ShortcutService,
     ) {
         fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
         fun passById(id: String) = passRepository.findById(id)
 
         fun passFlowById(id: String) = passRepository.flowById(id)
+
+        fun passesInGroup(groupId: Long) = passRepository.flowByGroup(groupId)
 
         fun filtered(query: String) =
             passRepository.filtered(query).map { passes ->
@@ -46,41 +49,31 @@ class PassStore
                 }
             }
 
-        fun create(
+        suspend fun create(
             pass: Pass,
             bitmaps: PassBitmaps,
         ) {
-            passRepository.insert(withAutoArchive(pass), bitmaps, null)
+            passRepository.insert(pass, bitmaps, null)
         }
 
-        fun add(loadResult: PassLoadResult): ImportResult {
-            val existing = passRepository.findById(loadResult.pass.pass.id)
-            val result = if (existing != null) ImportResult.Replaced else ImportResult.New
+        suspend fun add(loadResult: PassLoadResult): ImportResult {
+            val pass = loadResult.pass.pass
+            val existing = passRepository.findById(pass.id)
 
             insert(loadResult)
-            if (loadResult.pass.pass.updatable()) {
-                updateScheduler.scheduleUpdate(loadResult.pass.pass)
+            if (pass.updatable()) updateScheduler.scheduleUpdate(pass)
+            if (existing != null) return ImportResult.Replaced
+            if (passRepository.metadata(pass.id)?.archived == true) {
+                passRepository.archive(pass)
+                return ImportResult.AutoArchived
             }
-
-            return result
+            return ImportResult.New
         }
 
         suspend fun update(pass: Pass): UpdateResult {
             val updated = PassbookApi.getUpdated(pass)
             return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
-                val updatedWithCustomSettings =
-                    updated.content.result.copy(
-                        pass =
-                            updated.content.result.pass.copy(
-                                pass =
-                                    updated.content.result.pass.pass.copy(
-                                        archived = pass.archived,
-                                        autoArchive = pass.autoArchive,
-                                        renderLegacy = pass.renderLegacy,
-                                    ),
-                            ),
-                    )
-                insert(updatedWithCustomSettings)
+                insert(updated.content.result)
                 notificationService.createNotificationChannel()
                 val localizedPass =
                     updated.content.result.pass
@@ -117,10 +110,14 @@ class PassStore
         suspend fun delete(pass: Pass) {
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
-            Shortcut.remove(context, pass)
+            shortcutService.disable(pass)
         }
 
-        fun load(
+        suspend fun delete(attachment: Attachment) {
+            passRepository.delete(attachment)
+        }
+
+        suspend fun load(
             context: Context,
             bytes: ByteArray,
         ): ImportResult {
@@ -128,10 +125,10 @@ class PassStore
             return add(loaded)
         }
 
-        private fun insert(loadResult: PassLoadResult) {
+        private suspend fun insert(loadResult: PassLoadResult) {
             transactionalExecutor.runTransactionally {
                 val passWithLocalization = loadResult.pass
-                passRepository.insert(withAutoArchive(passWithLocalization.pass), loadResult.bitmaps, loadResult.originalPass)
+                passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
                 passWithLocalization.localizations
                     .map {
                         it.copy(
@@ -142,14 +139,6 @@ class PassStore
         }
 
         suspend fun archiveExpiredPasses() = passRepository.archiveExpiredPasses()
-
-        private fun withAutoArchive(
-            pass: Pass,
-            now: Instant = Instant.now(),
-        ): Pass {
-            val expired = pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
-            return if (pass.autoArchive && expired) pass.copy(archived = true) else pass
-        }
 
         suspend fun deleteGroup(groupId: Long) = passRepository.deleteGroup(groupId)
 
@@ -162,4 +151,10 @@ class PassStore
             pass: Pass,
             groupId: Long,
         ) = passRepository.dissociate(pass, groupId)
+
+        suspend fun attach(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) = passRepository.insertAttachment(pass, name, bytes)
     }

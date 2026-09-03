@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.nativeClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun UpdateFailureScreen(
         title = stringResource(R.string.details),
         actions = {
             IconButton(onClick = {
-                clipboard.nativeClipboard.setPrimaryClip(ClipData.newPlainText(reason, rationale))
+                clipboard.nativeClipboardManager.setPrimaryClip(ClipData.newPlainText(reason, rationale))
             }) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,

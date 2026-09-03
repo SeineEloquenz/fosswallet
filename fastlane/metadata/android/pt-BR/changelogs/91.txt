@@ -1,0 +1,2 @@
+* Corrigir o problema em que o ícone do bloco de configurações rápidas não era salvo de forma permanente
+* Corrigir o problema de regressão no carregamento do código de barras

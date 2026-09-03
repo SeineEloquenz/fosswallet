@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -31,9 +35,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateSet
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -43,14 +47,13 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.map
+import nz.eloque.compose_kit.components.SelectionIndicator
+import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.Tag
-import nz.eloque.foss_wallet.ui.card.ShortPassCard
+import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
-import nz.eloque.foss_wallet.ui.components.SwipeToDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,31 +72,18 @@ fun WalletView(
     val resources = LocalResources.current
 
     val emptyState = rememberLazyListState()
-    val passFlow = walletViewModel.filteredPasses
-    val passes: List<LocalizedPassWithTags> by remember(passFlow) {
-        passFlow.map { passes ->
-            passes.filter { archive == it.pass.archived }
-        }
-    }.collectAsState(listOf())
 
-    val tagFlow = walletViewModel.allTags
-    val tags by tagFlow.collectAsState(setOf())
+    val displayedPasses by walletViewModel.displayedPasses.collectAsState()
+    val sortedPasses = displayedPasses[archive].orEmpty()
 
-    val passTypesToShow = remember { PassType.all().toMutableStateList() }
+    val tags by walletViewModel.allTags.collectAsState(setOf())
+    val sortOption by walletViewModel.sortOptionState.collectAsState()
+    val selectedPassTypes by walletViewModel.selectedPassTypes.collectAsState()
+    val tagToFilterFor by walletViewModel.tagFilter.collectAsState()
 
-    val sortOption = walletViewModel.sortOptionState.collectAsState().value
-
-    val tagToFilterFor = remember { mutableStateOf<Tag?>(null) }
     val passToDelete = remember { mutableStateOf<LocalizedPassWithTags?>(null) }
 
-    val sortedPasses =
-        passes
-            .filter { localizedPass -> passTypesToShow.any { localizedPass.pass.type.isSameType(it) } }
-            .filter { localizedPass -> tagToFilterFor.value == null || localizedPass.tags.contains(tagToFilterFor.value) }
-            .sortedWith(sortOption.comparator)
-            .groupBy { it.pass.groupId }
-            .toList()
-    val visiblePasses = sortedPasses.flatMap { it.second }.toSet()
+    val visiblePasses = remember(sortedPasses) { sortedPasses.flatMap { it.second }.toSet() }
 
     LaunchedEffect(visiblePasses) {
         selectedPasses.removeAll { it !in visiblePasses }
@@ -131,7 +121,7 @@ fun WalletView(
     }
 
     LazyColumn(
-        state = if (passes.isEmpty()) emptyState else listState,
+        state = if (sortedPasses.isEmpty()) emptyState else listState,
         verticalArrangement =
             Arrangement
                 .spacedBy(8.dp),
@@ -149,7 +139,7 @@ fun WalletView(
                 walletViewModel = walletViewModel,
                 sortOption = sortOption,
                 onSortChange = { walletViewModel.setSortOption(it) },
-                passTypesToShow = passTypesToShow,
+                selectedPassTypes = selectedPassTypes,
                 tags = tags,
                 tagToFilterFor = tagToFilterFor,
             )
@@ -165,32 +155,62 @@ fun WalletView(
                 selectedPasses = selectedPasses,
             )
         }
-        items(ungrouped) { pass ->
+        items(
+            items = ungrouped,
+            key = { it.pass.id },
+        ) { pass ->
             val isSelectionMode = selectedPasses.isNotEmpty()
             SwipeToDismiss(
-                leftSwipeIcon = if (archive) Icons.Default.Unarchive else Icons.Default.Archive,
-                rightSwipeIcon = Icons.Default.Delete,
+                leftSwipeBackground = {
+                    Icon(imageVector = if (archive) Icons.Default.Unarchive else Icons.Default.Archive, contentDescription = null)
+                },
+                rightSwipeBackground = {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                },
                 allowLeftSwipe = !isSelectionMode,
                 allowRightSwipe = !isSelectionMode,
                 onLeftSwipe = { if (archive) walletViewModel.unarchive(pass.pass) else walletViewModel.archive(pass.pass) },
                 onRightSwipe = { passToDelete.value = pass },
-                modifier = Modifier.padding(2.dp),
             ) {
-                ShortPassCard(
-                    pass = pass,
-                    allTags = tags,
-                    onClick = {
-                        if (selectedPasses.isNotEmpty()) {
+                val isSelected = selectedPasses.contains(pass)
+                val scale by animateFloatAsState(if (isSelected) 0.95f else 1f)
+                Box {
+                    PassCard(
+                        localizedPass = pass,
+                        allTags = tags,
+                        modifier = Modifier.scale(scale),
+                        onClick = {
+                            if (selectedPasses.isNotEmpty()) {
+                                if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
+                            } else {
+                                navController.navigate("pass/${pass.pass.id}")
+                            }
+                        },
+                        onLongClick = {
                             if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
-                        } else {
-                            navController.navigate("pass/${pass.pass.id}")
-                        }
-                    },
-                    onLongClick = {
-                        if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
-                    },
-                    selected = selectedPasses.contains(pass),
-                )
+                        },
+                        showEntirePass = false,
+                    )
+                    if (isSelected) SelectionIndicator(Modifier.align(Alignment.TopEnd))
+                }
+            }
+        }
+        if (!archive) {
+            item {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    TextButton(
+                        onClick = {
+                            navController.navigate(Screen.Archive.route)
+                        },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.show_archived_passes),
+                        )
+                    }
+                }
             }
         }
         item {

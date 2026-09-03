@@ -31,7 +31,6 @@
     <string name="enable">Attiva</string>
     <string name="search">Cerca</string>
     <string name="add_shortcut">Aggiungi scorciatoia</string>
-    <string name="shortcut_exists">La scorciatoia esiste già!</string>
     <string name="made_with_love">Fatto con ❤ in Germania</string>
     <string name="privacy">Privacy</string>
     <string name="details">Dettagli</string>
@@ -56,9 +55,8 @@
     <string name="share_passes">Condividi biglietti</string>
     <string name="filter">Ordina per</string>
     <string name="date_added">Data aggiunta</string>
-    <string name="relevant_date_newest">La più recente data rilevante</string>
-    <string name="relevant_date_oldest">La più vecchia data rilevante</string>
-    <string name="selected">Selezionati</string>
+    <string name="relevant_date_latest">La più recente data rilevante</string>
+    <string name="relevant_date_earliest">La più vecchia data rilevante</string>
     <string name="libraries">Librerie</string>
     <string name="wallet">Porta tessere</string>
     <string name="compatibility_mode">Modalità compatibilità</string>
@@ -128,4 +126,19 @@
     <string name="ask_before_delete">Chiedi prima di eliminare</string>
     <string name="delete_confirmation_message">Eliminare i biglietti selezionati? Questa azione non può essere annullata.</string>
     <string name="the_archive">Archivio</string>
+    <string name="show_archived_passes">Mostra pass archiviati</string>
+    <string name="create_boarding_pass">Crea carta d\'imbarco</string>
+    <string name="created_pass_export_warning">Al momento non è possibile esportare i pass creati</string>
+    <string name="attachments">Allegati</string>
+    <string name="add_attachment">Aggiungi allegato</string>
+    <string name="delete_attachment">Elimina allegato</string>
+    <string name="attachment_name">Nome dell\'allegato</string>
+    <string name="choose_attachment_name">Scegli nome dell\'allegato</string>
+    <string name="permission_read_passes_label">Biglietti di lettura</string>
+    <string name="permission_read_passes_description">Leggere i tuoi biglietti e i loro dettagli, inclusi i codici a barre in modo compatibile con Catima</string>
+    <string name="background">Sfondo</string>
+    <string name="pass_imported_into_the_archive">Biglietto importato nell\'archivio</string>
+    <string name="no_passes_found_in_file">In questo file non sono stati trovati pass</string>
+    <string name="nothing_to_export">Niente da esportare: Al momento non è possibile esportare i pass creati</string>
+    <string name="export_skipped_passes">Esportati %1$d biglietti, saltati %2$d biglietti creati</string>
 </resources>

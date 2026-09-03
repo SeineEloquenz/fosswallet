@@ -24,6 +24,12 @@ Features (non-exhaustive):
 * Compatibility mode for legacy scanners
 * Multiple sort options (incl. by date)
 * Attach tags to passes
+* Gadgetbridge integration to get your passes on your watch
+
+### Gadgetbridge integration
+FossWallet integrates with Gadgetbridge, so that you can use your passes barcodes on supported gadgets.
+To sync your passes to a gadget, select it in the gadgetbridge device list, press the cogwheel to
+get to device settings, and go to the "loyalty cards"-menu. There you'll find options to sync passes.
 
 ## Installation
 

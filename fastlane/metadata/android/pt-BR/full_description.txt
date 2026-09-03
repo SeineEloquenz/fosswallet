@@ -1,0 +1,5 @@
+O FossWallet é uma carteira simples para o formato Passbook (.pkpass) com Material Design 3, desenvolvida com Jetpack Compose.
+
+Ele exibe o código de barras e os demais dados contidos no passe.
+O aplicativo permite a atualização de passes a partir dos servidores dos fornecedores para os passes compatíveis,
+mas, fora isso, pode ser usado totalmente off-line.

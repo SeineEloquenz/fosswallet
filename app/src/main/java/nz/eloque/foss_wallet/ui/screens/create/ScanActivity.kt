@@ -88,7 +88,7 @@ class ScanActivity : AppCompatActivity() {
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             val pickedUri = uri ?: return@registerForActivityResult
-            val result = ImageScanner.scanFrom(contentResolver, pickedUri)
+            val result = FileScanner.scanFrom(contentResolver, pickedUri, ScanSource.Image)
             if (result == null) {
                 Toast.makeText(this, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                 return@registerForActivityResult

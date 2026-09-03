@@ -1,0 +1,3 @@
+* Permitir o carregamento de outras codificações além do UTF-8
+* Corrigir uma possível falha ao carregar arquivos .pkpasses
+* Atualizar as traduções

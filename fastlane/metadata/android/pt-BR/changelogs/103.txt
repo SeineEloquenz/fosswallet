@@ -1,0 +1,2 @@
+* Observar que os passes criados não podem ser exportados
+* Adicionar um link para o artigo da Wikipédia sobre formatos de código de barras no criador de passes

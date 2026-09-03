@@ -36,15 +36,14 @@
     <string name="filter">Sortera efter</string>
     <string name="compatibility_mode">Kompatibilitetsläge</string>
     <string name="date_added">Datum tillagt</string>
-    <string name="relevant_date_newest">Senaste relevanta datum</string>
-    <string name="relevant_date_oldest">Äldsta relevanta datum</string>
+    <string name="relevant_date_latest">Senaste relevanta datum</string>
+    <string name="relevant_date_earliest">Äldsta relevanta datum</string>
     <string name="request_permissions">Begär behörighet</string>
     <string name="pass_updates_channel">Kortuppdateringar</string>
     <string name="pass_updated">Kort uppdaterat</string>
     <string name="group">Gruppera kort</string>
     <string name="ungroup">Avgruppera kort</string>
     <string name="passes">Kort</string>
-    <string name="shortcut_exists">Genvägen finns redan!</string>
     <string name="pass_view">Kortvy</string>
     <string name="pass_view_brightness">Öka ljusstyrkan</string>
     <string name="pass_already_imported">Kortet har redan importerats</string>
@@ -54,7 +53,7 @@
     <string name="permission_rationale">Utan behörigheten/behörigheterna fungerar FossWallet inte korrekt</string>
     <string name="no_barcode_format_given">Inget streckkodsformat har angetts! Standardinställningen är QR-kod. Denna kod skannas kanske inte korrekt.</string>
     <string name="invalid_pass_toast">Kortet kunde inte laddas. Är du säker på att detta är ett giltigt .pkpass?</string>
-    <string name="sync_interval">Kortuppdateringsintervall (min)</string>
+    <string name="sync_interval">Uppdateringsintervall för kort (min)</string>
     <string name="timeout">En timeout inträffade när uppdateringsservern anropades</string>
     <string name="exception">Ett undantagsfel inträffade när uppdateringsservern anropades</string>
     <string name="status_code">Servern svarade med statusen %1$s</string>
@@ -64,7 +63,6 @@
     <string name="n_passes_imported">%1$d kort importerades</string>
     <string name="pass_deleted">Kortet har tagits bort</string>
     <string name="pass_imported">Kortet har importerats</string>
-    <string name="selected">Markerat</string>
     <string name="webview">Öppna URL</string>
     <string name="create_pass">Skapa kort</string>
     <string name="pass_name">Kortnamn</string>
@@ -128,4 +126,19 @@
     <string name="import_pass">Importera kort</string>
     <string name="open_from_clipboard">Öppna från urklipp</string>
     <string name="the_archive">Arkiv</string>
+    <string name="show_archived_passes">Visa arkiverade kort</string>
+    <string name="created_pass_export_warning">Skapade kort kan för närvarande inte exporteras</string>
+    <string name="permission_read_passes_label">Läsa kort</string>
+    <string name="permission_read_passes_description">Läsa dina kort och deras uppgifter, inklusive streckkoder, på ett Catima-kompatibelt sätt</string>
+    <string name="create_boarding_pass">Skapa boardingkort</string>
+    <string name="attachments">Bilagor</string>
+    <string name="delete_attachment">Ta bort bilaga</string>
+    <string name="add_attachment">Lägg till bilaga</string>
+    <string name="choose_attachment_name">Välj namn på bilagan</string>
+    <string name="attachment_name">Bilagans namn</string>
+    <string name="background">Bakgrund</string>
+    <string name="pass_imported_into_the_archive">Kort importerat till arkivet</string>
+    <string name="no_passes_found_in_file">Inga kort hittades i denna fil</string>
+    <string name="nothing_to_export">Inget att exportera: skapade kort kan för närvarande inte exporteras</string>
+    <string name="export_skipped_passes">Exporterade %1$d kort, hoppade över %2$d skapade kort</string>
 </resources>

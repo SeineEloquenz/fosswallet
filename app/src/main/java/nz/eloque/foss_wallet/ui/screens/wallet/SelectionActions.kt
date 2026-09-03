@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
@@ -43,6 +44,8 @@ fun SelectionActions(
     val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     val showDeleteDialog = remember { mutableStateOf(false) }
+
+    BackHandler(enabled = selectedPasses.isNotEmpty()) { selectedPasses.clear() }
 
     fun deleteSelected() {
         selectedPasses.toList().forEach { walletViewModel.delete(it.pass) }

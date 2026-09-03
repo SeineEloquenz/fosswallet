@@ -4,15 +4,13 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.createBitmap
 import androidx.lifecycle.AndroidViewModel
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -31,6 +29,7 @@ import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import nz.eloque.foss_wallet.utils.toBitmap
 import java.time.ZonedDateTime
 import java.util.Locale
 import kotlin.coroutines.resume
@@ -55,7 +54,6 @@ class CreateViewModel
             serialNumber: String,
             type: PassType,
             barcodes: List<BarCode>,
-            logoText: String,
             colors: PassColors?,
             location: Location?,
             relevantDates: List<PassRelevantDate>,
@@ -65,6 +63,7 @@ class CreateViewModel
             stripUrl: Uri?,
             thumbnailUrl: Uri?,
             footerUrl: Uri?,
+            backgroundUrl: Uri?,
         ): String {
             val pass =
                 PassCreator.create(
@@ -73,7 +72,6 @@ class CreateViewModel
                     barCodes = barcodes,
                     organization = organization,
                     serialNumber = serialNumber,
-                    logoText = logoText,
                     colors = colors,
                     location = location,
                     relevantDates = relevantDates,
@@ -81,14 +79,14 @@ class CreateViewModel
                 )!!
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
-            val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawableToBitmap(drawable, 64, 64)
+            val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawable.toBitmap(64, 64)
             val logoBitmap = loadBitmapFromUrl(context, logoUrl, LOGO_SIZE)
 
             val finalLogo =
                 when {
                     logoBitmap != null -> logoBitmap
                     iconUrl != null -> iconBitmap
-                    else -> drawableToBitmap(drawable, 256, 256)
+                    else -> drawable.toBitmap(256, 256)
                 }
 
             val bitmaps =
@@ -98,6 +96,7 @@ class CreateViewModel
                     strip = loadBitmapFromUrl(context, stripUrl, STRIP_SIZE),
                     thumbnail = loadBitmapFromUrl(context, thumbnailUrl, THUMBNAIL_SIZE),
                     footer = loadBitmapFromUrl(context, footerUrl, FOOTER_SIZE),
+                    background = loadBitmapFromUrl(context, backgroundUrl, BACKGROUND_SIZE),
                 )
 
             passStore.create(
@@ -107,6 +106,7 @@ class CreateViewModel
                         hasStrip = bitmaps.strip != null,
                         hasThumbnail = bitmaps.thumbnail != null,
                         hasFooter = bitmaps.footer != null,
+                        hasBackground = bitmaps.background != null,
                     ),
                 bitmaps = bitmaps,
             )
@@ -144,24 +144,13 @@ class CreateViewModel
             }
         }
 
-        private fun drawableToBitmap(
-            drawable: Drawable,
-            width: Int,
-            height: Int,
-        ): Bitmap {
-            val bitmap = createBitmap(width, height)
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, width, height)
-            drawable.draw(canvas)
-            return bitmap
-        }
-
         companion object {
             private const val ICON_SIZE = 64
             private const val LOGO_SIZE = 512
             private const val STRIP_SIZE = 1024
             private const val THUMBNAIL_SIZE = 512
             private const val FOOTER_SIZE = 768
+            private const val BACKGROUND_SIZE = 512
         }
 
         suspend fun geocode(query: String): List<GeocodeResult> {
@@ -175,7 +164,7 @@ class CreateViewModel
                             query,
                             6,
                             object : Geocoder.GeocodeListener {
-                                override fun onGeocode(addresses: MutableList<android.location.Address>) {
+                                override fun onGeocode(addresses: MutableList<Address>) {
                                     if (continuation.isActive) {
                                         continuation.resume(addresses)
                                     }

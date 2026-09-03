@@ -1,0 +1,2 @@
+* Corrigir problema no tratamento do fuso horário
+* Corrigir vários erros de análise de localização

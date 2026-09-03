@@ -9,6 +9,7 @@
 /captures
 .externalNativeBuild
 .cxx
+.direnv
 local.properties
 fosswallet
 fosswallet-1-link

@@ -1,0 +1,4 @@
+* Melhorar a validação de códigos de barras no Creator
+* Adicionar tradução para o turco
+* Atualizar as traduções
+* Corrigir o problema de alguns códigos de barras não serem exibidos

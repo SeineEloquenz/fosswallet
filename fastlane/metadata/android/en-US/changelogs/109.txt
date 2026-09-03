@@ -1,0 +1,3 @@
+* Slightly update boarding pass transit type icons
+* Improve pass background color detection
+* Fix auto archival unarchiving some passes

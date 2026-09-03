@@ -1,0 +1,2 @@
+* Add Gadgetbridge integration
+Note: This needs Gadgetbridge >0.90 to function

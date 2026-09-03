@@ -1,0 +1,1 @@
+* Corrigir a condição de proteção ausente para lidar com dados legados

@@ -31,7 +31,6 @@
     <string name="enable">Etkinleştir</string>
     <string name="search">Ara</string>
     <string name="add_shortcut">Kısayol ekle</string>
-    <string name="shortcut_exists">Kısayol zaten var!</string>
     <string name="privacy">Gizlilik</string>
     <string name="details">Detaylar</string>
     <string name="timeout">Güncelleme sunucusuna bağlanırken zaman aşımı oluştu</string>
@@ -57,12 +56,11 @@
     <string name="share_passes">Kartları paylaş</string>
     <string name="more_options">Daha fazla seçenek</string>
     <string name="date_added">Eklendiği tarih</string>
-    <string name="relevant_date_newest">En yeni ilgili tarih</string>
-    <string name="relevant_date_oldest">En eski ilgili tarih</string>
-    <string name="selected">Seçildi</string>
+    <string name="relevant_date_latest">En yeni ilgili tarih</string>
+    <string name="relevant_date_earliest">En eski ilgili tarih</string>
     <string name="filter">Şuna göre sırala</string>
     <string name="libraries">Kütüphaneler</string>
-    <string name="compatibility_mode">Uyumluluk Modu</string>
+    <string name="compatibility_mode">Uyumluluk modu</string>
     <string name="create_pass">Kart oluştur</string>
     <string name="pass_name">Kart adı</string>
     <string name="barcode_value">Barkod değeri</string>
@@ -107,4 +105,7 @@
     <string name="thumbnail">Küçük resim</string>
     <string name="barcode_alt_text">Alternatif barkod metni</string>
     <string name="pass_relevant_start">Başlangıç</string>
+    <string name="background">Arka plan</string>
+    <string name="attachments">Ekler</string>
+    <string name="attachment_name">Ek adı</string>
 </resources>

@@ -1,0 +1,2 @@
+* Aumentar a largura horizontal dos passes 1D
+* Corrigir o problema de os passes serem desarquivados ao receber uma atualização

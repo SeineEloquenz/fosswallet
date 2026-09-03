@@ -8,12 +8,18 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import nz.eloque.foss_wallet.api.ImportResult
+import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
@@ -25,6 +31,9 @@ import nz.eloque.foss_wallet.persistence.tag.TagRepository
 data class QueryState(
     val query: String = "",
 )
+
+/** A sorted list of pass groups, keyed by their (nullable) group id. */
+typealias GroupedPasses = List<Pair<Long?, List<LocalizedPassWithTags>>>
 
 @HiltViewModel
 class WalletViewModel
@@ -39,12 +48,37 @@ class WalletViewModel
         private val queryState: StateFlow<QueryState> = baseQueryState.asStateFlow()
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
+        private val filteredPasses = queryState.flatMapMerge { passStore.filtered(it.query) }
 
         val allTags = tagRepository.all()
 
         private val _sortOptionState: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.TimeAdded)
         val sortOptionState = _sortOptionState.asStateFlow()
+
+        private val _selectedPassTypes = MutableStateFlow(PassType.all().toSet())
+        val selectedPassTypes = _selectedPassTypes.asStateFlow()
+
+        private val _tagFilter = MutableStateFlow<Tag?>(null)
+        val tagFilter = _tagFilter.asStateFlow()
+
+        /**
+         * Fully filtered, sorted and grouped passes, partitioned by their archived state.
+         */
+        val displayedPasses: StateFlow<Map<Boolean, GroupedPasses>> =
+            combine(
+                filteredPasses,
+                sortOptionState,
+                selectedPassTypes,
+                tagFilter,
+            ) { passes, sortOption, passTypes, tag ->
+                passes
+                    .filter { localizedPass -> passTypes.any { localizedPass.pass.type.isSameType(it) } }
+                    .filter { localizedPass -> tag == null || localizedPass.tags.contains(tag) }
+                    .sortedWith(sortOption.comparator)
+                    .groupBy { it.metadata.archived }
+                    .mapValues { (_, list) -> list.groupBy { it.metadata.groupId }.toList() }
+            }.flowOn(Dispatchers.Default)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
         init {
             update()
@@ -64,6 +98,18 @@ class WalletViewModel
             update()
         }
 
+        fun selectPassType(passType: PassType) {
+            _selectedPassTypes.value = _selectedPassTypes.value + passType
+        }
+
+        fun deselectPassType(passType: PassType) {
+            _selectedPassTypes.value = _selectedPassTypes.value - passType
+        }
+
+        fun setTagFilter(tag: Tag?) {
+            _tagFilter.value = tag
+        }
+
         fun group(passes: Set<Pass>) = viewModelScope.launch(Dispatchers.IO) { passStore.group(passes) }
 
         fun deleteGroup(groupId: Long) = viewModelScope.launch(Dispatchers.IO) { passStore.deleteGroup(groupId) }
@@ -71,7 +117,7 @@ class WalletViewModel
         fun filter(query: String) =
             viewModelScope.launch(Dispatchers.IO) { baseQueryState.value = baseQueryState.value.copy(query = query) }
 
-        fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
+        suspend fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 

@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.model
 
-import androidx.compose.material3.CardColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 
 data class PassColors(
@@ -8,5 +10,14 @@ data class PassColors(
     val foreground: Color,
     val label: Color,
 ) {
-    fun toCardColors(): CardColors = CardColors(background, foreground, background.copy(alpha = 0.38f), foreground.copy(alpha = 0.38f))
+    companion object {
+        val Fallback: PassColors
+            @Composable @ReadOnlyComposable
+            get() =
+                PassColors(
+                    background = MaterialTheme.colorScheme.surfaceVariant,
+                    foreground = MaterialTheme.colorScheme.onSurface,
+                    label = MaterialTheme.colorScheme.onSurface,
+                )
+    }
 }

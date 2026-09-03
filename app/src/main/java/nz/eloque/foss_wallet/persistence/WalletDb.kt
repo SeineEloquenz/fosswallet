@@ -6,9 +6,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassLocalization
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationDao
@@ -17,6 +19,8 @@ import nz.eloque.foss_wallet.persistence.migrations.M20_21
 import nz.eloque.foss_wallet.persistence.migrations.M_17_18
 import nz.eloque.foss_wallet.persistence.migrations.M_18_19
 import nz.eloque.foss_wallet.persistence.migrations.M_19_20
+import nz.eloque.foss_wallet.persistence.migrations.M_23_24
+import nz.eloque.foss_wallet.persistence.migrations.M_26_27
 import nz.eloque.foss_wallet.persistence.migrations.M_9_10
 import nz.eloque.foss_wallet.persistence.pass.PassDao
 import nz.eloque.foss_wallet.persistence.tag.TagDao
@@ -28,11 +32,15 @@ fun buildDb(context: Context) =
         .addMigrations(M_17_18)
         .addMigrations(M_18_19)
         .addMigrations(M_19_20)
+        .addMigrations(M_23_24)
+        .addMigrations(M_26_27)
         .build()
 
 @Database(
-    version = 23,
-    entities = [Pass::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class],
+    version = 27,
+    entities = [
+        Pass::class, PassMetadata::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class, Attachment::class,
+    ],
     autoMigrations = [
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
@@ -49,6 +57,8 @@ fun buildDb(context: Context) =
         AutoMigration(from = 20, to = 21, spec = M20_21::class),
         AutoMigration(from = 21, to = 22),
         AutoMigration(from = 22, to = 23),
+        AutoMigration(from = 24, to = 25),
+        AutoMigration(from = 25, to = 26),
     ],
     exportSchema = true,
 )

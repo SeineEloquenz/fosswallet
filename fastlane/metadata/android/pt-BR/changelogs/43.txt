@@ -1,0 +1,5 @@
+* Transferir a exclusão de passes do deslizar para o menu FAB
+* Adicionar feedback tátil à seleção de passes
+* Adicionar informações de compilação à página Sobre
+* Corrigir o problema do teclado não desaparecer ao pressionar Concluído durante a filtragem
+* Corrigir os cantos cortados ao deslizar os passes em um grupo

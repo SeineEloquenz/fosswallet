@@ -1,18 +1,19 @@
 package nz.eloque.foss_wallet.model
 
 import android.graphics.Bitmap
+import android.graphics.Bitmap.createBitmap
 import android.graphics.Color
-import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
+import com.google.zxing.common.BitMatrix
 import org.json.JSONObject
 import java.nio.charset.Charset
 
 data class BarCode(
-    private val format: BarcodeFormat,
-    private val message: String,
-    private val encoding: Charset,
+    val format: BarcodeFormat,
+    val message: String,
+    val encoding: Charset,
     val altText: String?,
 ) {
     fun toJson(): JSONObject =
@@ -23,57 +24,49 @@ data class BarCode(
             it.put("altText", altText)
         }
 
-    fun is1d(): Boolean =
-        when (format) {
-            BarcodeFormat.AZTEC -> false
-            BarcodeFormat.CODABAR -> true
-            BarcodeFormat.CODE_39 -> true
-            BarcodeFormat.CODE_93 -> true
-            BarcodeFormat.CODE_128 -> true
-            BarcodeFormat.DATA_MATRIX -> false
-            BarcodeFormat.EAN_8 -> true
-            BarcodeFormat.EAN_13 -> true
-            BarcodeFormat.ITF -> true
-            BarcodeFormat.MAXICODE -> false
-            BarcodeFormat.PDF_417 -> true
-            BarcodeFormat.QR_CODE -> false
-            BarcodeFormat.RSS_14 -> true
-            BarcodeFormat.RSS_EXPANDED -> true
-            BarcodeFormat.UPC_A -> true
-            BarcodeFormat.UPC_E -> true
-            BarcodeFormat.UPC_EAN_EXTENSION -> true
-        }
-
     fun hasLegacyRepresentation(): Boolean {
-        val legacyRepresentation = encodeAsBitmap(100, 100, true)
-        val representation = encodeAsBitmap(100, 100, false)
-        return !(representation?.sameAs(legacyRepresentation) ?: false)
+        val legacyRepresentation = encode(legacyRendering = true) ?: return false
+        val representation = encode(legacyRendering = false) ?: return false
+
+        return representation != legacyRepresentation
     }
 
-    fun encodeAsBitmap(
-        width: Int,
-        height: Int,
-        legacyRendering: Boolean,
+    fun isNotValid() = encode() == null
+
+    private fun encode(
+        width: Int = 0,
+        height: Int = 0,
+        legacyRendering: Boolean = false,
+    ): BitMatrix? {
+        val marginHint = Pair(EncodeHintType.MARGIN, 0)
+        val characterSetHint = Pair(EncodeHintType.CHARACTER_SET, encoding)
+        val encodeHints = if (legacyRendering) mapOf(marginHint) else mapOf(marginHint, characterSetHint)
+
+        return try {
+            MultiFormatWriter().encode(message, format, width, height, encodeHints)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    fun toBitmap(
+        width: Int = 0,
+        height: Int = 0,
+        legacyRendering: Boolean = false,
     ): Bitmap? {
-        val encodeHints = mapOf(Pair(EncodeHintType.CHARACTER_SET, encoding))
-        val result =
-            try {
-                MultiFormatWriter().encode(message, format, width, height, if (legacyRendering) null else encodeHints)
-            } catch (_: Exception) {
-                return null
-            }
-        val w = result.width
-        val h = result.height
+        val bitMatrix = encode(width, height, legacyRendering) ?: return null
+
+        val w = bitMatrix.width
+        val h = bitMatrix.height
         val pixels = IntArray(w * h)
         for (y in 0 until h) {
             val offset = y * w
             for (x in 0 until w) {
-                pixels[offset + x] = if (result[x, y]) Color.BLACK else Color.WHITE
+                pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
             }
         }
-        val bitmap = createBitmap(w, h)
-        bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
-        return bitmap
+
+        return createBitmap(pixels, w, h, Bitmap.Config.ARGB_8888)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -82,12 +75,14 @@ data class BarCode(
         other as BarCode
         if (format != other.format) return false
         if (message != other.message) return false
+        if (encoding != other.encoding) return false
         return altText == other.altText
     }
 
     override fun hashCode(): Int {
         var result = format.hashCode()
         result = 31 * result + message.hashCode()
+        result = 31 * result + encoding.hashCode()
         result = 31 * result + (altText?.hashCode() ?: 0)
         return result
     }

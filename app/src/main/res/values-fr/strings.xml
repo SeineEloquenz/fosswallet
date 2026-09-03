@@ -43,7 +43,6 @@
     <string name="filter">Trier par</string>
     <string name="sync_interval">Intervalle de mise à jour des cartes (min)</string>
     <string name="add_shortcut">Ajouter un raccourci</string>
-    <string name="shortcut_exists">Le raccourci existe déjà !</string>
     <string name="privacy">Confidentialité</string>
     <string name="timeout">Temps d’attente dépassé en contactant le serveur de mise à jour</string>
     <string name="exception">Une erreur est survenue lors de l\'appel au serveur de mise à jour</string>
@@ -53,8 +52,8 @@
     <string name="archive">Archiver</string>
     <string name="unarchive">Désarchiver</string>
     <string name="n_passes_imported">%1$d clefs importées</string>
-    <string name="relevant_date_newest">Dernière date pertinente</string>
-    <string name="relevant_date_oldest">Date pertinente la plus ancienne</string>
+    <string name="relevant_date_latest">Dernière date pertinente</string>
+    <string name="relevant_date_earliest">Date pertinente la plus ancienne</string>
     <string name="libraries">Librairies</string>
     <string name="ungroup">Dégrouper les cartes</string>
     <string name="open">Ouvrir</string>
@@ -63,7 +62,6 @@
     <string name="pass_view">Vue de la carte</string>
     <string name="pass_deleted">Carte supprimée avec succès</string>
     <string name="pass_imported">Carte importée avec succès</string>
-    <string name="selected">Sélectionnée</string>
     <string name="compatibility_mode">Mode compatibilité</string>
     <string name="webview">Ouvrir l\'URL</string>
     <string name="create_pass">Créer une carte</string>
@@ -128,4 +126,18 @@
     <string name="select_all">Sélectionner tout</string>
     <string name="scan_code">Scanner un code</string>
     <string name="the_archive">Archives</string>
+    <string name="created_pass_export_warning">Les cartes créées ne peuvent pas être actuellement exportées</string>
+    <string name="show_archived_passes">Montrer les cartes archivées</string>
+    <string name="create_boarding_pass">Créer une carte d\'embarquement</string>
+    <string name="permission_read_passes_label">Lire les cartes</string>
+    <string name="permission_read_passes_description">Lire vos cartes et leurs détails, en incluant les code-barres dans un mode compatible avec Catima</string>
+    <string name="attachment_name">Nom de la pièce jointe</string>
+    <string name="choose_attachment_name">Choisir le nom de la pièce jointe</string>
+    <string name="add_attachment">Ajouter une pièce jointe</string>
+    <string name="delete_attachment">Supprimer la pièce jointe</string>
+    <string name="attachments">Pièces jointes</string>
+    <string name="background">Arrière-plan</string>
+    <string name="no_passes_found_in_file">Aucune carte trouvée dans ce fichier</string>
+    <string name="nothing_to_export">Rien à exporter. Les cartes créées ne peuvent pas être exportées actuellement</string>
+    <string name="export_skipped_passes">%1$d cartes exportées, %2$d cartes ignorées</string>
 </resources>

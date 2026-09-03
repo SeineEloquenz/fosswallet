@@ -1,0 +1,5 @@
+* Adicionar fichas à visualização da carteira para filtrar os passes por tipo
+* Adicionar um seletor de ícones/logotipos ao criador de passes
+* Alterar ligeiramente a cor de fundo padrão dos passes
+* Atualizar as traduções
+* Corrigir a posição de rolagem na visualização da carteira ao voltar

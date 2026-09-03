@@ -22,7 +22,6 @@
     <string name="barcode_position_bottom">Apakšgalā</string>
     <string name="archive">Arhivēt</string>
     <string name="export">Izgūt</string>
-    <string name="selected">Atlasītās</string>
     <string name="request_permissions">Pieprasīt atļauju</string>
     <string name="serial_number">Sērijas numurs</string>
     <string name="add_pass">Pievienot caurlaidi</string>
@@ -39,7 +38,6 @@
     <string name="date_added">Pievienošanas datums</string>
     <string name="filter">Kārtot pēc</string>
     <string name="compatibility_mode">Saderības režīms</string>
-    <string name="shortcut_exists">Saīsne jau pastāv!</string>
     <string name="n_passes_imported">Ievietotas %1$d caurlaides</string>
     <string name="pass_deleted">Caurlaide veiksmīgi dzēsta</string>
     <string name="pass_imported">Caurlaide veiksmīgi ievietota</string>
@@ -71,4 +69,6 @@
     <string name="status_code">Serveris atbildēja ar statusu %1$s</string>
     <string name="searching">Meklēšana…</string>
     <string name="pass_expiration_date">Derīguma termiņš</string>
+    <string name="attachments">Pielikumi</string>
+    <string name="background">Fons</string>
 </resources>

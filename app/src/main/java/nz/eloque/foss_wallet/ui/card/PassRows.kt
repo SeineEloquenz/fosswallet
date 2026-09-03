@@ -17,22 +17,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import nz.eloque.compose_kit.layout.FairRow
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.components.FairRow
 
 @Composable
 fun HeaderRow(
     pass: Pass,
+    modifier: Modifier = Modifier,
     isSelectable: Boolean = true,
 ) {
     val context = LocalContext.current
 
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier) {
         Row(
             modifier = Modifier.height(38.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(PassCardDefaults.spacing),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             pass.logoFile(context)?.let {
@@ -73,16 +74,14 @@ fun FieldsRow(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     isSelectable: Boolean = true,
 ) {
-    val space = 10.dp
-
     if (fields.isNotEmpty()) {
         AutoSizePassFields(
             fields = fields,
             modifier = modifier.height(38.dp),
-            spacing = space,
+            spacing = PassCardDefaults.spacing,
         ) { fontSize ->
             FairRow(
-                spacing = space,
+                spacing = PassCardDefaults.spacing,
                 arrangeWithSpaceBetween = arrangeWithSpaceBetween,
             ) {
                 fields.forEach {

@@ -1,0 +1,4 @@
+* Initial image and PDF attachment support
+* Clarify naming of sort options
+* Remove focus from filter bar on back press
+* Swipe icon for delete is now red

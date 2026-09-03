@@ -14,7 +14,6 @@
     <string name="license">Litsents</string>
     <string name="search">Otsi</string>
     <string name="add_shortcut">Lisa otselink</string>
-    <string name="shortcut_exists">Otselink on juba olemas!</string>
     <string name="request_permissions">Küsi õigusi</string>
     <string name="enable">Võta kasutusele</string>
     <string name="permission_rationale">Ilma vajalike õigusteta FossWallet ei toimi korralikult</string>
@@ -55,9 +54,8 @@
     <string name="share_passes">Jaga dokumente</string>
     <string name="more_options">Lisavalikud</string>
     <string name="date_added">Lisamise kuupäev</string>
-    <string name="relevant_date_newest">Viimane oluline kuupäev</string>
-    <string name="relevant_date_oldest">Vanim oluline kuupäev</string>
-    <string name="selected">Valitud</string>
+    <string name="relevant_date_latest">Viimane oluline kuupäev</string>
+    <string name="relevant_date_earliest">Vanim oluline kuupäev</string>
     <string name="filter">Järjestus</string>
     <string name="libraries">Teegid</string>
     <string name="wallet">Kaarditasku</string>
@@ -128,4 +126,19 @@
     <string name="ask_before_delete">Küsi kinnitust enne kustutamist</string>
     <string name="select_all">Vali kõik</string>
     <string name="the_archive">Arhiveeri</string>
+    <string name="created_pass_export_warning">Loodud dokumente ei saa hetkel eksportida</string>
+    <string name="show_archived_passes">Näita arhiveeritud dokumente</string>
+    <string name="permission_read_passes_label">Dokumentide lugemine/avamine</string>
+    <string name="permission_read_passes_description">Loe oma dokumente ja nende andmeid, sealhulgas triipkoode, Catimaga ühilduval viisil</string>
+    <string name="create_boarding_pass">Loo pardakaart</string>
+    <string name="attachment_name">Manuse nimi</string>
+    <string name="choose_attachment_name">Sisesta manuse nimi</string>
+    <string name="add_attachment">Lisa manus</string>
+    <string name="delete_attachment">Kustuta manus</string>
+    <string name="attachments">Failid/manused</string>
+    <string name="background">Taust</string>
+    <string name="no_passes_found_in_file">Selles failis ei leidunud ühtegi dokumenti</string>
+    <string name="nothing_to_export">Mitte midagi pole eksportida: loodud dokumente ei saa hetkel eksportida</string>
+    <string name="export_skipped_passes">Eksportisin %1$d dokumenti, jätsin vahele %2$d loodud dokumenti</string>
+    <string name="pass_imported_into_the_archive">Dokument on imporditud arhiivi</string>
 </resources>

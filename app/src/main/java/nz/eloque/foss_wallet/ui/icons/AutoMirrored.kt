@@ -5,40 +5,37 @@ import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
 import androidx.compose.ui.graphics.vector.ImageVector
 
-val Icons.AutoMirrored.Filled.FlightTakeoff: ImageVector
+val Icons.AutoMirrored.Filled.Flight: ImageVector
     get() {
-        if (flightTakeoff != null) {
-            return flightTakeoff!!
+        if (flight != null) {
+            return flight!!
         }
-        flightTakeoff =
-            materialIcon(
-                name = "AutoMirrored.Filled.AirplaneTicket",
-                autoMirror =
-                true,
-            ) {
+        flight =
+            materialIcon(name = "AutoMirrored.Filled.Flight", autoMirror = true) {
                 materialPath {
-                    moveTo(2.5f, 19.0f)
-                    horizontalLineToRelative(19.0f)
-                    verticalLineToRelative(2.0f)
-                    horizontalLineToRelative(-19.0f)
-                    verticalLineTo(19.0f)
-                    close()
-                    moveTo(22.07f, 9.64f)
-                    curveToRelative(-0.21f, -0.8f, -1.04f, -1.28f, -1.84f, -1.06f)
-                    lineTo(14.92f, 10.0f)
-                    lineToRelative(-6.9f, -6.43f)
-                    lineTo(6.09f, 4.08f)
-                    lineToRelative(4.14f, 7.17f)
-                    lineToRelative(-4.97f, 1.33f)
-                    lineToRelative(-1.97f, -1.54f)
-                    lineToRelative(-1.45f, 0.39f)
-                    lineToRelative(2.59f, 4.49f)
-                    curveToRelative(0.0f, 0.0f, 7.12f, -1.9f, 16.57f, -4.43f)
-                    curveTo(21.81f, 11.26f, 22.28f, 10.44f, 22.07f, 9.64f)
+                    moveTo(8.0f, 21.0f)
+                    horizontalLineToRelative(2.0f)
+                    lineToRelative(5.0f, -8.0f)
+                    horizontalLineTo(20.5f)
+                    curveToRelative(0.83f, 0.0f, 1.5f, -0.67f, 1.5f, -1.5f)
+                    reflectiveCurveTo(24f - 2.67f, 10.0f, 24f - 3.5f, 10.0f)
+                    horizontalLineTo(15.0f)
+                    lineToRelative(-5.0f, -8.0f)
+                    horizontalLineToRelative(-2.0f)
+                    lineToRelative(2.5f, 8.0f)
+                    horizontalLineTo(5.0f)
+                    lineToRelative(-1.5f, -2.0f)
+                    horizontalLineTo(2.0f)
+                    lineToRelative(1.0f, 3.5f)
+                    lineToRelative(-1.0f, 3.5f)
+                    horizontalLineToRelative(1.5f)
+                    lineTo(5.0f, 13.0f)
+                    horizontalLineToRelative(5.5f)
+                    lineToRelative(-2.5f, 8.0f)
                     close()
                 }
             }
-        return flightTakeoff!!
+        return flight!!
     }
 
-private var flightTakeoff: ImageVector? = null
+private var flight: ImageVector? = null

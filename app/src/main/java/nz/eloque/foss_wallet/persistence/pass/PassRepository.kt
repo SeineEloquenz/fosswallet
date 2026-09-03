@@ -5,12 +5,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.OriginalPass
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
-import nz.eloque.foss_wallet.model.PassWithTagsAndLocalization
+import nz.eloque.foss_wallet.model.PassWithMetadata
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import java.time.Instant
@@ -22,11 +24,11 @@ class PassRepository
         @param:ApplicationContext private val context: Context,
         private val passDao: PassDao,
     ) {
-        fun all(): Flow<List<PassWithTagsAndLocalization>> = passDao.all()
+        fun all(): Flow<List<PassWithMetadata>> = passDao.all()
 
         fun updatable(): List<Pass> = passDao.updatable()
 
-        fun filtered(query: String): Flow<List<PassWithTagsAndLocalization>> =
+        fun filtered(query: String): Flow<List<PassWithMetadata>> =
             if (query.isEmpty()) {
                 all()
             } else {
@@ -38,6 +40,9 @@ class PassRepository
             passDao.flowById(id).map { it?.applyLocalization(Locale.getDefault().language) }
 
         fun findById(id: String): LocalizedPassWithTags? = passDao.findById(id)?.applyLocalization(Locale.getDefault().language)
+
+        fun flowByGroup(groupId: Long): Flow<List<LocalizedPassWithTags>> =
+            passDao.flowByGroup(groupId).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
         suspend fun associate(
             pass: Pass,
@@ -54,15 +59,28 @@ class PassRepository
             tag: Tag,
         ) = passDao.untag(PassTagCrossRef(pass.id, tag.label))
 
-        fun insert(
+        suspend fun insert(
             pass: Pass,
             bitmaps: PassBitmaps,
             originalPass: OriginalPass?,
         ) {
             val id = pass.id
+            val metadata = passDao.metadata(id) ?: PassMetadata(id)
+            val archived = AutoArchiver.shouldBeAutoArchived(pass, metadata)
             passDao.insert(pass)
+            passDao.insert(metadata.copy(archived = archived))
             bitmaps.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
+        }
+
+        suspend fun insertAttachment(
+            pass: Pass,
+            name: String,
+            bytes: ByteArray,
+        ) {
+            val attachment = Attachment(passId = pass.id, fileName = name)
+            attachment.save(context, bytes)
+            passDao.insert(attachment)
         }
 
         fun insert(group: PassGroup): PassGroup {
@@ -75,10 +93,17 @@ class PassRepository
             passDao.delete(pass)
         }
 
+        suspend fun delete(attachment: Attachment) {
+            attachment.delete(context)
+            passDao.delete(attachment)
+        }
+
         suspend fun dissociate(
             pass: Pass,
             groupId: Long,
         ) = passDao.dissociate(pass, groupId)
+
+        suspend fun metadata(id: String) = passDao.metadata(id)
 
         suspend fun deleteGroup(groupId: Long) = passDao.delete(PassGroup(groupId))
 
@@ -91,13 +116,15 @@ class PassRepository
 
         suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 
-        suspend fun toggleLegacyRendering(pass: Pass) = passDao.setLegacyRendering(pass.id, !pass.renderLegacy)
+        suspend fun toggleLegacyRendering(pass: Pass) = passDao.toggleLegacyRendering(pass.id)
 
         suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
             passDao
                 .nonArchivedWithExpirationDate()
                 .filter { pass ->
-                    pass.expirationDate?.toInstant()?.let { expiration -> !expiration.isAfter(now) } ?: false
+                    pass.expirationDate?.toInstant()?.let { expiration ->
+                        !expiration.isAfter(now) && pass.addedAt.isBefore(expiration)
+                    } ?: false
                 }.forEach { passDao.archive(it.id) }
         }
     }

@@ -1,0 +1,4 @@
+* Adicionar espaço em branco ao redor do código e do texto alternativo
+* Adicionar suporte para datas relativas e que ignoram o fuso horário (os passes precisarão ser reimportados para usar essas etiquetas)
+* Corrigir o problema das faixas não ocuparem toda a largura do passe
+* Atualizar as traduções

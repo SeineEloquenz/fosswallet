@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,18 +26,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import nz.eloque.compose_kit.fab.FabMenu
+import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.components.FabMenu
-import nz.eloque.foss_wallet.ui.components.FabMenuItem
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -46,7 +46,7 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    walletViewModel: WalletViewModel,
+    walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val contentResolver = context.contentResolver
@@ -151,10 +151,10 @@ fun WalletScreen(
                                 },
                             ),
                             FabMenuItem(
-                                icon = Icons.Default.QrCodeScanner,
-                                title = stringResource(R.string.scan_code),
+                                icon = Screen.Scan.icon,
+                                title = stringResource(Screen.Scan.resourceId),
                                 onClick = {
-                                    navController.navigate(Screen.CreateScan.route)
+                                    navController.navigate(Screen.Scan.route)
                                 },
                             ),
                             FabMenuItem(

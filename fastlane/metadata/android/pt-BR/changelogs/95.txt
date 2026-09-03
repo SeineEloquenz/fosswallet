@@ -1,0 +1,4 @@
+* A fonte do código hexadecimal de cor no criador de passagens agora é monoespaçada
+* Remoção do canal alfa do código hexadecimal de cor no criador de passagens
+* Manutenção da configuração da opção de ordenação
+* Exibição de uma barra de notificação se nenhum aplicativo de mapas/calendário estiver instalado

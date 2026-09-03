@@ -18,7 +18,6 @@
     <string name="enable">הפעלה</string>
     <string name="search">חיפוש</string>
     <string name="add_shortcut">הוספת קיצור דרך</string>
-    <string name="shortcut_exists">קיצור דרך כבר קיים!</string>
     <string name="privacy">פרטיות</string>
     <string name="details">פרטים</string>
     <string name="copy">העתקה</string>
@@ -59,7 +58,6 @@
     <string name="share_passes">שתף אישורים</string>
     <string name="more_options">אפשרויות נוספות</string>
     <string name="date_added">תאריך הוספה</string>
-    <string name="selected">נבחר</string>
     <string name="filter">מיין לפי</string>
     <string name="libraries">סיפריות</string>
     <string name="compatibility_mode">מצב תאימות</string>
@@ -80,8 +78,8 @@
     <string name="choose_image">בחר תמונה</string>
     <string name="clear_selection">נקה בחירה</string>
     <string name="no_barcode_format_given">תבנית הברקוד לא נבחרה! קוד QR נבחר כברירת המחדל. ייתכן שהברקוד הזה לא יסרק כראוי.</string>
-    <string name="relevant_date_newest">התאריך הרלוונטי החדש ביותר</string>
-    <string name="relevant_date_oldest">התאריך הרלוונטי הישן ביותר</string>
+    <string name="relevant_date_latest">התאריך הרלוונטי החדש ביותר</string>
+    <string name="relevant_date_earliest">התאריך הרלוונטי הישן ביותר</string>
     <string name="color">צבע</string>
     <string name="add_tag">הוסף תג</string>
     <string name="remove_tag">להסיר תג</string>
@@ -105,4 +103,6 @@
     <string name="no_calendar_app_found">לא נמצאה אפליקציית לוח שנה</string>
     <string name="pass_label_color">צבע תווית</string>
     <string name="thumbnail">תמונה ממוזערת</string>
+    <string name="attachments">צרופות</string>
+    <string name="background">רקע</string>
 </resources>

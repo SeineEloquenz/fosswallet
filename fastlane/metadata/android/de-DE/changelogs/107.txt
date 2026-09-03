@@ -1,0 +1,3 @@
+* Importieren von Bordkarten aus gescannten IATA-BCBP-Codes
+* Öffnen von gescannten URLs in der Webansicht, um die Bordkarten von dort herunterzuladen
+* Kleinere Änderungen am Layout manuell erstellter Bordkarten

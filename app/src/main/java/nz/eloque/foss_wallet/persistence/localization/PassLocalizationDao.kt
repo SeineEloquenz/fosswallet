@@ -1,9 +1,8 @@
 package nz.eloque.foss_wallet.persistence.localization
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.PassLocalization
 
@@ -18,6 +17,6 @@ interface PassLocalizationDao {
         lang: String,
     ): List<PassLocalization>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insert(localization: PassLocalization): Long
 }

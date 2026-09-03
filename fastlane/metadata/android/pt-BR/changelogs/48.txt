@@ -1,0 +1,1 @@
+* Permitir que os passes abertos sejam exibidos na tela de bloqueio

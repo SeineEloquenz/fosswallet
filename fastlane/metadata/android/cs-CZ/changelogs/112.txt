@@ -1,0 +1,4 @@
+* Povoleno listování mezi seskupenými palubními vstupenkami v zobrazení palubních vstupenek
+* Zobrazení čísel věrnostních programů na palubních vstupenkách
+* Počáteční podpora sdílení souborů PDF do aplikace FossWallet
+Poznámka: Původní soubor PDF se zatím nepřidá jako příloha a pro palubní vstupenku se použije první nalezený čárový kód

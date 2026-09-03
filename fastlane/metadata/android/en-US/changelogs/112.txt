@@ -1,0 +1,4 @@
+* Allow swiping between grouped passes in pass view
+* Show frequent flyer numbers on boarding passes
+* Initial support for sharing pdfs to FossWallet
+Note: the original pdf will not be added as an attachment currently and the first barcode found will be used for the pass

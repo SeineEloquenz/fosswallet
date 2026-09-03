@@ -1,0 +1,5 @@
+* Adicionar botão de exclusão de passe na visualização de passes
+* Adicionar menu suspenso para ações na visualização de passes
+* Adicionar suporte ao arquivamento de passes
+* Corrigir falha ao clicar no botão de calendário/localização caso não haja nenhum aplicativo compatível instalado
+* Corrigir hora de término padrão incorreta do evento

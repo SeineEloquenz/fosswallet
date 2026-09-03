@@ -1,0 +1,15 @@
+name: Update Android SDK Versions
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: SeineEloquenz/ci/.github/workflows/update-android-sdk.yml@main
+    with:
+      nix-file: shell.nix

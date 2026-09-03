@@ -1,0 +1,4 @@
+* Suporte inicial para imagens e anexos em PDF
+* Esclarecimento da nomenclatura das opções de ordenação
+* Remoção do foco da barra de filtro ao pressionar o botão Voltar
+* O ícone de deslizar para excluir agora é vermelho

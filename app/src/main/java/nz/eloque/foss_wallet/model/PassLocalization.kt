@@ -17,7 +17,11 @@ import androidx.room.ForeignKey
 )
 data class PassLocalization(
     val passId: String,
-    val lang: String,
+    private val lang: String,
     val label: String,
     val text: String,
-)
+) {
+    fun lang(): String = lang.normalizedLanguageTag()
+}
+
+private fun String.normalizedLanguageTag(): String = replace('_', '-')

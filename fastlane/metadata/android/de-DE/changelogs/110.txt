@@ -1,0 +1,6 @@
+* Veranstaltungsdaten in der Wallet-Ansicht anzeigen
+* Links in Beschreibungen anklickbar gemacht
+* Unterstützung für Locale-Codes mit Bindestrich (z. B. en-us)
+* Farben der Beschriftungen dargestellt
+* Darstellung des Barcodes leicht optimiert
+* Zurück-Navigation aus der Scan-Ansicht korrigiert

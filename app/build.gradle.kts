@@ -13,7 +13,6 @@ plugins {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xwhen-guards")
         jvmTarget = JvmTarget.JVM_17
     }
 }
@@ -35,7 +34,8 @@ android {
         }
     }
     namespace = "nz.eloque.foss_wallet"
-    compileSdk = 36
+    compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     buildFeatures {
         compose = true
@@ -45,9 +45,9 @@ android {
     defaultConfig {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
-        targetSdk = 36
-        versionCode = 103
-        versionName = "0.42.2"
+        targetSdk = 37
+        versionCode = 119
+        versionName = "0.49.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -58,6 +58,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -79,6 +80,11 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+}
+
+aboutLibraries {
+    // Prevent about libraries from pulling licenses at build time (see #695)
+    offlineMode = true
 }
 
 room {
@@ -158,4 +164,10 @@ dependencies {
     implementation(libs.aboutlibraries.compose.m3)
 
     implementation(libs.color.picker)
+
+    implementation(libs.bcbp.parser)
+
+    implementation(libs.compose.kit)
+
+    implementation(libs.dd.plist)
 }

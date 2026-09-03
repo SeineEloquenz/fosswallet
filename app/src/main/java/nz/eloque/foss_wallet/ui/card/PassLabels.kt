@@ -18,7 +18,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.Hyphens
@@ -31,11 +30,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import nz.eloque.compose_kit.input.AbbreviatingText
+import nz.eloque.compose_kit.layout.FairRow
+import nz.eloque.compose_kit.layout.findMaxAllowedWidth
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
-import nz.eloque.foss_wallet.ui.components.AbbreviatingText
-import nz.eloque.foss_wallet.ui.components.FairRow
-import nz.eloque.foss_wallet.ui.components.findMaxAllowedWidth
 
 private val linkStyle =
     TextLinkStyles(
@@ -76,8 +75,9 @@ fun PassField(
     ) {
         AbbreviatingText(
             text = field.label?.uppercase(LocalLocale.current.platformLocale).orEmpty(),
+            color = LocalPassLabelColor.current,
             textAlign = textAlign,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+            style = PassCardDefaults.labelStyle,
             useTooltip = isSelectable,
         )
         val content = @Composable {
@@ -91,6 +91,33 @@ fun PassField(
             )
         }
         if (isSelectable) SelectionContainer { content() } else content()
+    }
+}
+
+@Composable
+fun StripImagePrimaryField(
+    field: PassField,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    isSelectable: Boolean = true,
+) {
+    Column(modifier = modifier) {
+        val content = @Composable {
+            Text(
+                text = field.content.parseHtml(),
+                fontSize = fontSize,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = passFieldContentStyle,
+            )
+        }
+
+        if (isSelectable) SelectionContainer { content() } else content()
+        AbbreviatingText(
+            text = field.label.orEmpty(),
+            style = PassCardDefaults.labelStyleStripImage,
+            useTooltip = isSelectable,
+        )
     }
 }
 
@@ -120,6 +147,7 @@ fun AutoSizePassFields(
     maxLines: Int = 1,
     spacing: Dp = 0.dp,
     useFixedWidth: Boolean = false,
+    labelStyle: TextStyle = PassCardDefaults.labelStyle,
     content: @Composable (fontSize: TextUnit) -> Unit,
 ) {
     BoxWithConstraints(modifier = modifier) {
@@ -127,7 +155,6 @@ fun AutoSizePassFields(
 
         val density = LocalDensity.current
         val locale = LocalLocale.current.platformLocale
-        val labelStyle = MaterialTheme.typography.labelMedium
         val contentStyle = passFieldContentStyle
         val textMeasurer = rememberTextMeasurer(0)
 
@@ -174,7 +201,11 @@ fun AutoSizePassFields(
                                     text = it,
                                     style = contentStyle.copy(fontSize = currentFontSize),
                                     maxLines = maxLines,
-                                    constraints = Constraints(maxHeight = contentHeight, maxWidth = maxItemWidth),
+                                    constraints =
+                                        Constraints(
+                                            maxHeight = if (constraints.hasBoundedHeight) contentHeight else Constraints.Infinity,
+                                            maxWidth = if (constraints.hasBoundedWidth) maxItemWidth else Constraints.Infinity,
+                                        ),
                                 )
                             if (result.hasVisualOverflow) return@binarySearch true else result.size.width
                         }

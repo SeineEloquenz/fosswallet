@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -41,7 +40,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -69,6 +67,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
@@ -82,6 +81,8 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import nz.eloque.compose_kit.input.ComboBox
+import nz.eloque.compose_kit.picker.ImagePicker
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassColors
@@ -89,8 +90,7 @@ import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.components.ImagePicker
-import nz.eloque.foss_wallet.ui.screens.settings.ComboBox
+import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -102,8 +102,7 @@ import java.util.Calendar
 fun CreateView(
     navController: NavHostController,
     createViewModel: CreateViewModel,
-    startMode: CreateStartMode = CreateStartMode.Manual,
-    initialBarcode: String? = null,
+    initialBarcode: BarCode? = null,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -114,22 +113,24 @@ fun CreateView(
     var stripUrl by remember { mutableStateOf<Uri?>(null) }
     var thumbnailUrl by remember { mutableStateOf<Uri?>(null) }
     var footerUrl by remember { mutableStateOf<Uri?>(null) }
+    var backgroundUrl by remember { mutableStateOf<Uri?>(null) }
 
     var name by remember { mutableStateOf("") }
     var nameTouched by remember { mutableStateOf(false) }
     var organization by remember { mutableStateOf("") }
     var serialNumber by remember { mutableStateOf("") }
-    var logoText by remember { mutableStateOf("") }
-    val initialBarcodeValue = initialBarcode.orEmpty()
-    var barcodes by remember(initialBarcodeValue) {
+
+    var barcodes by remember {
         mutableStateOf(
-            listOf(
-                BarcodeDraft(
-                    message = initialBarcodeValue,
-                    altText = initialBarcodeValue,
-                    format = BarcodeFormat.QR_CODE,
-                ),
-            ),
+            initialBarcode?.let {
+                val draft =
+                    BarcodeDraft(
+                        message = it.message,
+                        altText = it.altText ?: it.message,
+                        format = it.format,
+                    )
+                listOf(draft)
+            } ?: emptyList(),
         )
     }
     var activeBarcodeIndex by remember { mutableIntStateOf(0) }
@@ -150,7 +151,6 @@ fun CreateView(
     var isSaving by remember { mutableStateOf(false) }
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
-    var initialScanHandled by remember { mutableStateOf(false) }
 
     val barCodeModels =
         barcodes.map {
@@ -168,7 +168,7 @@ fun CreateView(
     val barcodesValid =
         barcodes.isNotEmpty() &&
             barcodes.zip(barCodeModels).all { (draft, model) ->
-                draft.message.isNotEmpty() && barcodeValid(model)
+                draft.message.isNotEmpty() && !model.isNotValid()
             }
     val datesValid = relevantEnd == null || relevantStart != null
     val createValid = nameValid && barcodesValid && datesValid && pass != null && !isSaving
@@ -176,53 +176,28 @@ fun CreateView(
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
     val scanLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartActivityForResult(),
-            onResult = { activityResult ->
-                if (activityResult.resultCode == android.app.Activity.RESULT_OK) {
-                    val resultData = activityResult.data
-                    val contents = resultData?.getStringExtra(ScanActivity.EXTRA_RESULT)
-                    if (contents != null) {
-                        val formatName = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_FORMAT)
-                        if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
-                        barcodes =
-                            barcodes.mapIndexed { index, barcode ->
-                                if (index != activeBarcodeIndex) {
-                                    barcode
-                                } else {
-                                    val scannedFormat =
-                                        try {
-                                            BarcodeFormat.valueOf(formatName ?: BarcodeFormat.QR_CODE.name)
-                                        } catch (_: IllegalArgumentException) {
-                                            Toast
-                                                .makeText(
-                                                    context,
-                                                    resources.getString(R.string.no_barcode_format_given),
-                                                    Toast.LENGTH_SHORT,
-                                                ).show()
-                                            BarcodeFormat.QR_CODE
-                                        }
-                                    barcode.copy(
-                                        message = contents,
-                                        altText = contents,
-                                        format = scannedFormat,
-                                    )
-                                }
-                            }
-                        detailsExpanded = true
+        ScanLauncher.launch(onScanned = {
+            if (activeBarcodeIndex !in barcodes.indices) return@launch
+            barcodes =
+                barcodes.mapIndexed { index, barcode ->
+                    if (index != activeBarcodeIndex) {
+                        barcode
+                    } else {
+                        barcode.copy(
+                            message = it.message,
+                            altText = it.altText ?: it.message,
+                            format = it.format,
+                        )
                     }
                 }
-            },
-        )
-
-    LaunchedEffect(startMode, initialScanHandled) {
-        if (startMode == CreateStartMode.Scan && !initialScanHandled) {
-            initialScanHandled = true
-            scanLauncher.launch(
-                Intent(context, ScanActivity::class.java),
+            detailsExpanded = true
+        }, onCanceled = {
+            navController.popBackStack(
+                route = Screen.Wallet.route,
+                inclusive = false,
+                saveState = false,
             )
-        }
-    }
+        })
 
     if (showLocationPicker) {
         LocationPickerDialog(
@@ -276,6 +251,15 @@ fun CreateView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
+                val isNotValid =
+                    barcode.message.isNotEmpty() &&
+                        BarCode(
+                            format = barcode.format,
+                            message = barcode.message,
+                            encoding = Charsets.UTF_8,
+                            altText = barcode.altText.ifBlank { barcode.message },
+                        ).isNotValid()
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -291,27 +275,9 @@ fun CreateView(
                                 }
                         },
                         modifier = Modifier.fillMaxWidth(fraction = 0.72f),
-                        isError =
-                            barcode.message.isNotEmpty() &&
-                                !barcodeValid(
-                                    BarCode(
-                                        format = barcode.format,
-                                        message = barcode.message,
-                                        encoding = Charsets.UTF_8,
-                                        altText = barcode.altText.ifBlank { barcode.message },
-                                    ),
-                                ),
+                        isError = isNotValid,
                         supportingText = {
-                            if (barcode.message.isNotEmpty() &&
-                                !barcodeValid(
-                                    BarCode(
-                                        format = barcode.format,
-                                        message = barcode.message,
-                                        encoding = Charsets.UTF_8,
-                                        altText = barcode.altText.ifBlank { barcode.message },
-                                    ),
-                                )
-                            ) {
+                            if (isNotValid) {
                                 Text(stringResource(R.string.barcode_value_invalid, barcode.format.toString()))
                             }
                         },
@@ -544,19 +510,6 @@ fun CreateView(
                                 modifier = Modifier.fillMaxWidth(),
                             )
 
-                            OutlinedTextField(
-                                label = { Text(stringResource(R.string.logo_text)) },
-                                value = logoText,
-                                onValueChange = { logoText = it },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.TextFields,
-                                        contentDescription = stringResource(R.string.logo_text),
-                                    )
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-
                             ImagePicker(
                                 imageUrl = logoUrl,
                                 onClear = { logoUrl = null },
@@ -598,6 +551,15 @@ fun CreateView(
                                 onClear = { footerUrl = null },
                                 onChoose = { footerUrl = it },
                                 label = stringResource(R.string.footer),
+                                labelIcon = Icons.Default.Image,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            ImagePicker(
+                                imageUrl = backgroundUrl,
+                                onClear = { backgroundUrl = null },
+                                onChoose = { backgroundUrl = it },
+                                label = stringResource(R.string.background),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
                             )
@@ -648,7 +610,6 @@ fun CreateView(
                                     serialNumber = serialNumber,
                                     type = type,
                                     barcodes = barCodeModels,
-                                    logoText = logoText,
                                     colors = colors,
                                     location = location,
                                     relevantDates = relevantDates,
@@ -658,6 +619,7 @@ fun CreateView(
                                     stripUrl = stripUrl,
                                     thumbnailUrl = thumbnailUrl,
                                     footerUrl = footerUrl,
+                                    backgroundUrl = backgroundUrl,
                                 )
                             withContext(Dispatchers.Main) {
                                 isSaving = false
@@ -739,8 +701,7 @@ private fun ColorPickerRow(
                 readOnly = true,
                 label = { Text(label) },
                 textStyle =
-                    androidx.compose.ui.text
-                        .TextStyle(fontFamily = FontFamily.Monospace),
+                    TextStyle(fontFamily = FontFamily.Monospace),
                 leadingIcon = {
                     Row(
                         modifier = Modifier.padding(start = 10.dp),
@@ -958,7 +919,7 @@ private fun LocationPickerDialog(
 }
 
 private fun openDateTimePicker(
-    context: android.content.Context,
+    context: Context,
     initial: ZonedDateTime?,
     onPicked: (ZonedDateTime) -> Unit,
 ) {
@@ -1009,8 +970,6 @@ private data class BarcodeDraft(
     val altText: String,
     val format: BarcodeFormat,
 )
-
-private fun barcodeValid(barCode: BarCode): Boolean = barCode.encodeAsBitmap(100, 100, false) != null
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 

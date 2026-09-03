@@ -1,0 +1,1 @@
+* Corrigir falha ao arquivar ou desarquivar na visualização de passes

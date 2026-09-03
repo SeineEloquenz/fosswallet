@@ -45,14 +45,14 @@ fun CalendarButton(
                     } else {
                         start.plus(30, ChronoUnit.MINUTES).toEpochSecond() * 1000
                     },
-                ) // 30 min default
+                )
                 it.putExtra("title", title)
             }
 
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("DateView", "No calendar app found!", e)
+            Log.e("CalendarButton", "No calendar app found!", e)
             scope.launch {
                 snackbarHostState.showSnackbar(message = resources.getString(R.string.no_calendar_app_found))
             }

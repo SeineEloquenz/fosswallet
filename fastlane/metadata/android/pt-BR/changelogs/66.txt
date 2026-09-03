@@ -1,0 +1,4 @@
+* Melhorar a interface de usuário das configurações
+* Adicionar uma opção para aumentar o brilho na visualização de passes
+* Atualizar as traduções
+* Corrigir o recorte de sombras na visualização da carteira

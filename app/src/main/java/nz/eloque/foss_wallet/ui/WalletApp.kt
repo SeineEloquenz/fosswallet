@@ -3,8 +3,6 @@
 package nz.eloque.foss_wallet.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
@@ -28,30 +26,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.google.zxing.BarcodeFormat
+import nz.eloque.compose_kit.navigation.slideBackward
+import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
 import nz.eloque.foss_wallet.ui.screens.create.AdvancedAddScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
-import nz.eloque.foss_wallet.ui.screens.create.CreateStartMode
 import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.scan.ScanScreen
+import nz.eloque.foss_wallet.ui.screens.scan.ScanViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
-import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 import java.net.URLDecoder
+import java.nio.charset.Charset
 
 sealed class Screen(
     val route: String,
     val icon: ImageVector,
     @param:StringRes val resourceId: Int,
 ) {
+    data object Scan : Screen("scan", Icons.Default.QrCodeScanner, R.string.barcode)
+
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
 
     data object Archive : Screen("archive", Icons.Default.Archive, R.string.the_archive)
@@ -62,9 +67,26 @@ sealed class Screen(
 
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
 
-    data object Create : Screen("create", Icons.Default.Create, R.string.create_pass)
+    data object Create : Screen("create", Icons.Default.Create, R.string.create_pass) {
+        const val BARCODE_ROUTE = "create?format={format}?message={message}?altText={altText}?encoding={encoding}"
 
-    data object CreateScan : Screen("create_scan", Icons.Default.QrCodeScanner, R.string.scan_code)
+        val NAV_ARGUMENTS =
+            listOf(
+                navArgument("message") { type = NavType.StringType },
+                navArgument("altText") { type = NavType.StringType },
+                navArgument("encoding") { type = NavType.StringType },
+                navArgument("format") { type = NavType.StringType },
+            )
+
+        fun navigate(
+            navController: NavHostController,
+            barCode: BarCode,
+        ) {
+            navController.navigate(
+                "create?format=${barCode.format}?message=${barCode.message}?altText=${barCode.altText}?encoding=${barCode.encoding}",
+            )
+        }
+    }
 
     data object AdvancedAdd : Screen("advanced_add", Icons.Default.MoreHoriz, R.string.advanced)
 
@@ -77,8 +99,8 @@ fun WalletApp(
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
-    walletViewModel: WalletViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
+    scanViewModel: ScanViewModel = viewModel(),
 ) {
     Surface(
         modifier =
@@ -88,16 +110,19 @@ fun WalletApp(
         NavHost(
             navController = navController,
             startDestination = Screen.Wallet.route,
-            enterTransition = { slideIntoContainer(SlideDirection.Start, tween()) },
-            exitTransition = { slideOutOfContainer(SlideDirection.Start, tween()) },
-            popEnterTransition = { slideIntoContainer(SlideDirection.End, tween()) },
-            popExitTransition = { slideOutOfContainer(SlideDirection.End, tween()) },
+            enterTransition = { slideForward().targetContentEnter },
+            exitTransition = { slideForward().initialContentExit },
+            popEnterTransition = { slideBackward().targetContentEnter },
+            popExitTransition = { slideBackward().initialContentExit },
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController, walletViewModel)
+                WalletScreen(navController)
+            }
+            composable(Screen.Scan.route) {
+                ScanScreen(navController, scanViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController, walletViewModel)
+                ArchiveScreen(navController)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
@@ -108,7 +133,7 @@ fun WalletApp(
             ) { backStackEntry ->
                 val rawUrl = backStackEntry.arguments?.getString("url")!!
                 val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, walletViewModel, url)
+                WebviewScreen(navController, url)
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(navController, settingsViewModel)
@@ -116,25 +141,29 @@ fun WalletApp(
             composable(Screen.Libraries.route) {
                 LibrariesScreen(navController)
             }
+            composable(Screen.Create.route) {
+                CreateScreen(
+                    navController = navController,
+                    createViewModel = createViewModel,
+                )
+            }
             composable(
-                route = "${Screen.Create.route}?barcode={barcode}",
-                arguments =
-                    listOf(
-                        navArgument("barcode") {
-                            type = NavType.StringType
-                            nullable = true
-                            defaultValue = null
-                        },
-                    ),
+                route = Screen.Create.BARCODE_ROUTE,
+                arguments = Screen.Create.NAV_ARGUMENTS,
             ) { backStackEntry ->
+                val barcode =
+                    BarCode(
+                        format = BarcodeFormat.valueOf(backStackEntry.arguments?.getString("format")!!),
+                        message = backStackEntry.arguments?.getString("message")!!,
+                        encoding = Charset.forName(backStackEntry.arguments?.getString("encoding")!!),
+                        altText = backStackEntry.arguments?.getString("altText"),
+                    )
+
                 CreateScreen(
                     navController,
                     createViewModel,
-                    initialBarcode = backStackEntry.arguments?.getString("barcode"),
+                    initialBarcode = barcode,
                 )
-            }
-            composable(Screen.CreateScan.route) {
-                CreateScreen(navController, createViewModel, startMode = CreateStartMode.Scan)
             }
             composable(Screen.AdvancedAdd.route) {
                 AdvancedAddScreen(navController)
@@ -144,7 +173,7 @@ fun WalletApp(
                 deepLinks =
                     listOf(
                         navDeepLink {
-                            uriPattern = "${Shortcut.BASE_URI}/{passId}"
+                            uriPattern = "${ShortcutService.BASE_URI}/{passId}"
                         },
                     ),
                 arguments = listOf(navArgument("passId") { type = NavType.StringType }),

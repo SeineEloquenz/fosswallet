@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.persistence
 
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
 import androidx.core.content.edit
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.R
@@ -20,15 +20,15 @@ private const val SORT_OPTION = "walletViewSortOption"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
 
 sealed class BarcodePosition(
-    val arrangement: Arrangement.Vertical,
+    val alignment: Alignment,
     val key: String,
     @param:StringRes val label: Int,
 ) {
-    object Top : BarcodePosition(Arrangement.Top, "TOP", R.string.barcode_position_top)
+    object Top : BarcodePosition(Alignment.TopCenter, "TOP", R.string.barcode_position_top)
 
-    object Center : BarcodePosition(Arrangement.Center, "CENTER", R.string.barcode_position_center)
+    object Center : BarcodePosition(Alignment.Center, "CENTER", R.string.barcode_position_center)
 
-    object Bottom : BarcodePosition(Arrangement.Bottom, "BOTTOM", R.string.barcode_position_bottom)
+    object Bottom : BarcodePosition(Alignment.BottomCenter, "BOTTOM", R.string.barcode_position_bottom)
 
     companion object {
         fun all(): List<BarcodePosition> = listOf(Top, Center, Bottom)

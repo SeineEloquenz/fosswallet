@@ -1,0 +1,6 @@
+* Exibir as datas dos eventos na visualização da carteira
+* Tornar os links nas descrições clicáveis
+* Oferecer suporte a códigos de localidade com traço (p. ex., en-us)
+* Exibir as cores dos rótulos
+* Otimizar ligeiramente a exibição do código de barras
+* Corrigir a navegação para trás a partir da visualização de leitura

@@ -1,0 +1,2 @@
+* Permitir valores vazios nos campos importados
+* Exibir uma notificação com o nome do aeroporto ao clicar longamente no código do aeroporto

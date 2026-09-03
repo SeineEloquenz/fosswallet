@@ -1,0 +1,4 @@
+* Verknüpfungen verwenden nun adaptive Symbole
+* Layout der Bordkarte wurde verbessert
+* Verknüpfung zum Öffnen des Barcodes aus der Wallet per Doppelklick wurde entfernt
+* Fehlerhafte Zeitzonenbehandlung wurde behoben

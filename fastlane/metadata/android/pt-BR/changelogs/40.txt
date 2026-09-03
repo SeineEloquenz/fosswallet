@@ -1,0 +1,8 @@
+* Exibir HTML nos campos de passe
+* Exibir dicas de ferramenta ao passar sobre textos abreviados
+* Adicionar visualização genérica do cartão de embarque quando o estilo não faz sentido
+* Renderizar campos de data e moeda corretamente
+* Corrigir falha causada por cálculo incorreto do stride ao carregar alguns códigos
+* Corrigir falha ao importar arquivo Passbook vazio
+* Corrigir o problema de cartões peculiares serem vistos como duplicados, embora não sejam
+* Atualizar dependências

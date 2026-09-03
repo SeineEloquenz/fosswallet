@@ -1,0 +1,6 @@
+* Reformular o calendário e os botões de navegação
+* Reformular o tratamento do fuso horário (é necessário adicionar novamente os passes incorretos para que isso funcione)
+* Reformular a tela de configurações
+* Adicionar tradução para o sueco
+* Corrigir o envio excessivo de notificações
+* Corrigir a falha ao excluir um passe

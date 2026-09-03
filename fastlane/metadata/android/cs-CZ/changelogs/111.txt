@@ -1,0 +1,1 @@
+* Zlepšena spolehlivost čárového skeneru

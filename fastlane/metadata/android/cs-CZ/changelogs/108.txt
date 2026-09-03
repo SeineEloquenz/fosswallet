@@ -1,0 +1,4 @@
+* Podpora příloh v podobě obrázků a souborů PDF
+* Upřesnění názvů možností třídění
+* Odstranění fokusu z lišty filtrů při stisknutí tlačítka Zpět
+* Ikona pro smazání pomocí přejetí prstem je nyní červená

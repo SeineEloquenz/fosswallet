@@ -1,0 +1,2 @@
+* Upozornění na neexportovatelnost vytvořených lístků
+* Do tvorby lístků byl přidán odkaz na článek na Wikipedii o formátech čárových kódů
