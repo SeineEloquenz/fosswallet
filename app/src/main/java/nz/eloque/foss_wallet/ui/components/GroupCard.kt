@@ -21,6 +21,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +50,7 @@ fun GroupCard(
     allTags: Set<Tag>,
     selectedPasses: MutableSet<LocalizedPassWithTags>,
     walletViewModel: WalletViewModel,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onClick: (Pass) -> Unit = {},
 ) {
@@ -99,6 +101,7 @@ fun GroupCard(
                             }
                         },
                         showEntirePass = false,
+                        snackbarHostState = snackbarHostState,
                     )
                     if (isSelected) SelectionIndicator(Modifier.align(Alignment.TopEnd))
                 }

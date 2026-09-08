@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -96,6 +97,7 @@ sealed class Screen(
 @Composable
 fun WalletApp(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
@@ -116,13 +118,13 @@ fun WalletApp(
             popExitTransition = { slideBackward().initialContentExit },
         ) {
             composable(Screen.Wallet.route) {
-                WalletScreen(navController)
+                WalletScreen(navController, snackbarHostState)
             }
             composable(Screen.Scan.route) {
                 ScanScreen(navController, scanViewModel)
             }
             composable(Screen.Archive.route) {
-                ArchiveScreen(navController)
+                ArchiveScreen(navController, snackbarHostState)
             }
             composable(Screen.About.route) {
                 AboutScreen(navController)
@@ -179,7 +181,7 @@ fun WalletApp(
                 arguments = listOf(navArgument("passId") { type = NavType.StringType }),
             ) { backStackEntry ->
                 val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                PassScreen(passId, navController, passViewModel, snackbarHostState)
             }
             composable(
                 route = "updateFailure/{reason}/{rationale}",

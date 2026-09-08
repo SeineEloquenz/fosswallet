@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
@@ -46,6 +47,7 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @Composable
 fun WalletScreen(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -182,6 +184,7 @@ fun WalletScreen(
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
             onVisiblePassesChanged = { visiblePasses.value = it },
+            snackbarHostState = snackbarHostState,
         )
 
         if (loading.value) {
