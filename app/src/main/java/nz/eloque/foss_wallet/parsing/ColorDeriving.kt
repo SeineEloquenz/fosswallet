@@ -15,7 +15,11 @@ fun Bitmap?.derivePassColors(): PassColors? {
     val luminance = ColorUtils.calculateLuminance(backgroundColor.toArgb())
     val contentColor = if (luminance > 0.5) Color.Black else Color.White
 
-    return PassColors(backgroundColor, contentColor, contentColor)
+    return if (backgroundColor == Color.White && contentColor == Color.Black) {
+        null
+    } else {
+        PassColors(backgroundColor, contentColor, contentColor)
+    }
 }
 
 private fun Bitmap.backgroundColor(): Color? {
