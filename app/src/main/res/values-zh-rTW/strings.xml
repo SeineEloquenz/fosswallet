@@ -137,4 +137,10 @@
     <string name="delete_attachment">刪除附件</string>
     <string name="attachments">附件</string>
     <string name="background">背景</string>
+    <string name="shortcut_unsupported">您的啟動器不支援釘選捷徑</string>
+    <string name="shortcut_failed">無法建立捷徑</string>
+    <string name="pass_imported_into_the_archive">通行證已匯入封存</string>
+    <string name="no_passes_found_in_file">此檔案中未找到通行證</string>
+    <string name="nothing_to_export">沒有可匯出的內容：目前建立的通行證尚無法匯出</string>
+    <string name="export_skipped_passes">已匯出 %1$d 個通行證，略過 %2$d 個建立的通行證</string>
 </resources>

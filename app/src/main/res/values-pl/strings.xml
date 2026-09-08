@@ -141,4 +141,6 @@
     <string name="nothing_to_export">Brak możliwości eksportu: utworzone przepustki nie mogą być obecnie eksportowane</string>
     <string name="export_skipped_passes">Wyeksportowano %1$d przepustek, pominięto %2$d utworzonych przepustek</string>
     <string name="pass_imported_into_the_archive">Przepustka zaimportowana do archiwum</string>
+    <string name="shortcut_unsupported">Twój program uruchamiający nie obsługuje przypinania skrótów</string>
+    <string name="shortcut_failed">Nie udało się utworzyć skrótu</string>
 </resources>

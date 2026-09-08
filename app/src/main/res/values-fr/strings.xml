@@ -140,4 +140,7 @@
     <string name="no_passes_found_in_file">Aucune carte trouvée dans ce fichier</string>
     <string name="nothing_to_export">Rien à exporter. Les cartes créées ne peuvent pas être exportées actuellement</string>
     <string name="export_skipped_passes">%1$d cartes exportées, %2$d cartes ignorées</string>
+    <string name="shortcut_failed">Le raccourci n\'a pas pu être créé</string>
+    <string name="shortcut_unsupported">Votre lanceur ne permet pas d\'épingler des raccourcis</string>
+    <string name="pass_imported_into_the_archive">Carte importée dans l\'archive</string>
 </resources>

@@ -141,4 +141,6 @@
     <string name="no_passes_found_in_file">V tomto souboru nebyly nalezeny žádné lístky</string>
     <string name="nothing_to_export">Nic k exportu: vytvořené lístky v současné době nelze exportovat</string>
     <string name="export_skipped_passes">Exportováno %1$d lístků, přeskočeno %2$d vytvořených lístků</string>
+    <string name="shortcut_unsupported">Vaše aplikace domovské obrazovky nepodporuje připínání zkratek</string>
+    <string name="shortcut_failed">Nepodařilo se vytvořit zkratku</string>
 </resources>

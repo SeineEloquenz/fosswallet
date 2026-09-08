@@ -1,0 +1,2 @@
+* Reformular o estilo dos passes para que se assemelhem mais à Apple Wallet
+* Melhorar o desempenho da renderização da carteira e dos passes
