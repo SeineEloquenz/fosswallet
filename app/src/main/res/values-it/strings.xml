@@ -141,4 +141,6 @@
     <string name="no_passes_found_in_file">In questo file non sono stati trovati pass</string>
     <string name="nothing_to_export">Niente da esportare: Al momento non è possibile esportare i pass creati</string>
     <string name="export_skipped_passes">Esportati %1$d biglietti, saltati %2$d biglietti creati</string>
+    <string name="shortcut_unsupported">Il tuo launcher non supporta l\'aggiunta di scorciatoie alla schermata Home</string>
+    <string name="shortcut_failed">Impossibile creare la scorciatoia</string>
 </resources>
