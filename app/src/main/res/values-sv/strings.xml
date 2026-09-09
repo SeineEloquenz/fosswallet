@@ -141,4 +141,6 @@
     <string name="no_passes_found_in_file">Inga kort hittades i denna fil</string>
     <string name="nothing_to_export">Inget att exportera: skapade kort kan för närvarande inte exporteras</string>
     <string name="export_skipped_passes">Exporterade %1$d kort, hoppade över %2$d skapade kort</string>
+    <string name="shortcut_failed">Kunde inte skapa genväg</string>
+    <string name="shortcut_unsupported">Din startskärmsapp stöder inte att genvägar fästs</string>
 </resources>
