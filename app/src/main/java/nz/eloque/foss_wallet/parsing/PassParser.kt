@@ -57,7 +57,10 @@ class PassParser(
         val serialNumber = passJson.getString("serialNumber")
         val type =
             when {
-                passJson.has(PassType.EVENT) -> PassType.Event
+                passJson.has(PassType.EVENT) -> {
+                    PassType.Event
+                }
+
                 passJson.has(PassType.BOARDING) -> {
                     val boardingJson = passJson.getJSONObject(PassType.BOARDING)
                     val transitType =
@@ -68,9 +71,18 @@ class PassParser(
                         }
                     PassType.Boarding(transitType)
                 }
-                passJson.has(PassType.COUPON) -> PassType.Coupon
-                passJson.has(PassType.STORE_CARD) -> PassType.StoreCard
-                else -> PassType.Generic
+
+                passJson.has(PassType.COUPON) -> {
+                    PassType.Coupon
+                }
+
+                passJson.has(PassType.STORE_CARD) -> {
+                    PassType.StoreCard
+                }
+
+                else -> {
+                    PassType.Generic
+                }
             }
 
         val locations =
@@ -229,7 +241,7 @@ class PassParser(
             if (regexResult != null) {
                 val (red, green, blue, alpha) = regexResult.destructured
                 val parsedAlpha = alpha.ifEmpty { "1.0" }.toDoubleOrNull() ?: return null
-                return Color(red.toInt(), green.toInt(), blue.toInt(), (parsedAlpha * 255.0).toInt())
+                Color(red.toInt(), green.toInt(), blue.toInt(), (parsedAlpha * 255.0).toInt())
             } else {
                 try {
                     Color(representation.toColorInt())
