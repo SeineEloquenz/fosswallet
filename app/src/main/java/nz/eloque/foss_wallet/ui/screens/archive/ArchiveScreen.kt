@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
@@ -27,6 +28,7 @@ import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 @Composable
 fun ArchiveScreen(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val listState = rememberLazyListState()
@@ -90,6 +92,7 @@ fun ArchiveScreen(
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
             onVisiblePassesChanged = { visiblePasses.value = it },
+            snackbarHostState = snackbarHostState,
         )
     }
 }
