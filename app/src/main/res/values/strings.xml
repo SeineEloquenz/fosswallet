@@ -41,6 +41,7 @@
     <string name="search">Search</string>
     <string name="add_shortcut">Add shortcut</string>
     <string name="shortcut_unsupported">Your launcher does not support pinning shortcuts</string>
+    <string name="widget_unsupported">Your launcher does not support pinning widgets</string>
     <string name="shortcut_failed">Could not create shortcut</string>
     <string name="privacy">Privacy</string>
     <string name="details">Details</string>
@@ -144,4 +145,10 @@
     <string name="add_attachment">Add attachment</string>
     <string name="delete_attachment">Delete attachment</string>
     <string name="attachments">Attachments</string>
+    <string name="widget_unconfigured">The widget is not configured</string>
+    <string name="passcard_widget_description">Shows a selected pass on the start screen</string>
+    <string name="barcode_widget_description">Shows selected passes barcode on the start screen</string>
+    <string name="add_to_launcher">Add to home screen</string>
+    <string name="add_card_widget">Add card widget</string>
+    <string name="add_barcode_widget">Add barcode widget</string>
 </resources>

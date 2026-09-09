@@ -49,6 +49,7 @@ fun Barcodes(
     legacyRendering: Boolean,
     barcodePosition: BarcodePosition,
     modifier: Modifier = Modifier,
+    initiallyExpanded: Boolean = false,
 ) {
     val pagerState = rememberPagerState { barcodes.size }
 
@@ -69,6 +70,7 @@ fun Barcodes(
                     barcode = barcodes[it],
                     legacyRendering = legacyRendering,
                     barcodePosition = barcodePosition,
+                    initiallyExpanded = initiallyExpanded && it == pagerState.currentPage,
                 )
             }
         }
@@ -89,6 +91,7 @@ fun Barcode(
     modifier: Modifier = Modifier,
     legacyRendering: Boolean = false,
     barcodePosition: BarcodePosition = BarcodePosition.Center,
+    initiallyExpanded: Boolean = false,
 ) {
     val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
 
@@ -101,7 +104,7 @@ fun Barcode(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (barcodeBitmap != null) {
-            var showFullscreen by remember { mutableStateOf(false) }
+            var showFullscreen by remember { mutableStateOf(initiallyExpanded) }
             val imageBitmap = remember(barcodeBitmap) { barcodeBitmap.asImageBitmap() }
             val scaledWidth = (2.5.dp * barcodeBitmap.width).coerceIn(125.dp, 300.dp)
             val isLinearBarcode = barcodeBitmap.height == 1
