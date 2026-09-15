@@ -67,7 +67,6 @@ fun PassScreen(
     passId: String,
     navController: NavHostController,
     passViewModel: PassViewModel,
-    snackbarHostState: SnackbarHostState,
 ) {
     val passFlow: Flow<LocalizedPassWithTags> =
         remember(passId) {
@@ -100,9 +99,9 @@ fun PassScreen(
                     pageCount = { passes.size },
                 )
             val currentPass = passes.getOrElse(pagerState.currentPage) { localizedPass }
+            val snackbarHostState = remember { SnackbarHostState() }
 
             WalletScaffold(
-                snackbarHostState = snackbarHostState,
                 navController = navController,
                 title = currentPass.pass.description,
                 toolWindow = true,
@@ -115,7 +114,7 @@ fun PassScreen(
                         passViewModel = passViewModel,
                     )
                 },
-            ) { scrollBehavior ->
+            ) { scrollBehavior, snackbarHostState ->
                 Column(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,

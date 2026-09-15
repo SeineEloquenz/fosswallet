@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,7 +88,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
-            val snackbarHostState = remember { SnackbarHostState() }
             var isProcessingFileShare by remember { mutableStateOf(false) }
             LaunchedEffect(dataUri, shareSource != null) {
                 if (shareSource != null && dataUri != null) {
@@ -134,7 +132,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     WalletApp(
                         navController,
-                        snackbarHostState,
                     )
 
                     if (isProcessingFileShare) {
