@@ -23,7 +23,7 @@ fun LibrariesScreen(navController: NavHostController) {
         navController = navController,
         toolWindow = true,
         title = stringResource(id = Screen.Libraries.resourceId),
-    ) {
+    ) { _, _ ->
         val libraries by produceLibraries(R.raw.aboutlibraries)
         LibrariesContainer(
             libraries = libraries,

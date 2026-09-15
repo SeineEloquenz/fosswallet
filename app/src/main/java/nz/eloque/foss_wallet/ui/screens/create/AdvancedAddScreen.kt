@@ -39,7 +39,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
         navController = navController,
         toolWindow = true,
         title = stringResource(R.string.advanced),
-    ) {
+    ) { _, _ ->
         Column(
             modifier =
                 Modifier
