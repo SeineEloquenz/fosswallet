@@ -111,6 +111,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/pkpass" />
+                <data android:mimeType="application/vnd.apple.pkpass" />
+                <data android:mimeType="application/vnd-com.apple.pkpass" />
+                <data android:mimeType="application/pkpasses" />
+                <data android:mimeType="application/vnd.apple.pkpasses" />
+                <data android:mimeType="application/vnd-com.apple.pkpasses" />
                 <data android:mimeType="application/vnd.espass-espass" />
             </intent-filter>
 

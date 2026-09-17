@@ -66,17 +66,8 @@ class MainActivity : ComponentActivity() {
                     intent.data
                 }
 
-                shareSource != null -> {
-                    intent.sharedFileUri()
-                }
-
                 Intent.ACTION_SEND == intent.action -> {
-                    val count =
-                        intent.clipData
-                            ?.itemCount
-                            ?.minus(1)
-                            ?.coerceAtLeast(0)
-                    count?.let { intent.clipData?.getItemAt(it)?.uri }
+                    intent.sharedFileUri()
                 }
 
                 else -> {
@@ -177,6 +168,8 @@ class MainActivity : ComponentActivity() {
             getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let { return it }
         }
 
-        return clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+        return clipData?.let { clip ->
+            (0 until clip.itemCount).firstNotNullOfOrNull { clip.getItemAt(it).uri }
+        }
     }
 }
