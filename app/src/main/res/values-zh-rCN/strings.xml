@@ -141,4 +141,6 @@
     <string name="nothing_to_export">没有可导出的内容：当前无法导出已创建的凭证</string>
     <string name="export_skipped_passes">已导出 %1$d 个凭证，跳过 %2$d 个已创建的凭证</string>
     <string name="pass_imported_into_the_archive">凭证已导入到归档中</string>
+    <string name="shortcut_unsupported">您的启动器不支持固定快捷方式</string>
+    <string name="shortcut_failed">无法创建快捷方式</string>
 </resources>

@@ -141,4 +141,6 @@
     <string name="nothing_to_export">Mitte midagi pole eksportida: loodud dokumente ei saa hetkel eksportida</string>
     <string name="export_skipped_passes">Eksportisin %1$d dokumenti, jätsin vahele %2$d loodud dokumenti</string>
     <string name="pass_imported_into_the_archive">Dokument on imporditud arhiivi</string>
+    <string name="shortcut_unsupported">Sinu käivitaja ei toeta linkide esiletõstmise võimalust</string>
+    <string name="shortcut_failed">Otselingi lisamine ei õnnestunud</string>
 </resources>

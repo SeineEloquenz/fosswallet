@@ -137,4 +137,10 @@
     <string name="show_archived_passes">Mostrar pases archivados</string>
     <string name="pass_foreground_color">Color de primer plano</string>
     <string name="background">Fondo</string>
+    <string name="shortcut_unsupported">Tu lanzador no soporta fijar enlaces</string>
+    <string name="shortcut_failed">No se puede crear el enlace</string>
+    <string name="pass_imported_into_the_archive">Pase importado al archivo</string>
+    <string name="no_passes_found_in_file">No hay pases en el archivo</string>
+    <string name="nothing_to_export">Nada que exportar: los pases creados no pueden ser exportados en este momento</string>
+    <string name="export_skipped_passes">Exportados %1$d pases, ignorados %2$d pases creados</string>
 </resources>
