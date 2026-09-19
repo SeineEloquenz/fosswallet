@@ -174,7 +174,7 @@ fun WalletScreen(
                 )
             }
         },
-    ) { scrollBehavior ->
+    ) { scrollBehavior, snackbarHostState ->
         WalletView(
             navController = navController,
             walletViewModel = walletViewModel,
@@ -182,6 +182,7 @@ fun WalletScreen(
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
             onVisiblePassesChanged = { visiblePasses.value = it },
+            snackbarHostState = snackbarHostState,
         )
 
         if (loading.value) {

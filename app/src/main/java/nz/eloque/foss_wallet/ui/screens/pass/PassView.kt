@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Attachment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -47,6 +48,7 @@ import java.time.Instant
 fun PassView(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    snackbarHostState: SnackbarHostState,
     onAttachmentAdd: (String, ByteArray) -> Unit,
     onAttachmentDelete: (Attachment) -> Unit,
     onTagClick: (Tag) -> Unit,
@@ -73,6 +75,7 @@ fun PassView(
         PassCard(
             localizedPass = localizedPass,
             allTags = allTags,
+            snackbarHostState = snackbarHostState,
             barcode = {
                 Barcodes(
                     barcodes = pass.barCodes.toList(),
@@ -134,7 +137,7 @@ private fun PassPreview() {
     val kscTag = Tag("KSC", Color.Blue)
     val gameTag = Tag("Spiel", Color.Red)
     val allTags = setOf(kscTag, gameTag)
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val pass =
         Pass(
             "",
@@ -173,6 +176,7 @@ private fun PassPreview() {
     PassView(
         localizedPass = LocalizedPassWithTags(pass, PassMetadata(pass.id), allTags, listOf()),
         allTags = allTags,
+        snackbarHostState = snackbarHostState,
         onTagClick = {},
         onTagAdd = {},
         onTagCreate = {},

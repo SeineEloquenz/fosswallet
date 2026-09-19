@@ -17,7 +17,7 @@ fun ScanScreen(
         navController = navController,
         toolWindow = true,
         title = stringResource(id = Screen.Create.resourceId),
-    ) {
+    ) { _, _ ->
         ScanView(
             navController = navController,
             scanViewModel = scanViewModel,

@@ -89,8 +89,6 @@ fun PassScreen(
     val allTags by remember(tagFlow) { tagFlow }.collectAsState(initial = setOf())
 
     AllowOnLockscreen {
-        val snackbarHostState = remember { SnackbarHostState() }
-
         if (passViewModel.increasePassViewBrightness()) UpdateBrightness()
 
         // Recreate the pager whenever the set or order of group passes changes
@@ -101,9 +99,9 @@ fun PassScreen(
                     pageCount = { passes.size },
                 )
             val currentPass = passes.getOrElse(pagerState.currentPage) { localizedPass }
+            val snackbarHostState = remember { SnackbarHostState() }
 
             WalletScaffold(
-                snackbarHostState = snackbarHostState,
                 navController = navController,
                 title = currentPass.pass.description,
                 toolWindow = true,
@@ -116,7 +114,7 @@ fun PassScreen(
                         passViewModel = passViewModel,
                     )
                 },
-            ) { scrollBehavior ->
+            ) { scrollBehavior, snackbarHostState ->
                 Column(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -138,6 +136,7 @@ fun PassScreen(
                         PassView(
                             localizedPass = pagePass,
                             allTags = allTags,
+                            snackbarHostState = snackbarHostState,
                             onTagClick = { passViewModel.untag(pagePass.pass, it) },
                             onTagAdd = { passViewModel.tag(pagePass.pass, it) },
                             onTagCreate = { passViewModel.addTag(it) },

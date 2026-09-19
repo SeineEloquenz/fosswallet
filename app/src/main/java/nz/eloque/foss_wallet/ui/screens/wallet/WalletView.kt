@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -63,6 +64,7 @@ fun WalletView(
     modifier: Modifier = Modifier,
     emptyIcon: ImageVector = Icons.Default.Wallet,
     archive: Boolean = false,
+    snackbarHostState: SnackbarHostState,
     listState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     selectedPasses: SnapshotStateSet<LocalizedPassWithTags>,
@@ -153,6 +155,7 @@ fun WalletView(
                 onClick = { navController.navigate("pass/${it.id}") },
                 walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses,
+                snackbarHostState = snackbarHostState,
             )
         }
         items(
@@ -190,6 +193,7 @@ fun WalletView(
                             if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
                         },
                         showEntirePass = false,
+                        snackbarHostState = snackbarHostState,
                     )
                     if (isSelected) SelectionIndicator(Modifier.align(Alignment.TopEnd))
                 }

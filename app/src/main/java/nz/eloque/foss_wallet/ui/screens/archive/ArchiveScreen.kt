@@ -80,7 +80,7 @@ fun ArchiveScreen(
                 )
             }
         },
-    ) { scrollBehavior ->
+    ) { scrollBehavior, snackbarHostState ->
         WalletView(
             navController = navController,
             walletViewModel = walletViewModel,
@@ -90,6 +90,7 @@ fun ArchiveScreen(
             scrollBehavior = scrollBehavior,
             selectedPasses = selectedPasses,
             onVisiblePassesChanged = { visiblePasses.value = it },
+            snackbarHostState = snackbarHostState,
         )
     }
 }

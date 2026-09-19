@@ -19,7 +19,7 @@ fun CreateScreen(
         navController = navController,
         toolWindow = true,
         title = stringResource(id = Screen.Create.resourceId),
-    ) {
+    ) { _, _ ->
         CreateView(
             navController,
             createViewModel,

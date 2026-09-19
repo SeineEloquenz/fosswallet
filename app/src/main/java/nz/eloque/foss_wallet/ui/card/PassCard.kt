@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -67,6 +68,7 @@ val LocalPassLabelColor = compositionLocalOf { Color.Unspecified }
 fun PassCard(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     barcode: @Composable () -> Unit = {},
     onTagClick: (Tag) -> Unit = {},
@@ -96,6 +98,7 @@ fun PassCard(
             PassCardFooter(
                 localizedPass = localizedPass,
                 allTags = allTags,
+                snackbarHostState = snackbarHostState,
                 onTagClick = onTagClick,
                 onTagAdd = onTagAdd,
                 onTagCreate = onTagCreate,

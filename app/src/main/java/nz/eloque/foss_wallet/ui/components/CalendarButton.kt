@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,12 +24,12 @@ fun CalendarButton(
     title: String,
     start: ZonedDateTime,
     end: ZonedDateTime?,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     IconButton(onClick = {
         val intent =
@@ -53,7 +52,7 @@ fun CalendarButton(
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Log.e("CalendarButton", "No calendar app found!", e)
-            scope.launch {
+            coroutineScope.launch {
                 snackbarHostState.showSnackbar(message = resources.getString(R.string.no_calendar_app_found))
             }
         }
