@@ -3,15 +3,17 @@ package nz.eloque.foss_wallet.quick_settings
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import nz.eloque.foss_wallet.MainActivity
 import nz.eloque.foss_wallet.R
 
 class WalletTileService : TileService() {
-    override fun onTileAdded() {
-        super.onTileAdded()
+    override fun onStartListening() {
+        super.onStartListening()
 
-        qsTile.apply {
+        qsTile?.apply {
+            state = Tile.STATE_ACTIVE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 subtitle = getString(R.string.open)
             }
@@ -36,11 +38,19 @@ class WalletTileService : TileService() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startActivityAndCollapse(pendingIntent)
+        val launchWallet = Runnable {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startActivityAndCollapse(pendingIntent)
+            } else {
+                @Suppress("DEPRECATION")
+                startActivityAndCollapse(intent)
+            }
+        }
+
+        if (isLocked) {
+            unlockAndRun(launchWallet)
         } else {
-            @Suppress("DEPRECATION")
-            startActivityAndCollapse(intent)
+            launchWallet.run()
         }
     }
 }
