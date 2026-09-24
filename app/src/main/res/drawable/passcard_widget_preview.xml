@@ -1,0 +1,50 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="180dp"
+    android:height="90dp"
+    android:viewportWidth="180"
+    android:viewportHeight="90">
+
+    <!-- Card background, matches PassCardDefault.fallbackColors().background
+         and PassCardDefault.cornerRadius (12dp) for the default (non-event/
+         coupon/boarding) card shape. -->
+    <path
+        android:fillColor="#E7E0EC"
+        android:pathData="M12,0 L168,0 A12,12 0 0 1 180,12 L180,78 A12,12 0 0 1 168,90 L12,90 A12,12 0 0 1 0,78 L0,12 A12,12 0 0 1 12,0 Z" />
+
+    <!-- Logo placeholder chip, mirrors HeaderRow's logo image slot -->
+    <path
+        android:fillColor="#1D1B20"
+        android:fillAlpha="0.18"
+        android:pathData="M12,8 L32,8 A4,4 0 0 1 36,12 L36,32 A4,4 0 0 1 32,36 L12,36 A4,4 0 0 1 8,32 L8,12 A4,4 0 0 1 12,8 Z" />
+
+    <!-- Logo text placeholder, next to the logo chip -->
+    <path
+        android:fillColor="#1D1B20"
+        android:fillAlpha="0.28"
+        android:pathData="M44,16 L104,16 A4,4 0 0 1 108,20 L108,24 A4,4 0 0 1 104,28 L44,28 A4,4 0 0 1 40,24 L40,20 A4,4 0 0 1 44,16 Z" />
+
+    <!-- Header field placeholder, top-right: label line -->
+    <path
+        android:fillColor="#49454F"
+        android:fillAlpha="0.35"
+        android:pathData="M140,8 L172,8 A2,2 0 0 1 174,10 L174,12 A2,2 0 0 1 172,14 L140,14 A2,2 0 0 1 138,12 L138,10 A2,2 0 0 1 140,8 Z" />
+
+    <!-- Header field placeholder, top-right: value line -->
+    <path
+        android:fillColor="#1D1B20"
+        android:fillAlpha="0.28"
+        android:pathData="M125,18 L175,18 A3,3 0 0 1 178,21 L178,25 A3,3 0 0 1 175,28 L125,28 A3,3 0 0 1 122,25 L122,21 A3,3 0 0 1 125,18 Z" />
+
+    <!-- Primary content placeholder: label -->
+    <path
+        android:fillColor="#49454F"
+        android:fillAlpha="0.35"
+        android:pathData="M12,52 L60,52 A2,2 0 0 1 62,54 L62,56 A2,2 0 0 1 60,58 L12,58 A2,2 0 0 1 10,56 L10,54 A2,2 0 0 1 12,52 Z" />
+
+    <!-- Primary content placeholder: value, larger -->
+    <path
+        android:fillColor="#1D1B20"
+        android:fillAlpha="0.32"
+        android:pathData="M12,62 L120,62 A5,5 0 0 1 125,67 L125,74 A5,5 0 0 1 120,79 L12,79 A5,5 0 0 1 7,74 L7,67 A5,5 0 0 1 12,62 Z" />
+
+</vector>

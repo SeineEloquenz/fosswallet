@@ -56,6 +56,7 @@ fun PassView(
     onRenderingChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    initiallyShowBarcode: Boolean = false,
 ) {
     val pass = localizedPass.pass
     val metadata = localizedPass.metadata
@@ -78,6 +79,7 @@ fun PassView(
                     barcodes = pass.barCodes.toList(),
                     legacyRendering = metadata.renderLegacy && hasLegacyRepresentation,
                     barcodePosition = barcodePosition,
+                    initiallyExpanded = initiallyShowBarcode,
                 )
             },
             onTagClick = onTagClick,

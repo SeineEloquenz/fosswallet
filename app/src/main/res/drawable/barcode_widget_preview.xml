@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="90dp"
+    android:height="90dp"
+    android:viewportWidth="90"
+    android:viewportHeight="90">
+    <!-- Background -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M0,0h90v90h-90z"/>
+    <!-- Finder-pattern outer squares + a handful of data modules, on a coarse
+         15x15 / 6dp grid instead of the original per-pixel grid, to keep the
+         path data short (drop-in replacement for the previous detailed vector). -->
+    <path
+        android:fillColor="#FF121212"
+        android:pathData="M0,0h42v42h-42z
+                M48,0h42v42h-42z
+                M0,48h42v42h-42z
+                M48,18h6v6h-6z
+                M60,42h6v6h-6z
+                M18,42h6v6h-6z
+                M48,48h6v6h-6z
+                M60,48h6v6h-6z
+                M78,48h6v6h-6z
+                M54,60h6v6h-6z
+                M66,60h6v6h-6z
+                M42,60h6v6h-6z
+                M48,72h6v6h-6z
+                M60,72h6v6h-6z
+                M72,72h6v6h-6z
+                M84,72h6v6h-6z
+                M54,84h6v6h-6z
+                M66,84h6v6h-6z
+                M78,84h6v6h-6z"/>
+    <!-- Finder-pattern inner rings (white) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M6,6h30v30h-30z
+                M54,6h30v30h-30z
+                M6,54h30v30h-30z"/>
+    <!-- Finder-pattern cores (black) -->
+    <path
+        android:fillColor="#FF121212"
+        android:pathData="M12,12h18v18h-18z
+                M60,12h18v18h-18z
+                M12,60h18v18h-18z"/>
+</vector>
