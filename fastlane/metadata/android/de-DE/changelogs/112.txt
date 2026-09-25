@@ -1,0 +1,4 @@
+* Wischen zwischen gruppierten Tickets in der Ticketansicht ermöglicht
+* Anzeige der Vielfliegernummern auf Bordkarten
+* Erste Unterstützung für das Teilen von PDF-Dateien mit FossWallet
+Hinweis: Die ursprüngliche PDF-Datei wird derzeit nicht als Anhang hinzugefügt, und es wird der erste gefundene Barcode für das Ticket verwendet
