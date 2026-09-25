@@ -1,0 +1,2 @@
+* Stil der Pässe so überarbeitet, dass er dem von Apple Wallet stärker ähnelt
+* Leistung der Wallet und der Pass-Darstellung verbessert
