@@ -42,6 +42,7 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
+import nz.eloque.foss_wallet.utils.darken
 
 @Composable
 fun Barcodes(
@@ -51,6 +52,7 @@ fun Barcodes(
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { barcodes.size }
+    val contentColor = LocalContentColor.current
 
     Column(
         modifier = modifier,
@@ -76,8 +78,8 @@ fun Barcodes(
         if (barcodes.size > 1) {
             HorizontalPagerIndicator(
                 pagerState = pagerState,
-                activeColor = LocalContentColor.current,
-                inactiveColor = LocalContentColor.current.copy(alpha = 0.3f),
+                activeColor = contentColor,
+                inactiveColor = contentColor.darken(),
             )
         }
     }
