@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.compose_kit.chip.ChipRow
@@ -29,7 +30,9 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.ui.components.CalendarButton
+import nz.eloque.foss_wallet.ui.components.LauncherButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
+import nz.eloque.foss_wallet.ui.components.ShareButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
 import nz.eloque.foss_wallet.utils.prettyDate
 
@@ -51,6 +54,9 @@ fun PassCardFooter(
     ) {
         val pass = localizedPass.pass
         val tags = localizedPass.tags
+
+        val context = LocalContext.current
+        val passFile = pass.originalPassFile(context)
 
         var tagChooserShown by remember { mutableStateOf(false) }
 
@@ -81,7 +87,15 @@ fun PassCardFooter(
                 )
             }
         }
+
         pass.locations.firstOrNull()?.let { LocationButton(it) }
+
+        if (!readOnly) {
+            LauncherButton(pass)
+            if (passFile != null) {
+                ShareButton(passFile)
+            }
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 

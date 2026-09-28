@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
@@ -67,6 +66,7 @@ fun PassScreen(
     passId: String,
     navController: NavHostController,
     passViewModel: PassViewModel,
+    initiallyShowBarcode: Boolean = false,
 ) {
     val passFlow: Flow<LocalizedPassWithTags> =
         remember(passId) {
@@ -146,6 +146,7 @@ fun PassScreen(
                             onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
                             onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
+                            initiallyShowBarcode = initiallyShowBarcode && pagePass.pass.id == passId,
                         )
                     }
                 }
@@ -272,21 +273,6 @@ fun Actions(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
         ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.add_shortcut)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
-                },
-                onClick = {
-                    passViewModel.addShortcut(pass)
-                },
-            )
-
-            val passFile = pass.originalPassFile(context)
-            if (passFile != null) {
-                PassShareButton(passFile)
-            }
-
             if (metadata.archived) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.unarchive)) },
