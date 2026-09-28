@@ -20,7 +20,7 @@ fun WebviewScreen(
         navController = navController,
         toolWindow = true,
         title = stringResource(id = R.string.webview),
-    ) {
+    ) { _, _ ->
         WebviewView(navController, walletViewModel, url)
     }
 }

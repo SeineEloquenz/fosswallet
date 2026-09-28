@@ -137,11 +137,13 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                         val result = share(passes.map { it.pass }, context)
                         withContext(Dispatchers.Main) {
                             when (result) {
-                                is BundleShareResult.NothingToShare ->
+                                is BundleShareResult.NothingToShare -> {
                                     Toast
                                         .makeText(context, resources.getString(R.string.nothing_to_export), Toast.LENGTH_LONG)
                                         .show()
-                                is BundleShareResult.Shared ->
+                                }
+
+                                is BundleShareResult.Shared -> {
                                     if (result.skipped > 0) {
                                         Toast
                                             .makeText(
@@ -150,6 +152,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                                                 Toast.LENGTH_LONG,
                                             ).show()
                                     }
+                                }
                             }
                         }
                     }

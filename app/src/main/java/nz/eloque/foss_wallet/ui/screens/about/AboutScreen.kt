@@ -14,7 +14,7 @@ fun AboutScreen(navController: NavHostController) {
         navController = navController,
         toolWindow = true,
         title = stringResource(id = R.string.about),
-    ) {
+    ) { _, _ ->
         AboutView(navController)
     }
 }

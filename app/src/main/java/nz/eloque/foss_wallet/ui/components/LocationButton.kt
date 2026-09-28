@@ -10,7 +10,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,12 +21,12 @@ import nz.eloque.foss_wallet.R
 @Composable
 fun LocationButton(
     location: Location,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     IconButton(
         onClick = {
@@ -39,7 +38,7 @@ fun LocationButton(
                 )
             } catch (e: ActivityNotFoundException) {
                 Log.e("LocationButton", "No map app found!", e)
-                scope.launch {
+                coroutineScope.launch {
                     snackbarHostState.showSnackbar(message = resources.getString(R.string.no_map_app_found))
                 }
             }

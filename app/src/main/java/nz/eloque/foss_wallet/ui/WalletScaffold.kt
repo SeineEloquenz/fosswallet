@@ -30,7 +30,7 @@ fun WalletScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    content: @Composable (scrollBehavior: TopAppBarScrollBehavior) -> Unit,
+    content: @Composable (scrollBehavior: TopAppBarScrollBehavior, snackbarHostState: SnackbarHostState) -> Unit,
 ) {
     AppScaffold(
         title = {
@@ -56,6 +56,6 @@ fun WalletScaffold(
         bottomBar = bottomBar,
         snackbarHostState = snackbarHostState,
         contentHorizontalPadding = 8.dp,
-        content = content,
+        content = { scrollBehavior -> content(scrollBehavior, snackbarHostState) },
     )
 }

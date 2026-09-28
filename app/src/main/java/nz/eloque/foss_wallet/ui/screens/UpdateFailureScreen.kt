@@ -49,7 +49,7 @@ fun UpdateFailureScreen(
                 )
             }
         },
-    ) {
+    ) { _, _ ->
         Column(
             modifier = Modifier.fillMaxSize().horizontalScroll(rememberScrollState()).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),

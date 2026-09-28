@@ -13,6 +13,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import nz.eloque.foss_wallet.utils.prettyDate
 fun PassCardFooter(
     localizedPass: LocalizedPassWithTags,
     allTags: Set<Tag>,
+    snackbarHostState: SnackbarHostState,
     onTagClick: (Tag) -> Unit = {},
     onTagAdd: (Tag) -> Unit = {},
     onTagCreate: (Tag) -> Unit = {},
@@ -61,6 +63,7 @@ fun PassCardFooter(
                 title = pass.description,
                 start = interval.startDate,
                 end = interval.endDate,
+                snackbarHostState = snackbarHostState,
             )
             if (showDates) {
                 Text(
@@ -74,6 +77,7 @@ fun PassCardFooter(
                 title = pass.description,
                 start = date.date,
                 end = pass.expirationDate,
+                snackbarHostState = snackbarHostState,
             )
             if (showDates) {
                 Text(
@@ -81,7 +85,7 @@ fun PassCardFooter(
                 )
             }
         }
-        pass.locations.firstOrNull()?.let { LocationButton(it) }
+        pass.locations.firstOrNull()?.let { LocationButton(it, snackbarHostState) }
 
         Spacer(modifier = Modifier.width(8.dp))
 

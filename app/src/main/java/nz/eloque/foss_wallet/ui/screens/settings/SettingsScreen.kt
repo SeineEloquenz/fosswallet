@@ -27,7 +27,7 @@ fun SettingsScreen(
             }
         },
         title = stringResource(id = R.string.settings),
-    ) {
+    ) { _, _ ->
         SettingsView(settingsViewModel)
     }
 }
