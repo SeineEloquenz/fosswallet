@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.composable
 import androidx.navigation.createGraph
+import androidx.navigation.toRoute
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
 import org.junit.Assert.assertEquals
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.nio.charset.Charset
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -37,9 +39,16 @@ class CreateNavigationTest {
         assertBarcodeRoundTrip("example", "")
     }
 
+    @Test
+    fun `barcode format and non-default encoding survive navigation`() {
+        assertBarcodeRoundTrip("Zürich", "Ticket", BarcodeFormat.AZTEC, Charsets.ISO_8859_1)
+    }
+
     private fun assertBarcodeRoundTrip(
         message: String,
         altText: String?,
+        format: BarcodeFormat = BarcodeFormat.QR_CODE,
+        encoding: Charset = Charsets.UTF_8,
     ) {
         Robolectric.buildActivity(Activity::class.java).setup().use { activity ->
             val controller = NavHostController(activity.get())
@@ -47,18 +56,13 @@ class CreateNavigationTest {
             controller.graph =
                 controller.createGraph(startDestination = "wallet") {
                     composable("wallet") {}
-                    composable(Screen.Create.BARCODE_ROUTE, arguments = Screen.Create.NAV_ARGUMENTS) {}
+                    composable<CreateWithBarcode> {}
                 }
-            val barcode = BarCode(BarcodeFormat.QR_CODE, message, Charsets.UTF_8, altText)
+            val barcode = BarCode(format, message, encoding, altText)
 
             Screen.Create.navigate(controller, barcode)
 
-            assertEquals(Screen.Create.BARCODE_ROUTE, controller.currentDestination?.route)
-            val arguments = controller.currentBackStackEntry!!.arguments!!
-            assertEquals(message, arguments.getString("message"))
-            assertEquals(altText, arguments.getString("altText"))
-            assertEquals(barcode.format.name, arguments.getString("format"))
-            assertEquals(barcode.encoding.name(), arguments.getString("encoding"))
+            assertEquals(barcode, controller.currentBackStackEntry!!.toRoute<CreateWithBarcode>().toBarCode())
         }
     }
 }
