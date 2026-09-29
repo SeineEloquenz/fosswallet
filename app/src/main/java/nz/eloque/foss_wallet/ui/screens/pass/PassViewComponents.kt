@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,6 +53,7 @@ fun Barcodes(
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { barcodes.size }
+    var fullscreenPage by remember { mutableStateOf<Int?>(null) }
 
     Column(
         modifier = modifier,
@@ -69,6 +72,7 @@ fun Barcodes(
                     barcode = barcodes[it],
                     legacyRendering = legacyRendering,
                     barcodePosition = barcodePosition,
+                    onClick = { fullscreenPage = it },
                 )
             }
         }
@@ -81,6 +85,16 @@ fun Barcodes(
             )
         }
     }
+
+    fullscreenPage?.let { initialPage ->
+        FullscreenBarcodes(
+            barcodes = barcodes,
+            initialPage = initialPage,
+            legacyRendering = legacyRendering,
+            barcodePosition = barcodePosition,
+            onDismiss = { fullscreenPage = null },
+        )
+    }
 }
 
 @Composable
@@ -89,6 +103,7 @@ fun Barcode(
     modifier: Modifier = Modifier,
     legacyRendering: Boolean = false,
     barcodePosition: BarcodePosition = BarcodePosition.Center,
+    onClick: (() -> Unit)? = null,
 ) {
     val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
 
@@ -105,12 +120,6 @@ fun Barcode(
             val imageBitmap = remember(barcodeBitmap) { barcodeBitmap.asImageBitmap() }
             val scaledWidth = (2.5.dp * barcodeBitmap.width).coerceIn(125.dp, 300.dp)
             val isLinearBarcode = barcodeBitmap.height == 1
-            val aspectRatio =
-                if (isLinearBarcode) {
-                    scaledWidth / 90.dp
-                } else {
-                    barcodeBitmap.width.toFloat() / barcodeBitmap.height
-                }
 
             Image(
                 bitmap = imageBitmap,
@@ -120,30 +129,23 @@ fun Barcode(
                         .padding(10.dp)
                         .padding(horizontal = if (isLinearBarcode) 10.dp else 0.dp)
                         .widthIn(max = scaledWidth)
-                        .aspectRatio(aspectRatio)
+                        .aspectRatio(barcodeBitmap.barcodeAspectRatio())
                         .weight(1f, fill = false)
-                        .clickable { showFullscreen = true },
+                        .clickable {
+                            if (onClick != null) onClick() else showFullscreen = true
+                        },
                 contentScale = ContentScale.FillBounds,
                 filterQuality = FilterQuality.None,
             )
 
             if (showFullscreen) {
-                FullscreenDialog(
+                FullscreenBarcodes(
+                    barcodes = listOf(barcode),
+                    initialPage = 0,
+                    legacyRendering = legacyRendering,
+                    barcodePosition = barcodePosition,
                     onDismiss = { showFullscreen = false },
-                    contentAlignment = barcodePosition.alignment,
-                ) {
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = stringResource(R.string.barcode),
-                        modifier =
-                            Modifier
-                                .background(Color.White)
-                                .padding(24.dp)
-                                .aspectRatio(aspectRatio),
-                        contentScale = ContentScale.FillBounds,
-                        filterQuality = FilterQuality.None,
-                    )
-                }
+                )
             }
         } else {
             BrokenBarcodeWarning()
@@ -159,6 +161,70 @@ fun Barcode(
         }
     }
 }
+
+@Composable
+private fun FullscreenBarcodes(
+    barcodes: List<BarCode>,
+    initialPage: Int,
+    legacyRendering: Boolean,
+    barcodePosition: BarcodePosition,
+    onDismiss: () -> Unit,
+) {
+    val pagerState = rememberPagerState(initialPage = initialPage) { barcodes.size }
+
+    FullscreenDialog(onDismiss = onDismiss) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f),
+                pageSpacing = 16.dp,
+            ) { page ->
+                val barcode = barcodes[page]
+                val bitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = barcodePosition.alignment,
+                ) {
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = remember(bitmap) { bitmap.asImageBitmap() },
+                            contentDescription = stringResource(R.string.barcode),
+                            modifier =
+                                Modifier
+                                    .background(Color.White)
+                                    .padding(24.dp)
+                                    .aspectRatio(bitmap.barcodeAspectRatio()),
+                            contentScale = ContentScale.FillBounds,
+                            filterQuality = FilterQuality.None,
+                        )
+                    } else {
+                        BrokenBarcodeWarning()
+                    }
+                }
+            }
+
+            if (barcodes.size > 1) {
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    modifier = Modifier.padding(16.dp),
+                    activeColor = Color.White,
+                    inactiveColor = Color.White.copy(alpha = 0.3f),
+                )
+            }
+        }
+    }
+}
+
+private fun Bitmap.barcodeAspectRatio(): Float =
+    if (height == 1) {
+        (2.5.dp * width).coerceIn(125.dp, 300.dp) / 90.dp
+    } else {
+        width.toFloat() / height
+    }
 
 @Composable
 private fun BrokenBarcodeWarning() {
