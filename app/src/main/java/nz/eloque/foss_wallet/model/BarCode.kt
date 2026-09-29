@@ -102,7 +102,7 @@ data class BarCode(
                 },
             )
 
-        fun formatFromString(format: String): BarcodeFormat =
+        fun formatFromString(format: String): BarcodeFormat? =
             when (format) {
                 "PKBarcodeFormatQR" -> BarcodeFormat.QR_CODE
                 "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
@@ -117,7 +117,7 @@ data class BarCode(
                 "PKBarcodeFormatITF" -> BarcodeFormat.ITF
                 "PKBarcodeFormatUPCA" -> BarcodeFormat.UPC_A
                 "PKBarcodeFormatUPCE" -> BarcodeFormat.UPC_E
-                else -> BarcodeFormat.entries.firstOrNull { it.name == format } ?: BarcodeFormat.QR_CODE
+                else -> BarcodeFormat.entries.firstOrNull { it.name == format }
             }
     }
 }

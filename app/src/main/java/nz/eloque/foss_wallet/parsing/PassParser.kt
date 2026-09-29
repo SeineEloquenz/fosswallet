@@ -2,10 +2,13 @@ package nz.eloque.foss_wallet.parsing
 
 import android.content.Context
 import android.location.Location
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
@@ -199,8 +202,20 @@ class PassParser(
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
+            if (barcodeFormat == null) {
+                context?.let { context ->
+                    Handler(Looper.getMainLooper()).post {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.barcode_format_fallback_warning, barcodeFormatString),
+                                Toast.LENGTH_LONG,
+                            ).show()
+                    }
+                }
+            }
             BarCode(
-                barcodeFormat,
+                barcodeFormat ?: BarcodeFormat.QR_CODE,
                 barcodeJSON.getString("message"),
                 Charset.forName(barcodeJSON.optString("messageEncoding", BarCode.FALLBACK_CHARSET.toString())),
                 barcodeJSON.stringOrNull("altText"),
