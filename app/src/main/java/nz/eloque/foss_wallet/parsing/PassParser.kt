@@ -2,8 +2,6 @@ package nz.eloque.foss_wallet.parsing
 
 import android.content.Context
 import android.location.Location
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
@@ -31,6 +29,7 @@ import java.time.format.DateTimeParseException
 
 class PassParser(
     val context: Context? = null,
+    private val onBarcodeFormatFallback: (String) -> Unit = {},
 ) {
     fun parse(
         passJson: JSONObject,
@@ -203,16 +202,7 @@ class PassParser(
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
             if (barcodeFormat == null) {
-                context?.let { context ->
-                    Handler(Looper.getMainLooper()).post {
-                        Toast
-                            .makeText(
-                                context,
-                                context.getString(R.string.barcode_format_fallback_warning, barcodeFormatString),
-                                Toast.LENGTH_LONG,
-                            ).show()
-                    }
-                }
+                onBarcodeFormatFallback(barcodeFormatString)
             }
             BarCode(
                 barcodeFormat ?: BarcodeFormat.QR_CODE,
