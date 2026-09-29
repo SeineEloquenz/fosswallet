@@ -104,13 +104,20 @@ data class BarCode(
 
         fun formatFromString(format: String): BarcodeFormat =
             when (format) {
+                "PKBarcodeFormatQR" -> BarcodeFormat.QR_CODE
                 "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
                 "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
                 "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
                 "PKBarcodeFormatCode39" -> BarcodeFormat.CODE_39
                 "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
                 "PKBarcodeFormatCodabar" -> BarcodeFormat.CODABAR
-                else -> BarcodeFormat.QR_CODE
+                "PKBarcodeFormatDataMatrix" -> BarcodeFormat.DATA_MATRIX
+                "PKBarcodeFormatEAN8" -> BarcodeFormat.EAN_8
+                "PKBarcodeFormatEAN13" -> BarcodeFormat.EAN_13
+                "PKBarcodeFormatITF" -> BarcodeFormat.ITF
+                "PKBarcodeFormatUPCA" -> BarcodeFormat.UPC_A
+                "PKBarcodeFormatUPCE" -> BarcodeFormat.UPC_E
+                else -> BarcodeFormat.entries.firstOrNull { it.name == format } ?: BarcodeFormat.QR_CODE
             }
     }
 }
