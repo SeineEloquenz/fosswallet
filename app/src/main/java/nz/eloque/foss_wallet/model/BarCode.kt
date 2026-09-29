@@ -102,14 +102,24 @@ data class BarCode(
                 },
             )
 
-        fun formatFromString(format: String): BarcodeFormat =
-            when (format) {
-                "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
-                "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
-                "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
-                "PKBarcodeFormatCode39" -> BarcodeFormat.CODE_39
-                "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
-                else -> BarcodeFormat.QR_CODE
-            }
+        private val renderableFormats =
+            mapOf(
+                "PKBarcodeFormatQR" to BarcodeFormat.QR_CODE,
+                "PKBarcodeFormatPDF417" to BarcodeFormat.PDF_417,
+                "PKBarcodeFormatAztec" to BarcodeFormat.AZTEC,
+                "PKBarcodeFormatCode128" to BarcodeFormat.CODE_128,
+                "PKBarcodeFormatCode39" to BarcodeFormat.CODE_39,
+                "PKBarcodeFormatCode93" to BarcodeFormat.CODE_93,
+                "PKBarcodeFormatCodabar" to BarcodeFormat.CODABAR,
+                "PKBarcodeFormatDataMatrix" to BarcodeFormat.DATA_MATRIX,
+                "PKBarcodeFormatEAN8" to BarcodeFormat.EAN_8,
+                "PKBarcodeFormatEAN13" to BarcodeFormat.EAN_13,
+                "PKBarcodeFormatITF" to BarcodeFormat.ITF,
+                "PKBarcodeFormatUPCA" to BarcodeFormat.UPC_A,
+                "PKBarcodeFormatUPCE" to BarcodeFormat.UPC_E,
+            )
+
+        fun formatFromString(format: String): BarcodeFormat? =
+            renderableFormats[format] ?: renderableFormats.values.firstOrNull { it.name == format }
     }
 }

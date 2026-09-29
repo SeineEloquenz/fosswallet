@@ -10,6 +10,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
+import nz.eloque.foss_wallet.ui.showBarcodeFormatWarning
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.zip.ZipInputStream
@@ -59,9 +60,10 @@ class Loader(
         walletViewModel: WalletViewModel,
         coroutineScope: CoroutineScope,
     ): LoaderResult {
+        val fallbackFormats = linkedSetOf<String>()
         val loadResults =
             try {
-                this.load(inputStream)
+                this.load(inputStream) { fallbackFormats.add(it) }
             } catch (e: InvalidInputException) {
                 Log.e(TAG, "Failed to load pass from intent: $e")
                 coroutineScope.launch(Dispatchers.Main) {
@@ -78,6 +80,9 @@ class Loader(
                     .show()
             }
             return LoaderResult.Invalid
+        }
+        if (fallbackFormats.isNotEmpty()) {
+            showBarcodeFormatWarning(context, fallbackFormats)
         }
         if (loadResults.size == 1) {
             val loadResult = loadResults.first()
@@ -118,8 +123,11 @@ class Loader(
     }
 
     @Throws(InvalidInputException::class)
-    private fun load(input: InputStream): Set<PassLoadResult> {
-        val passParser = PassParser(context)
+    private fun load(
+        input: InputStream,
+        onBarcodeFormatFallback: (String) -> Unit,
+    ): Set<PassLoadResult> {
+        val passParser = PassParser(context, onBarcodeFormatFallback)
         val bytes = input.readBytes()
 
         val type = detectFileType(bytes)
