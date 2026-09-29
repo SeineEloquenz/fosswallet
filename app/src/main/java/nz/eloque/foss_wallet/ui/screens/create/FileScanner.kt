@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.graphics.Matrix
@@ -9,6 +10,7 @@ import android.net.Uri
 import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.ui.showBarcodeFormatWarning
 import zxingcpp.BarcodeReader
 import java.nio.charset.StandardCharsets
 
@@ -34,13 +36,18 @@ object FileScanner {
         val text: String,
         val format: String,
     ) {
-        fun toBarCode(): BarCode =
-            BarCode(
-                format = BarcodeFormat.valueOf(format),
+        suspend fun toBarCode(context: Context): BarCode {
+            val barcodeFormat = BarCode.formatFromString(format)
+            if (barcodeFormat == null) {
+                showBarcodeFormatWarning(context, setOf(format))
+            }
+            return BarCode(
+                format = barcodeFormat ?: BarcodeFormat.QR_CODE,
                 message = text,
                 encoding = StandardCharsets.UTF_8,
                 altText = text,
             )
+        }
     }
 
     fun scanFrom(

@@ -3,17 +3,22 @@ package nz.eloque.foss_wallet.ui
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Looper
+import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.ui.screens.create.FileScanner
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -62,6 +67,40 @@ class BarcodeFormatWarningTest {
 
                 assertFalse(dialog.isShowing)
                 assertTrue(job.isCompleted)
+            }
+        }
+
+    @Test
+    fun `unsupported scans wait for OK before returning the QR fallback`() =
+        runTest {
+            Robolectric.buildActivity(Activity::class.java).setup().use { activity ->
+                listOf("MICRO_QR_CODE", "MAXI_CODE", "RSS_14").forEach { format ->
+                    val text = "A\r\nB & Zürich"
+                    val result = async { FileScanner.ScanResult(text, format).toBarCode(activity.get()) }
+                    runCurrent()
+
+                    val dialog = ShadowAlertDialog.getLatestAlertDialog()
+                    assertTrue(dialog.isShowing)
+                    assertTrue(shadowOf(dialog).message.toString().contains(format))
+                    assertFalse(result.isCompleted)
+
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+                    shadowOf(Looper.getMainLooper()).idle()
+                    runCurrent()
+
+                    assertEquals(BarCode(BarcodeFormat.QR_CODE, text, Charsets.UTF_8, text), result.await())
+                }
+            }
+        }
+
+    @Test
+    fun `supported scans keep their format without a warning`() =
+        runTest {
+            Robolectric.buildActivity(Activity::class.java).setup().use { activity ->
+                val result = FileScanner.ScanResult("ABC123", "CODE_128").toBarCode(activity.get())
+
+                assertEquals(BarCode(BarcodeFormat.CODE_128, "ABC123", Charsets.UTF_8, "ABC123"), result)
+                assertNull(ShadowAlertDialog.getLatestAlertDialog())
             }
         }
 

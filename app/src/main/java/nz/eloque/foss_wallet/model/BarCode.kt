@@ -102,22 +102,24 @@ data class BarCode(
                 },
             )
 
+        private val renderableFormats =
+            mapOf(
+                "PKBarcodeFormatQR" to BarcodeFormat.QR_CODE,
+                "PKBarcodeFormatPDF417" to BarcodeFormat.PDF_417,
+                "PKBarcodeFormatAztec" to BarcodeFormat.AZTEC,
+                "PKBarcodeFormatCode128" to BarcodeFormat.CODE_128,
+                "PKBarcodeFormatCode39" to BarcodeFormat.CODE_39,
+                "PKBarcodeFormatCode93" to BarcodeFormat.CODE_93,
+                "PKBarcodeFormatCodabar" to BarcodeFormat.CODABAR,
+                "PKBarcodeFormatDataMatrix" to BarcodeFormat.DATA_MATRIX,
+                "PKBarcodeFormatEAN8" to BarcodeFormat.EAN_8,
+                "PKBarcodeFormatEAN13" to BarcodeFormat.EAN_13,
+                "PKBarcodeFormatITF" to BarcodeFormat.ITF,
+                "PKBarcodeFormatUPCA" to BarcodeFormat.UPC_A,
+                "PKBarcodeFormatUPCE" to BarcodeFormat.UPC_E,
+            )
+
         fun formatFromString(format: String): BarcodeFormat? =
-            when (format) {
-                "PKBarcodeFormatQR" -> BarcodeFormat.QR_CODE
-                "PKBarcodeFormatPDF417" -> BarcodeFormat.PDF_417
-                "PKBarcodeFormatAztec" -> BarcodeFormat.AZTEC
-                "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
-                "PKBarcodeFormatCode39" -> BarcodeFormat.CODE_39
-                "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
-                "PKBarcodeFormatCodabar" -> BarcodeFormat.CODABAR
-                "PKBarcodeFormatDataMatrix" -> BarcodeFormat.DATA_MATRIX
-                "PKBarcodeFormatEAN8" -> BarcodeFormat.EAN_8
-                "PKBarcodeFormatEAN13" -> BarcodeFormat.EAN_13
-                "PKBarcodeFormatITF" -> BarcodeFormat.ITF
-                "PKBarcodeFormatUPCA" -> BarcodeFormat.UPC_A
-                "PKBarcodeFormatUPCE" -> BarcodeFormat.UPC_E
-                else -> BarcodeFormat.entries.firstOrNull { it.name == format }
-            }
+            renderableFormats[format] ?: renderableFormats.values.firstOrNull { it.name == format }
     }
 }
