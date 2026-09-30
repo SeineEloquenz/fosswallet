@@ -83,7 +83,7 @@
     <string name="expand">Uitklappen</string>
     <string name="collapse">Inklappen</string>
     <string name="color">Kleur</string>
-    <string name="add_tag">Tags toevoegen</string>
+    <string name="add_tag">Tag toevoegen</string>
     <string name="remove_tag">Tags verwijderen</string>
     <string name="tag_label">Label van de tag</string>
     <string name="no_barcode_found">Geen streepjescode gevonden</string>
@@ -109,7 +109,7 @@
     <string name="additional_fields">Aanvullende velden</string>
     <string name="pass_relevant_start">Start</string>
     <string name="pass_label_color">Labelkleur</string>
-    <string name="add_another_barcode">Nog een strepjescode toevoege</string>
+    <string name="add_another_barcode">Nog een streepjescode toevoegen</string>
     <string name="open_in_map_app">Openen in kaartapp</string>
     <string name="pass_expiration_date">Vervaldatum</string>
     <string name="strip">Streep</string>

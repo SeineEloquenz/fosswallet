@@ -1,0 +1,2 @@
+* Problem bei der Zeitzonenverarbeitung behoben
+* Mehrere Fehler beim Parsen der Lokalisierung behoben
