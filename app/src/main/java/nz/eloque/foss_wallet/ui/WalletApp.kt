@@ -2,6 +2,7 @@
 
 package nz.eloque.foss_wallet.ui
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -68,12 +69,16 @@ sealed class Screen(
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
 
     data object Create : Screen("create", Icons.Default.Create, R.string.create_pass) {
-        const val BARCODE_ROUTE = "create?format={format}?message={message}?altText={altText}?encoding={encoding}"
+        const val BARCODE_ROUTE = "create?format={format}&message={message}&altText={altText}&encoding={encoding}"
 
         val NAV_ARGUMENTS =
             listOf(
                 navArgument("message") { type = NavType.StringType },
-                navArgument("altText") { type = NavType.StringType },
+                navArgument("altText") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
                 navArgument("encoding") { type = NavType.StringType },
                 navArgument("format") { type = NavType.StringType },
             )
@@ -83,7 +88,16 @@ sealed class Screen(
             barCode: BarCode,
         ) {
             navController.navigate(
-                "create?format=${barCode.format}?message=${barCode.message}?altText=${barCode.altText}?encoding=${barCode.encoding}",
+                Uri
+                    .Builder()
+                    .path(route)
+                    .appendQueryParameter("format", barCode.format.name)
+                    .appendQueryParameter("message", barCode.message)
+                    .apply {
+                        barCode.altText?.let { appendQueryParameter("altText", it) }
+                    }.appendQueryParameter("encoding", barCode.encoding.name())
+                    .build()
+                    .toString(),
             )
         }
     }
