@@ -38,14 +38,15 @@ class WalletTileService : TileService() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
 
-        val launchWallet = Runnable {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                startActivityAndCollapse(pendingIntent)
-            } else {
-                @Suppress("DEPRECATION")
-                startActivityAndCollapse(intent)
+        val launchWallet =
+            Runnable {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startActivityAndCollapse(pendingIntent)
+                } else {
+                    @Suppress("DEPRECATION")
+                    startActivityAndCollapse(intent)
+                }
             }
-        }
 
         if (isLocked) {
             unlockAndRun(launchWallet)
