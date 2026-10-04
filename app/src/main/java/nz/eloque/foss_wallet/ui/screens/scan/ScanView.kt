@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.scan
 
-import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +29,6 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Route
-import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,18 +43,18 @@ fun ScanView(
     var initialScanHandled by remember { mutableStateOf(false) }
 
     val scanLauncher =
-        ScanLauncher.launch(onScanned = {
-            scannedBarcode = it
-        }, onCanceled = {
-            navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
-        })
+        rememberLauncherForActivityResult(ScanContract()) { barcode ->
+            if (barcode != null) {
+                scannedBarcode = barcode
+            } else {
+                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
+            }
+        }
 
     LaunchedEffect(initialScanHandled) {
         if (!initialScanHandled) {
             initialScanHandled = true
-            scanLauncher.launch(
-                Intent(context, ScanActivity::class.java),
-            )
+            scanLauncher.launch(Unit)
         }
     }
 

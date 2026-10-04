@@ -9,6 +9,7 @@ import android.content.Intent
 import android.location.Location
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -90,7 +91,7 @@ import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.Route
-import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
+import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
 import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -161,16 +162,18 @@ fun CreateView(
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
     val scanLauncher =
-        ScanLauncher.launch(onScanned = {
-            if (activeBarcodeIndex !in barcodes.indices) return@launch
+        rememberLauncherForActivityResult(ScanContract()) { scanned ->
+            if (scanned == null) {
+                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
+                return@rememberLauncherForActivityResult
+            }
+            if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
             barcodes =
                 barcodes.mapIndexed { index, barcode ->
-                    if (index != activeBarcodeIndex) barcode else BarcodeDraft.from(it)
+                    if (index != activeBarcodeIndex) barcode else BarcodeDraft.from(scanned)
                 }
             detailsExpanded = true
-        }, onCanceled = {
-            navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
-        })
+        }
 
     if (showLocationPicker) {
         LocationPickerDialog(
@@ -251,9 +254,7 @@ fun CreateView(
 
                     IconButton(onClick = {
                         activeBarcodeIndex = index
-                        scanLauncher.launch(
-                            Intent(context, ScanActivity::class.java),
-                        )
+                        scanLauncher.launch(Unit)
                     }) {
                         Icon(
                             imageVector = Icons.Default.QrCodeScanner,
