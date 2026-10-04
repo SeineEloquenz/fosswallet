@@ -12,6 +12,7 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.shortcut.ShortcutService
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -30,6 +31,15 @@ class NavigationTest {
     @Test
     fun `reserved characters and Unicode survive navigation`() {
         assertBarcodeRoundTrip("https://example.org/a?x=1&y=2#fragment + %20 / Zürich", "?message=other&altText=other# + %20")
+    }
+
+    @Test
+    fun `create route without a barcode has no barcode`() {
+        withController { controller ->
+            controller.navigate(Route.Create())
+
+            assertNull(controller.currentBackStackEntry!!.toRoute<Route.Create>().toBarCode())
+        }
     }
 
     @Test
@@ -74,9 +84,9 @@ class NavigationTest {
     ) {
         val barcode = BarCode(format, message, encoding, altText)
         withController { controller ->
-            controller.navigate(Route.CreateWithBarcode(barcode))
+            controller.navigate(Route.Create(barcode))
 
-            assertEquals(barcode, controller.currentBackStackEntry!!.toRoute<Route.CreateWithBarcode>().toBarCode())
+            assertEquals(barcode, controller.currentBackStackEntry!!.toRoute<Route.Create>().toBarCode())
         }
     }
 
@@ -95,7 +105,7 @@ class NavigationTest {
             controller.graph =
                 controller.createGraph(startDestination = Route.Wallet) {
                     composable<Route.Wallet> {}
-                    composable<Route.CreateWithBarcode> {}
+                    composable<Route.Create> {}
                     composable<Route.Pass>(deepLinks = listOf(navDeepLink<Route.Pass>(basePath = ShortcutService.BASE_URI))) {}
                     composable<Route.Webview> {}
                     composable<Route.UpdateFailure> {}

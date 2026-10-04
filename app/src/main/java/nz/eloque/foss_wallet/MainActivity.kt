@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                         withContext(Dispatchers.Main) {
                             isProcessingFileShare = false
                             if (barcode != null) {
-                                navController.navigate(Route.CreateWithBarcode(barcode))
+                                navController.navigate(Route.Create(barcode))
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                             }

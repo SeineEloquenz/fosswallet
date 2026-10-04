@@ -83,7 +83,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
                                         encoding = Charsets.UTF_8,
                                         altText = value,
                                     )
-                                navController.navigate(Route.CreateWithBarcode(barcode))
+                                navController.navigate(Route.Create(barcode))
                             }
                         }
                     }
@@ -94,7 +94,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
             }
 
             Button(
-                onClick = { navController.navigate(Route.Create) },
+                onClick = { navController.navigate(Route.Create()) },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.manual_entry))
