@@ -29,14 +29,12 @@ sealed interface Route {
     @Serializable
     data object AdvancedAdd : Route
 
+    /** The create screen, optionally prefilled with a scanned barcode. */
     @Serializable
-    data object Create : Route
-
-    @Serializable
-    data class CreateWithBarcode(
-        val format: String,
-        val message: String,
-        val encoding: String,
+    data class Create(
+        val format: String? = null,
+        val message: String? = null,
+        val encoding: String? = null,
         val altText: String? = null,
     ) : Route {
         constructor(barCode: BarCode) : this(
@@ -46,13 +44,15 @@ sealed interface Route {
             altText = barCode.altText,
         )
 
-        fun toBarCode(): BarCode =
-            BarCode(
+        fun toBarCode(): BarCode? {
+            if (format == null || message == null || encoding == null) return null
+            return BarCode(
                 format = BarcodeFormat.valueOf(format),
                 message = message,
                 encoding = Charset.forName(encoding),
                 altText = altText,
             )
+        }
     }
 
     @Serializable

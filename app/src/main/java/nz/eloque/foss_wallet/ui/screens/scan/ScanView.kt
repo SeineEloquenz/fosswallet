@@ -12,8 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.zxing.BarcodeFormat
 import de.nielstron.bcbp.IataBcbp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +32,7 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
+import java.nio.charset.Charset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,8 +42,8 @@ fun ScanView(
 ) {
     val context = LocalContext.current
 
-    var scannedBarcode by remember { mutableStateOf<BarCode?>(null) }
-    var initialScanHandled by remember { mutableStateOf(false) }
+    var scannedBarcode by rememberSaveable(stateSaver = BarCodeSaver) { mutableStateOf<BarCode?>(null) }
+    var initialScanHandled by rememberSaveable { mutableStateOf(false) }
 
     val scanLauncher =
         rememberLauncherForActivityResult(ScanContract()) { barcode ->
@@ -106,7 +109,7 @@ fun ScanView(
 
             TextButton(
                 onClick = {
-                    navController.navigate(Route.CreateWithBarcode(scannedBarcode!!))
+                    navController.navigate(Route.Create(scannedBarcode!!))
                 },
             ) {
                 Text(stringResource(R.string.manual_entry))
@@ -114,3 +117,11 @@ fun ScanView(
         }
     }
 }
+
+private val BarCodeSaver =
+    Saver<BarCode?, List<String?>>(
+        save = { barcode -> barcode?.let { listOf(it.format.name, it.message, it.encoding.name(), it.altText) } ?: emptyList() },
+        restore = { saved ->
+            saved.takeIf { it.size == 4 }?.let { BarCode(BarcodeFormat.valueOf(it[0]!!), it[1]!!, Charset.forName(it[2]), it[3]) }
+        },
+    )

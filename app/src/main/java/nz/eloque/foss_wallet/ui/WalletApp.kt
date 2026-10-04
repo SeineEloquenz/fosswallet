@@ -22,7 +22,6 @@ import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
 import nz.eloque.foss_wallet.ui.screens.create.AdvancedAddScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
-import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.scan.ScanScreen
@@ -36,7 +35,6 @@ import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 fun WalletApp(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
     scanViewModel: ScanViewModel = viewModel(),
@@ -76,17 +74,7 @@ fun WalletApp(
                 LibrariesScreen(navController)
             }
             composable<Route.Create> {
-                CreateScreen(
-                    navController = navController,
-                    createViewModel = createViewModel,
-                )
-            }
-            composable<Route.CreateWithBarcode> { backStackEntry ->
-                CreateScreen(
-                    navController,
-                    createViewModel,
-                    initialBarcode = backStackEntry.toRoute<Route.CreateWithBarcode>().toBarCode(),
-                )
+                CreateScreen(navController)
             }
             composable<Route.AdvancedAdd> {
                 AdvancedAddScreen(navController)
