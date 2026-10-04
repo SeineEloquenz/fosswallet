@@ -121,7 +121,7 @@ class PassbookApi(
                     }
                 }
                 304 -> FetchOutcome.Result(UpdateResult.NotUpdated)
-                403 -> FetchOutcome.Result(UpdateResult.Failed(FailureReason.Forbidden))
+                401, 403 -> FetchOutcome.Result(UpdateResult.Failed(FailureReason.Forbidden))
                 else -> FetchOutcome.Result(UpdateResult.Failed(FailureReason.Status(it.code)))
             }
         }

@@ -181,4 +181,13 @@ class PassbookApiTest {
         assertEquals(UpdateResult.Failed(FailureReason.Status(301)), result)
         assertEquals(6, server.requestCount)
     }
+
+    @Test
+    fun `401 is reported like 403`() {
+        server.enqueue(MockResponse.Builder().code(401).build())
+
+        val result = runBlocking { api.getUpdated(pass()) }
+
+        assertEquals(UpdateResult.Failed(FailureReason.Forbidden), result)
+    }
 }
