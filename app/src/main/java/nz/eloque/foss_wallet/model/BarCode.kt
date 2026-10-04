@@ -33,7 +33,7 @@ data class BarCode(
 
     fun isNotValid() = encode() == null
 
-    private fun encode(
+    internal fun encode(
         width: Int = 0,
         height: Int = 0,
         legacyRendering: Boolean = false,
