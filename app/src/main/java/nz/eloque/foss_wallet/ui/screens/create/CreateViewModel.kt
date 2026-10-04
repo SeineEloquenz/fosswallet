@@ -12,7 +12,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
-import coil.ImageLoader
+import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
@@ -125,7 +125,6 @@ class CreateViewModel
                 return BitmapFactory.decodeFile(imageUrl.path)
             }
 
-            val loader = ImageLoader(context)
             val request =
                 ImageRequest
                     .Builder(context)
@@ -136,7 +135,7 @@ class CreateViewModel
                     .allowHardware(false) // IMPORTANT for Bitmap
                     .build()
 
-            val result = loader.execute(request)
+            val result = context.imageLoader.execute(request)
             return if (result is SuccessResult) {
                 (result.drawable as? BitmapDrawable)?.bitmap
             } else {

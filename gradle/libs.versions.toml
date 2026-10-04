@@ -7,7 +7,7 @@ bcbpParser = "0.2.0"
 coil = "2.7.0"
 color-picker = "1.2.0"
 composeBom = "2026.06.01"
-composeKit = "v0.5.7"
+composeKit = "v0.5.8"
 dd-plist = "1.30"
 #noinspection NewerVersionAvailable
 zxing = "3.3.3" # We can not upgrade zxing until we know why https://github.com/SeineEloquenz/fosswallet/issues/184 happens
@@ -65,6 +65,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 color-picker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "color-picker" }
 compose-kit = { module = "com.github.SeineEloquenz.compose-kit:lib-android", version.ref = "composeKit" }
 dd-plist = { module = "com.googlecode.plist:dd-plist", version.ref = "dd-plist" }
