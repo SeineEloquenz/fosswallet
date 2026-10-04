@@ -37,11 +37,8 @@ import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.Route
-import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilter
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
