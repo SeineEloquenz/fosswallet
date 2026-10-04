@@ -517,6 +517,7 @@ fun CreateView(
                                 label = stringResource(R.string.logo),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -526,6 +527,7 @@ fun CreateView(
                                 label = stringResource(R.string.icon),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -535,6 +537,7 @@ fun CreateView(
                                 label = stringResource(R.string.strip),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -544,6 +547,7 @@ fun CreateView(
                                 label = stringResource(R.string.thumbnail),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -553,6 +557,7 @@ fun CreateView(
                                 label = stringResource(R.string.footer),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -562,6 +567,7 @@ fun CreateView(
                                 label = stringResource(R.string.background),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
                         }
                     }
@@ -976,3 +982,5 @@ private fun Double.formatCoord(): String = String.format(Locale.current.platform
 private fun Color.toHexColor(): String = String.format("#%06X", this.toArgb() and 0x00FFFFFF)
 
 private fun Color.opaque(): Color = this.copy(alpha = 1f)
+
+private val IMAGE_MIME_TYPES = arrayOf("image/png", "image/jpeg", "image/svg+xml")
