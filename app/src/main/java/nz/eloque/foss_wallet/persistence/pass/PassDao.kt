@@ -14,6 +14,7 @@ import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithMetadata
+import java.time.Instant
 
 @Dao
 interface PassDao {
@@ -126,6 +127,12 @@ interface PassDao {
     """,
     )
     suspend fun deleteEmptyGroup(groupId: Long)
+
+    @Query("UPDATE PassMetadata SET updatedAt = :updatedAt WHERE passId = :passId")
+    suspend fun setUpdatedAt(
+        passId: String,
+        updatedAt: Instant,
+    )
 
     @Query("UPDATE PassMetadata SET archived = 1 WHERE passId = :passId")
     suspend fun archive(passId: String)

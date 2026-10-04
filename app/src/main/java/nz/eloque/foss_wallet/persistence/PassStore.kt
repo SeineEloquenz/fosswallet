@@ -74,6 +74,7 @@ class PassStore
             val updated = PassbookApi.getUpdated(pass)
             return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
                 insert(updated.content.result)
+                passRepository.setUpdatedAt(pass)
                 notificationService.createNotificationChannel()
                 val localizedPass =
                     updated.content.result.pass

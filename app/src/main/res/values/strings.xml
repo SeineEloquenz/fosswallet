@@ -55,6 +55,7 @@
     <string name="pass_view">Pass view</string>
     <string name="pass_view_brightness">Increase brightness</string>
     <string name="fullscreen_only_brightness">Only in fullscreen barcode view</string>
+    <string name="last_updated">Last updated %1$s</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
     <string name="barcode_position_bottom">Bottom</string>
