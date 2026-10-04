@@ -1,25 +1,15 @@
 package nz.eloque.foss_wallet.ui.screens.webview
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.ui.Route
+import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import okhttp3.OkHttpClient
@@ -34,8 +24,7 @@ fun WebviewView(
     walletViewModel: WalletViewModel,
     url: String,
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    ImportEventsEffect(walletViewModel, navController, onImported = { navController.popBackStack() })
 
     AndroidView(factory = {
         val webview = WebView(it)
@@ -46,7 +35,7 @@ fun WebviewView(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                 )
             webViewClient =
-                CustomWebViewClient(context, walletViewModel, coroutineScope, navController)
+                CustomWebViewClient(walletViewModel)
             loadUrl(url)
         }
 
@@ -60,10 +49,7 @@ fun WebviewView(
 }
 
 class CustomWebViewClient(
-    val context: Context,
     val walletViewModel: WalletViewModel,
-    val coroutineScope: CoroutineScope,
-    val navController: NavController,
 ) : WebViewClient() {
     override fun shouldInterceptRequest(
         view: WebView?,
@@ -99,28 +85,7 @@ class CustomWebViewClient(
     }
 
     private fun handlePkPassResponse(response: Response): WebResourceResponse {
-        val bytes = response.body.byteStream().readBytes()
-        coroutineScope.launch {
-            withContext(Dispatchers.IO) {
-                val result =
-                    Loader(context).handleInputStream(
-                        ByteArrayInputStream(bytes),
-                        walletViewModel,
-                        coroutineScope,
-                    )
-                if (result is LoaderResult.Single) {
-                    withContext(Dispatchers.Main) {
-                        navController.popBackStack()
-                        navController.navigate(Route.Pass(result.passId))
-                    }
-                } else if (result is LoaderResult.Multiple) {
-                    withContext(Dispatchers.Main) {
-                        navController.popBackStack()
-                    }
-                }
-            }
-        }
-
+        walletViewModel.import(response.body.byteStream().readBytes())
         return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
     }
 }

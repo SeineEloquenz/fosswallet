@@ -1,10 +1,12 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.map
 import nz.eloque.foss_wallet.api.FailureReason
+import nz.eloque.foss_wallet.api.ImportOutcome
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -16,7 +18,9 @@ import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.InvalidInputException
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
+import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
@@ -24,6 +28,8 @@ import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
 import nz.eloque.foss_wallet.shortcut.ShortcutService
 import java.util.Locale
+
+private const val TAG = "PassStore"
 
 class PassStore
     @Inject
@@ -132,12 +138,30 @@ class PassStore
             passRepository.delete(attachment)
         }
 
-        suspend fun load(
-            context: Context,
-            bytes: ByteArray,
-        ): ImportResult {
-            val loaded = PassLoader(PassParser(context)).load(bytes)
-            return add(loaded)
+        suspend fun import(bytes: ByteArray): ImportOutcome {
+            val loaded =
+                try {
+                    Loader(context).load(bytes)
+                } catch (e: InvalidInputException) {
+                    Log.w(TAG, "Failed to import file", e)
+                    return ImportOutcome.Invalid
+                }
+            return when (loaded.size) {
+                0 -> {
+                    ImportOutcome.Empty
+                }
+
+                1 -> {
+                    val single = loaded.first()
+                    ImportOutcome.Single(single.pass.pass.id, add(single))
+                }
+
+                else -> {
+                    loaded.forEach { add(it) }
+                    group(loaded.map { it.pass.pass }.toSet())
+                    ImportOutcome.Multiple(loaded.size)
+                }
+            }
         }
 
         private suspend fun insert(loadResult: PassLoadResult) {

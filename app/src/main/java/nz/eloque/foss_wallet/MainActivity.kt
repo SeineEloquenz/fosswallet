@@ -26,13 +26,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.ShortcutService
+import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.create.FileScanner
@@ -75,12 +73,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+        val isFreshStart = savedInstanceState == null
+
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
             var isProcessingFileShare by remember { mutableStateOf(false) }
+            ImportEventsEffect(walletViewModel, navController)
             LaunchedEffect(dataUri, shareSource != null) {
+                if (!isFreshStart) return@LaunchedEffect
                 if (shareSource != null && dataUri != null) {
                     isProcessingFileShare = true
                     coroutineScope.launch(Dispatchers.IO) {
@@ -98,15 +100,8 @@ class MainActivity : ComponentActivity() {
                     return@LaunchedEffect
                 }
 
-                if (ShortcutService.SCHEME != dataUri?.scheme) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
-                        if (result is LoaderResult.Single) {
-                            withContext(Dispatchers.Main) {
-                                navController.navigate(Route.Pass(result.passId))
-                            }
-                        }
-                    }
+                if (dataUri != null && ShortcutService.SCHEME != dataUri.scheme) {
+                    walletViewModel.import(listOf(dataUri))
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -139,23 +134,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private suspend fun Uri.handleIntent(
-        walletViewModel: WalletViewModel,
-        coroutineScope: CoroutineScope,
-    ): LoaderResult {
-        contentResolver.openInputStream(this).use {
-            it?.let {
-                return Loader(this@MainActivity).handleInputStream(
-                    it,
-                    walletViewModel,
-                    coroutineScope,
-                )
-            }
-        }
-
-        return LoaderResult.Invalid
     }
 
     @Suppress("DEPRECATION")
