@@ -15,51 +15,51 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.toJavaDuration
 
 class UpdateScheduler
-@Inject
-constructor(
-    private val passRepository: PassRepository,
-    private val settingsStore: SettingsStore,
-    private val workManager: Lazy<WorkManager>,
-) {
-    fun disableSync() {
-        val updatablePasses = passRepository.updatable()
-        updatablePasses.forEach { cancelUpdate(it) }
-    }
+    @Inject
+    constructor(
+        private val passRepository: PassRepository,
+        private val settingsStore: SettingsStore,
+        private val workManager: Lazy<WorkManager>,
+    ) {
+        fun disableSync() {
+            val updatablePasses = passRepository.updatable()
+            updatablePasses.forEach { cancelUpdate(it) }
+        }
 
-    fun enableSync() {
-        val updatablePasses = passRepository.updatable()
-        updatablePasses.forEach { scheduleUpdate(it) }
-    }
+        fun enableSync() {
+            val updatablePasses = passRepository.updatable()
+            updatablePasses.forEach { scheduleUpdate(it) }
+        }
 
-    fun updateSyncInterval() {
-        val updatablePasses = passRepository.updatable()
-        updatablePasses.forEach { cancelUpdate(it) }
-        updatablePasses.forEach { scheduleUpdate(it) }
-    }
+        fun updateSyncInterval() {
+            val updatablePasses = passRepository.updatable()
+            updatablePasses.forEach { cancelUpdate(it) }
+            updatablePasses.forEach { scheduleUpdate(it) }
+        }
 
-    fun scheduleUpdate(pass: Pass) {
-        if (settingsStore.isSyncEnabled()) {
-            Log.i(TAG, "Scheduled update for pass ${pass.id}")
-            val workRequest =
-                PeriodicWorkRequestBuilder<UpdateWorker>(settingsStore.syncInterval().toJavaDuration())
-                    .setInputData(Data.Builder().putString("id", pass.id).build())
-                    .addTag("update")
-                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
-                    .build()
-            workManager.get().enqueueUniquePeriodicWork(
-                pass.id,
-                ExistingPeriodicWorkPolicy.REPLACE,
-                workRequest,
-            )
+        fun scheduleUpdate(pass: Pass) {
+            if (settingsStore.isSyncEnabled()) {
+                Log.i(TAG, "Scheduled update for pass ${pass.id}")
+                val workRequest =
+                    PeriodicWorkRequestBuilder<UpdateWorker>(settingsStore.syncInterval().toJavaDuration())
+                        .setInputData(Data.Builder().putString("id", pass.id).build())
+                        .addTag("update")
+                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
+                        .build()
+                workManager.get().enqueueUniquePeriodicWork(
+                    pass.id,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    workRequest,
+                )
+            }
+        }
+
+        fun cancelUpdate(pass: Pass) {
+            Log.i(TAG, "Canceled update for pass ${pass.id}")
+            workManager.get().cancelUniqueWork(pass.id)
+        }
+
+        companion object {
+            const val TAG = "UpdateScheduler"
         }
     }
-
-    fun cancelUpdate(pass: Pass) {
-        Log.i(TAG, "Canceled update for pass ${pass.id}")
-        workManager.get().cancelUniqueWork(pass.id)
-    }
-
-    companion object {
-        const val TAG = "UpdateScheduler"
-    }
-}
