@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nz.eloque.compose_kit.dialog.FullscreenDialog
+import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
@@ -48,6 +49,7 @@ fun Barcodes(
     barcodes: List<BarCode>,
     legacyRendering: Boolean,
     barcodePosition: BarcodePosition,
+    increaseFullscreenBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { barcodes.size }
@@ -69,6 +71,7 @@ fun Barcodes(
                     barcode = barcodes[it],
                     legacyRendering = legacyRendering,
                     barcodePosition = barcodePosition,
+                    increaseFullscreenBrightness = increaseFullscreenBrightness,
                 )
             }
         }
@@ -89,6 +92,7 @@ fun Barcode(
     modifier: Modifier = Modifier,
     legacyRendering: Boolean = false,
     barcodePosition: BarcodePosition = BarcodePosition.Center,
+    increaseFullscreenBrightness: Boolean = false,
 ) {
     val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
 
@@ -132,6 +136,7 @@ fun Barcode(
                     onDismiss = { showFullscreen = false },
                     contentAlignment = barcodePosition.alignment,
                 ) {
+                    if (increaseFullscreenBrightness) UpdateBrightness()
                     Image(
                         bitmap = imageBitmap,
                         contentDescription = stringResource(R.string.barcode),

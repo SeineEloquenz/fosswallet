@@ -61,7 +61,9 @@ class PassViewModel
 
         fun barcodePosition(): BarcodePosition = settingsStore.barcodePosition()
 
-        fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness()
+        fun increasePassViewBrightness(): Boolean = settingsStore.increasePassViewBrightness() && !settingsStore.fullscreenOnlyBrightness()
+
+        fun increaseFullscreenBrightness(): Boolean = settingsStore.increasePassViewBrightness() && settingsStore.fullscreenOnlyBrightness()
 
         fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
 
