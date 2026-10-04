@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.ShortcutService
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.create.FileScanner
 import nz.eloque.foss_wallet.ui.screens.create.ScanSource
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         withContext(Dispatchers.Main) {
                             isProcessingFileShare = false
                             if (barcode != null) {
-                                Screen.Create.navigate(navController, barcode)
+                                navController.navigate(Route.CreateWithBarcode(barcode))
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                             }
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                         val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
                         if (result is LoaderResult.Single) {
                             withContext(Dispatchers.Main) {
-                                navController.navigate("pass/${result.passId}")
+                                navController.navigate(Route.Pass(result.passId))
                             }
                         }
                     }

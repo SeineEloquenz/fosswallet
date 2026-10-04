@@ -51,7 +51,7 @@ import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 
@@ -150,7 +150,7 @@ fun WalletView(
                 groupId = groupId!!,
                 passes = passes,
                 allTags = tags,
-                onClick = { navController.navigate("pass/${it.id}") },
+                onClick = { navController.navigate(Route.Pass(it.id)) },
                 walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses,
             )
@@ -183,7 +183,7 @@ fun WalletView(
                             if (selectedPasses.isNotEmpty()) {
                                 if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
                             } else {
-                                navController.navigate("pass/${pass.pass.id}")
+                                navController.navigate(Route.Pass(pass.pass.id))
                             }
                         },
                         onLongClick = {
@@ -203,7 +203,7 @@ fun WalletView(
                 ) {
                     TextButton(
                         onClick = {
-                            navController.navigate(Screen.Archive.route)
+                            navController.navigate(Route.Archive)
                         },
                     ) {
                         Text(

@@ -89,7 +89,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
 import java.nio.charset.Charset
 import java.time.ZoneId
@@ -169,11 +169,7 @@ fun CreateView(
                 }
             detailsExpanded = true
         }, onCanceled = {
-            navController.popBackStack(
-                route = Screen.Wallet.route,
-                inclusive = false,
-                saveState = false,
-            )
+            navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
         })
 
     if (showLocationPicker) {
@@ -599,8 +595,8 @@ fun CreateView(
                                 )
                             withContext(Dispatchers.Main) {
                                 isSaving = false
-                                navController.navigate("pass/$savedPassId") {
-                                    popUpTo(Screen.Wallet.route)
+                                navController.navigate(Route.Pass(savedPassId)) {
+                                    popUpTo<Route.Wallet>()
                                 }
                             }
                         }

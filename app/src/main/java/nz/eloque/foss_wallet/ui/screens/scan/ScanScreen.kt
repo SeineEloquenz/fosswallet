@@ -4,7 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,7 +16,7 @@ fun ScanScreen(
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = Screen.Create.resourceId),
+        title = stringResource(id = R.string.create_pass),
     ) {
         ScanView(
             navController = navController,
