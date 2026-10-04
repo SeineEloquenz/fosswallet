@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 import okhttp3.OkHttpClient
@@ -110,7 +111,7 @@ class CustomWebViewClient(
                 if (result is LoaderResult.Single) {
                     withContext(Dispatchers.Main) {
                         navController.popBackStack()
-                        navController.navigate("pass/${result.passId}")
+                        navController.navigate(Route.Pass(result.passId))
                     }
                 } else if (result is LoaderResult.Multiple) {
                     withContext(Dispatchers.Main) {

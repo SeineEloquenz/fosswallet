@@ -28,10 +28,9 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
-import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,11 +47,7 @@ fun ScanView(
         ScanLauncher.launch(onScanned = {
             scannedBarcode = it
         }, onCanceled = {
-            navController.popBackStack(
-                route = Screen.Wallet.route,
-                inclusive = false,
-                saveState = false,
-            )
+            navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
         })
 
     LaunchedEffect(initialScanHandled) {
@@ -88,8 +83,8 @@ fun ScanView(
                         coroutineScope.launch(Dispatchers.IO) {
                             val passId = scanViewModel.saveBcbpPass(it, bcbp)
                             withContext(Dispatchers.Main) {
-                                navController.navigate("pass/$passId") {
-                                    popUpTo(Screen.Scan.route) {
+                                navController.navigate(Route.Pass(passId)) {
+                                    popUpTo<Route.Scan> {
                                         inclusive = true
                                     }
                                 }
@@ -103,8 +98,7 @@ fun ScanView(
             if (it.message.startsWith("https://") || it.message.startsWith("http://")) {
                 TextButton(
                     onClick = {
-                        val url = URLEncoder.encode(it.message, Charsets.UTF_8.name())
-                        navController.navigate("${Screen.Web.route}/$url")
+                        navController.navigate(Route.Webview(it.message))
                     },
                 ) {
                     Text(stringResource(R.string.webview))
@@ -113,7 +107,7 @@ fun ScanView(
 
             TextButton(
                 onClick = {
-                    Screen.Create.navigate(navController, scannedBarcode!!)
+                    navController.navigate(Route.CreateWithBarcode(scannedBarcode!!))
                 },
             ) {
                 Text(stringResource(R.string.manual_entry))

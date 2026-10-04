@@ -57,6 +57,7 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
@@ -245,8 +246,12 @@ fun Actions(
                                     when (result.reason) {
                                         is FailureReason.Exception -> {
                                             coroutineScope.launch(Dispatchers.Main) {
+                                                val exception = result.reason.exception
                                                 navController.navigate(
-                                                    "updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}",
+                                                    Route.UpdateFailure(
+                                                        exception.message ?: exception.javaClass.name,
+                                                        exception.asString(),
+                                                    ),
                                                 )
                                             }
                                         }
