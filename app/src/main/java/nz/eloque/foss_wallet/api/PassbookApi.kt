@@ -4,9 +4,6 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.parsing.PassParser
-import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
-import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -71,12 +68,7 @@ class PassbookApi(
                     if (body.isEmpty()) {
                         FetchOutcome.Result(UpdateResult.NotUpdated)
                     } else {
-                        try {
-                            val loadResult = PassLoader(PassParser()).load(body, pass.id, pass.addedAt, pass.deviceId)
-                            FetchOutcome.Result(UpdateResult.Success(UpdateContent.LoadResult(loadResult)))
-                        } catch (e: InvalidPassException) {
-                            FetchOutcome.Result(UpdateResult.Failed(FailureReason.Exception(e)))
-                        }
+                        FetchOutcome.Result(UpdateResult.Success(UpdateContent.Downloaded(body)))
                     }
                 }
                 304 -> FetchOutcome.Result(UpdateResult.NotUpdated)

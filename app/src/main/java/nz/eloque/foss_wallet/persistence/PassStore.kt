@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.api.FailureReason
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -15,6 +16,7 @@ import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
@@ -78,18 +80,21 @@ class PassStore
                     registered = passRepository.isRegistered(pass),
                     onRegistered = { passRepository.setRegistered(pass) },
                 )
-            return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
-                insert(updated.content.result)
-                passRepository.setUpdatedAt(pass)
-                notificationService.createNotificationChannel()
-                val localizedPass =
-                    updated.content.result.pass
-                        .applyLocalization(Locale.getDefault().language)
-                localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
-                UpdateResult.Success(UpdateContent.Pass(localizedPass))
-            } else {
-                updated
-            }
+            if (updated !is UpdateResult.Success || updated.content !is UpdateContent.Downloaded) return updated
+            val loadResult =
+                try {
+                    PassLoader(PassParser()).load(updated.content.bytes, pass.id, pass.addedAt, pass.deviceId)
+                } catch (e: InvalidPassException) {
+                    return UpdateResult.Failed(FailureReason.Exception(e))
+                }
+            insert(loadResult)
+            passRepository.setUpdatedAt(pass)
+            notificationService.createNotificationChannel()
+            val localizedPass =
+                loadResult.pass
+                    .applyLocalization(Locale.getDefault().language)
+            localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
+            return UpdateResult.Success(UpdateContent.Pass(localizedPass))
         }
 
         suspend fun archive(pass: Pass) = passRepository.archive(pass)

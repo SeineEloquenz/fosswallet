@@ -69,18 +69,19 @@ class PassbookApiTest {
     }
 
     @Test
-    fun `garbage 200 body fails gracefully`() {
+    fun `200 body is returned as downloaded pass`() {
         server.enqueue(
             MockResponse
                 .Builder()
                 .code(200)
-                .body("not a pkpass")
+                .body("pkpass bytes")
                 .build(),
         )
 
         val result = runBlocking { api.getUpdated(pass()) }
 
-        assertTrue(result is UpdateResult.Failed)
+        val content = (result as UpdateResult.Success).content as UpdateContent.Downloaded
+        assertEquals("pkpass bytes", content.bytes.decodeToString())
     }
 
     @Test
