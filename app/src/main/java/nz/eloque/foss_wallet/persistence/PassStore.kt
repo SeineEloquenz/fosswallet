@@ -74,9 +74,10 @@ class PassStore
         }
 
         suspend fun update(pass: Pass): UpdateResult {
+            val service = pass.webService() ?: return UpdateResult.NotUpdated
             val updated =
                 passbookApi.getUpdated(
-                    pass = pass,
+                    service = service,
                     registered = passRepository.isRegistered(pass),
                     onRegistered = { passRepository.setRegistered(pass) },
                 )
@@ -124,7 +125,7 @@ class PassStore
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
             shortcutService.disable(pass)
-            if (registered) passbookApi.unregister(pass)
+            if (registered) pass.webService()?.let { passbookApi.unregister(it) }
         }
 
         suspend fun delete(attachment: Attachment) {

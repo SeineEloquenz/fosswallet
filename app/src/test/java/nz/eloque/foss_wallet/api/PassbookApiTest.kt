@@ -3,8 +3,7 @@ package nz.eloque.foss_wallet.api
 import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
-import nz.eloque.foss_wallet.model.Pass
-import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.PassWebService
 import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -12,7 +11,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.time.Instant
+import java.util.UUID
 
 class PassbookApiTest {
     private lateinit var server: MockWebServer
@@ -30,26 +29,20 @@ class PassbookApiTest {
         server.close()
     }
 
-    private fun pass(): Pass =
-        Pass(
-            id = "pass-id",
-            description = "desc",
-            formatVersion = 1,
-            organization = "org",
-            serialNumber = "serial-1",
-            type = PassType.Generic,
-            barCodes = setOf(),
-            addedAt = Instant.ofEpochMilli(0),
+    private fun service(): PassWebService =
+        PassWebService(
+            url = server.url("/").toString().trimEnd('/'),
             authToken = "token",
-            webServiceUrl = server.url("/").toString().trimEnd('/'),
             passTypeIdentifier = "pass.type.id",
+            serialNumber = "serial-1",
+            deviceId = UUID.randomUUID(),
         )
 
     @Test
     fun `304 reports not updated without registering`() {
         server.enqueue(MockResponse.Builder().code(304).build())
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(1, server.requestCount)
@@ -63,7 +56,7 @@ class PassbookApiTest {
     fun `empty 200 body reports not updated instead of crashing the parser`() {
         server.enqueue(MockResponse.Builder().code(200).build())
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.NotUpdated, result)
     }
@@ -78,7 +71,7 @@ class PassbookApiTest {
                 .build(),
         )
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         val content = (result as UpdateResult.Success).content as UpdateContent.Downloaded
         assertEquals("pkpass bytes", content.bytes.decodeToString())
@@ -91,7 +84,7 @@ class PassbookApiTest {
         server.enqueue(MockResponse.Builder().code(304).build())
         var registeredCallbacks = 0
 
-        val result = runBlocking { api.getUpdated(pass(), onRegistered = { registeredCallbacks++ }) }
+        val result = runBlocking { api.getUpdated(service(), onRegistered = { registeredCallbacks++ }) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(3, server.requestCount)
@@ -120,7 +113,7 @@ class PassbookApiTest {
         server.enqueue(MockResponse.Builder().code(204).build())
         server.enqueue(MockResponse.Builder().code(401).build())
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(2, server.requestCount)
@@ -130,7 +123,7 @@ class PassbookApiTest {
     fun `204 for an already registered pass does not register again`() {
         server.enqueue(MockResponse.Builder().code(204).build())
 
-        val result = runBlocking { api.getUpdated(pass(), registered = true) }
+        val result = runBlocking { api.getUpdated(service(), registered = true) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(1, server.requestCount)
@@ -139,14 +132,14 @@ class PassbookApiTest {
     @Test
     fun `unregister deletes the registration of the pass`() {
         server.enqueue(MockResponse.Builder().code(200).build())
-        val pass = pass()
+        val service = service()
 
-        val unregistered = runBlocking { api.unregister(pass) }
+        val unregistered = runBlocking { api.unregister(service) }
 
         assertTrue(unregistered)
         val request = server.takeRequest()
         assertEquals("DELETE", request.method)
-        assertEquals("/v1/devices/${pass.deviceId}/registrations/pass.type.id/serial-1", request.url.encodedPath)
+        assertEquals("/v1/devices/${service.deviceId}/registrations/pass.type.id/serial-1", request.url.encodedPath)
         assertEquals("ApplePass token", request.headers["Authorization"])
     }
 
@@ -162,7 +155,7 @@ class PassbookApiTest {
         server.enqueue(redirect("/download/pass.pkpass"))
         server.enqueue(MockResponse.Builder().code(304).build())
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         val update = server.takeRequest()
@@ -177,7 +170,7 @@ class PassbookApiTest {
     fun `redirect loops are cut off`() {
         repeat(10) { server.enqueue(redirect("/loop")) }
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.Failed(FailureReason.Status(301)), result)
         assertEquals(6, server.requestCount)
@@ -187,7 +180,7 @@ class PassbookApiTest {
     fun `401 is reported like 403`() {
         server.enqueue(MockResponse.Builder().code(401).build())
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(service()) }
 
         assertEquals(UpdateResult.Failed(FailureReason.Forbidden), result)
     }

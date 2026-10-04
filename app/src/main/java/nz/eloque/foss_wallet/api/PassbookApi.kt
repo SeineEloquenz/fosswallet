@@ -3,7 +3,7 @@ package nz.eloque.foss_wallet.api
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassWebService
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,37 +19,37 @@ class PassbookApi(
     private val client = client.newBuilder().followRedirects(false).build()
 
     suspend fun getUpdated(
-        pass: Pass,
+        service: PassWebService,
         registered: Boolean = false,
         onRegistered: suspend () -> Unit = {},
     ): UpdateResult =
         withContext(Dispatchers.IO) {
-            val first = fetch(pass)
+            val first = fetch(service)
             // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
-            if (first !is FetchOutcome.NeedsRegistration || registered || !register(pass)) {
+            if (first !is FetchOutcome.NeedsRegistration || registered || !register(service)) {
                 first.toUpdateResult()
             } else {
                 onRegistered()
-                fetch(pass).toUpdateResult()
+                fetch(service).toUpdateResult()
             }
         }
 
     /**
      * Registers this device for the given pass using the PassKit web service protocol.
      */
-    suspend fun register(pass: Pass): Boolean {
+    suspend fun register(service: PassWebService): Boolean {
         // There is no APNs token, issuers that validate the push token format will reject the registration.
-        val body = JSONObject().put("pushToken", pass.deviceId.toString()).toString()
-        return succeeds(pass.registrationRequest().post(body.toRequestBody(JSON_MEDIA_TYPE)).build(), 200, 201)
+        val body = JSONObject().put("pushToken", service.deviceId.toString()).toString()
+        return succeeds(service.registrationRequest().post(body.toRequestBody(JSON_MEDIA_TYPE)).build(), 200, 201)
     }
 
     /**
      * Unregisters this device for the given pass using the PassKit web service protocol.
      */
-    suspend fun unregister(pass: Pass): Boolean = succeeds(pass.registrationRequest().delete().build(), 200)
+    suspend fun unregister(service: PassWebService): Boolean = succeeds(service.registrationRequest().delete().build(), 200)
 
-    private fun fetch(pass: Pass): FetchOutcome {
-        val request = pass.authorizedRequest("passes/${pass.passTypeIdentifier}/${pass.serialNumber}").build()
+    private fun fetch(service: PassWebService): FetchOutcome {
+        val request = service.authorizedRequest("passes/${service.passTypeIdentifier}/${service.serialNumber}").build()
         val response =
             try {
                 executeFollowingRedirects(request)
@@ -113,13 +113,13 @@ class PassbookApi(
             }
         }
 
-    private fun Pass.authorizedRequest(path: String): Request.Builder =
+    private fun PassWebService.authorizedRequest(path: String): Request.Builder =
         Request
             .Builder()
-            .url("${webServiceUrl!!.trimEnd('/')}/$API_VERSION/$path")
+            .url("$url/$API_VERSION/$path")
             .header("Authorization", "ApplePass $authToken")
 
-    private fun Pass.registrationRequest(): Request.Builder =
+    private fun PassWebService.registrationRequest(): Request.Builder =
         authorizedRequest("devices/$deviceId/registrations/$passTypeIdentifier/$serialNumber")
 
     private sealed interface FetchOutcome {
