@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.api
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
@@ -14,7 +16,6 @@ import okio.IOException
 import org.json.JSONObject
 import java.net.SocketTimeoutException
 
-@Suppress("RedundantSuspendModifier")
 class PassbookApi(
     client: OkHttpClient = OkHttpClient(),
 ) {
@@ -25,83 +26,41 @@ class PassbookApi(
         registered: Boolean = false,
         onRegistered: suspend () -> Unit = {},
     ): UpdateResult =
-        when (val first = fetch(pass)) {
-            is FetchOutcome.Result -> first.result
+        withContext(Dispatchers.IO) {
+            val first = fetch(pass)
             // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
-            is FetchOutcome.NeedsRegistration ->
-                if (registered || !register(pass)) {
-                    UpdateResult.NotUpdated
-                } else {
-                    onRegistered()
-                    when (val retry = fetch(pass)) {
-                        is FetchOutcome.Result -> retry.result
-                        is FetchOutcome.NeedsRegistration -> UpdateResult.NotUpdated
-                    }
-                }
+            if (first !is FetchOutcome.NeedsRegistration || registered || !register(pass)) {
+                first.toUpdateResult()
+            } else {
+                onRegistered()
+                fetch(pass).toUpdateResult()
+            }
         }
 
     /**
      * Registers this device for the given pass using the PassKit web service protocol.
      */
     suspend fun register(pass: Pass): Boolean {
-        val requestUrl = pass.registrationUrl() ?: return false
         // There is no APNs token, issuers that validate the push token format will reject the registration.
         val body = JSONObject().put("pushToken", pass.deviceId.toString()).toString()
-
-        val response =
-            try {
-                client.post(requestUrl, body, pass.authHeader())
-            } catch (e: SocketTimeoutException) {
-                Log.i(TAG, "Timeout while registering device at $requestUrl", e)
-                return false
-            } catch (e: IOException) {
-                Log.i(TAG, "Failed to register device at $requestUrl", e)
-                return false
-            }
-        return response.use {
-            when (it.code) {
-                200, 201 -> true
-                else -> {
-                    Log.i(TAG, "Device registration at $requestUrl returned ${it.code}")
-                    false
-                }
-            }
-        }
+        return succeeds(pass.registrationRequest().post(body.toRequestBody(JSON_MEDIA_TYPE)).build(), 200, 201)
     }
 
     /**
      * Unregisters this device for the given pass using the PassKit web service protocol.
      */
-    suspend fun unregister(pass: Pass): Boolean {
-        val requestUrl = pass.registrationUrl() ?: return false
+    suspend fun unregister(pass: Pass): Boolean = succeeds(pass.registrationRequest().delete().build(), 200)
+
+    private fun fetch(pass: Pass): FetchOutcome {
+        val request = pass.authorizedRequest("passes/${pass.passTypeIdentifier}/${pass.serialNumber}").build()
         val response =
             try {
-                client.delete(requestUrl, pass.authHeader())
-            } catch (e: IOException) {
-                Log.i(TAG, "Failed to unregister device at $requestUrl", e)
-                return false
-            }
-        return response.use { it.code == 200 }
-    }
-
-    private fun Pass.registrationUrl(): String? =
-        webServiceUrl?.trimEnd('/')?.let {
-            "$it/$API_VERSION/devices/$deviceId/registrations/$passTypeIdentifier/$serialNumber"
-        }
-
-    private fun Pass.authHeader(): Pair<String, String> = Pair("Authorization", "ApplePass $authToken")
-
-    private suspend fun fetch(pass: Pass): FetchOutcome {
-        val webServiceUrl = pass.webServiceUrl!!.trimEnd('/')
-        val requestUrl = "$webServiceUrl/$API_VERSION/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
-        val response =
-            try {
-                client.getFollowingRedirects(requestUrl, pass.authHeader())
+                executeFollowingRedirects(request)
             } catch (e: SocketTimeoutException) {
-                Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
+                Log.i(TAG, "Timeout while connecting to pass api at ${request.url}", e)
                 return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Timeout))
             } catch (e: IOException) {
-                Log.i(TAG, "Failed to connect to pass api at $requestUrl", e)
+                Log.i(TAG, "Failed to connect to pass api at ${request.url}", e)
                 return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Exception(e)))
             }
         return response.use {
@@ -127,67 +86,58 @@ class PassbookApi(
         }
     }
 
-    private sealed interface FetchOutcome {
-        data class Result(
-            val result: UpdateResult,
-        ) : FetchOutcome
-
-        data object NeedsRegistration : FetchOutcome
-    }
-
-    private suspend fun OkHttpClient.getFollowingRedirects(
-        url: String,
-        authHeader: Pair<String, String>,
-    ): Response {
-        var response = get(url, authHeader)
+    private fun executeFollowingRedirects(request: Request): Response {
+        var response = client.newCall(request).execute()
         repeat(MAX_REDIRECTS) {
             if (!response.isRedirect) return response
             val location = response.header("Location")?.let { response.request.url.resolve(it) } ?: return response
             response.close()
             // Issuers redirect to storage like S3 that rejects requests carrying the PassKit Authorization header.
-            response = get(location.toString())
+            val redirect =
+                response.request
+                    .newBuilder()
+                    .url(location)
+                    .removeHeader("Authorization")
+                    .build()
+            response = client.newCall(redirect).execute()
         }
         return response
     }
 
-    private suspend fun OkHttpClient.get(
-        url: String,
-        vararg headers: Pair<String, String>,
-    ): Response {
-        val requestBuilder =
-            Request
-                .Builder()
-                .url(url)
-                .get()
-        headers.forEach { requestBuilder.header(it.first, it.second) }
-        return this.newCall(requestBuilder.build()).execute()
-    }
+    private suspend fun succeeds(
+        request: Request,
+        vararg successCodes: Int,
+    ): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                client.newCall(request).execute().use { response ->
+                    (response.code in successCodes).also { success ->
+                        if (!success) Log.i(TAG, "${request.method} ${request.url} returned ${response.code}")
+                    }
+                }
+            } catch (e: IOException) {
+                Log.i(TAG, "${request.method} ${request.url} failed", e)
+                false
+            }
+        }
 
-    private suspend fun OkHttpClient.delete(
-        url: String,
-        vararg headers: Pair<String, String>,
-    ): Response {
-        val requestBuilder =
-            Request
-                .Builder()
-                .url(url)
-                .delete()
-        headers.forEach { requestBuilder.header(it.first, it.second) }
-        return this.newCall(requestBuilder.build()).execute()
-    }
+    private fun Pass.authorizedRequest(path: String): Request.Builder =
+        Request
+            .Builder()
+            .url("${webServiceUrl!!.trimEnd('/')}/$API_VERSION/$path")
+            .header("Authorization", "ApplePass $authToken")
 
-    private suspend fun OkHttpClient.post(
-        url: String,
-        json: String,
-        vararg headers: Pair<String, String>,
-    ): Response {
-        val requestBuilder =
-            Request
-                .Builder()
-                .url(url)
-                .post(json.toRequestBody(JSON_MEDIA_TYPE))
-        headers.forEach { requestBuilder.header(it.first, it.second) }
-        return this.newCall(requestBuilder.build()).execute()
+    private fun Pass.registrationRequest(): Request.Builder =
+        authorizedRequest("devices/$deviceId/registrations/$passTypeIdentifier/$serialNumber")
+
+    private sealed interface FetchOutcome {
+        fun toUpdateResult(): UpdateResult = (this as? Result)?.result ?: UpdateResult.NotUpdated
+
+        data class Result(
+            val result: UpdateResult,
+        ) : FetchOutcome
+
+        data object NeedsRegistration : FetchOutcome
     }
 
     companion object {
