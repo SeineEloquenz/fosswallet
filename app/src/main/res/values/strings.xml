@@ -54,6 +54,7 @@
     <string name="barcode_position">Barcode position in fullscreen</string>
     <string name="pass_view">Pass view</string>
     <string name="pass_view_brightness">Increase brightness</string>
+    <string name="fullscreen_only_brightness">Only in fullscreen barcode view</string>
     <string name="barcode_position_top">Top</string>
     <string name="barcode_position_center">Center</string>
     <string name="barcode_position_bottom">Bottom</string>

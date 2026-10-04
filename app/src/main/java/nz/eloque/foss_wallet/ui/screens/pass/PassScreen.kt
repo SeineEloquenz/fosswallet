@@ -142,6 +142,7 @@ fun PassScreen(
                             onTagAdd = { passViewModel.tag(pagePass.pass, it) },
                             onTagCreate = { passViewModel.addTag(it) },
                             barcodePosition = passViewModel.barcodePosition(),
+                            increaseFullscreenBrightness = passViewModel.increaseFullscreenBrightness(),
                             scrollBehavior = scrollBehavior,
                             onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
