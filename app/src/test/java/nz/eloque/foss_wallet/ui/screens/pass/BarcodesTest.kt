@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
+import androidx.activity.ComponentDialog
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
@@ -21,6 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowDialog
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -58,8 +60,40 @@ class BarcodesTest {
     }
 
     @Test
-    fun standaloneBarcodeStillOpensFullscreen() {
-        composeRule.setContent { Barcode(barcode("Single barcode")) }
+    fun dismissingFullscreenKeepsSwipedPage() {
+        composeRule.setContent {
+            Barcodes(
+                barcodes = List(3) { barcode("Barcode $it") },
+                legacyRendering = false,
+                barcodePosition = BarcodePosition.Center,
+            )
+        }
+        composeRule.onNodeWithContentDescription("Barcode").performClick()
+        composeRule.onNode(hasScrollToIndexAction() and hasAnyAncestor(isDialog())).performTouchInput { swipeLeft() }
+        composeRule.waitForIdle()
+        composeRule.runOnUiThread {
+            (ShadowDialog.getLatestDialog() as ComponentDialog).onBackPressedDispatcher.onBackPressed()
+        }
+        composeRule.waitForIdle()
+
+        composeRule.onNode(isDialog()).assertDoesNotExist()
+        val range =
+            composeRule
+                .onNode(hasScrollToIndexAction())
+                .fetchSemanticsNode()
+                .config[SemanticsProperties.HorizontalScrollAxisRange]
+        assertEquals(0.5f, range.value() / range.maxValue(), 0.01f)
+    }
+
+    @Test
+    fun singleBarcodeOpensFullscreen() {
+        composeRule.setContent {
+            Barcodes(
+                barcodes = listOf(barcode("Single barcode")),
+                legacyRendering = false,
+                barcodePosition = BarcodePosition.Center,
+            )
+        }
         composeRule.onNodeWithContentDescription("Barcode").performClick()
         composeRule
             .onNode(hasContentDescription("Barcode") and hasAnyAncestor(isDialog()))

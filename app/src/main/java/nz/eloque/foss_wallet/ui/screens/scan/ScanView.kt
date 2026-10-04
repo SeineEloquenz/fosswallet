@@ -27,9 +27,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
-import nz.eloque.foss_wallet.ui.screens.pass.Barcode
+import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +73,11 @@ fun ScanView(
                 .padding(16.dp),
     ) {
         scannedBarcode?.let {
-            Barcode(barcode = it)
+            Barcodes(
+                barcodes = listOf(it),
+                legacyRendering = false,
+                barcodePosition = BarcodePosition.Center,
+            )
 
             val bcbp = IataBcbp.parse(it.message)
             if (bcbp != null) {
