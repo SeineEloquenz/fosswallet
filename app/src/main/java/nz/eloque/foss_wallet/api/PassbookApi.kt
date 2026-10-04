@@ -18,37 +18,37 @@ import java.net.SocketTimeoutException
 class PassbookApi(
     private val client: OkHttpClient = OkHttpClient.Builder().build(),
 ) {
-    suspend fun getUpdated(pass: Pass): UpdateResult {
-        val first = fetch(pass)
-        // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
-        return if (first is FetchOutcome.NeedsRegistration) {
-            if (register(pass)) {
-                when (val retry = fetch(pass)) {
-                    is FetchOutcome.Result -> retry.result
-                    is FetchOutcome.NeedsRegistration -> UpdateResult.NotUpdated
+    suspend fun getUpdated(
+        pass: Pass,
+        registered: Boolean = false,
+        onRegistered: suspend () -> Unit = {},
+    ): UpdateResult =
+        when (val first = fetch(pass)) {
+            is FetchOutcome.Result -> first.result
+            // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
+            is FetchOutcome.NeedsRegistration ->
+                if (registered || !register(pass)) {
+                    UpdateResult.NotUpdated
+                } else {
+                    onRegistered()
+                    when (val retry = fetch(pass)) {
+                        is FetchOutcome.Result -> retry.result
+                        is FetchOutcome.NeedsRegistration -> UpdateResult.NotUpdated
+                    }
                 }
-            } else {
-                UpdateResult.NotUpdated
-            }
-        } else {
-            (first as FetchOutcome.Result).result
         }
-    }
 
     /**
      * Registers this device for the given pass using the PassKit web service protocol.
      */
     suspend fun register(pass: Pass): Boolean {
-        val webServiceUrl = pass.webServiceUrl?.trimEnd('/') ?: return false
-        val requestUrl =
-            "$webServiceUrl/$API_VERSION/devices/${pass.deviceId}" +
-                "/registrations/${pass.passTypeIdentifier}/${pass.serialNumber}"
-        val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
+        val requestUrl = pass.registrationUrl() ?: return false
+        // There is no APNs token, issuers that validate the push token format will reject the registration.
         val body = JSONObject().put("pushToken", pass.deviceId.toString()).toString()
 
         val response =
             try {
-                client.post(requestUrl, body, authHeader)
+                client.post(requestUrl, body, pass.authHeader())
             } catch (e: SocketTimeoutException) {
                 Log.i(TAG, "Timeout while registering device at $requestUrl", e)
                 return false
@@ -67,14 +67,34 @@ class PassbookApi(
         }
     }
 
+    /**
+     * Unregisters this device for the given pass using the PassKit web service protocol.
+     */
+    suspend fun unregister(pass: Pass): Boolean {
+        val requestUrl = pass.registrationUrl() ?: return false
+        val response =
+            try {
+                client.delete(requestUrl, pass.authHeader())
+            } catch (e: IOException) {
+                Log.i(TAG, "Failed to unregister device at $requestUrl", e)
+                return false
+            }
+        return response.use { it.code == 200 }
+    }
+
+    private fun Pass.registrationUrl(): String? =
+        webServiceUrl?.trimEnd('/')?.let {
+            "$it/$API_VERSION/devices/$deviceId/registrations/$passTypeIdentifier/$serialNumber"
+        }
+
+    private fun Pass.authHeader(): Pair<String, String> = Pair("Authorization", "ApplePass $authToken")
+
     private suspend fun fetch(pass: Pass): FetchOutcome {
         val webServiceUrl = pass.webServiceUrl!!.trimEnd('/')
         val requestUrl = "$webServiceUrl/$API_VERSION/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
-        val authHeader = Pair("Authorization", "ApplePass ${pass.authToken}")
-
         val response =
             try {
-                client.get(requestUrl, authHeader)
+                client.get(requestUrl, pass.authHeader())
             } catch (e: SocketTimeoutException) {
                 Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
                 return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Timeout))
@@ -91,9 +111,8 @@ class PassbookApi(
                         FetchOutcome.Result(UpdateResult.NotUpdated)
                     } else {
                         try {
-                            FetchOutcome.Result(
-                                UpdateResult.Success(UpdateContent.LoadResult(PassLoader(PassParser()).load(body, pass.id, pass.addedAt))),
-                            )
+                            val loadResult = PassLoader(PassParser()).load(body, pass.id, pass.addedAt, pass.deviceId)
+                            FetchOutcome.Result(UpdateResult.Success(UpdateContent.LoadResult(loadResult)))
                         } catch (e: InvalidPassException) {
                             FetchOutcome.Result(UpdateResult.Failed(FailureReason.Exception(e)))
                         }
@@ -123,6 +142,19 @@ class PassbookApi(
                 .Builder()
                 .url(url)
                 .get()
+        headers.forEach { requestBuilder.header(it.first, it.second) }
+        return this.newCall(requestBuilder.build()).execute()
+    }
+
+    private suspend fun OkHttpClient.delete(
+        url: String,
+        vararg headers: Pair<String, String>,
+    ): Response {
+        val requestBuilder =
+            Request
+                .Builder()
+                .url(url)
+                .delete()
         headers.forEach { requestBuilder.header(it.first, it.second) }
         return this.newCall(requestBuilder.build()).execute()
     }

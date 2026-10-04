@@ -15,6 +15,7 @@ import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithMetadata
 import java.time.Instant
+import java.util.UUID
 
 @Dao
 interface PassDao {
@@ -132,6 +133,12 @@ interface PassDao {
     suspend fun setUpdatedAt(
         passId: String,
         updatedAt: Instant,
+    )
+
+    @Query("UPDATE PassMetadata SET registeredDeviceId = :deviceId WHERE passId = :passId")
+    suspend fun setRegisteredDeviceId(
+        passId: String,
+        deviceId: UUID,
     )
 
     @Query("UPDATE PassMetadata SET archived = 1 WHERE passId = :passId")

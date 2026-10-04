@@ -121,6 +121,10 @@ class PassRepository
 
         suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 
+        suspend fun isRegistered(pass: Pass): Boolean = passDao.metadata(pass.id)?.registeredDeviceId == pass.deviceId
+
+        suspend fun setRegistered(pass: Pass) = passDao.setRegisteredDeviceId(pass.id, pass.deviceId)
+
         suspend fun toggleLegacyRendering(pass: Pass) = passDao.toggleLegacyRendering(pass.id)
 
         suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {

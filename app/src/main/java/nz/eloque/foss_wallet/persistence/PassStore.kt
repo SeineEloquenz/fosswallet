@@ -72,7 +72,12 @@ class PassStore
         }
 
         suspend fun update(pass: Pass): UpdateResult {
-            val updated = passbookApi.getUpdated(pass)
+            val updated =
+                passbookApi.getUpdated(
+                    pass = pass,
+                    registered = passRepository.isRegistered(pass),
+                    onRegistered = { passRepository.setRegistered(pass) },
+                )
             return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
                 insert(updated.content.result)
                 passRepository.setUpdatedAt(pass)
@@ -110,9 +115,11 @@ class PassStore
         }
 
         suspend fun delete(pass: Pass) {
+            val registered = passRepository.isRegistered(pass)
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
             shortcutService.disable(pass)
+            if (registered) passbookApi.unregister(pass)
         }
 
         suspend fun delete(attachment: Attachment) {

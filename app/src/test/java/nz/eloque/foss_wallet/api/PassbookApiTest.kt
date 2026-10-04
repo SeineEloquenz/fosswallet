@@ -87,11 +87,13 @@ class PassbookApiTest {
         server.enqueue(MockResponse.Builder().code(204).build())
         server.enqueue(MockResponse.Builder().code(201).build())
         server.enqueue(MockResponse.Builder().code(304).build())
+        var registeredCallbacks = 0
 
-        val result = runBlocking { api.getUpdated(pass()) }
+        val result = runBlocking { api.getUpdated(pass(), onRegistered = { registeredCallbacks++ }) }
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(3, server.requestCount)
+        assertEquals(1, registeredCallbacks)
 
         val fetch = server.takeRequest()
         assertEquals("GET", fetch.method)
@@ -120,5 +122,29 @@ class PassbookApiTest {
 
         assertEquals(UpdateResult.NotUpdated, result)
         assertEquals(2, server.requestCount)
+    }
+
+    @Test
+    fun `204 for an already registered pass does not register again`() {
+        server.enqueue(MockResponse.Builder().code(204).build())
+
+        val result = runBlocking { api.getUpdated(pass(), registered = true) }
+
+        assertEquals(UpdateResult.NotUpdated, result)
+        assertEquals(1, server.requestCount)
+    }
+
+    @Test
+    fun `unregister deletes the registration of the pass`() {
+        server.enqueue(MockResponse.Builder().code(200).build())
+        val pass = pass()
+
+        val unregistered = runBlocking { api.unregister(pass) }
+
+        assertTrue(unregistered)
+        val request = server.takeRequest()
+        assertEquals("DELETE", request.method)
+        assertEquals("/v1/devices/${pass.deviceId}/registrations/pass.type.id/serial-1", request.url.encodedPath)
+        assertEquals("ApplePass token", request.headers["Authorization"])
     }
 }

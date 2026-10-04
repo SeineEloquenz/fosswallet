@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.mockito.Mockito
+import java.util.UUID
 
 @RunWith(Parameterized::class)
 class PassParserTest(
@@ -23,6 +24,13 @@ class PassParserTest(
         Assert.assertNotNull(jsonString)
         val json = JsonLoader.load(jsonString!!)
         Assert.assertNotNull(parser.parse(json, bitmaps = bitmaps))
+    }
+
+    @Test
+    fun keepsGivenDeviceId() {
+        val json = JsonLoader.load(loadJson(passName)!!)
+        val deviceId = UUID.randomUUID()
+        Assert.assertEquals(deviceId, parser.parse(json, bitmaps = bitmaps, deviceId = deviceId).deviceId)
     }
 
     companion object {
