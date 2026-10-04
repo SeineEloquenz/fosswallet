@@ -23,7 +23,7 @@ class ScanResultTest {
 
     @Test
     fun `binary aztec ticket renders with its original bytes`() {
-        val barcode = FileScanner.ScanResult.fromDecoded(ticketText, ticketBytes, ContentType.BINARY, "AZTEC")!!.toBarCode()
+        val barcode = FileScanner.ScanResult.fromDecoded(ticketText, ticketBytes, ContentType.BINARY, BarcodeFormat.AZTEC)!!.toBarCode()
 
         assertArrayEquals(ticketBytes, barcode.renderedBytes())
         assertNull(barcode.altText)
@@ -34,7 +34,7 @@ class ScanResultTest {
         val bytes = "[)>\u001e06\u001dP12345\u001dQ7\u001e\u0004".toByteArray(StandardCharsets.ISO_8859_1)
         val text = "[)>␞06␝P12345␝Q7␞␄"
 
-        val barcode = FileScanner.ScanResult.fromDecoded(text, bytes, ContentType.ISO15434, "DATA_MATRIX")!!.toBarCode()
+        val barcode = FileScanner.ScanResult.fromDecoded(text, bytes, ContentType.ISO15434, BarcodeFormat.DATA_MATRIX)!!.toBarCode()
 
         assertArrayEquals(bytes, barcode.renderedBytes())
         assertNull(barcode.altText)
@@ -45,7 +45,7 @@ class ScanResultTest {
         val text = "Zürich HB"
         val bytes = text.toByteArray(StandardCharsets.UTF_8)
 
-        val barcode = FileScanner.ScanResult.fromDecoded(text, bytes, ContentType.TEXT, "QR_CODE")!!.toBarCode()
+        val barcode = FileScanner.ScanResult.fromDecoded(text, bytes, ContentType.TEXT, BarcodeFormat.QR_CODE)!!.toBarCode()
 
         assertArrayEquals(bytes, barcode.renderedBytes())
         assertEquals(text, barcode.altText)
@@ -53,7 +53,7 @@ class ScanResultTest {
 
     @Test
     fun `scanned binary ticket keeps its bytes when saved from the create screen`() {
-        val scanned = FileScanner.ScanResult.fromDecoded(ticketText, ticketBytes, ContentType.BINARY, "AZTEC")!!.toBarCode()
+        val scanned = FileScanner.ScanResult.fromDecoded(ticketText, ticketBytes, ContentType.BINARY, BarcodeFormat.AZTEC)!!.toBarCode()
 
         val saved = BarcodeDraft.from(scanned).toBarCode()
 
@@ -71,8 +71,8 @@ class ScanResultTest {
 
     @Test
     fun `empty scans are ignored`() {
-        assertNull(FileScanner.ScanResult.fromDecoded(" ", byteArrayOf(32), ContentType.TEXT, "QR_CODE"))
-        assertNull(FileScanner.ScanResult.fromDecoded("", ByteArray(0), ContentType.BINARY, "AZTEC"))
+        assertNull(FileScanner.ScanResult.fromDecoded(" ", byteArrayOf(32), ContentType.TEXT, BarcodeFormat.QR_CODE))
+        assertNull(FileScanner.ScanResult.fromDecoded("", ByteArray(0), ContentType.BINARY, BarcodeFormat.AZTEC))
     }
 
     private fun BarCode.renderedBytes(): ByteArray {

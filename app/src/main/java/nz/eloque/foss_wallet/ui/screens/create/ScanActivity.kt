@@ -2,7 +2,6 @@ package nz.eloque.foss_wallet.ui.screens.create
 
 import android.Manifest
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -55,20 +54,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.screens.create.FileScanner.toScanResult
+import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import zxingcpp.BarcodeReader
 import java.util.concurrent.Executors
 
 class ScanActivity : AppCompatActivity() {
-    companion object {
-        const val EXTRA_RESULT = "scan_result"
-        const val EXTRA_RESULT_FORMAT = "scan_result_format"
-        const val EXTRA_RESULT_ENCODING = "scan_result_encoding"
-        const val EXTRA_RESULT_ALT_TEXT = "scan_result_alt_text"
-    }
-
     private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
     private var isTorchEnabled by mutableStateOf(false)
@@ -200,16 +193,7 @@ class ScanActivity : AppCompatActivity() {
                 } catch (_: RuntimeException) {
                     return@setAnalyzer
                 }
-            if (result == null) return@setAnalyzer
-            // Prevent crashes due to unsupported formats in zxing
-            val format =
-                try {
-                    BarcodeFormat.valueOf(result.format.name).toString()
-                } catch (_: Exception) {
-                    return@setAnalyzer
-                }
-            val scanResult =
-                FileScanner.ScanResult.fromDecoded(result.text, result.bytes, result.contentType, format) ?: return@setAnalyzer
+            val scanResult = result?.toScanResult() ?: return@setAnalyzer
 
             hasDeliveredResult = true
             runOnUiThread {
@@ -282,14 +266,7 @@ class ScanActivity : AppCompatActivity() {
     private fun deliverScanResult(result: FileScanner.ScanResult) {
         if (isFinishing || isDestroyed) return
 
-        val scanIntent =
-            Intent().apply {
-                putExtra(EXTRA_RESULT, result.message)
-                putExtra(EXTRA_RESULT_FORMAT, result.format)
-                putExtra(EXTRA_RESULT_ENCODING, result.encoding.name())
-                putExtra(EXTRA_RESULT_ALT_TEXT, result.altText)
-            }
-        setResult(Activity.RESULT_OK, scanIntent)
+        setResult(Activity.RESULT_OK, ScanContract.resultIntent(result.toBarCode()))
         finish()
     }
 }

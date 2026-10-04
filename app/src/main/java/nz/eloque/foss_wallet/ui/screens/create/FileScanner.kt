@@ -33,13 +33,13 @@ object FileScanner {
 
     data class ScanResult(
         val message: String,
-        val format: String,
+        val format: BarcodeFormat,
         val encoding: Charset,
         val altText: String?,
     ) {
         fun toBarCode(): BarCode =
             BarCode(
-                format = BarcodeFormat.valueOf(format),
+                format = format,
                 message = message,
                 encoding = encoding,
                 altText = altText,
@@ -53,7 +53,7 @@ object FileScanner {
                 text: String?,
                 bytes: ByteArray?,
                 contentType: BarcodeReader.ContentType,
-                format: String,
+                format: BarcodeFormat,
             ): ScanResult? {
                 val message = bytes?.let { String(it, StandardCharsets.ISO_8859_1) }?.takeIf { it.isNotBlank() } ?: return null
                 val caption = text?.takeIf { contentType == BarcodeReader.ContentType.TEXT && it.isNotBlank() }
@@ -123,8 +123,11 @@ object FileScanner {
         return scanFrom(bitmap)
     }
 
-    fun scanFrom(bitmap: Bitmap): ScanResult? {
-        val result = barcodeReader.read(bitmap).firstOrNull() ?: return null
-        return ScanResult.fromDecoded(result.text, result.bytes, result.contentType, result.format.name)
+    fun scanFrom(bitmap: Bitmap): ScanResult? = barcodeReader.read(bitmap).firstOrNull()?.toScanResult()
+
+    /** Converts a zxing-cpp result, returning null for formats the app cannot render. */
+    fun BarcodeReader.Result.toScanResult(): ScanResult? {
+        val format = BarcodeFormat.entries.firstOrNull { it.name == format.name } ?: return null
+        return ScanResult.fromDecoded(text, bytes, contentType, format)
     }
 }
