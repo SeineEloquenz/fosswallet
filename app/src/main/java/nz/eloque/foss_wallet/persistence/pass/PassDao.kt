@@ -23,9 +23,8 @@ interface PassDao {
     @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithMetadata>>
 
-    @Transaction
-    @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
-    fun updatable(): List<Pass>
+    @Query("SELECT * FROM pass")
+    suspend fun allPasses(): List<Pass>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")

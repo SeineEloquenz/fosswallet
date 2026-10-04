@@ -26,7 +26,7 @@ class PassRepository
     ) {
         fun all(): Flow<List<PassWithMetadata>> = passDao.all()
 
-        fun updatable(): List<Pass> = passDao.updatable()
+        suspend fun updatable(): List<Pass> = passDao.allPasses().filter { it.updatable() }
 
         fun filtered(query: String): Flow<List<PassWithMetadata>> =
             if (query.isEmpty()) {
