@@ -77,6 +77,7 @@ fun ScanView(
                 barcodes = listOf(it),
                 legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
+                increaseFullscreenBrightness = false,
             )
 
             val bcbp = IataBcbp.parse(it.message)

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.dialog.FullscreenDialog
+import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
@@ -53,6 +54,7 @@ fun Barcodes(
     barcodes: List<BarCode>,
     legacyRendering: Boolean,
     barcodePosition: BarcodePosition,
+    increaseFullscreenBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val bitmaps = remember(barcodes, legacyRendering) { barcodes.map { it.toBitmap(legacyRendering = legacyRendering) } }
@@ -95,6 +97,7 @@ fun Barcodes(
             bitmaps = bitmaps,
             initialPage = initialPage,
             barcodePosition = barcodePosition,
+            increaseBrightness = increaseFullscreenBrightness,
             onDismiss = { lastPage ->
                 fullscreenPage = null
                 coroutineScope.launch { pagerState.scrollToPage(lastPage) }
@@ -152,11 +155,13 @@ private fun FullscreenBarcodes(
     bitmaps: List<Bitmap?>,
     initialPage: Int,
     barcodePosition: BarcodePosition,
+    increaseBrightness: Boolean,
     onDismiss: (lastPage: Int) -> Unit,
 ) {
     val pagerState = rememberPagerState(initialPage = initialPage) { bitmaps.size }
 
     FullscreenDialog(onDismiss = { onDismiss(pagerState.currentPage) }) {
+        if (increaseBrightness) UpdateBrightness()
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

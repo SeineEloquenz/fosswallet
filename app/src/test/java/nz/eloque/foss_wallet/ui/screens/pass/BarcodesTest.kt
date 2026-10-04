@@ -37,6 +37,7 @@ class BarcodesTest {
                 barcodes = List(3) { barcode("Barcode $it") },
                 legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
+                increaseFullscreenBrightness = false,
             )
         }
         composeRule.onNode(hasScrollToIndexAction()).performScrollToIndex(1)
@@ -66,6 +67,7 @@ class BarcodesTest {
                 barcodes = List(3) { barcode("Barcode $it") },
                 legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
+                increaseFullscreenBrightness = false,
             )
         }
         composeRule.onNodeWithContentDescription("Barcode").performClick()
@@ -92,6 +94,7 @@ class BarcodesTest {
                 barcodes = listOf(barcode("Single barcode")),
                 legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
+                increaseFullscreenBrightness = false,
             )
         }
         composeRule.onNodeWithContentDescription("Barcode").performClick()

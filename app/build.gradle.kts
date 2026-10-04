@@ -131,6 +131,7 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     implementation(libs.zxing)
     implementation(libs.zxingcpp.android)
