@@ -105,6 +105,7 @@ dependencies {
     testImplementation(libs.androidx.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.ui.test.junit4)
 
     // Compose
     implementation(libs.androidx.activity.compose)
