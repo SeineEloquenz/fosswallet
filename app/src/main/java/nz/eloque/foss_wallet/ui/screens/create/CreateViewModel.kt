@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
 import coil.imageLoader
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
@@ -133,6 +134,8 @@ class CreateViewModel
                     .size(targetSize)
                     .data(imageUrl)
                     .allowHardware(false) // IMPORTANT for Bitmap
+                    // Picker previews in the shared cache would otherwise be accepted at the wrong size
+                    .memoryCachePolicy(CachePolicy.DISABLED)
                     .build()
 
             val result = context.imageLoader.execute(request)
