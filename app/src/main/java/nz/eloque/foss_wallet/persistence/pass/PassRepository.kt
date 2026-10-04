@@ -114,6 +114,11 @@ class PassRepository
 
         suspend fun archive(pass: Pass) = passDao.archive(pass.id)
 
+        suspend fun setUpdatedAt(
+            pass: Pass,
+            updatedAt: Instant = Instant.now(),
+        ) = passDao.setUpdatedAt(pass.id, updatedAt)
+
         suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
 
         suspend fun toggleLegacyRendering(pass: Pass) = passDao.toggleLegacyRendering(pass.id)

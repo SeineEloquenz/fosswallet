@@ -12,10 +12,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Attachment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -40,7 +43,10 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.AttachmentList
+import nz.eloque.foss_wallet.utils.prettyDateTime
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +92,22 @@ fun PassView(
             onTagAdd = onTagAdd,
             onTagCreate = onTagCreate,
         )
+
+        if (pass.updatable()) {
+            val lastUpdated = metadata.updatedAt ?: pass.addedAt
+            if (lastUpdated != Instant.EPOCH) {
+                Text(
+                    text =
+                        stringResource(
+                            R.string.last_updated,
+                            ZonedDateTime.ofInstant(lastUpdated, ZoneId.systemDefault()).prettyDateTime(),
+                        ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
+            }
+        }
 
         if (hasLegacyRepresentation) {
             Card {
