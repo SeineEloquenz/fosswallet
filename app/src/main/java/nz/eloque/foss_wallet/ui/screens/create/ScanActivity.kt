@@ -65,6 +65,8 @@ class ScanActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_RESULT = "scan_result"
         const val EXTRA_RESULT_FORMAT = "scan_result_format"
+        const val EXTRA_RESULT_ENCODING = "scan_result_encoding"
+        const val EXTRA_RESULT_ALT_TEXT = "scan_result_alt_text"
     }
 
     private var previewView: PreviewView? = null
@@ -94,7 +96,7 @@ class ScanActivity : AppCompatActivity() {
                 return@registerForActivityResult
             }
 
-            deliverScanResult(result.text, result.format)
+            deliverScanResult(result)
         }
 
     private val requestCameraPermissionLauncher =
@@ -198,7 +200,7 @@ class ScanActivity : AppCompatActivity() {
                 } catch (_: RuntimeException) {
                     return@setAnalyzer
                 }
-            val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
+            if (result == null) return@setAnalyzer
             // Prevent crashes due to unsupported formats in zxing
             val format =
                 try {
@@ -206,10 +208,12 @@ class ScanActivity : AppCompatActivity() {
                 } catch (_: Exception) {
                     return@setAnalyzer
                 }
+            val scanResult =
+                FileScanner.ScanResult.fromDecoded(result.text, result.bytes, result.contentType, format) ?: return@setAnalyzer
 
             hasDeliveredResult = true
             runOnUiThread {
-                deliverScanResult(text, format)
+                deliverScanResult(scanResult)
             }
         }
 
@@ -275,16 +279,15 @@ class ScanActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun deliverScanResult(
-        text: String,
-        format: String,
-    ) {
+    private fun deliverScanResult(result: FileScanner.ScanResult) {
         if (isFinishing || isDestroyed) return
 
         val scanIntent =
             Intent().apply {
-                putExtra(EXTRA_RESULT, text)
-                putExtra(EXTRA_RESULT_FORMAT, format)
+                putExtra(EXTRA_RESULT, result.message)
+                putExtra(EXTRA_RESULT_FORMAT, result.format)
+                putExtra(EXTRA_RESULT_ENCODING, result.encoding.name())
+                putExtra(EXTRA_RESULT_ALT_TEXT, result.altText)
             }
         setResult(Activity.RESULT_OK, scanIntent)
         finish()

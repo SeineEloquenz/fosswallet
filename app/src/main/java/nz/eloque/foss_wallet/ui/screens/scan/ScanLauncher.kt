@@ -14,6 +14,7 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
+import java.nio.charset.Charset
 
 object ScanLauncher {
     @Composable
@@ -49,12 +50,13 @@ object ScanLauncher {
                                 ).show()
                             BarcodeFormat.QR_CODE
                         }
+                    val encoding = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_ENCODING)?.let { Charset.forName(it) }
                     val barcode =
                         BarCode(
                             message = contents,
-                            altText = contents,
+                            altText = resultData.getStringExtra(ScanActivity.EXTRA_RESULT_ALT_TEXT),
                             format = scannedFormat,
-                            encoding = Charsets.UTF_8,
+                            encoding = encoding ?: Charsets.UTF_8,
                         )
                     onScanned(barcode)
                 }

@@ -91,6 +91,7 @@ import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
+import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -122,15 +123,7 @@ fun CreateView(
 
     var barcodes by remember {
         mutableStateOf(
-            initialBarcode?.let {
-                val draft =
-                    BarcodeDraft(
-                        message = it.message,
-                        altText = it.altText ?: it.message,
-                        format = it.format,
-                    )
-                listOf(draft)
-            } ?: emptyList(),
+            initialBarcode?.let { listOf(BarcodeDraft.from(it)) } ?: emptyList(),
         )
     }
     var activeBarcodeIndex by remember { mutableIntStateOf(0) }
@@ -152,15 +145,7 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
 
-    val barCodeModels =
-        barcodes.map {
-            BarCode(
-                format = it.format,
-                message = it.message,
-                encoding = Charsets.UTF_8,
-                altText = it.altText.ifBlank { it.message },
-            )
-        }
+    val barCodeModels = barcodes.map { it.toBarCode() }
     val pass = PassCreator.create(name, type, barCodeModels)
 
     val nameValid = name.length in 1..<30
@@ -180,15 +165,7 @@ fun CreateView(
             if (activeBarcodeIndex !in barcodes.indices) return@launch
             barcodes =
                 barcodes.mapIndexed { index, barcode ->
-                    if (index != activeBarcodeIndex) {
-                        barcode
-                    } else {
-                        barcode.copy(
-                            message = it.message,
-                            altText = it.altText ?: it.message,
-                            format = it.format,
-                        )
-                    }
+                    if (index != activeBarcodeIndex) barcode else BarcodeDraft.from(it)
                 }
             detailsExpanded = true
         }, onCanceled = {
@@ -251,14 +228,7 @@ fun CreateView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
-                val isNotValid =
-                    barcode.message.isNotEmpty() &&
-                        BarCode(
-                            format = barcode.format,
-                            message = barcode.message,
-                            encoding = Charsets.UTF_8,
-                            altText = barcode.altText.ifBlank { barcode.message },
-                        ).isNotValid()
+                val isNotValid = barcode.message.isNotEmpty() && barcode.toBarCode().isNotValid()
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -971,11 +941,24 @@ private enum class ColorTarget {
     Label,
 }
 
-private data class BarcodeDraft(
+internal data class BarcodeDraft(
     val message: String,
     val altText: String,
     val format: BarcodeFormat,
-)
+    val encoding: Charset = Charsets.UTF_8,
+) {
+    fun toBarCode(): BarCode =
+        BarCode(
+            format = format,
+            message = message,
+            encoding = encoding,
+            altText = altText.ifBlank { message.takeIf { encoding == Charsets.UTF_8 } },
+        )
+
+    companion object {
+        fun from(barCode: BarCode) = BarcodeDraft(barCode.message, barCode.altText.orEmpty(), barCode.format, barCode.encoding)
+    }
+}
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 

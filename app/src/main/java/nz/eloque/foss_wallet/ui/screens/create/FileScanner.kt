@@ -10,6 +10,7 @@ import androidx.core.graphics.createBitmap
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
 import zxingcpp.BarcodeReader
+import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 enum class ScanSource {
@@ -31,16 +32,34 @@ object FileScanner {
         )
 
     data class ScanResult(
-        val text: String,
+        val message: String,
         val format: String,
+        val encoding: Charset,
+        val altText: String?,
     ) {
         fun toBarCode(): BarCode =
             BarCode(
                 format = BarcodeFormat.valueOf(format),
-                message = text,
-                encoding = StandardCharsets.UTF_8,
-                altText = text,
+                message = message,
+                encoding = encoding,
+                altText = altText,
             )
+
+        companion object {
+            /**
+             * Builds a scan result from the raw bytes, keeping zxing-cpp's display text only as caption for plain text.
+             */
+            fun fromDecoded(
+                text: String?,
+                bytes: ByteArray?,
+                contentType: BarcodeReader.ContentType,
+                format: String,
+            ): ScanResult? {
+                val message = bytes?.let { String(it, StandardCharsets.ISO_8859_1) }?.takeIf { it.isNotBlank() } ?: return null
+                val caption = text?.takeIf { contentType == BarcodeReader.ContentType.TEXT && it.isNotBlank() }
+                return ScanResult(message, format, StandardCharsets.ISO_8859_1, caption)
+            }
+        }
     }
 
     fun scanFrom(
@@ -106,10 +125,6 @@ object FileScanner {
 
     fun scanFrom(bitmap: Bitmap): ScanResult? {
         val result = barcodeReader.read(bitmap).firstOrNull() ?: return null
-        val text = result.text?.takeIf { it.isNotBlank() } ?: return null
-        return ScanResult(
-            text = text,
-            format = result.format.name,
-        )
+        return ScanResult.fromDecoded(result.text, result.bytes, result.contentType, result.format.name)
     }
 }
