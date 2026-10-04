@@ -26,7 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.google.zxing.BarcodeFormat
+import androidx.navigation.toRoute
 import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
 import nz.eloque.foss_wallet.R
@@ -48,7 +48,6 @@ import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 import java.net.URLDecoder
-import java.nio.charset.Charset
 
 sealed class Screen(
     val route: String,
@@ -68,23 +67,11 @@ sealed class Screen(
     data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
 
     data object Create : Screen("create", Icons.Default.Create, R.string.create_pass) {
-        const val BARCODE_ROUTE = "create?format={format}?message={message}?altText={altText}?encoding={encoding}"
-
-        val NAV_ARGUMENTS =
-            listOf(
-                navArgument("message") { type = NavType.StringType },
-                navArgument("altText") { type = NavType.StringType },
-                navArgument("encoding") { type = NavType.StringType },
-                navArgument("format") { type = NavType.StringType },
-            )
-
         fun navigate(
             navController: NavHostController,
             barCode: BarCode,
         ) {
-            navController.navigate(
-                "create?format=${barCode.format}?message=${barCode.message}?altText=${barCode.altText}?encoding=${barCode.encoding}",
-            )
+            navController.navigate(CreateWithBarcode(barCode))
         }
     }
 
@@ -147,22 +134,11 @@ fun WalletApp(
                     createViewModel = createViewModel,
                 )
             }
-            composable(
-                route = Screen.Create.BARCODE_ROUTE,
-                arguments = Screen.Create.NAV_ARGUMENTS,
-            ) { backStackEntry ->
-                val barcode =
-                    BarCode(
-                        format = BarcodeFormat.valueOf(backStackEntry.arguments?.getString("format")!!),
-                        message = backStackEntry.arguments?.getString("message")!!,
-                        encoding = Charset.forName(backStackEntry.arguments?.getString("encoding")!!),
-                        altText = backStackEntry.arguments?.getString("altText"),
-                    )
-
+            composable<CreateWithBarcode> { backStackEntry ->
                 CreateScreen(
                     navController,
                     createViewModel,
-                    initialBarcode = barcode,
+                    initialBarcode = backStackEntry.toRoute<CreateWithBarcode>().toBarCode(),
                 )
             }
             composable(Screen.AdvancedAdd.route) {
