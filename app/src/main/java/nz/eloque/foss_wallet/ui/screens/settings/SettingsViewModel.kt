@@ -59,7 +59,7 @@ class SettingsViewModel
 
         fun refresh() = update()
 
-        fun enableSync(enabled: Boolean) {
+        suspend fun enableSync(enabled: Boolean) {
             settingsStore.enableSync(enabled)
             if (enabled) {
                 updateScheduler.enableSync()
@@ -69,7 +69,7 @@ class SettingsViewModel
             update()
         }
 
-        fun setSyncInterval(duration: Duration) {
+        suspend fun setSyncInterval(duration: Duration) {
             settingsStore.setSyncInterval(duration)
             updateScheduler.updateSyncInterval()
             update()

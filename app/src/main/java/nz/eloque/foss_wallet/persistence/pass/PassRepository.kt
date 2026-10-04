@@ -26,7 +26,7 @@ class PassRepository
     ) {
         fun all(): Flow<List<PassWithMetadata>> = passDao.all()
 
-        fun updatable(): List<Pass> = passDao.updatable()
+        suspend fun updatable(): List<Pass> = passDao.allPasses().filter { it.updatable() }
 
         fun filtered(query: String): Flow<List<PassWithMetadata>> =
             if (query.isEmpty()) {
@@ -120,6 +120,10 @@ class PassRepository
         ) = passDao.setUpdatedAt(pass.id, updatedAt)
 
         suspend fun unarchive(pass: Pass) = passDao.unarchive(pass.id)
+
+        suspend fun isRegistered(pass: Pass): Boolean = passDao.metadata(pass.id)?.registeredDeviceId == pass.deviceId
+
+        suspend fun setRegistered(pass: Pass) = passDao.setRegisteredDeviceId(pass.id, pass.deviceId)
 
         suspend fun toggleLegacyRendering(pass: Pass) = passDao.toggleLegacyRendering(pass.id)
 
