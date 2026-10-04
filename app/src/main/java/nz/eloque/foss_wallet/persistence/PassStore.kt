@@ -1,9 +1,12 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.map
+import nz.eloque.foss_wallet.api.FailureReason
+import nz.eloque.foss_wallet.api.ImportOutcome
 import nz.eloque.foss_wallet.api.ImportResult
 import nz.eloque.foss_wallet.api.PassbookApi
 import nz.eloque.foss_wallet.api.UpdateContent
@@ -15,13 +18,18 @@ import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
+import nz.eloque.foss_wallet.persistence.loader.InvalidInputException
+import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
+import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
 import nz.eloque.foss_wallet.persistence.pass.PassRepository
-import nz.eloque.foss_wallet.shortcut.Shortcut
+import nz.eloque.foss_wallet.shortcut.ShortcutService
 import java.util.Locale
+
+private const val TAG = "PassStore"
 
 class PassStore
     @Inject
@@ -32,6 +40,8 @@ class PassStore
         private val passRepository: PassRepository,
         private val localizationRepository: PassLocalizationRepository,
         private val updateScheduler: UpdateScheduler,
+        private val shortcutService: ShortcutService,
+        private val passbookApi: PassbookApi,
     ) {
         fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
 
@@ -70,18 +80,28 @@ class PassStore
         }
 
         suspend fun update(pass: Pass): UpdateResult {
-            val updated = PassbookApi.getUpdated(pass)
-            return if (updated is UpdateResult.Success && updated.content is UpdateContent.LoadResult) {
-                insert(updated.content.result)
-                notificationService.createNotificationChannel()
-                val localizedPass =
-                    updated.content.result.pass
-                        .applyLocalization(Locale.getDefault().language)
-                localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
-                UpdateResult.Success(UpdateContent.Pass(localizedPass))
-            } else {
-                updated
-            }
+            val service = pass.webService() ?: return UpdateResult.NotUpdated
+            val updated =
+                passbookApi.getUpdated(
+                    service = service,
+                    registered = passRepository.isRegistered(pass),
+                    onRegistered = { passRepository.setRegistered(pass) },
+                )
+            if (updated !is UpdateResult.Success || updated.content !is UpdateContent.Downloaded) return updated
+            val loadResult =
+                try {
+                    PassLoader(PassParser()).load(updated.content.bytes, pass.id, pass.addedAt, pass.deviceId)
+                } catch (e: InvalidPassException) {
+                    return UpdateResult.Failed(FailureReason.Exception(e))
+                }
+            insert(loadResult)
+            passRepository.setUpdatedAt(pass)
+            notificationService.createNotificationChannel()
+            val localizedPass =
+                loadResult.pass
+                    .applyLocalization(Locale.getDefault().language)
+            localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
+            return UpdateResult.Success(UpdateContent.Pass(localizedPass))
         }
 
         suspend fun archive(pass: Pass) = passRepository.archive(pass)
@@ -107,21 +127,41 @@ class PassStore
         }
 
         suspend fun delete(pass: Pass) {
+            val registered = passRepository.isRegistered(pass)
             passRepository.delete(pass)
             updateScheduler.cancelUpdate(pass)
-            Shortcut.remove(context, pass)
+            shortcutService.disable(pass)
+            if (registered) pass.webService()?.let { passbookApi.unregister(it) }
         }
 
         suspend fun delete(attachment: Attachment) {
             passRepository.delete(attachment)
         }
 
-        suspend fun load(
-            context: Context,
-            bytes: ByteArray,
-        ): ImportResult {
-            val loaded = PassLoader(PassParser(context)).load(bytes)
-            return add(loaded)
+        suspend fun import(bytes: ByteArray): ImportOutcome {
+            val loaded =
+                try {
+                    Loader(context).load(bytes)
+                } catch (e: InvalidInputException) {
+                    Log.w(TAG, "Failed to import file", e)
+                    return ImportOutcome.Invalid
+                }
+            return when (loaded.size) {
+                0 -> {
+                    ImportOutcome.Empty
+                }
+
+                1 -> {
+                    val single = loaded.first()
+                    ImportOutcome.Single(single.pass.pass.id, add(single))
+                }
+
+                else -> {
+                    loaded.forEach { add(it) }
+                    group(loaded.map { it.pass.pass }.toSet())
+                    ImportOutcome.Multiple(loaded.size)
+                }
+            }
         }
 
         private suspend fun insert(loadResult: PassLoadResult) {

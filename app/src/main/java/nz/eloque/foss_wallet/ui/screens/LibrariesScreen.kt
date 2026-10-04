@@ -13,7 +13,6 @@ import androidx.navigation.NavHostController
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,7 +21,7 @@ fun LibrariesScreen(navController: NavHostController) {
     WalletScaffold(
         navController = navController,
         toolWindow = true,
-        title = stringResource(id = Screen.Libraries.resourceId),
+        title = stringResource(id = R.string.libraries),
     ) {
         val libraries by produceLibraries(R.raw.aboutlibraries)
         LibrariesContainer(

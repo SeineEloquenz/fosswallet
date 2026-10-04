@@ -32,7 +32,6 @@
     <string name="enable">Activar</string>
     <string name="search">Buscar</string>
     <string name="add_shortcut">Engadir atallo</string>
-    <string name="shortcut_exists">O atallo xa existe!</string>
     <string name="privacy">Privacidade</string>
     <string name="details">Detalles</string>
     <string name="timeout">Esgotouse o tempo de espera intentando conectar co servidor de actualizacións</string>
@@ -142,4 +141,6 @@
     <string name="nothing_to_export">Nada que exportar: actualmente os pases creados non se poden exportar</string>
     <string name="export_skipped_passes">Exportados %1$d pases, omitidos %2$d pases creados</string>
     <string name="pass_imported_into_the_archive">Importouse o pase ao arquivo</string>
+    <string name="shortcut_unsupported">O teu lanzador non é compatible con fixar atallos</string>
+    <string name="shortcut_failed">Non se puido crear o atallo</string>
 </resources>

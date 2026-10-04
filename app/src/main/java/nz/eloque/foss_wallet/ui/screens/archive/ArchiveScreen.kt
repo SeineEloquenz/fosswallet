@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.screens.archive
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +21,7 @@ import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilter
 import nz.eloque.foss_wallet.ui.icons.ArchiveSearch
 import nz.eloque.foss_wallet.ui.screens.wallet.FilterBlock
@@ -70,11 +72,11 @@ fun ArchiveScreen(
                 }
             }
             IconButton(onClick = {
-                navController.navigate(Screen.Settings.route)
+                navController.navigate(Route.Settings)
             }) {
                 Icon(
-                    imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(Screen.Settings.resourceId),
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.settings),
                 )
             }
         },

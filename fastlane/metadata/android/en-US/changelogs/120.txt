@@ -1,0 +1,4 @@
+* Accept user-installed ca certificates
+* Localize barcode alt texts
+* Add additional share targets
+* Fix brightness when swiping through passes

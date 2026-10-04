@@ -9,6 +9,7 @@ import android.content.Intent
 import android.location.Location
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -89,8 +90,9 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
+import nz.eloque.foss_wallet.ui.Route
+import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
+import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -122,15 +124,7 @@ fun CreateView(
 
     var barcodes by remember {
         mutableStateOf(
-            initialBarcode?.let {
-                val draft =
-                    BarcodeDraft(
-                        message = it.message,
-                        altText = it.altText ?: it.message,
-                        format = it.format,
-                    )
-                listOf(draft)
-            } ?: emptyList(),
+            initialBarcode?.let { listOf(BarcodeDraft.from(it)) } ?: emptyList(),
         )
     }
     var activeBarcodeIndex by remember { mutableIntStateOf(0) }
@@ -152,15 +146,7 @@ fun CreateView(
     var advancedExpanded by remember { mutableStateOf(false) }
     var detailsExpanded by remember { mutableStateOf(false) }
 
-    val barCodeModels =
-        barcodes.map {
-            BarCode(
-                format = it.format,
-                message = it.message,
-                encoding = Charsets.UTF_8,
-                altText = it.altText.ifBlank { it.message },
-            )
-        }
+    val barCodeModels = barcodes.map { it.toBarCode() }
     val pass = PassCreator.create(name, type, barCodeModels)
 
     val nameValid = name.length in 1..<30
@@ -176,28 +162,18 @@ fun CreateView(
     val allColorsBlank = backgroundColor == null && foregroundColor == null && labelColor == null
 
     val scanLauncher =
-        ScanLauncher.launch(onScanned = {
-            if (activeBarcodeIndex !in barcodes.indices) return@launch
+        rememberLauncherForActivityResult(ScanContract()) { scanned ->
+            if (scanned == null) {
+                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
+                return@rememberLauncherForActivityResult
+            }
+            if (activeBarcodeIndex !in barcodes.indices) return@rememberLauncherForActivityResult
             barcodes =
                 barcodes.mapIndexed { index, barcode ->
-                    if (index != activeBarcodeIndex) {
-                        barcode
-                    } else {
-                        barcode.copy(
-                            message = it.message,
-                            altText = it.altText ?: it.message,
-                            format = it.format,
-                        )
-                    }
+                    if (index != activeBarcodeIndex) barcode else BarcodeDraft.from(scanned)
                 }
             detailsExpanded = true
-        }, onCanceled = {
-            navController.popBackStack(
-                route = Screen.Wallet.route,
-                inclusive = false,
-                saveState = false,
-            )
-        })
+        }
 
     if (showLocationPicker) {
         LocationPickerDialog(
@@ -251,14 +227,7 @@ fun CreateView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             barcodes.forEachIndexed { index, barcode ->
-                val isNotValid =
-                    barcode.message.isNotEmpty() &&
-                        BarCode(
-                            format = barcode.format,
-                            message = barcode.message,
-                            encoding = Charsets.UTF_8,
-                            altText = barcode.altText.ifBlank { barcode.message },
-                        ).isNotValid()
+                val isNotValid = barcode.message.isNotEmpty() && barcode.toBarCode().isNotValid()
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -285,9 +254,7 @@ fun CreateView(
 
                     IconButton(onClick = {
                         activeBarcodeIndex = index
-                        scanLauncher.launch(
-                            Intent(context, ScanActivity::class.java),
-                        )
+                        scanLauncher.launch(Unit)
                     }) {
                         Icon(
                             imageVector = Icons.Default.QrCodeScanner,
@@ -517,6 +484,7 @@ fun CreateView(
                                 label = stringResource(R.string.logo),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -526,6 +494,7 @@ fun CreateView(
                                 label = stringResource(R.string.icon),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -535,6 +504,7 @@ fun CreateView(
                                 label = stringResource(R.string.strip),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -544,6 +514,7 @@ fun CreateView(
                                 label = stringResource(R.string.thumbnail),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -553,6 +524,7 @@ fun CreateView(
                                 label = stringResource(R.string.footer),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
 
                             ImagePicker(
@@ -562,6 +534,7 @@ fun CreateView(
                                 label = stringResource(R.string.background),
                                 labelIcon = Icons.Default.Image,
                                 modifier = Modifier.fillMaxWidth(),
+                                mimeTypes = IMAGE_MIME_TYPES,
                             )
                         }
                     }
@@ -623,8 +596,8 @@ fun CreateView(
                                 )
                             withContext(Dispatchers.Main) {
                                 isSaving = false
-                                navController.navigate("pass/$savedPassId") {
-                                    popUpTo(Screen.Wallet.route)
+                                navController.navigate(Route.Pass(savedPassId)) {
+                                    popUpTo<Route.Wallet>()
                                 }
                             }
                         }
@@ -965,14 +938,29 @@ private enum class ColorTarget {
     Label,
 }
 
-private data class BarcodeDraft(
+internal data class BarcodeDraft(
     val message: String,
     val altText: String,
     val format: BarcodeFormat,
-)
+    val encoding: Charset = Charsets.UTF_8,
+) {
+    fun toBarCode(): BarCode =
+        BarCode(
+            format = format,
+            message = message,
+            encoding = encoding,
+            altText = altText.ifBlank { message.takeIf { encoding == Charsets.UTF_8 } },
+        )
+
+    companion object {
+        fun from(barCode: BarCode) = BarcodeDraft(barCode.message, barCode.altText.orEmpty(), barCode.format, barCode.encoding)
+    }
+}
 
 private fun Double.formatCoord(): String = String.format(Locale.current.platformLocale, "%.6f", this)
 
 private fun Color.toHexColor(): String = String.format("#%06X", this.toArgb() and 0x00FFFFFF)
 
 private fun Color.opaque(): Color = this.copy(alpha = 1f)
+
+private val IMAGE_MIME_TYPES = arrayOf("image/png", "image/jpeg", "image/svg+xml")

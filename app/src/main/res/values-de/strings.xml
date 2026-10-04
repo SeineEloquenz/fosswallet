@@ -34,7 +34,6 @@
     <string name="sync_interval">Pass-Aktualisierungsintervall (min)</string>
     <string name="enable">Aktivieren</string>
     <string name="add_shortcut">Verknüpfung hinzufügen</string>
-    <string name="shortcut_exists">Es existiert bereits eine Verknüpfung!</string>
     <string name="privacy">Privatsphäre</string>
     <string name="details">Details</string>
     <string name="timeout">Es ist eine Zeitüberschreitung bei der Verbindung aufgetreten</string>
@@ -142,4 +141,6 @@
     <string name="nothing_to_export">Nichts zu Exportieren: Erstellte Pässe können aktuell nicht exportiert werden</string>
     <string name="export_skipped_passes">%1$d Pässe exportiert, %2$d erstellte Pässe übersprungen</string>
     <string name="pass_imported_into_the_archive">Pass ins Archiv importiert</string>
+    <string name="shortcut_failed">Verknüpfung konnte nicht erstellt werden</string>
+    <string name="shortcut_unsupported">Dein Launcher unterstützt das Anpinnen von Verknüpfungen nicht</string>
 </resources>

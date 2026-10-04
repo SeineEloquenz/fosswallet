@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.about
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -14,7 +15,7 @@ import nz.eloque.compose_kit.components.About
 import nz.eloque.compose_kit.components.AboutLink
 import nz.eloque.foss_wallet.BuildConfig
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 
 @Composable
 fun AboutView(navController: NavHostController) {
@@ -47,9 +48,9 @@ fun AboutView(navController: NavHostController) {
                     url = "https://hosted.weblate.org/projects/fosswallet/",
                 ),
                 AboutLink.Action(
-                    icon = Screen.Libraries.icon,
-                    label = stringResource(Screen.Libraries.resourceId),
-                    onClick = { navController.navigate(Screen.Libraries.route) },
+                    icon = Icons.AutoMirrored.Filled.LibraryBooks,
+                    label = stringResource(R.string.libraries),
+                    onClick = { navController.navigate(Route.Libraries) },
                 ),
             ),
     )

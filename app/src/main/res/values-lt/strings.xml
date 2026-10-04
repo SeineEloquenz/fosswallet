@@ -43,7 +43,6 @@
     <string name="enable">Įjungti</string>
     <string name="search">Ieškoti</string>
     <string name="add_shortcut">Pridėti trumpinį</string>
-    <string name="shortcut_exists">Trumpinys jau egzistuoja.</string>
     <string name="privacy">Privatumas</string>
     <string name="details">Išsamiau</string>
     <string name="timeout">Įvyko baigimo laikas kreipiant naujinimo serverį.</string>

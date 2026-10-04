@@ -1,8 +1,8 @@
 package nz.eloque.foss_wallet.persistence.pass
 
+import android.content.Context
 import androidx.room.Room
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
@@ -15,13 +15,17 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.time.Instant
 import java.time.ZoneOffset
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class AutoArchiveBehaviorTest {
     private val fixedNow = Instant.parse("2026-01-01T00:00:00Z")
     private val fixedExpiredDate = fixedNow.minusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
+    private val fixedAddedBeforeExpiry = fixedNow.minusSeconds(2 * 24 * 60 * 60)
     private val fixedFutureDate = fixedNow.plusSeconds(24 * 60 * 60).atOffset(ZoneOffset.UTC).toZonedDateTime()
 
     private lateinit var db: WalletDb
@@ -30,7 +34,7 @@ class AutoArchiveBehaviorTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val context = ApplicationProvider.getApplicationContext<Context>()
         db =
             Room
                 .inMemoryDatabaseBuilder(context, WalletDb::class.java)
@@ -57,7 +61,7 @@ class AutoArchiveBehaviorTest {
                     serialNumber = "123",
                     type = PassType.Generic,
                     barCodes = setOf(),
-                    addedAt = fixedNow,
+                    addedAt = fixedAddedBeforeExpiry,
                     expirationDate = fixedExpiredDate,
                 )
             passDao.insert(pass)
@@ -82,6 +86,32 @@ class AutoArchiveBehaviorTest {
             assertNotNull(afterAutoArchiveRun)
             assertFalse(afterAutoArchiveRun!!.archived)
             assertFalse(afterAutoArchiveRun.autoArchive)
+        }
+
+    @Test
+    fun passAddedAfterExpirationIsNotArchived() =
+        runTest {
+            val pass =
+                Pass(
+                    id = "already-expired-pass",
+                    description = "Deliberately added expired pass",
+                    formatVersion = 1,
+                    organization = "Test Org",
+                    serialNumber = "124",
+                    type = PassType.Generic,
+                    barCodes = setOf(),
+                    addedAt = fixedNow,
+                    expirationDate = fixedExpiredDate,
+                )
+            passDao.insert(pass)
+            passDao.insert(PassMetadata(pass.id))
+
+            passRepository.archiveExpiredPasses(now = fixedNow)
+
+            val afterAutoArchiveRun = passDao.findById(pass.id)?.metadata
+            assertNotNull(afterAutoArchiveRun)
+            assertFalse(afterAutoArchiveRun!!.archived)
+            assertTrue(afterAutoArchiveRun.autoArchive)
         }
 
     @Test

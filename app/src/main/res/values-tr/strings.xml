@@ -31,7 +31,6 @@
     <string name="enable">Etkinleştir</string>
     <string name="search">Ara</string>
     <string name="add_shortcut">Kısayol ekle</string>
-    <string name="shortcut_exists">Kısayol zaten var!</string>
     <string name="privacy">Gizlilik</string>
     <string name="details">Detaylar</string>
     <string name="timeout">Güncelleme sunucusuna bağlanırken zaman aşımı oluştu</string>

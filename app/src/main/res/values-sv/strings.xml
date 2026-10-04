@@ -44,7 +44,6 @@
     <string name="group">Gruppera kort</string>
     <string name="ungroup">Avgruppera kort</string>
     <string name="passes">Kort</string>
-    <string name="shortcut_exists">Genvägen finns redan!</string>
     <string name="pass_view">Kortvy</string>
     <string name="pass_view_brightness">Öka ljusstyrkan</string>
     <string name="pass_already_imported">Kortet har redan importerats</string>
@@ -142,4 +141,6 @@
     <string name="no_passes_found_in_file">Inga kort hittades i denna fil</string>
     <string name="nothing_to_export">Inget att exportera: skapade kort kan för närvarande inte exporteras</string>
     <string name="export_skipped_passes">Exporterade %1$d kort, hoppade över %2$d skapade kort</string>
+    <string name="shortcut_failed">Kunde inte skapa genväg</string>
+    <string name="shortcut_unsupported">Din startskärmsapp stöder inte att genvägar fästs</string>
 </resources>

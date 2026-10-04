@@ -2,7 +2,6 @@ package nz.eloque.foss_wallet.ui.screens.create
 
 import android.Manifest
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -55,18 +54,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.screens.create.FileScanner.toScanResult
+import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import zxingcpp.BarcodeReader
 import java.util.concurrent.Executors
 
 class ScanActivity : AppCompatActivity() {
-    companion object {
-        const val EXTRA_RESULT = "scan_result"
-        const val EXTRA_RESULT_FORMAT = "scan_result_format"
-    }
-
     private var previewView: PreviewView? = null
     private var cameraPermissionState by mutableStateOf(CameraPermissionState.Requesting)
     private var isTorchEnabled by mutableStateOf(false)
@@ -94,7 +89,7 @@ class ScanActivity : AppCompatActivity() {
                 return@registerForActivityResult
             }
 
-            deliverScanResult(result.text, result.format)
+            deliverScanResult(result)
         }
 
     private val requestCameraPermissionLauncher =
@@ -198,18 +193,11 @@ class ScanActivity : AppCompatActivity() {
                 } catch (_: RuntimeException) {
                     return@setAnalyzer
                 }
-            val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
-            // Prevent crashes due to unsupported formats in zxing
-            val format =
-                try {
-                    BarcodeFormat.valueOf(result.format.name).toString()
-                } catch (_: Exception) {
-                    return@setAnalyzer
-                }
+            val scanResult = result?.toScanResult() ?: return@setAnalyzer
 
             hasDeliveredResult = true
             runOnUiThread {
-                deliverScanResult(text, format)
+                deliverScanResult(scanResult)
             }
         }
 
@@ -275,18 +263,10 @@ class ScanActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun deliverScanResult(
-        text: String,
-        format: String,
-    ) {
+    private fun deliverScanResult(result: FileScanner.ScanResult) {
         if (isFinishing || isDestroyed) return
 
-        val scanIntent =
-            Intent().apply {
-                putExtra(EXTRA_RESULT, text)
-                putExtra(EXTRA_RESULT_FORMAT, format)
-            }
-        setResult(Activity.RESULT_OK, scanIntent)
+        setResult(Activity.RESULT_OK, ScanContract.resultIntent(result.toBarCode()))
         finish()
     }
 }

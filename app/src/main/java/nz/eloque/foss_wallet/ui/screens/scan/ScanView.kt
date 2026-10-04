@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.scan
 
-import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,10 +27,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.ui.Screen
-import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
-import nz.eloque.foss_wallet.ui.screens.pass.Barcode
-import java.net.URLEncoder
+import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.ui.Route
+import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,22 +43,18 @@ fun ScanView(
     var initialScanHandled by remember { mutableStateOf(false) }
 
     val scanLauncher =
-        ScanLauncher.launch(onScanned = {
-            scannedBarcode = it
-        }, onCanceled = {
-            navController.popBackStack(
-                route = Screen.Wallet.route,
-                inclusive = false,
-                saveState = false,
-            )
-        })
+        rememberLauncherForActivityResult(ScanContract()) { barcode ->
+            if (barcode != null) {
+                scannedBarcode = barcode
+            } else {
+                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
+            }
+        }
 
     LaunchedEffect(initialScanHandled) {
         if (!initialScanHandled) {
             initialScanHandled = true
-            scanLauncher.launch(
-                Intent(context, ScanActivity::class.java),
-            )
+            scanLauncher.launch(Unit)
         }
     }
 
@@ -72,7 +67,12 @@ fun ScanView(
                 .padding(16.dp),
     ) {
         scannedBarcode?.let {
-            Barcode(barcode = it)
+            Barcodes(
+                barcodes = listOf(it),
+                legacyRendering = false,
+                barcodePosition = BarcodePosition.Center,
+                increaseFullscreenBrightness = false,
+            )
 
             val bcbp = IataBcbp.parse(it.message)
             if (bcbp != null) {
@@ -82,8 +82,8 @@ fun ScanView(
                         coroutineScope.launch(Dispatchers.IO) {
                             val passId = scanViewModel.saveBcbpPass(it, bcbp)
                             withContext(Dispatchers.Main) {
-                                navController.navigate("pass/$passId") {
-                                    popUpTo(Screen.Scan.route) {
+                                navController.navigate(Route.Pass(passId)) {
+                                    popUpTo<Route.Scan> {
                                         inclusive = true
                                     }
                                 }
@@ -97,8 +97,7 @@ fun ScanView(
             if (it.message.startsWith("https://") || it.message.startsWith("http://")) {
                 TextButton(
                     onClick = {
-                        val url = URLEncoder.encode(it.message, Charsets.UTF_8.name())
-                        navController.navigate("${Screen.Web.route}/$url")
+                        navController.navigate(Route.Webview(it.message))
                     },
                 ) {
                     Text(stringResource(R.string.webview))
@@ -107,7 +106,7 @@ fun ScanView(
 
             TextButton(
                 onClick = {
-                    Screen.Create.navigate(navController, scannedBarcode!!)
+                    navController.navigate(Route.CreateWithBarcode(scannedBarcode!!))
                 },
             ) {
                 Text(stringResource(R.string.manual_entry))

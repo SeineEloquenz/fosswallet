@@ -26,14 +26,12 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.shortcut.Shortcut
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.shortcut.ShortcutService
+import nz.eloque.foss_wallet.ui.ImportEventsEffect
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.create.FileScanner
 import nz.eloque.foss_wallet.ui.screens.create.ScanSource
@@ -66,17 +64,8 @@ class MainActivity : ComponentActivity() {
                     intent.data
                 }
 
-                shareSource != null -> {
-                    intent.sharedFileUri()
-                }
-
                 Intent.ACTION_SEND == intent.action -> {
-                    val count =
-                        intent.clipData
-                            ?.itemCount
-                            ?.minus(1)
-                            ?.coerceAtLeast(0)
-                    count?.let { intent.clipData?.getItemAt(it)?.uri }
+                    intent.sharedFileUri()
                 }
 
                 else -> {
@@ -84,12 +73,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+        val isFreshStart = savedInstanceState == null
+
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
             var isProcessingFileShare by remember { mutableStateOf(false) }
+            ImportEventsEffect(walletViewModel, navController)
             LaunchedEffect(dataUri, shareSource != null) {
+                if (!isFreshStart) return@LaunchedEffect
                 if (shareSource != null && dataUri != null) {
                     isProcessingFileShare = true
                     coroutineScope.launch(Dispatchers.IO) {
@@ -98,7 +91,7 @@ class MainActivity : ComponentActivity() {
                         withContext(Dispatchers.Main) {
                             isProcessingFileShare = false
                             if (barcode != null) {
-                                Screen.Create.navigate(navController, barcode)
+                                navController.navigate(Route.CreateWithBarcode(barcode))
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
                             }
@@ -107,15 +100,8 @@ class MainActivity : ComponentActivity() {
                     return@LaunchedEffect
                 }
 
-                if (Shortcut.SCHEME != dataUri?.scheme) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
-                        if (result is LoaderResult.Single) {
-                            withContext(Dispatchers.Main) {
-                                navController.navigate("pass/${result.passId}")
-                            }
-                        }
-                    }
+                if (dataUri != null && ShortcutService.SCHEME != dataUri.scheme) {
+                    walletViewModel.import(listOf(dataUri))
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -150,23 +136,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun Uri.handleIntent(
-        walletViewModel: WalletViewModel,
-        coroutineScope: CoroutineScope,
-    ): LoaderResult {
-        contentResolver.openInputStream(this).use {
-            it?.let {
-                return Loader(this@MainActivity).handleInputStream(
-                    it,
-                    walletViewModel,
-                    coroutineScope,
-                )
-            }
-        }
-
-        return LoaderResult.Invalid
-    }
-
     @Suppress("DEPRECATION")
     private fun Intent.sharedFileUri(): Uri? {
         if (action != Intent.ACTION_SEND) return null
@@ -177,6 +146,8 @@ class MainActivity : ComponentActivity() {
             getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let { return it }
         }
 
-        return clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+        return clipData?.let { clip ->
+            (0 until clip.itemCount).firstNotNullOfOrNull { clip.getItemAt(it).uri }
+        }
     }
 }

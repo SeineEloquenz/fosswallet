@@ -14,6 +14,8 @@ import nz.eloque.foss_wallet.model.PassGroup
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassTagCrossRef
 import nz.eloque.foss_wallet.model.PassWithMetadata
+import java.time.Instant
+import java.util.UUID
 
 @Dao
 interface PassDao {
@@ -21,9 +23,8 @@ interface PassDao {
     @Query("SELECT * FROM pass")
     fun all(): Flow<List<PassWithMetadata>>
 
-    @Transaction
-    @Query("SELECT * FROM pass WHERE webServiceUrl != ''")
-    fun updatable(): List<Pass>
+    @Query("SELECT * FROM pass")
+    suspend fun allPasses(): List<Pass>
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
@@ -126,6 +127,18 @@ interface PassDao {
     """,
     )
     suspend fun deleteEmptyGroup(groupId: Long)
+
+    @Query("UPDATE PassMetadata SET updatedAt = :updatedAt WHERE passId = :passId")
+    suspend fun setUpdatedAt(
+        passId: String,
+        updatedAt: Instant,
+    )
+
+    @Query("UPDATE PassMetadata SET registeredDeviceId = :deviceId WHERE passId = :passId")
+    suspend fun setRegisteredDeviceId(
+        passId: String,
+        deviceId: UUID,
+    )
 
     @Query("UPDATE PassMetadata SET archived = 1 WHERE passId = :passId")
     suspend fun archive(passId: String)

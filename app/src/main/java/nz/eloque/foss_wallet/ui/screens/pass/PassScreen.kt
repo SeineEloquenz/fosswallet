@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.components.UpdateButton
+import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.FailureReason
@@ -55,8 +56,8 @@ import nz.eloque.foss_wallet.api.UpdateResult
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
-import nz.eloque.foss_wallet.shortcut.Shortcut
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
@@ -90,6 +91,8 @@ fun PassScreen(
 
     AllowOnLockscreen {
         val snackbarHostState = remember { SnackbarHostState() }
+
+        if (passViewModel.increasePassViewBrightness()) UpdateBrightness()
 
         // Recreate the pager whenever the set or order of group passes changes
         key(passes.map { it.pass.id }) {
@@ -140,8 +143,8 @@ fun PassScreen(
                             onTagAdd = { passViewModel.tag(pagePass.pass, it) },
                             onTagCreate = { passViewModel.addTag(it) },
                             barcodePosition = passViewModel.barcodePosition(),
+                            increaseFullscreenBrightness = passViewModel.increaseFullscreenBrightness(),
                             scrollBehavior = scrollBehavior,
-                            increaseBrightness = passViewModel.increasePassViewBrightness(),
                             onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
                             onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
@@ -243,8 +246,12 @@ fun Actions(
                                     when (result.reason) {
                                         is FailureReason.Exception -> {
                                             coroutineScope.launch(Dispatchers.Main) {
+                                                val exception = result.reason.exception
                                                 navController.navigate(
-                                                    "updateFailure/${result.reason.exception.message}/${result.reason.exception.asString()}",
+                                                    Route.UpdateFailure(
+                                                        exception.message ?: exception.javaClass.name,
+                                                        exception.asString(),
+                                                    ),
                                                 )
                                             }
                                         }
@@ -277,7 +284,7 @@ fun Actions(
                     Icon(imageVector = Icons.Default.AppShortcut, contentDescription = stringResource(R.string.add_shortcut))
                 },
                 onClick = {
-                    Shortcut.create(context, pass, pass.description)
+                    passViewModel.addShortcut(pass)
                 },
             )
 

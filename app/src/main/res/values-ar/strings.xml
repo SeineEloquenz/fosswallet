@@ -69,7 +69,6 @@
     <string name="enable">تفعيل</string>
     <string name="search">بحث</string>
     <string name="add_shortcut">إضافة اختصار</string>
-    <string name="shortcut_exists">الاختصار موجود بالفعل!</string>
     <string name="timeout">تعذر الاتصال بسبب انتهاء المهلة</string>
     <string name="exception">تعذر الاتصال بالخادم</string>
     <string name="copy">نسخ</string>
