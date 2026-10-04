@@ -16,8 +16,10 @@ import java.net.SocketTimeoutException
 
 @Suppress("RedundantSuspendModifier")
 class PassbookApi(
-    private val client: OkHttpClient = OkHttpClient.Builder().build(),
+    client: OkHttpClient = OkHttpClient(),
 ) {
+    private val client = client.newBuilder().followRedirects(false).build()
+
     suspend fun getUpdated(
         pass: Pass,
         registered: Boolean = false,
@@ -94,7 +96,7 @@ class PassbookApi(
         val requestUrl = "$webServiceUrl/$API_VERSION/passes/${pass.passTypeIdentifier}/${pass.serialNumber}"
         val response =
             try {
-                client.get(requestUrl, pass.authHeader())
+                client.getFollowingRedirects(requestUrl, pass.authHeader())
             } catch (e: SocketTimeoutException) {
                 Log.i(TAG, "Timeout while connecting to pass api at $requestUrl", e)
                 return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Timeout))
@@ -131,6 +133,21 @@ class PassbookApi(
         ) : FetchOutcome
 
         data object NeedsRegistration : FetchOutcome
+    }
+
+    private suspend fun OkHttpClient.getFollowingRedirects(
+        url: String,
+        authHeader: Pair<String, String>,
+    ): Response {
+        var response = get(url, authHeader)
+        repeat(MAX_REDIRECTS) {
+            if (!response.isRedirect) return response
+            val location = response.header("Location")?.let { response.request.url.resolve(it) } ?: return response
+            response.close()
+            // Issuers redirect to storage like S3 that rejects requests carrying the PassKit Authorization header.
+            response = get(location.toString())
+        }
+        return response
     }
 
     private suspend fun OkHttpClient.get(
@@ -176,6 +193,7 @@ class PassbookApi(
     companion object {
         private const val TAG = "PassbookApi"
         private const val API_VERSION = "v1"
+        private const val MAX_REDIRECTS = 5
         private val JSON_MEDIA_TYPE = "application/json".toMediaType()
     }
 }

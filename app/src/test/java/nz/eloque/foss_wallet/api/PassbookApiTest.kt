@@ -8,6 +8,7 @@ import nz.eloque.foss_wallet.model.PassType
 import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -146,5 +147,38 @@ class PassbookApiTest {
         assertEquals("DELETE", request.method)
         assertEquals("/v1/devices/${pass.deviceId}/registrations/pass.type.id/serial-1", request.url.encodedPath)
         assertEquals("ApplePass token", request.headers["Authorization"])
+    }
+
+    private fun redirect(location: String) =
+        MockResponse
+            .Builder()
+            .code(301)
+            .addHeader("Location", location)
+            .build()
+
+    @Test
+    fun `redirect target is requested without the PassKit authorization`() {
+        server.enqueue(redirect("/download/pass.pkpass"))
+        server.enqueue(MockResponse.Builder().code(304).build())
+
+        val result = runBlocking { api.getUpdated(pass()) }
+
+        assertEquals(UpdateResult.NotUpdated, result)
+        val update = server.takeRequest()
+        assertEquals("/v1/passes/pass.type.id/serial-1", update.url.encodedPath)
+        assertEquals("ApplePass token", update.headers["Authorization"])
+        val download = server.takeRequest()
+        assertEquals("/download/pass.pkpass", download.url.encodedPath)
+        assertNull(download.headers["Authorization"])
+    }
+
+    @Test
+    fun `redirect loops are cut off`() {
+        repeat(10) { server.enqueue(redirect("/loop")) }
+
+        val result = runBlocking { api.getUpdated(pass()) }
+
+        assertEquals(UpdateResult.Failed(FailureReason.Status(301)), result)
+        assertEquals(6, server.requestCount)
     }
 }
