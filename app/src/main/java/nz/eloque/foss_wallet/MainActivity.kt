@@ -84,11 +84,12 @@ class MainActivity : ComponentActivity() {
                 if (shareSource != null && dataUri != null) {
                     isProcessingFileShare = true
                     coroutineScope.launch(Dispatchers.IO) {
-                        val barcode =
-                            runCatching { FileScanner.scanFrom(contentResolver, dataUri, shareSource)?.toBarCode() }.getOrNull()
+                        val scanResult =
+                            runCatching { FileScanner.scanFrom(contentResolver, dataUri, shareSource) }.getOrNull()
                         withContext(Dispatchers.Main) {
                             isProcessingFileShare = false
-                            if (barcode != null) {
+                            if (scanResult != null) {
+                                val barcode = scanResult.toBarCode(this@MainActivity)
                                 Screen.Create.navigate(navController, barcode)
                             } else {
                                 Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()

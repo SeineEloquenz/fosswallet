@@ -55,7 +55,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import zxingcpp.BarcodeReader
@@ -199,17 +198,9 @@ class ScanActivity : AppCompatActivity() {
                     return@setAnalyzer
                 }
             val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
-            // Prevent crashes due to unsupported formats in zxing
-            val format =
-                try {
-                    BarcodeFormat.valueOf(result.format.name).toString()
-                } catch (_: Exception) {
-                    return@setAnalyzer
-                }
-
             hasDeliveredResult = true
             runOnUiThread {
-                deliverScanResult(text, format)
+                deliverScanResult(text, result.format.name)
             }
         }
 

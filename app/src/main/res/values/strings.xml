@@ -144,4 +144,6 @@
     <string name="add_attachment">Add attachment</string>
     <string name="delete_attachment">Delete attachment</string>
     <string name="attachments">Attachments</string>
+    <string name="barcode_format_fallback_title">Barcode format not preserved</string>
+    <string name="barcode_format_fallback_warning">The following barcode formats are unsupported:\n%1$s\n\nThey will be replaced with QR codes, which may not scan correctly.</string>
 </resources>
