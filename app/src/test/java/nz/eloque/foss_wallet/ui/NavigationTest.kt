@@ -76,6 +76,15 @@ class NavigationTest {
         assertRoundTrip(Route.UpdateFailure("Failed /v1/passes/a/b", "java.io.IOException: x/y\n\tat a.b(C.kt:1)\n"))
     }
 
+    @Test
+    fun `raw scanned barcode survives result navigation`() {
+        val barcode = BarCode(BarcodeFormat.AZTEC, "#UT01x\u009c\u0000\r\u001a5", Charsets.ISO_8859_1, null)
+        withController { controller ->
+            controller.navigate(Route.ScanResult(barcode))
+            assertEquals(barcode, controller.currentBackStackEntry!!.toRoute<Route.ScanResult>().toBarCode())
+        }
+    }
+
     private fun assertBarcodeRoundTrip(
         message: String,
         altText: String?,
@@ -106,6 +115,7 @@ class NavigationTest {
                 controller.createGraph(startDestination = Route.Wallet) {
                     composable<Route.Wallet> {}
                     composable<Route.Create> {}
+                    composable<Route.ScanResult> {}
                     composable<Route.Pass>(deepLinks = listOf(navDeepLink<Route.Pass>(basePath = ShortcutService.BASE_URI))) {}
                     composable<Route.Webview> {}
                     composable<Route.UpdateFailure> {}

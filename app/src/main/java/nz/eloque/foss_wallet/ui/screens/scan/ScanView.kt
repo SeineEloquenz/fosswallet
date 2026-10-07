@@ -13,16 +13,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.zxing.BarcodeFormat
 import de.nielstron.bcbp.IataBcbp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,23 +29,22 @@ import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
-import java.nio.charset.Charset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScanView(
     navController: NavHostController,
     scanViewModel: ScanViewModel,
+    initialBarcode: BarCode? = null,
 ) {
-    val context = LocalContext.current
-
-    var scannedBarcode by rememberSaveable(stateSaver = BarCodeSaver) { mutableStateOf<BarCode?>(null) }
-    var initialScanHandled by rememberSaveable { mutableStateOf(false) }
+    var initialScanHandled by rememberSaveable { mutableStateOf(initialBarcode != null) }
 
     val scanLauncher =
         rememberLauncherForActivityResult(ScanContract()) { barcode ->
             if (barcode != null) {
-                scannedBarcode = barcode
+                navController.navigate(Route.ScanResult(barcode)) {
+                    popUpTo<Route.Scan> { inclusive = true }
+                }
             } else {
                 navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
             }
@@ -69,7 +65,7 @@ fun ScanView(
                 .fillMaxSize()
                 .padding(16.dp),
     ) {
-        scannedBarcode?.let {
+        initialBarcode?.let {
             Barcodes(
                 barcodes = listOf(it),
                 legacyRendering = false,
@@ -86,7 +82,7 @@ fun ScanView(
                             val passId = scanViewModel.saveBcbpPass(it, bcbp)
                             withContext(Dispatchers.Main) {
                                 navController.navigate(Route.Pass(passId)) {
-                                    popUpTo<Route.Scan> {
+                                    popUpTo<Route.ScanResult> {
                                         inclusive = true
                                     }
                                 }
@@ -109,7 +105,7 @@ fun ScanView(
 
             TextButton(
                 onClick = {
-                    navController.navigate(Route.Create(scannedBarcode!!))
+                    navController.navigate(Route.Create(it))
                 },
             ) {
                 Text(stringResource(R.string.manual_entry))
@@ -117,11 +113,3 @@ fun ScanView(
         }
     }
 }
-
-private val BarCodeSaver =
-    Saver<BarCode?, List<String?>>(
-        save = { barcode -> barcode?.let { listOf(it.format.name, it.message, it.encoding.name(), it.altText) } ?: emptyList() },
-        restore = { saved ->
-            saved.takeIf { it.size == 4 }?.let { BarCode(BarcodeFormat.valueOf(it[0]!!), it[1]!!, Charset.forName(it[2]), it[3]) }
-        },
-    )
