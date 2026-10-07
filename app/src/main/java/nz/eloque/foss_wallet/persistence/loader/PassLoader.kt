@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.time.Instant
+import java.util.UUID
 import java.util.zip.ZipInputStream
 
 data class PassLoadResult(
@@ -68,9 +69,10 @@ class PassLoader(
         bytes: ByteArray,
         resultingId: String? = null,
         addedAt: Instant = Instant.now(),
+        deviceId: UUID = UUID.randomUUID(),
     ): PassLoadResult {
         try {
-            return loadPass(bytes, resultingId, addedAt)
+            return loadPass(bytes, resultingId, addedAt, deviceId)
         } catch (e: Exception) {
             throw InvalidPassException(e)
         }
@@ -80,6 +82,7 @@ class PassLoader(
         bytes: ByteArray,
         resultingId: String? = null,
         addedAt: Instant,
+        deviceId: UUID,
     ): PassLoadResult {
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
@@ -91,7 +94,7 @@ class PassLoader(
         var background: Bitmap? = null
         ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             var entry = zip.nextEntry
-            do {
+            while (entry != null) {
                 if (!entry.isDirectory) {
                     Log.d(TAG, "Found file: ${entry.name}")
                     val buffer = ByteArray(1024)
@@ -140,7 +143,8 @@ class PassLoader(
                         }
                     }
                 }
-            } while (zip.nextEntry.also { entry = it } != null)
+                entry = zip.nextEntry
+            }
         }
         if (icon == null) {
             icon = logo ?: createBitmap(100, 100)
@@ -148,7 +152,7 @@ class PassLoader(
         // TODO check signature before returning
         if (passJson != null) {
             val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer, background)
-            val pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt)
+            val pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt, deviceId = deviceId)
             return PassLoadResult(PassWithLocalization(pass, localizations.toList()), bitmaps, OriginalPass(bytes))
         } else {
             throw InvalidPassException()

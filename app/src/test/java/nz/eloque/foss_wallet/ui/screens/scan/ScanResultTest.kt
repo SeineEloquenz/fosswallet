@@ -10,8 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.ui.CreateWithBarcode
-import nz.eloque.foss_wallet.ui.ScanWithBarcode
+import nz.eloque.foss_wallet.ui.Route
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -59,14 +58,14 @@ class ScanResultTest {
         val viewModel = mock(ScanViewModel::class.java)
         composeRule.setContent {
             val navController = rememberNavController()
-            NavHost(navController, startDestination = ScanWithBarcode(barcode)) {
-                composable<ScanWithBarcode> { entry ->
-                    val initialBarcode = entry.toRoute<ScanWithBarcode>().toBarCode()
+            NavHost(navController, startDestination = Route.ScanResult(barcode)) {
+                composable<Route.ScanResult> { entry ->
+                    val initialBarcode = entry.toRoute<Route.ScanResult>().toBarCode()
                     assertEquals(barcode, initialBarcode)
                     ScanView(navController, viewModel, initialBarcode)
                 }
-                composable<CreateWithBarcode> { entry ->
-                    assertEquals(barcode, entry.toRoute<CreateWithBarcode>().toBarCode())
+                composable<Route.Create> { entry ->
+                    assertEquals(barcode, entry.toRoute<Route.Create>().toBarCode())
                     Text("Manual editor")
                 }
             }

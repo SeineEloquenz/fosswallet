@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,7 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
@@ -40,13 +43,12 @@ import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.ImportEventsEffect
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.create.scanSource
-import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
+import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewContract
+import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -59,65 +61,45 @@ fun WalletScreen(
     val context = LocalContext.current
     val contentResolver = context.contentResolver
     val coroutineScope = rememberCoroutineScope()
-
     val listState = rememberLazyListState()
 
-    val loading = remember { mutableStateOf(false) }
+    val importing by walletViewModel.importing.collectAsState()
+    var classifyingFiles by remember { mutableStateOf(false) }
+    val loading = importing || classifyingFiles
 
     var previewQueue by remember { mutableStateOf<List<Uri>>(emptyList()) }
     val previewLauncher =
-        ScanLauncher.launch(
-            onScanned = {
-                previewQueue = previewQueue.drop(1)
-                Screen.Scan.navigate(navController, it)
-            },
-            onCanceled = { previewQueue = previewQueue.drop(1) },
-        )
+        rememberLauncherForActivityResult(FilePreviewContract()) { barcode ->
+            previewQueue = previewQueue.drop(1)
+            if (barcode != null) navController.navigate(Route.ScanResult(barcode))
+        }
     LaunchedEffect(previewQueue.firstOrNull()) {
         previewQueue.firstOrNull()?.let { uri ->
-            previewLauncher.launch(Intent(context, ScanActivity::class.java).apply { data = uri })
+            previewLauncher.launch(FilePreviewInput(uri))
         }
     }
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             coroutineScope.launch {
-                loading.value = true
+                classifyingFiles = true
                 val (previewUris, passUris) =
                     withContext(Dispatchers.IO) {
                         uris.partition { contentResolver.scanSource(it) != null }
                     }
-                withContext(Dispatchers.IO) {
-                    var result: LoaderResult? = null
-                    passUris.forEach { uri ->
-                        contentResolver.openInputStream(uri)?.use {
-                            result =
-                                Loader(context).handleInputStream(
-                                    it,
-                                    walletViewModel,
-                                    coroutineScope,
-                                )
-                        }
-                    }
-                    if (passUris.size == 1 && previewUris.isEmpty()) {
-                        if (result is LoaderResult.Single) {
-                            withContext(Dispatchers.Main) {
-                                navController.navigate("pass/${result.passId}")
-                            }
-                        }
-                    }
-                }
-                loading.value = false
+                if (passUris.isNotEmpty()) walletViewModel.import(passUris, openPass = uris.size == 1)
+                classifyingFiles = false
                 previewQueue = previewUris
             }
         }
+    ImportEventsEffect(walletViewModel, navController)
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
     WalletScaffold(
         navController = navController,
-        title = stringResource(id = Screen.Wallet.resourceId),
+        title = stringResource(id = R.string.wallet),
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
@@ -142,19 +124,19 @@ fun WalletScreen(
                 }
             }
             IconButton(onClick = {
-                navController.navigate(Screen.Archive.route)
+                navController.navigate(Route.Archive)
             }) {
                 Icon(
-                    imageVector = Screen.Archive.icon,
+                    imageVector = Icons.Default.Archive,
                     contentDescription = stringResource(R.string.the_archive),
                 )
             }
             IconButton(onClick = {
-                navController.navigate(Screen.Settings.route)
+                navController.navigate(Route.Settings)
             }) {
                 Icon(
-                    imageVector = Screen.Settings.icon,
-                    contentDescription = stringResource(Screen.Settings.resourceId),
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.settings),
                 )
             }
         },
@@ -174,14 +156,14 @@ fun WalletScreen(
                                 icon = Icons.Default.MoreHoriz,
                                 title = stringResource(R.string.advanced),
                                 onClick = {
-                                    navController.navigate(Screen.AdvancedAdd.route)
+                                    navController.navigate(Route.AdvancedAdd)
                                 },
                             ),
                             FabMenuItem(
-                                icon = Screen.Scan.icon,
-                                title = stringResource(Screen.Scan.resourceId),
+                                icon = Icons.Default.QrCodeScanner,
+                                title = stringResource(R.string.barcode),
                                 onClick = {
-                                    navController.navigate(Screen.Scan.route)
+                                    navController.navigate(Route.Scan)
                                 },
                             ),
                             FabMenuItem(
@@ -213,7 +195,7 @@ fun WalletScreen(
             onVisiblePassesChanged = { visiblePasses.value = it },
         )
 
-        if (loading.value) {
+        if (loading) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier =

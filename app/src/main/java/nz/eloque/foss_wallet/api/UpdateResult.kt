@@ -2,7 +2,6 @@ package nz.eloque.foss_wallet.api
 
 import androidx.annotation.StringRes
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 
 sealed class UpdateResult {
     data class Success(
@@ -17,8 +16,8 @@ sealed class UpdateResult {
 }
 
 sealed class UpdateContent {
-    data class LoadResult(
-        val result: PassLoadResult,
+    class Downloaded(
+        val bytes: ByteArray,
     ) : UpdateContent()
 
     data class Pass(

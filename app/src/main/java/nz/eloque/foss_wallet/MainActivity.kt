@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -21,18 +22,16 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.ShortcutService
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.ImportEventsEffect
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletApp
-import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.create.scanSource
-import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
+import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewContract
+import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
@@ -45,29 +44,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val dataUri =
-            when {
-                Intent.ACTION_VIEW == intent.action -> {
-                    intent.data
-                }
-
-                Intent.ACTION_SEND == intent.action -> {
-                    intent.sharedFileUri()
-                }
-
-                else -> {
-                    null
-                }
+            when (intent.action) {
+                Intent.ACTION_VIEW -> intent.data
+                Intent.ACTION_SEND -> intent.sharedFileUri()
+                else -> null
             }
 
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
+            ImportEventsEffect(walletViewModel, navController)
             val previewLauncher =
-                ScanLauncher.launch(
-                    onScanned = { Screen.Scan.navigate(navController, it) },
-                    onCanceled = {},
-                )
+                rememberLauncherForActivityResult(FilePreviewContract()) { barcode ->
+                    if (barcode != null) navController.navigate(Route.ScanResult(barcode))
+                }
             var importHandled by rememberSaveable { mutableStateOf(false) }
             LaunchedEffect(dataUri) {
                 if (importHandled) return@LaunchedEffect
@@ -79,24 +70,12 @@ class MainActivity : ComponentActivity() {
                         null
                     }
                 if (source != null) {
-                    previewLauncher.launch(
-                        Intent(this@MainActivity, ScanActivity::class.java).apply {
-                            setDataAndType(dataUri, intent.type)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        },
-                    )
+                    previewLauncher.launch(FilePreviewInput(dataUri!!, intent.type))
                     return@LaunchedEffect
                 }
 
-                if (ShortcutService.SCHEME != dataUri?.scheme) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val result = dataUri?.handleIntent(walletViewModel, coroutineScope)
-                        if (result is LoaderResult.Single) {
-                            withContext(Dispatchers.Main) {
-                                navController.navigate("pass/${result.passId}")
-                            }
-                        }
-                    }
+                if (dataUri != null && ShortcutService.SCHEME != dataUri.scheme) {
+                    walletViewModel.import(listOf(dataUri))
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -117,23 +96,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private suspend fun Uri.handleIntent(
-        walletViewModel: WalletViewModel,
-        coroutineScope: CoroutineScope,
-    ): LoaderResult {
-        contentResolver.openInputStream(this).use {
-            it?.let {
-                return Loader(this@MainActivity).handleInputStream(
-                    it,
-                    walletViewModel,
-                    coroutineScope,
-                )
-            }
-        }
-
-        return LoaderResult.Invalid
     }
 
     @Suppress("DEPRECATION")

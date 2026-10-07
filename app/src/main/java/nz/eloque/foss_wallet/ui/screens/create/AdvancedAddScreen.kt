@@ -23,9 +23,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.ui.Screen
+import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,20 +72,18 @@ fun AdvancedAddScreen(navController: NavHostController) {
                             return@launch
                         }
 
-                        val url = URLEncoder.encode(value, Charsets.UTF_8.name())
                         withContext(Dispatchers.Main) {
                             if (value.startsWith("https://") || value.startsWith("http://")) {
-                                navController.navigate("${Screen.Web.route}/$url")
+                                navController.navigate(Route.Webview(value))
                             } else {
-                                Screen.Create.navigate(
-                                    navController,
+                                val barcode =
                                     BarCode(
                                         format = BarcodeFormat.QR_CODE,
                                         message = value,
                                         encoding = Charsets.UTF_8,
                                         altText = value,
-                                    ),
-                                )
+                                    )
+                                navController.navigate(Route.Create(barcode))
                             }
                         }
                     }
@@ -97,7 +94,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
             }
 
             Button(
-                onClick = { navController.navigate(Screen.Create.route) },
+                onClick = { navController.navigate(Route.Create()) },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.manual_entry))

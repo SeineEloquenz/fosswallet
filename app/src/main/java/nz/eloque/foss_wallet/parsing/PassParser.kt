@@ -25,6 +25,7 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
+import java.util.UUID
 
 class PassParser(
     val context: Context? = null,
@@ -34,6 +35,7 @@ class PassParser(
         overridingId: String? = null,
         bitmaps: PassBitmaps,
         addedAt: Instant = Instant.now(),
+        deviceId: UUID = UUID.randomUUID(),
     ): Pass {
         if (!passJson.has("description")) {
             Log.w(TAG, "Pass has no description.")
@@ -102,6 +104,7 @@ class PassParser(
             hasFooter = bitmaps.footer != null,
             hasBackground = bitmaps.background != null,
             addedAt = addedAt,
+            deviceId = deviceId,
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
