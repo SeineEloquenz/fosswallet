@@ -146,4 +146,9 @@
     <string name="add_attachment">Add attachment</string>
     <string name="delete_attachment">Delete attachment</string>
     <string name="attachments">Attachments</string>
+    <string name="take_photo">Take photo</string>
+    <string name="photo_capture_failed">Could not take photo. Please try again.</string>
+    <string name="preview_load_failed">Could not open this file. Please choose another image or PDF.</string>
+    <string name="previous_page">Previous</string>
+    <string name="next_page">Next</string>
 </resources>

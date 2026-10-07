@@ -4,14 +4,18 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -27,10 +31,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -59,6 +63,7 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 import zxingcpp.BarcodeReader
+import java.io.File
 import java.util.concurrent.Executors
 
 class ScanActivity : AppCompatActivity() {
@@ -76,26 +81,45 @@ class ScanActivity : AppCompatActivity() {
     private var boundCamera: Camera? = null
     private var isCameraBound = false
     private val cameraExecutor = Executors.newSingleThreadExecutor()
-    private val barcodeReader =
-        BarcodeReader(
-            BarcodeReader.Options(
-                tryHarder = true,
-                tryRotate = true,
-                tryInvert = true,
-            ),
+    private val barcodeReader = BarcodeReader(BarcodeReader.Options(tryHarder = true, tryRotate = true, tryInvert = true))
+    private var imageCapture: ImageCapture? = null
+    private var previewMimeType by mutableStateOf<String?>(null)
+    private var previewUri by mutableStateOf<Uri?>(null)
+    private var isActive by mutableStateOf(false)
+    private var isCapturing by mutableStateOf(false)
+    private val capturedFiles = mutableListOf<File>()
+
+    private fun showPreview(uri: Uri) {
+        previewMimeType = contentResolver.getType(uri)
+        previewUri = uri
+        cameraProvider?.unbindAll()
+        isCameraBound = false
+        isTorchEnabled = false
+    }
+
+    private fun takePhoto() {
+        val capture = imageCapture ?: return
+        if (isCapturing) return
+        isCapturing = true
+        capture.targetRotation = previewView!!.display.rotation
+        val file = File.createTempFile("barcode-", ".jpg", cacheDir)
+        capturedFiles.add(file)
+        capture.takePicture(
+            ImageCapture.OutputFileOptions.Builder(file).build(),
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    isCapturing = false
+                    showPreview(Uri.fromFile(file))
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    isCapturing = false
+                    Toast.makeText(this@ScanActivity, R.string.photo_capture_failed, Toast.LENGTH_SHORT).show()
+                }
+            },
         )
-
-    private val pickImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            val pickedUri = uri ?: return@registerForActivityResult
-            val result = FileScanner.scanFrom(contentResolver, pickedUri, ScanSource.Image)
-            if (result == null) {
-                Toast.makeText(this, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
-                return@registerForActivityResult
-            }
-
-            deliverScanResult(result.text, result.format)
-        }
+    }
 
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -119,36 +143,59 @@ class ScanActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        savedInstanceState?.getStringArrayList("captured_files")?.forEach { capturedFiles.add(File(it)) }
+        previewMimeType = savedInstanceState?.getString("preview_mime") ?: intent.type
+        previewUri = savedInstanceState?.getString("preview_uri")?.let(Uri::parse) ?: intent.data
+
         val hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         cameraPermissionState = if (hasCameraPermission) CameraPermissionState.Granted else CameraPermissionState.Requesting
         setContent {
             WalletTheme {
-                QrScannerContent(
-                    permissionState = cameraPermissionState,
-                    isTorchEnabled = isTorchEnabled,
-                    onPreviewReady = { view ->
-                        previewView = view
-                        if (cameraPermissionState == CameraPermissionState.Granted) {
-                            startCameraIfAllowed()
+                val uri = previewUri
+                if (uri != null) {
+                    val goBack = {
+                        if (intent.data != null) {
+                            finish()
+                        } else {
+                            previewUri = null
+                            previewView = null
+                            if (cameraPermissionState != CameraPermissionState.Granted) requestCameraPermission()
                         }
-                    },
-                    onRequestCameraPermission = ::requestCameraPermission,
-                    onOpenGallery = {
-                        pickImageLauncher.launch("image/*")
-                    },
-                    onToggleFlashlight = ::toggleFlashlight,
-                    onSwitchCamera = ::switchCameraLens,
-                )
+                    }
+                    BackHandler(onBack = goBack)
+                    ImagePreview(
+                        uri = uri,
+                        mimeType = previewMimeType,
+                        scanningEnabled = isActive,
+                        onScanned = { deliverScanResult(it.text, it.format) },
+                    )
+                } else {
+                    QrScannerContent(
+                        permissionState = cameraPermissionState,
+                        isTorchEnabled = isTorchEnabled,
+                        onPreviewReady = { view ->
+                            previewView = view
+                            if (cameraPermissionState == CameraPermissionState.Granted) {
+                                startCameraIfAllowed()
+                            }
+                        },
+                        onRequestCameraPermission = ::requestCameraPermission,
+                        onTakePhoto = ::takePhoto,
+                        isCapturing = isCapturing,
+                        onToggleFlashlight = ::toggleFlashlight,
+                        onSwitchCamera = ::switchCameraLens,
+                    )
+                }
             }
         }
 
-        if (!hasCameraPermission) {
+        if (!hasCameraPermission && previewUri == null) {
             requestCameraPermission()
         }
     }
 
     private fun startCameraIfAllowed() {
-        if (cameraPermissionState != CameraPermissionState.Granted || hasDeliveredResult || isCameraBound) return
+        if (cameraPermissionState != CameraPermissionState.Granted || hasDeliveredResult || isCameraBound || previewUri != null) return
         val boundPreviewView = previewView ?: return
 
         val future = ProcessCameraProvider.getInstance(this)
@@ -157,7 +204,9 @@ class ScanActivity : AppCompatActivity() {
                 try {
                     val provider = future.get()
                     cameraProvider = provider
-                    bindCameraUseCases(provider, boundPreviewView)
+                    if (isActive && previewUri == null && previewView === boundPreviewView && !hasDeliveredResult) {
+                        bindCameraUseCases(provider, boundPreviewView)
+                    }
                 } catch (_: SecurityException) {
                     onCameraAccessFailed()
                 }
@@ -179,44 +228,34 @@ class ScanActivity : AppCompatActivity() {
                 it.surfaceProvider = boundPreviewView.surfaceProvider
             }
 
+        val capture = ImageCapture.Builder().build()
+        imageCapture = capture
+
         val analyzer =
             ImageAnalysis
                 .Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
-
         analyzer.setAnalyzer(cameraExecutor) { image ->
-            if (hasDeliveredResult) {
-                image.close()
-                return@setAnalyzer
-            }
-
-            // Prevent crashes due to failing barcode reader
             val result =
                 try {
                     image.use { barcodeReader.read(it).firstOrNull() }
                 } catch (_: RuntimeException) {
-                    return@setAnalyzer
+                    null
                 }
-            val text = result?.text?.takeIf { it.isNotBlank() } ?: return@setAnalyzer
-            // Prevent crashes due to unsupported formats in zxing
-            val format =
-                try {
-                    BarcodeFormat.valueOf(result.format.name).toString()
-                } catch (_: Exception) {
-                    return@setAnalyzer
+            val text = result?.text?.takeIf { it.isNotBlank() }
+            val format = result?.format?.name
+            if (text != null && BarcodeFormat.entries.any { it.name == format }) {
+                runOnUiThread {
+                    if (isActive && !isCapturing && previewUri == null) deliverScanResult(text, format!!)
                 }
-
-            hasDeliveredResult = true
-            runOnUiThread {
-                deliverScanResult(text, format)
             }
         }
 
         val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
         try {
-            val camera = provider.bindToLifecycle(this, selector, preview, analyzer)
+            val camera = provider.bindToLifecycle(this, selector, preview, capture, analyzer)
             boundCamera = camera
             camera.cameraControl.enableTorch(isTorchEnabled)
             isCameraBound = true
@@ -259,19 +298,29 @@ class ScanActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        isActive = true
         startCameraIfAllowed()
     }
 
     override fun onPause() {
+        isActive = false
         cameraProvider?.unbindAll()
         isCameraBound = false
         super.onPause()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("preview_uri", previewUri?.toString())
+        outState.putString("preview_mime", previewMimeType)
+        outState.putStringArrayList("captured_files", ArrayList(capturedFiles.map { it.path }))
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         cameraProvider?.unbindAll()
         isCameraBound = false
-        cameraExecutor.shutdownNow()
+        cameraExecutor.shutdown()
+        if (!isChangingConfigurations) capturedFiles.forEach { it.delete() }
         super.onDestroy()
     }
 
@@ -279,7 +328,8 @@ class ScanActivity : AppCompatActivity() {
         text: String,
         format: String,
     ) {
-        if (isFinishing || isDestroyed) return
+        if (isFinishing || isDestroyed || hasDeliveredResult) return
+        hasDeliveredResult = true
 
         val scanIntent =
             Intent().apply {
@@ -303,7 +353,8 @@ private fun QrScannerContent(
     isTorchEnabled: Boolean,
     onPreviewReady: (PreviewView) -> Unit,
     onRequestCameraPermission: () -> Unit,
-    onOpenGallery: () -> Unit,
+    onTakePhoto: () -> Unit,
+    isCapturing: Boolean,
     onToggleFlashlight: () -> Unit,
     onSwitchCamera: () -> Unit,
 ) {
@@ -387,7 +438,8 @@ private fun QrScannerContent(
             }
 
             IconButton(
-                onClick = onOpenGallery,
+                onClick = onTakePhoto,
+                enabled = permissionState == CameraPermissionState.Granted && !isCapturing,
                 modifier =
                     Modifier
                         .size(64.dp)
@@ -395,8 +447,8 @@ private fun QrScannerContent(
                         .background(Color.White),
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Image,
-                    contentDescription = stringResource(R.string.choose_image),
+                    imageVector = Icons.Filled.CameraAlt,
+                    contentDescription = stringResource(R.string.take_photo),
                     tint = Color.Black,
                     modifier = Modifier.size(28.dp),
                 )
@@ -423,7 +475,7 @@ private fun QrScannerContent(
 }
 
 @Composable
-private fun ScannerOverlay(modifier: Modifier = Modifier) {
+internal fun ScannerOverlay(modifier: Modifier = Modifier) {
     val cornerRadius = with(LocalDensity.current) { 24.dp.toPx() }
     val strokeWidth = with(LocalDensity.current) { 2.dp.toPx() }
 

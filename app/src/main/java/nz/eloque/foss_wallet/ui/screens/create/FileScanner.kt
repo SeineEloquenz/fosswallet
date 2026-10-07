@@ -104,8 +104,12 @@ object FileScanner {
         return scanFrom(bitmap)
     }
 
+    @Synchronized
     fun scanFrom(bitmap: Bitmap): ScanResult? {
-        val result = barcodeReader.read(bitmap).firstOrNull() ?: return null
+        val result =
+            barcodeReader.read(bitmap).firstOrNull {
+                it.text?.isNotBlank() == true && BarcodeFormat.entries.any { format -> format.name == it.format.name }
+            } ?: return null
         val text = result.text?.takeIf { it.isNotBlank() } ?: return null
         return ScanResult(
             text = text,

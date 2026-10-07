@@ -5,23 +5,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -35,8 +30,9 @@ import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletApp
-import nz.eloque.foss_wallet.ui.screens.create.FileScanner
-import nz.eloque.foss_wallet.ui.screens.create.ScanSource
+import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
+import nz.eloque.foss_wallet.ui.screens.create.scanSource
+import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
@@ -48,18 +44,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val shareSource: ScanSource? =
-            if (intent.action == Intent.ACTION_SEND) {
-                if (intent.type?.startsWith("image/") == true) {
-                    ScanSource.Image
-                } else if (intent.type == "application/pdf") {
-                    ScanSource.Pdf
-                } else {
-                    null
-                }
-            } else {
-                null
-            }
         val dataUri =
             when {
                 Intent.ACTION_VIEW == intent.action -> {
@@ -79,22 +63,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
-            var isProcessingFileShare by remember { mutableStateOf(false) }
-            LaunchedEffect(dataUri, shareSource != null) {
-                if (shareSource != null && dataUri != null) {
-                    isProcessingFileShare = true
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val barcode =
-                            runCatching { FileScanner.scanFrom(contentResolver, dataUri, shareSource)?.toBarCode() }.getOrNull()
-                        withContext(Dispatchers.Main) {
-                            isProcessingFileShare = false
-                            if (barcode != null) {
-                                Screen.Create.navigate(navController, barcode)
-                            } else {
-                                Toast.makeText(this@MainActivity, getString(R.string.no_barcode_found), Toast.LENGTH_SHORT).show()
-                            }
-                        }
+            val previewLauncher =
+                ScanLauncher.launch(
+                    onScanned = { Screen.Create.navigate(navController, it) },
+                    onCanceled = {},
+                )
+            var importHandled by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(dataUri) {
+                if (importHandled) return@LaunchedEffect
+                importHandled = true
+                val source =
+                    if (dataUri != null && ShortcutService.SCHEME != dataUri.scheme) {
+                        withContext(Dispatchers.IO) { contentResolver.scanSource(dataUri, intent.type) }
+                    } else {
+                        null
                     }
+                if (source != null) {
+                    previewLauncher.launch(
+                        Intent(this@MainActivity, ScanActivity::class.java).apply {
+                            setDataAndType(dataUri, intent.type)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        },
+                    )
                     return@LaunchedEffect
                 }
 
@@ -124,18 +114,6 @@ class MainActivity : ComponentActivity() {
                     WalletApp(
                         navController,
                     )
-
-                    if (isProcessingFileShare) {
-                        Box(
-                            modifier =
-                                androidx.compose.ui.Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
                 }
             }
         }

@@ -1,6 +1,8 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -18,10 +20,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +44,9 @@ import nz.eloque.foss_wallet.persistence.loader.Loader
 import nz.eloque.foss_wallet.persistence.loader.LoaderResult
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
+import nz.eloque.foss_wallet.ui.screens.create.scanSource
+import nz.eloque.foss_wallet.ui.screens.scan.ScanLauncher
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -56,14 +64,32 @@ fun WalletScreen(
 
     val loading = remember { mutableStateOf(false) }
 
+    var previewQueue by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val previewLauncher =
+        ScanLauncher.launch(
+            onScanned = {
+                previewQueue = previewQueue.drop(1)
+                Screen.Create.navigate(navController, it)
+            },
+            onCanceled = { previewQueue = previewQueue.drop(1) },
+        )
+    LaunchedEffect(previewQueue.firstOrNull()) {
+        previewQueue.firstOrNull()?.let { uri ->
+            previewLauncher.launch(Intent(context, ScanActivity::class.java).apply { data = uri })
+        }
+    }
+
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
-            println("selected file URI $uris")
             coroutineScope.launch {
                 loading.value = true
+                val (previewUris, passUris) =
+                    withContext(Dispatchers.IO) {
+                        uris.partition { contentResolver.scanSource(it) != null }
+                    }
                 withContext(Dispatchers.IO) {
                     var result: LoaderResult? = null
-                    uris.forEach { uri ->
+                    passUris.forEach { uri ->
                         contentResolver.openInputStream(uri)?.use {
                             result =
                                 Loader(context).handleInputStream(
@@ -73,7 +99,7 @@ fun WalletScreen(
                                 )
                         }
                     }
-                    if (uris.size == 1) {
+                    if (passUris.size == 1 && previewUris.isEmpty()) {
                         if (result is LoaderResult.Single) {
                             withContext(Dispatchers.Main) {
                                 navController.navigate("pass/${result.passId}")
@@ -82,6 +108,7 @@ fun WalletScreen(
                     }
                 }
                 loading.value = false
+                previewQueue = previewUris
             }
         }
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
@@ -166,6 +193,8 @@ fun WalletScreen(
                                             "application/json+zip",
                                             "application/octet-stream",
                                             "text/json",
+                                            "image/*",
+                                            "application/pdf",
                                         ).plus(PkpassMimeTypes),
                                     )
                                 },
