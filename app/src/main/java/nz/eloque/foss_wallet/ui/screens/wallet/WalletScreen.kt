@@ -69,7 +69,7 @@ fun WalletScreen(
         ScanLauncher.launch(
             onScanned = {
                 previewQueue = previewQueue.drop(1)
-                Screen.Create.navigate(navController, it)
+                Screen.Scan.navigate(navController, it)
             },
             onCanceled = { previewQueue = previewQueue.drop(1) },
         )

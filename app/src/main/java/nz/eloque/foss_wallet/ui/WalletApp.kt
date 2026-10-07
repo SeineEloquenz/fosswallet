@@ -54,7 +54,14 @@ sealed class Screen(
     val icon: ImageVector,
     @param:StringRes val resourceId: Int,
 ) {
-    data object Scan : Screen("scan", Icons.Default.QrCodeScanner, R.string.barcode)
+    data object Scan : Screen("scan", Icons.Default.QrCodeScanner, R.string.barcode) {
+        fun navigate(
+            navController: NavHostController,
+            barCode: BarCode,
+        ) {
+            navController.navigate(ScanWithBarcode(barCode))
+        }
+    }
 
     data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
 
@@ -107,6 +114,13 @@ fun WalletApp(
             }
             composable(Screen.Scan.route) {
                 ScanScreen(navController, scanViewModel)
+            }
+            composable<ScanWithBarcode> { backStackEntry ->
+                ScanScreen(
+                    navController,
+                    scanViewModel,
+                    initialBarcode = backStackEntry.toRoute<ScanWithBarcode>().toBarCode(),
+                )
             }
             composable(Screen.Archive.route) {
                 ArchiveScreen(navController)

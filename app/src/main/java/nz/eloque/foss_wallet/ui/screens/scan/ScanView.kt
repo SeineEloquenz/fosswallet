@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
+import nz.eloque.foss_wallet.ui.ScanWithBarcode
 import nz.eloque.foss_wallet.ui.Screen
 import nz.eloque.foss_wallet.ui.screens.create.ScanActivity
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
@@ -38,15 +39,17 @@ import java.net.URLEncoder
 fun ScanView(
     navController: NavHostController,
     scanViewModel: ScanViewModel,
+    initialBarcode: BarCode? = null,
 ) {
     val context = LocalContext.current
 
-    var scannedBarcode by remember { mutableStateOf<BarCode?>(null) }
-    var initialScanHandled by remember { mutableStateOf(false) }
+    var initialScanHandled by rememberSaveable { mutableStateOf(initialBarcode != null) }
 
     val scanLauncher =
         ScanLauncher.launch(onScanned = {
-            scannedBarcode = it
+            navController.navigate(ScanWithBarcode(it)) {
+                popUpTo(Screen.Scan.route) { inclusive = true }
+            }
         }, onCanceled = {
             navController.popBackStack(
                 route = Screen.Wallet.route,
@@ -72,7 +75,7 @@ fun ScanView(
                 .fillMaxSize()
                 .padding(16.dp),
     ) {
-        scannedBarcode?.let {
+        initialBarcode?.let {
             Barcodes(
                 barcodes = listOf(it),
                 legacyRendering = false,
@@ -89,7 +92,7 @@ fun ScanView(
                             val passId = scanViewModel.saveBcbpPass(it, bcbp)
                             withContext(Dispatchers.Main) {
                                 navController.navigate("pass/$passId") {
-                                    popUpTo(Screen.Scan.route) {
+                                    popUpTo<ScanWithBarcode> {
                                         inclusive = true
                                     }
                                 }
@@ -113,7 +116,7 @@ fun ScanView(
 
             TextButton(
                 onClick = {
-                    Screen.Create.navigate(navController, scannedBarcode!!)
+                    Screen.Create.navigate(navController, it)
                 },
             ) {
                 Text(stringResource(R.string.manual_entry))

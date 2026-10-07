@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
             val coroutineScope = rememberCoroutineScope()
             val previewLauncher =
                 ScanLauncher.launch(
-                    onScanned = { Screen.Create.navigate(navController, it) },
+                    onScanned = { Screen.Scan.navigate(navController, it) },
                     onCanceled = {},
                 )
             var importHandled by rememberSaveable { mutableStateOf(false) }
