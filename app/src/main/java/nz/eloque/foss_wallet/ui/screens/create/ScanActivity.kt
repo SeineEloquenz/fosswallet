@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -85,9 +86,21 @@ class ScanActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
     private var previewMimeType by mutableStateOf<String?>(null)
     private var previewUri by mutableStateOf<Uri?>(null)
+    private var isChoosingFile by mutableStateOf(false)
     private var isActive by mutableStateOf(false)
     private var isCapturing by mutableStateOf(false)
     private val capturedFiles = mutableListOf<File>()
+
+    private val pickFileLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            isChoosingFile = false
+            if (uri != null) showPreview(uri)
+        }
+
+    private fun pickFile() {
+        isChoosingFile = true
+        pickFileLauncher.launch(arrayOf("image/*", "application/pdf"))
+    }
 
     private fun showPreview(uri: Uri) {
         previewMimeType = contentResolver.getType(uri)
@@ -166,12 +179,14 @@ class ScanActivity : AppCompatActivity() {
                     ImagePreview(
                         uri = uri,
                         mimeType = previewMimeType,
-                        scanningEnabled = isActive,
+                        scanningEnabled = isActive && !isChoosingFile,
+                        onPickFile = ::pickFile,
                         onScanned = { deliverScanResult(it.text, it.format) },
                     )
                 } else {
                     QrScannerContent(
                         permissionState = cameraPermissionState,
+                        onPickFile = ::pickFile,
                         isTorchEnabled = isTorchEnabled,
                         onPreviewReady = { view ->
                             previewView = view
@@ -247,7 +262,7 @@ class ScanActivity : AppCompatActivity() {
             val format = result?.format?.name
             if (text != null && BarcodeFormat.entries.any { it.name == format }) {
                 runOnUiThread {
-                    if (isActive && !isCapturing && previewUri == null) deliverScanResult(text, format!!)
+                    if (isActive && !isChoosingFile && !isCapturing && previewUri == null) deliverScanResult(text, format!!)
                 }
             }
         }
@@ -350,6 +365,7 @@ private enum class CameraPermissionState {
 @Composable
 private fun QrScannerContent(
     permissionState: CameraPermissionState,
+    onPickFile: () -> Unit,
     isTorchEnabled: Boolean,
     onPreviewReady: (PreviewView) -> Unit,
     onRequestCameraPermission: () -> Unit,
@@ -411,6 +427,11 @@ private fun QrScannerContent(
                 }
             }
         }
+
+        FilePickerButton(
+            onClick = onPickFile,
+            modifier = Modifier.align(Alignment.BottomEnd).safeDrawingPadding().padding(16.dp),
+        )
 
         Row(
             modifier =

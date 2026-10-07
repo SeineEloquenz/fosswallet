@@ -151,4 +151,5 @@
     <string name="preview_load_failed">Could not open this file. Please choose another image or PDF.</string>
     <string name="previous_page">Previous</string>
     <string name="next_page">Next</string>
+    <string name="choose_another_file">Choose another file</string>
 </resources>
