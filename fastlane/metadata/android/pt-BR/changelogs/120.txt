@@ -1,0 +1,4 @@
+* Aceitar certificados CA instalados pelo usuário
+* Localizar textos alternativos de códigos de barras
+* Adicionar destinos de compartilhamento adicionais
+* Corrigir o brilho ao percorrer os passes

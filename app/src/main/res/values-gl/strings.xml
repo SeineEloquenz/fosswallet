@@ -143,4 +143,6 @@
     <string name="pass_imported_into_the_archive">Importouse o pase ao arquivo</string>
     <string name="shortcut_unsupported">O teu lanzador non é compatible con fixar atallos</string>
     <string name="shortcut_failed">Non se puido crear o atallo</string>
+    <string name="fullscreen_only_brightness">So na vista a pantalla completa dos códigos</string>
+    <string name="last_updated">Última actualización %1$s</string>
 </resources>
