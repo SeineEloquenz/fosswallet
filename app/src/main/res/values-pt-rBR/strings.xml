@@ -143,4 +143,6 @@
     <string name="export_skipped_passes">%1$d passes exportados; %2$d passes criados ignorados</string>
     <string name="shortcut_unsupported">Seu launcher não oferece suporte à fixação de atalhos</string>
     <string name="shortcut_failed">Não foi possível criar o atalho</string>
+    <string name="fullscreen_only_brightness">Somente na visualização do código de barras na tela cheia</string>
+    <string name="last_updated">Última atualização %1$s</string>
 </resources>

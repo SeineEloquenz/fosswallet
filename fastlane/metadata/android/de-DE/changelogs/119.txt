@@ -1,0 +1,1 @@
+* Parser korrigiert, der einige Pässe fälschlicherweise abgelehnt hat
