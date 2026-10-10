@@ -13,7 +13,7 @@ class WalletTileService : TileService() {
         super.onStartListening()
 
         qsTile?.apply {
-            state = Tile.STATE_ACTIVE
+            state = Tile.STATE_INACTIVE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 subtitle = getString(R.string.open)
             }
