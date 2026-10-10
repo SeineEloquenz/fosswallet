@@ -143,4 +143,6 @@
     <string name="export_skipped_passes">Exportováno %1$d lístků, přeskočeno %2$d vytvořených lístků</string>
     <string name="shortcut_unsupported">Vaše aplikace domovské obrazovky nepodporuje připínání zkratek</string>
     <string name="shortcut_failed">Nepodařilo se vytvořit zkratku</string>
+    <string name="fullscreen_only_brightness">Pouze v celoobrazovkovém zobrazení čárového kódu</string>
+    <string name="last_updated">Naposledy aktualizováno %1$s</string>
 </resources>
