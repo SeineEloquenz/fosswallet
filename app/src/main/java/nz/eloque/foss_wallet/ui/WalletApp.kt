@@ -58,6 +58,13 @@ fun WalletApp(
             composable<Route.Scan> {
                 ScanScreen(navController, scanViewModel)
             }
+            composable<Route.ScanResult> { backStackEntry ->
+                ScanScreen(
+                    navController,
+                    scanViewModel,
+                    initialBarcode = backStackEntry.toRoute<Route.ScanResult>().toBarCode(),
+                )
+            }
             composable<Route.Archive> {
                 ArchiveScreen(navController)
             }

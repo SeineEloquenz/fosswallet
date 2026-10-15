@@ -29,6 +29,24 @@ sealed interface Route {
     @Serializable
     data object AdvancedAdd : Route
 
+    /** The common result screen for camera scans and imported image/PDF barcodes. */
+    @Serializable
+    data class ScanResult(
+        val format: String,
+        val message: String,
+        val encoding: String,
+        val altText: String? = null,
+    ) : Route {
+        constructor(barCode: BarCode) : this(
+            format = barCode.format.name,
+            message = barCode.message,
+            encoding = barCode.encoding.name(),
+            altText = barCode.altText,
+        )
+
+        fun toBarCode(): BarCode = Create(format, message, encoding, altText).toBarCode()!!
+    }
+
     /** The create screen, optionally prefilled with a scanned barcode. */
     @Serializable
     data class Create(

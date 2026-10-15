@@ -3,6 +3,7 @@ package nz.eloque.foss_wallet.ui.screens.scan
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
@@ -42,3 +43,24 @@ class ScanContract : ActivityResultContract<Unit, BarCode?>() {
         }
     }
 }
+
+/** Opens a picked/shared file in the same scanner preview and preserves the typed barcode result. */
+class FilePreviewContract : ActivityResultContract<FilePreviewInput, BarCode?>() {
+    override fun createIntent(
+        context: Context,
+        input: FilePreviewInput,
+    ): Intent =
+        Intent(context, ScanActivity::class.java)
+            .setDataAndType(input.uri, input.mimeType)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): BarCode? = ScanContract().parseResult(resultCode, intent)
+}
+
+data class FilePreviewInput(
+    val uri: Uri,
+    val mimeType: String? = null,
+)
