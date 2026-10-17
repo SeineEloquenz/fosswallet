@@ -109,6 +109,7 @@ data class BarCode(
                 "PKBarcodeFormatCode128" -> BarcodeFormat.CODE_128
                 "PKBarcodeFormatCode39" -> BarcodeFormat.CODE_39
                 "PKBarcodeFormatCode93" -> BarcodeFormat.CODE_93
+                "PKBarcodeFormatDataMatrix" -> BarcodeFormat.DATA_MATRIX
                 else -> BarcodeFormat.QR_CODE
             }
     }
