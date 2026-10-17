@@ -6,6 +6,7 @@ import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import dagger.Lazy
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.persistence.SettingsStore
@@ -18,7 +19,7 @@ class UpdateScheduler
     constructor(
         private val passRepository: PassRepository,
         private val settingsStore: SettingsStore,
-        private val workManager: WorkManager,
+        private val workManager: Lazy<WorkManager>,
     ) {
         suspend fun disableSync() {
             val updatablePasses = passRepository.updatable()
@@ -45,7 +46,7 @@ class UpdateScheduler
                         .addTag("update")
                         .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
                         .build()
-                workManager.enqueueUniquePeriodicWork(
+                workManager.get().enqueueUniquePeriodicWork(
                     pass.id,
                     ExistingPeriodicWorkPolicy.REPLACE,
                     workRequest,
@@ -55,7 +56,7 @@ class UpdateScheduler
 
         fun cancelUpdate(pass: Pass) {
             Log.i(TAG, "Canceled update for pass ${pass.id}")
-            workManager.cancelUniqueWork(pass.id)
+            workManager.get().cancelUniqueWork(pass.id)
         }
 
         companion object {
