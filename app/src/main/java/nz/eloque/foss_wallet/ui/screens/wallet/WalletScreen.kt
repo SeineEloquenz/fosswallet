@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Deselect
 import androidx.compose.material.icons.outlined.SelectAll
@@ -38,7 +39,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.Route
-import nz.eloque.foss_wallet.ui.WalletScaffold
+import nz.eloque.foss_wallet.ui.WalletScaffoldWithFilter
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -52,6 +53,9 @@ fun WalletScreen(
 
     val loading by walletViewModel.importing.collectAsState()
 
+    val tagFlow = walletViewModel.allTags
+    val tags by tagFlow.collectAsState(setOf())
+
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             walletViewModel.import(uris)
@@ -61,9 +65,10 @@ fun WalletScreen(
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
-    WalletScaffold(
+    WalletScaffoldWithFilter(
         navController = navController,
-        title = stringResource(id = R.string.wallet),
+        imageVector = Icons.Default.Search,
+        onSearch = { walletViewModel.filter(it) },
         actions = {
             if (selectedPasses.isNotEmpty()) {
                 IconButton(
@@ -146,6 +151,12 @@ fun WalletScreen(
                         ),
                 )
             }
+        },
+        subRow = {
+            FilterBlock(
+                walletViewModel = walletViewModel,
+                tags = tags,
+            )
         },
     ) { scrollBehavior ->
         WalletView(
