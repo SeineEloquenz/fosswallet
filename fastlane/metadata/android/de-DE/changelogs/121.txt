@@ -1,0 +1,9 @@
+* Verbesserung der Konformität mit der Passbook-API-Spezifikation
+* Anzeige des Zeitstempels „Zuletzt aktualisiert“ unter aktualisierbaren Passes
+* Wischen zwischen Barcodes im Vollbildmodus ermöglicht
+* Einstellung hinzugefügt, um die Helligkeit nur in der Vollbildansicht von Barcodes zu erhöhen
+* SVG-Symbole für erstellte Passes hinzugefügt
+* Problem beim Import von EasyJet-BCBP behoben
+* Fehler bei fehlenden Kalender-/Karten-Apps behoben
+* Problem behoben, bei dem einige Codes nicht korrekt importiert wurden
+* Problem behoben, bei dem der Pass-Ersteller bei Bildschirmdrehung gelöscht wurde
