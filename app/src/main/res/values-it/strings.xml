@@ -144,4 +144,5 @@
     <string name="shortcut_unsupported">Il tuo launcher non supporta l\'aggiunta di scorciatoie alla schermata Home</string>
     <string name="shortcut_failed">Impossibile creare la scorciatoia</string>
     <string name="last_updated">Ultimo aggiornamento %1$s</string>
+    <string name="fullscreen_only_brightness">Solo con il codice a schermo intero</string>
 </resources>

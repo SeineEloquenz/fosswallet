@@ -143,4 +143,6 @@
     <string name="pass_imported_into_the_archive">Przepustka zaimportowana do archiwum</string>
     <string name="shortcut_unsupported">Twój program uruchamiający nie obsługuje przypinania skrótów</string>
     <string name="shortcut_failed">Nie udało się utworzyć skrótu</string>
+    <string name="fullscreen_only_brightness">Tylko w trybie pełnoekranowym wyświetlania kodów kreskowych</string>
+    <string name="last_updated">Ostatnio zaktualizowano %1$s</string>
 </resources>

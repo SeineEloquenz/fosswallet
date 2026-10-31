@@ -1,3 +1,0 @@
-* Opravena malá velikost vertikálních obrázků
-* Opravena přítomnost akce archivace v archivu namísto akce odebrání z archivu
-* Aktualizovány překlady
