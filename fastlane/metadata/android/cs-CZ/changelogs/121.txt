@@ -1,0 +1,10 @@
+* Zlepšeno dodržení Passbook API
+* Zobrazení značky poslední aktualizace pod aktualizovatelnými lístky
+* Možnost přejetí mezi celoobrazovkovými kódy
+* Nastavení zvýšení jasu pouze u celoobrazovkových kódů
+* SVG ikony pro vytvořené lístky
+* Oprava problému s importem EasyJet BCBP
+* Oprava chybějících chyb u chybějící aplikace kalendáře/map
+* Oprava nesprávného importu některých kódů
+* Oprava vymazání tvorby lístku při otočení obrazovky
+* Oprava neodpovídající dlaždice rychlých nastavení
