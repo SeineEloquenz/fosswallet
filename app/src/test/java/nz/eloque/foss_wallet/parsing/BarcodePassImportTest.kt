@@ -61,6 +61,7 @@ class BarcodePassImportTest(
                     Triple("PKBarcodeFormatDataMatrix", BarcodeFormat.DATA_MATRIX, "Library card"),
                     Triple("PKBarcodeFormatEAN8", BarcodeFormat.EAN_8, "96385074"),
                     Triple("PKBarcodeFormatEAN13", BarcodeFormat.EAN_13, "5901234123457"),
+                    Triple("PKBarcodeFormatI2of5", BarcodeFormat.ITF, "12345678"),
                     Triple("PKBarcodeFormatITF", BarcodeFormat.ITF, "12345678"),
                     Triple("PKBarcodeFormatUPCA", BarcodeFormat.UPC_A, "042100005264"),
                     Triple("PKBarcodeFormatUPCE", BarcodeFormat.UPC_E, "05096893"),
