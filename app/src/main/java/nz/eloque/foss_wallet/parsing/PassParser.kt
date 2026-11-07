@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
@@ -29,6 +30,7 @@ import java.util.UUID
 
 class PassParser(
     val context: Context? = null,
+    private val onBarcodeFormatFallback: (String) -> Unit = {},
 ) {
     fun parse(
         passJson: JSONObject,
@@ -202,8 +204,11 @@ class PassParser(
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
+            if (barcodeFormat == null) {
+                onBarcodeFormatFallback(barcodeFormatString)
+            }
             BarCode(
-                barcodeFormat,
+                barcodeFormat ?: BarcodeFormat.QR_CODE,
                 barcodeJSON.getString("message"),
                 Charset.forName(barcodeJSON.optString("messageEncoding", BarCode.FALLBACK_CHARSET.toString())),
                 barcodeJSON.stringOrNull("altText"),
