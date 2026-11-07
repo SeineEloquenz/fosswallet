@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.model.field
 
+import android.icu.util.ULocale
 import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.linkify
@@ -45,6 +46,19 @@ sealed class PassContent(
         }
     }
 
+    data class Numeric(
+        val value: String,
+        val style: NumberStyle,
+    ) : PassContent(NUMERIC) {
+        override fun contains(query: String) = query inIgnoreCase value || query inIgnoreCase prettyPrint()
+
+        override fun prettyPrint(): String = format(ULocale.getDefault())
+
+        override fun isEmpty(): Boolean = value.isEmpty()
+
+        fun format(locale: ULocale): String = value.toBigDecimalOrNull()?.let { style.format(it, locale) } ?: value
+    }
+
     data class Date(
         val date: PassDateTime,
         val format: FormatStyle,
@@ -87,6 +101,7 @@ sealed class PassContent(
         const val DATE = 2
         const val TIME = 3
         const val DATE_TIME = 4
+        const val NUMERIC = 5
 
         fun deserialize(content: String): PassContent {
             if (content.length < 2 || !content[0].isDigit() || content[1] != '|') {
@@ -98,6 +113,7 @@ sealed class PassContent(
             return when (id) {
                 CURRENCY -> Currency(components[0], components.getOrElse(1) { "" })
                 DATE, TIME, DATE_TIME -> components.toTemporal(id) ?: Plain(body)
+                NUMERIC -> components.toNumeric() ?: Plain(body)
                 else -> Plain(body)
             }
         }
@@ -113,6 +129,12 @@ sealed class PassContent(
             }
         }
 
+        private fun List<String>.toNumeric(): Numeric? {
+            val value = getOrNull(0) ?: return null
+            val style = getOrNull(1)?.let { name -> NumberStyle.entries.firstOrNull { it.name == name } } ?: return null
+            return Numeric(value, style)
+        }
+
         private fun String.toFormatStyleOrNull(): FormatStyle? =
             try {
                 FormatStyle.valueOf(this)
@@ -125,6 +147,7 @@ sealed class PassContent(
         when (this) {
             is Plain -> "$id|$text"
             is Currency -> "$id|$amount|$currency"
+            is Numeric -> "$id|$value|${style.name}"
             is Date -> temporal(date, format, isRelative)
             is Time -> temporal(time, format, isRelative)
             is DateTime -> temporal(dateTime, format, isRelative)
