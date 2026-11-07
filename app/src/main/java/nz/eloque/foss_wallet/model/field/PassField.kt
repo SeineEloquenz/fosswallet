@@ -11,6 +11,12 @@ data class PassField(
     val label: String?,
     val content: PassContent,
     val changeMessage: String? = null,
+    /** Raw JSON of the field's semantic tags. */
+    val semantics: String? = null,
+    val textAlignment: TextAlignment? = null,
+    /** Null means the default detectors, an empty set disables detection. */
+    val dataDetectorTypes: Set<DataDetectorType>? = null,
+    val row: Int? = null,
 ) {
     fun toJson(): JSONObject =
         JSONObject().also { json ->
@@ -18,6 +24,10 @@ data class PassField(
             json.put("label", label)
             json.put("value", content.serialize())
             changeMessage?.let { json.put("changeMessage", it) }
+            semantics?.let { json.put("semantics", it) }
+            textAlignment?.let { json.put("textAlignment", it.jsonValue) }
+            dataDetectorTypes?.let { json.put("dataDetectorTypes", DataDetectorType.toJson(it)) }
+            row?.let { json.put("row", it) }
         }
 
     fun hasChangeMessage(): Boolean = changeMessage != null
@@ -31,7 +41,18 @@ data class PassField(
                 json.stringOrNull("label"),
                 PassContent.deserialize(json.getString("value")),
                 if (json.has("changeMessage")) json.getString("changeMessage") else null,
+                json.stringOrNull("semantics"),
+                json.textAlignmentOrNull(),
+                json.dataDetectorTypesOrNull(),
+                json.rowOrNull(),
             )
+
+        fun JSONObject.textAlignmentOrNull(): TextAlignment? = stringOrNull("textAlignment")?.let { TextAlignment.fromJson(it) }
+
+        fun JSONObject.dataDetectorTypesOrNull(): Set<DataDetectorType>? =
+            optJSONArray("dataDetectorTypes")?.let { DataDetectorType.fromJson(it) }
+
+        fun JSONObject.rowOrNull(): Int? = if (isNull("row")) null else optInt("row")
 
         val Empty = PassField("", "", PassContent.Plain(""))
     }

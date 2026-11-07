@@ -19,6 +19,7 @@ fun Pass.applyLocalization(mapping: Map<String, PassLocalization>): Pass =
         secondaryFields = secondaryFields.applyLocalization(mapping),
         auxiliaryFields = auxiliaryFields.applyLocalization(mapping),
         backFields = backFields.applyLocalization(mapping),
+        additionalInfoFields = additionalInfoFields.applyLocalization(mapping),
         barCodes = barCodes.applyLocalization(mapping),
     )
 

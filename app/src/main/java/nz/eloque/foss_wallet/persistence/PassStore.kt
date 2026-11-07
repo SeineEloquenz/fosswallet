@@ -104,6 +104,18 @@ class PassStore
             return UpdateResult.Success(UpdateContent.Pass(localizedPass))
         }
 
+        /** Re-parses every pass from its stored original, keeping its id, addedAt and deviceId like an update does. */
+        suspend fun backfill() {
+            passRepository.allPasses().forEach { pass ->
+                val original = pass.originalPassFile(context) ?: return@forEach
+                try {
+                    insert(PassLoader(PassParser()).load(original.readBytes(), pass.id, pass.addedAt, pass.deviceId))
+                } catch (e: InvalidPassException) {
+                    Log.w(TAG, "Failed to backfill pass ${pass.id}", e)
+                }
+            }
+        }
+
         suspend fun archive(pass: Pass) = passRepository.archive(pass)
 
         suspend fun unarchive(pass: Pass) = passRepository.unarchive(pass)

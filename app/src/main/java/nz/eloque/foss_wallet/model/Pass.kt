@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.model
 
 import android.content.Context
-import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -38,16 +37,28 @@ data class Pass(
     val colors: PassColors? = null,
     val relevantDates: List<PassRelevantDate> = LinkedList(),
     val expirationDate: ZonedDateTime? = null,
+    @ColumnInfo(defaultValue = "0")
+    val voided: Boolean = false,
     val logoText: String? = null,
     val authToken: String? = null,
     val webServiceUrl: String? = null,
     val passTypeIdentifier: String? = null,
-    val locations: List<Location> = LinkedList(),
+    val locations: List<PassLocation> = LinkedList(),
+    @ColumnInfo(defaultValue = "[]")
+    val beacons: List<PassBeacon> = LinkedList(),
+    val maxDistance: Double? = null,
+    /** Action URLs, emails and phone numbers, keyed by their pass.json key such as `transferURL`. */
+    @ColumnInfo(defaultValue = "{}")
+    val links: Map<String, String> = emptyMap(),
+    /** Raw JSON of the pass-level semantic tags. */
+    val semantics: String? = null,
     val headerFields: List<PassField> = LinkedList(),
     val primaryFields: List<PassField> = LinkedList(),
     val secondaryFields: List<PassField> = LinkedList(),
     val auxiliaryFields: List<PassField> = LinkedList(),
     val backFields: List<PassField> = LinkedList(),
+    @ColumnInfo(defaultValue = "[]")
+    val additionalInfoFields: List<PassField> = LinkedList(),
 ) {
     fun iconFile(context: Context): File? = coilImageModel(context, "icon", true) ?: logoFile(context)
 
@@ -74,7 +85,7 @@ data class Pass(
             else -> false
         }
 
-    fun allFields(): List<PassField> = headerFields + primaryFields + secondaryFields + auxiliaryFields + backFields
+    fun allFields(): List<PassField> = headerFields + primaryFields + secondaryFields + auxiliaryFields + backFields + additionalInfoFields
 
     fun updatedFields(oldPass: Pass): List<PassField> {
         val myFields = this.allFields()

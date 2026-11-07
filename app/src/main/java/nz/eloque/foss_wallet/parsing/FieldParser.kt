@@ -4,6 +4,9 @@ import nz.eloque.foss_wallet.model.field.NumberStyle
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassDateTime.Companion.ignoringTimeZone
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.model.field.PassField.Companion.dataDetectorTypesOrNull
+import nz.eloque.foss_wallet.model.field.PassField.Companion.rowOrNull
+import nz.eloque.foss_wallet.model.field.PassField.Companion.textAlignmentOrNull
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject
 import java.time.format.FormatStyle
@@ -70,7 +73,16 @@ object FieldParser {
                 }
             }
 
-        return PassField(key, label, content, changeMessage)
+        return PassField(
+            key,
+            label,
+            content,
+            changeMessage,
+            field.optJSONObject("semantics")?.toString(),
+            field.textAlignmentOrNull(),
+            field.dataDetectorTypesOrNull(),
+            field.rowOrNull(),
+        )
     }
 
     private fun String.toFormatStyle(): FormatStyle =

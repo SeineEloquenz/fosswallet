@@ -9,6 +9,8 @@ import coil.ImageLoaderFactory
 import coil.decode.SvgDecoder
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
+import nz.eloque.foss_wallet.persistence.BackfillWorker
+import nz.eloque.foss_wallet.persistence.SettingsStore
 import kotlin.concurrent.thread
 
 @HiltAndroidApp
@@ -18,13 +20,15 @@ class WalletApplication :
     ImageLoaderFactory {
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject lateinit var settingsStore: SettingsStore
+
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 
     override fun onCreate() {
         super.onCreate()
         // WorkManager only reschedules work dropped by a force stop when it initializes, so it must start with the app.
-        thread(name = "WorkManagerInit") { WorkManager.getInstance(this) }
+        thread(name = "WorkManagerInit") { BackfillWorker.enqueueIfNeeded(WorkManager.getInstance(this), settingsStore) }
     }
 
     override fun newImageLoader(): ImageLoader =
