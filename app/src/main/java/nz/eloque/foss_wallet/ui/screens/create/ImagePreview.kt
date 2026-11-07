@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
@@ -23,9 +24,11 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,7 +37,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +44,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -51,6 +55,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +78,8 @@ fun ImagePreview(
     var zoom by remember(uri, pageIndex) { mutableFloatStateOf(1f) }
     var pan by remember(uri, pageIndex) { mutableStateOf(Offset.Zero) }
     var viewportSize by remember { mutableStateOf(IntSize.Zero) }
-    val currentOnScanned by rememberUpdatedState(onScanned)
+    var match by remember(uri, pageIndex) { mutableStateOf<PreviewMatch?>(null) }
+    var notFound by remember(uri, pageIndex) { mutableStateOf(false) }
 
     LaunchedEffect(uri, pageIndex) {
         try {
@@ -89,21 +95,27 @@ fun ImagePreview(
     val bitmap = page?.bitmap
     LaunchedEffect(bitmap, viewportSize, zoom, pan, scanningEnabled) {
         if (!scanningEnabled || bitmap == null || viewportSize.width == 0 || viewportSize.height == 0) return@LaunchedEffect
-        // Cancel obsolete results when the user moves, changes page, or picks another file.
         delay(350)
         val viewport = PreviewViewport(bitmap.width, bitmap.height, viewportSize.width, viewportSize.height, zoom, pan.x, pan.y)
-        val bounds = viewport.visibleBounds() ?: return@LaunchedEffect
-        val result =
-            withContext(Dispatchers.Default) {
-                val crop = Bitmap.createBitmap(bitmap, bounds.x, bounds.y, bounds.width, bounds.height)
-                try {
-                    FileScanner.scanFrom(crop)
-                } finally {
-                    if (crop !== bitmap) crop.recycle()
+        val bounds = viewport.visibleBounds()
+        val detection =
+            bounds?.let {
+                withContext(Dispatchers.Default) {
+                    val crop = Bitmap.createBitmap(bitmap, bounds.x, bounds.y, bounds.width, bounds.height)
+                    try {
+                        FileScanner.detect(crop)
+                    } finally {
+                        if (crop !== bitmap) crop.recycle()
+                    }
                 }
             }
-        if (result != null) currentOnScanned(result)
+        match =
+            detection?.let { found ->
+                PreviewMatch(found.result, found.corners.map { Offset((it.x + bounds.x).toFloat(), (it.y + bounds.y).toFloat()) })
+            }
+        notFound = detection == null
     }
+    val outlineColor = MaterialTheme.colorScheme.primary
 
     Box(Modifier.fillMaxSize().background(Color.Black).safeDrawingPadding()) {
         Column(Modifier.fillMaxSize()) {
@@ -133,7 +145,18 @@ fun ImagePreview(
                         withTransform({
                             translate(viewport.left, viewport.top)
                             scale(viewport.scale, viewport.scale, Offset.Zero)
-                        }) { drawImage(image) }
+                        }) {
+                            drawImage(image)
+                            match?.let {
+                                val outline =
+                                    Path().apply {
+                                        moveTo(it.corners[0].x, it.corners[0].y)
+                                        it.corners.drop(1).forEach { corner -> lineTo(corner.x, corner.y) }
+                                        close()
+                                    }
+                                drawPath(outline, outlineColor, style = Stroke(width = 4.dp.toPx() / viewport.scale))
+                            }
+                        }
                     }
                     ScannerOverlay(modifier = Modifier.fillMaxSize())
                 } else if (failed) {
@@ -164,6 +187,20 @@ fun ImagePreview(
                             tint = Color.White.copy(alpha = if (pageIndex + 1 < pageCount) 1f else 0.38f),
                         )
                     }
+                }
+            }
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 88.dp)
+                    .padding(horizontal = 88.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                val found = match
+                if (found != null) {
+                    Button(onClick = { onScanned(found.result) }) { Text(stringResource(R.string.use_this_barcode)) }
+                } else if (notFound) {
+                    Text(stringResource(R.string.no_barcode_in_view), color = Color.White, textAlign = TextAlign.Center)
                 }
             }
         }
@@ -204,3 +241,8 @@ internal fun FilePickerButton(
         }
     }
 }
+
+private data class PreviewMatch(
+    val result: FileScanner.ScanResult,
+    val corners: List<Offset>,
+)

@@ -186,4 +186,6 @@
     <string name="previous_page">Previous</string>
     <string name="next_page">Next</string>
     <string name="choose_another_file">Choose another file</string>
+    <string name="use_this_barcode">Use this barcode</string>
+    <string name="no_barcode_in_view">No barcode in view. Zoom or move to a barcode.</string>
 </resources>

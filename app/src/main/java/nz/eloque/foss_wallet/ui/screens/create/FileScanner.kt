@@ -1,6 +1,7 @@
 package nz.eloque.foss_wallet.ui.screens.create
 
 import android.graphics.Bitmap
+import android.graphics.Point
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
 import zxingcpp.BarcodeReader
@@ -58,8 +59,19 @@ object FileScanner {
         }
     }
 
+    /** A decoded barcode with its corners in the scanned bitmap's coordinates. */
+    data class Detection(
+        val result: ScanResult,
+        val corners: List<Point>,
+    )
+
     @Synchronized
-    fun scanFrom(bitmap: Bitmap): ScanResult? = barcodeReader.read(bitmap).firstNotNullOfOrNull { it.toScanResult() }
+    fun detect(bitmap: Bitmap): Detection? =
+        barcodeReader.read(bitmap).firstNotNullOfOrNull { found ->
+            found.toScanResult()?.let { result ->
+                with(found.position) { Detection(result, listOf(topLeft, topRight, bottomRight, bottomLeft)) }
+            }
+        }
 
     /** Converts a zxing-cpp result, falling back to QR for formats the app cannot render. */
     fun BarcodeReader.Result.toScanResult(): ScanResult? {
