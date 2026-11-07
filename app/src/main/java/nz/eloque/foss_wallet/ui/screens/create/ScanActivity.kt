@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.ui.BarcodeFallbackDialog
 import nz.eloque.foss_wallet.ui.screens.create.FileScanner.toScanResult
 import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
@@ -67,6 +68,7 @@ class ScanActivity : AppCompatActivity() {
     private var isTorchEnabled by mutableStateOf(false)
     private var lensFacing by mutableIntStateOf(CameraSelector.LENS_FACING_BACK)
     private var hasDeliveredResult = false
+    private var pendingFallback by mutableStateOf<FileScanner.ScanResult?>(null)
     private var cameraProvider: ProcessCameraProvider? = null
     private var boundCamera: Camera? = null
     private var isCameraBound = false
@@ -134,6 +136,12 @@ class ScanActivity : AppCompatActivity() {
                     onToggleFlashlight = ::toggleFlashlight,
                     onSwitchCamera = ::switchCameraLens,
                 )
+                pendingFallback?.let { result ->
+                    BarcodeFallbackDialog(
+                        formats = setOfNotNull(result.unsupportedFormat),
+                        onConfirm = { finishWithResult(result) },
+                    )
+                }
             }
         }
 
@@ -265,7 +273,14 @@ class ScanActivity : AppCompatActivity() {
 
     private fun deliverScanResult(result: FileScanner.ScanResult) {
         if (isFinishing || isDestroyed) return
+        if (result.unsupportedFormat != null) {
+            pendingFallback = result
+            return
+        }
+        finishWithResult(result)
+    }
 
+    private fun finishWithResult(result: FileScanner.ScanResult) {
         setResult(Activity.RESULT_OK, ScanContract.resultIntent(result.toBarCode()))
         finish()
     }

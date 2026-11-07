@@ -139,9 +139,10 @@ class PassStore
         }
 
         suspend fun import(bytes: ByteArray): ImportOutcome {
+            val barcodeFallbacks = linkedSetOf<String>()
             val loaded =
                 try {
-                    Loader(context).load(bytes)
+                    Loader(context).load(bytes) { barcodeFallbacks.add(it) }
                 } catch (e: InvalidInputException) {
                     Log.w(TAG, "Failed to import file", e)
                     return ImportOutcome.Invalid
@@ -153,13 +154,13 @@ class PassStore
 
                 1 -> {
                     val single = loaded.first()
-                    ImportOutcome.Single(single.pass.pass.id, add(single))
+                    ImportOutcome.Single(single.pass.pass.id, add(single), barcodeFallbacks)
                 }
 
                 else -> {
                     loaded.forEach { add(it) }
                     group(loaded.map { it.pass.pass }.toSet())
-                    ImportOutcome.Multiple(loaded.size)
+                    ImportOutcome.Multiple(loaded.size, barcodeFallbacks)
                 }
             }
         }

@@ -4,8 +4,13 @@ import android.content.res.Resources
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import kotlinx.coroutines.CompletableDeferred
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportOutcome
 import nz.eloque.foss_wallet.api.ImportResult
@@ -19,13 +24,25 @@ fun ImportEventsEffect(
     onImported: () -> Unit = {},
 ) {
     val context = LocalContext.current
+    var fallbackWarning by remember { mutableStateOf<Pair<Set<String>, CompletableDeferred<Unit>>?>(null) }
     LaunchedEffect(walletViewModel) {
         walletViewModel.importEvents.collect { event ->
             val outcome = event.outcome
             Toast.makeText(context, outcome.message(context.resources), outcome.toastDuration()).show()
+            if (outcome.barcodeFallbacks.isNotEmpty()) {
+                val acknowledged = CompletableDeferred<Unit>()
+                fallbackWarning = outcome.barcodeFallbacks to acknowledged
+                acknowledged.await()
+            }
             if (outcome is ImportOutcome.Single || outcome is ImportOutcome.Multiple) onImported()
             if (event.openPass && outcome is ImportOutcome.Single) navController.navigate(Route.Pass(outcome.passId))
         }
+    }
+    fallbackWarning?.let { (formats, acknowledged) ->
+        BarcodeFallbackDialog(formats, onConfirm = {
+            fallbackWarning = null
+            acknowledged.complete(Unit)
+        })
     }
 }
 

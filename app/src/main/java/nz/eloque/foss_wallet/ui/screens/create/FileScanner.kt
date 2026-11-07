@@ -31,11 +31,13 @@ object FileScanner {
             ),
         )
 
+    /** A decoded barcode. [unsupportedFormat] names the scanned format when [format] is a QR fallback for it. */
     data class ScanResult(
         val message: String,
         val format: BarcodeFormat,
         val encoding: Charset,
         val altText: String?,
+        val unsupportedFormat: String? = null,
     ) {
         fun toBarCode(): BarCode =
             BarCode(
@@ -125,9 +127,11 @@ object FileScanner {
 
     fun scanFrom(bitmap: Bitmap): ScanResult? = barcodeReader.read(bitmap).firstOrNull()?.toScanResult()
 
-    /** Converts a zxing-cpp result, returning null for formats the app cannot render. */
+    /** Converts a zxing-cpp result, falling back to QR for formats the app cannot render. */
     fun BarcodeReader.Result.toScanResult(): ScanResult? {
-        val format = BarcodeFormat.entries.firstOrNull { it.name == format.name } ?: return null
-        return ScanResult.fromDecoded(text, bytes, contentType, format)
+        val renderable = BarCode.formatFromString(format.name)
+        return ScanResult
+            .fromDecoded(text, bytes, contentType, renderable ?: BarcodeFormat.QR_CODE)
+            ?.copy(unsupportedFormat = format.name.takeIf { renderable == null })
     }
 }

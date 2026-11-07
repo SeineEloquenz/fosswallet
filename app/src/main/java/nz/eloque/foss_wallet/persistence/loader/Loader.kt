@@ -35,8 +35,11 @@ class Loader(
 ) {
     /** Parses the passes of a pkpass or pkpasses file. */
     @Throws(InvalidInputException::class)
-    fun load(bytes: ByteArray): Set<PassLoadResult> {
-        val passParser = PassParser(context)
+    fun load(
+        bytes: ByteArray,
+        onBarcodeFormatFallback: (String) -> Unit = {},
+    ): Set<PassLoadResult> {
+        val passParser = PassParser(context, onBarcodeFormatFallback)
 
         val type = detectFileType(bytes)
         return when (type) {
