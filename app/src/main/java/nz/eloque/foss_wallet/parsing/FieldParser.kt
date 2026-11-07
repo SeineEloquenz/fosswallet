@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.parsing
 
+import nz.eloque.foss_wallet.model.field.NumberStyle
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassDateTime.Companion.ignoringTimeZone
 import nz.eloque.foss_wallet.model.field.PassField
@@ -28,10 +29,16 @@ object FieldParser {
                 null
             }
 
+        val numberStyle = field.stringOrNull("numberStyle")?.let { NumberStyle.fromJson(it) }
+
         val content =
             when {
                 field.has("currencyCode") -> {
                     PassContent.Currency(value, field.getString("currencyCode"))
+                }
+
+                numberStyle != null && value.toBigDecimalOrNull() != null -> {
+                    PassContent.Numeric(value, numberStyle)
                 }
 
                 parsedDate == null -> {
