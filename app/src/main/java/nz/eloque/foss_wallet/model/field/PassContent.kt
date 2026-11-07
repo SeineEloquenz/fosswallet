@@ -6,7 +6,9 @@ import nz.eloque.foss_wallet.utils.linkify
 import nz.eloque.foss_wallet.utils.prettyDate
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import nz.eloque.foss_wallet.utils.prettyTime
+import java.text.NumberFormat
 import java.time.format.FormatStyle
+import java.util.Locale
 
 sealed class PassContent(
     val id: Int,
@@ -27,18 +29,20 @@ sealed class PassContent(
     ) : PassContent(CURRENCY) {
         override fun contains(query: String) = query inIgnoreCase amount || query inIgnoreCase currency
 
-        override fun prettyPrint(): String = amount + toCurrency(currency)
+        override fun prettyPrint(): String = format(Locale.getDefault())
 
         override fun isEmpty(): Boolean = amount.isEmpty()
 
-        private fun toCurrency(currencyCode: String): String? =
-            try {
-                java.util.Currency
-                    .getInstance(currency)
-                    .symbol
+        fun format(locale: Locale): String {
+            val number = amount.trim().toBigDecimalOrNull() ?: return "$amount $currency"
+            val currencyFormat = NumberFormat.getCurrencyInstance(locale)
+            return try {
+                currencyFormat.currency = java.util.Currency.getInstance(currency)
+                currencyFormat.format(number)
             } catch (_: IllegalArgumentException) {
-                " $currencyCode"
+                "${NumberFormat.getNumberInstance(locale).format(number)} $currency"
             }
+        }
     }
 
     data class Date(
