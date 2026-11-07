@@ -109,7 +109,7 @@ class PassParser(
             deviceId = deviceId,
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
-            logoText = passJson.stringOrNull("logoText"),
+            logoText = passJson.stringOrNull("logoText") ?: passJson.stringOrNull("eventLogoText"),
             authToken = passJson.stringOrNull("authenticationToken"),
             webServiceUrl = passJson.stringOrNull("webServiceURL"),
             passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier"),
