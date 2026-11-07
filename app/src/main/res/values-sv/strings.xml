@@ -143,4 +143,6 @@
     <string name="export_skipped_passes">Exporterade %1$d kort, hoppade över %2$d skapade kort</string>
     <string name="shortcut_failed">Kunde inte skapa genväg</string>
     <string name="shortcut_unsupported">Din startskärmsapp stöder inte att genvägar fästs</string>
+    <string name="last_updated">Senast uppdaterat %1$s</string>
+    <string name="fullscreen_only_brightness">Endast i helskärmsläge för streckkodsvisning</string>
 </resources>

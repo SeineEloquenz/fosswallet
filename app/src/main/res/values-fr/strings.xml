@@ -143,4 +143,6 @@
     <string name="shortcut_failed">Le raccourci n\'a pas pu être créé</string>
     <string name="shortcut_unsupported">Votre lanceur ne permet pas d\'épingler des raccourcis</string>
     <string name="pass_imported_into_the_archive">Carte importée dans l\'archive</string>
+    <string name="last_updated">Dernière mise à jour %1$s</string>
+    <string name="fullscreen_only_brightness">Seulement en vue code barre plein écran</string>
 </resources>

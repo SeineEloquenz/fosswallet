@@ -2,35 +2,19 @@
 
 package nz.eloque.foss_wallet.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
-import androidx.compose.material.icons.filled.Archive
-import androidx.compose.material.icons.filled.ContentPasteGo
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.google.zxing.BarcodeFormat
+import androidx.navigation.toRoute
 import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
-import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
@@ -38,7 +22,6 @@ import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
 import nz.eloque.foss_wallet.ui.screens.archive.ArchiveScreen
 import nz.eloque.foss_wallet.ui.screens.create.AdvancedAddScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
-import nz.eloque.foss_wallet.ui.screens.create.CreateViewModel
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
 import nz.eloque.foss_wallet.ui.screens.scan.ScanScreen
@@ -47,57 +30,11 @@ import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsViewModel
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletScreen
 import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
-import java.net.URLDecoder
-import java.nio.charset.Charset
-
-sealed class Screen(
-    val route: String,
-    val icon: ImageVector,
-    @param:StringRes val resourceId: Int,
-) {
-    data object Scan : Screen("scan", Icons.Default.QrCodeScanner, R.string.barcode)
-
-    data object Wallet : Screen("wallet", Icons.Default.Wallet, R.string.wallet)
-
-    data object Archive : Screen("archive", Icons.Default.Archive, R.string.the_archive)
-
-    data object About : Screen("about", Icons.Default.Info, R.string.about)
-
-    data object Settings : Screen("settings", Icons.Default.Settings, R.string.settings)
-
-    data object Libraries : Screen("libraries", Icons.AutoMirrored.Filled.LibraryBooks, R.string.libraries)
-
-    data object Create : Screen("create", Icons.Default.Create, R.string.create_pass) {
-        const val BARCODE_ROUTE = "create?format={format}?message={message}?altText={altText}?encoding={encoding}"
-
-        val NAV_ARGUMENTS =
-            listOf(
-                navArgument("message") { type = NavType.StringType },
-                navArgument("altText") { type = NavType.StringType },
-                navArgument("encoding") { type = NavType.StringType },
-                navArgument("format") { type = NavType.StringType },
-            )
-
-        fun navigate(
-            navController: NavHostController,
-            barCode: BarCode,
-        ) {
-            navController.navigate(
-                "create?format=${barCode.format}?message=${barCode.message}?altText=${barCode.altText}?encoding=${barCode.encoding}",
-            )
-        }
-    }
-
-    data object AdvancedAdd : Screen("advanced_add", Icons.Default.MoreHoriz, R.string.advanced)
-
-    data object Web : Screen("webview", Icons.Default.ContentPasteGo, R.string.webview)
-}
 
 @Composable
 fun WalletApp(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    createViewModel: CreateViewModel = viewModel(),
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
     scanViewModel: ScanViewModel = viewModel(),
@@ -109,89 +46,47 @@ fun WalletApp(
     ) {
         NavHost(
             navController = navController,
-            startDestination = Screen.Wallet.route,
+            startDestination = Route.Wallet,
             enterTransition = { slideForward().targetContentEnter },
             exitTransition = { slideForward().initialContentExit },
             popEnterTransition = { slideBackward().targetContentEnter },
             popExitTransition = { slideBackward().initialContentExit },
         ) {
-            composable(Screen.Wallet.route) {
+            composable<Route.Wallet> {
                 WalletScreen(navController)
             }
-            composable(Screen.Scan.route) {
+            composable<Route.Scan> {
                 ScanScreen(navController, scanViewModel)
             }
-            composable(Screen.Archive.route) {
+            composable<Route.Archive> {
                 ArchiveScreen(navController)
             }
-            composable(Screen.About.route) {
+            composable<Route.About> {
                 AboutScreen(navController)
             }
-            composable(
-                route = "webview/{url}",
-                arguments = listOf(navArgument("url") { type = NavType.StringType }),
-            ) { backStackEntry ->
-                val rawUrl = backStackEntry.arguments?.getString("url")!!
-                val url = URLDecoder.decode(rawUrl, Charsets.UTF_8.name())
-                WebviewScreen(navController, url)
+            composable<Route.Webview> { backStackEntry ->
+                WebviewScreen(navController, backStackEntry.toRoute<Route.Webview>().url)
             }
-            composable(Screen.Settings.route) {
+            composable<Route.Settings> {
                 SettingsScreen(navController, settingsViewModel)
             }
-            composable(Screen.Libraries.route) {
+            composable<Route.Libraries> {
                 LibrariesScreen(navController)
             }
-            composable(Screen.Create.route) {
-                CreateScreen(
-                    navController = navController,
-                    createViewModel = createViewModel,
-                )
+            composable<Route.Create> {
+                CreateScreen(navController)
             }
-            composable(
-                route = Screen.Create.BARCODE_ROUTE,
-                arguments = Screen.Create.NAV_ARGUMENTS,
-            ) { backStackEntry ->
-                val barcode =
-                    BarCode(
-                        format = BarcodeFormat.valueOf(backStackEntry.arguments?.getString("format")!!),
-                        message = backStackEntry.arguments?.getString("message")!!,
-                        encoding = Charset.forName(backStackEntry.arguments?.getString("encoding")!!),
-                        altText = backStackEntry.arguments?.getString("altText"),
-                    )
-
-                CreateScreen(
-                    navController,
-                    createViewModel,
-                    initialBarcode = barcode,
-                )
-            }
-            composable(Screen.AdvancedAdd.route) {
+            composable<Route.AdvancedAdd> {
                 AdvancedAddScreen(navController)
             }
-            composable(
-                route = "pass/{passId}",
-                deepLinks =
-                    listOf(
-                        navDeepLink {
-                            uriPattern = "${ShortcutService.BASE_URI}/{passId}"
-                        },
-                    ),
-                arguments = listOf(navArgument("passId") { type = NavType.StringType }),
+            composable<Route.Pass>(
+                deepLinks = listOf(navDeepLink<Route.Pass>(basePath = ShortcutService.BASE_URI)),
             ) { backStackEntry ->
-                val passId = backStackEntry.arguments?.getString("passId")!!
-                PassScreen(passId, navController, passViewModel)
+                PassScreen(backStackEntry.toRoute<Route.Pass>().passId, navController, passViewModel)
             }
-            composable(
-                route = "updateFailure/{reason}/{rationale}",
-                arguments =
-                    listOf(
-                        navArgument("reason") { type = NavType.StringType },
-                        navArgument("rationale") { type = NavType.StringType },
-                    ),
-            ) { backStackEntry ->
-                val reason = backStackEntry.arguments?.getString("reason")!!
-                val rationale = backStackEntry.arguments?.getString("rationale")!!
-                UpdateFailureScreen(reason, rationale, navController)
+            composable<Route.UpdateFailure> { backStackEntry ->
+                val route = backStackEntry.toRoute<Route.UpdateFailure>()
+                UpdateFailureScreen(route.reason, route.rationale, navController)
             }
         }
     }

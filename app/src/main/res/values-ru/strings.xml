@@ -141,4 +141,8 @@
     <string name="add_attachment">Добавить вложение</string>
     <string name="delete_attachment">Удалить вложение</string>
     <string name="attachments">Вложения</string>
+    <string name="shortcut_unsupported">Ваша панель запуска не поддерживает создание ярлыков</string>
+    <string name="shortcut_failed">Не удалось создать ярлык</string>
+    <string name="fullscreen_only_brightness">Только в полноэкранном режиме просмотра штрихкода</string>
+    <string name="last_updated">Последнее обновление: %1$s</string>
 </resources>

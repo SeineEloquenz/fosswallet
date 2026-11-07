@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.Instant
+import java.util.UUID
 
 @Entity(
     tableName = "PassMetadata",
@@ -32,4 +34,6 @@ data class PassMetadata(
     val archived: Boolean = false,
     val autoArchive: Boolean = true,
     val renderLegacy: Boolean = false,
+    val updatedAt: Instant? = null,
+    val registeredDeviceId: UUID? = null,
 )

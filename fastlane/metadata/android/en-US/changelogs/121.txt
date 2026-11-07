@@ -1,0 +1,10 @@
+* Improve compliance with Passbook API spec
+* Show "last updated" timestamp below updateable passes
+* Allow swiping between fullscreen barcodes
+* Add setting for brightness increase only on the fullscreen barcode view
+* Add svg icons for created passes
+* Fix EasyJet BCBP import problem
+* Fix missing errors on missing calender/map apps
+* Fix some codes not being imported correctly
+* Fix pass creator clearing on screen rotation
+* Fix unresponsive quick settings tile

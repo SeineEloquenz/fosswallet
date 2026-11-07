@@ -143,4 +143,5 @@
     <string name="export_skipped_passes">Esportati %1$d biglietti, saltati %2$d biglietti creati</string>
     <string name="shortcut_unsupported">Il tuo launcher non supporta l\'aggiunta di scorciatoie alla schermata Home</string>
     <string name="shortcut_failed">Impossibile creare la scorciatoia</string>
+    <string name="last_updated">Ultimo aggiornamento %1$s</string>
 </resources>

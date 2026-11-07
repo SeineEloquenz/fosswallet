@@ -143,4 +143,6 @@
     <string name="pass_imported_into_the_archive">Dokument on imporditud arhiivi</string>
     <string name="shortcut_unsupported">Sinu käivitaja ei toeta linkide esiletõstmise võimalust</string>
     <string name="shortcut_failed">Otselingi lisamine ei õnnestunud</string>
+    <string name="fullscreen_only_brightness">Vaid triipkoodi täisekraanivaates</string>
+    <string name="last_updated">Viimane uuendus: %1$s</string>
 </resources>

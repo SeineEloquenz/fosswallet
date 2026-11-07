@@ -84,10 +84,14 @@ data class Pass(
             .filter { it.content != updatedFields[it.key]?.content }
     }
 
-    fun updatable(): Boolean =
-        webServiceUrl != null &&
-            authToken != null &&
-            passTypeIdentifier != null
+    fun webService(): PassWebService? =
+        if (webServiceUrl != null && authToken != null && passTypeIdentifier != null) {
+            PassWebService(webServiceUrl.trimEnd('/'), authToken, passTypeIdentifier, serialNumber, deviceId)
+        } else {
+            null
+        }
+
+    fun updatable(): Boolean = webService() != null
 
     private fun coilImageModel(
         context: Context,

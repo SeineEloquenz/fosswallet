@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.plugin.compose)
+    alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.hilt.android)
@@ -46,8 +47,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 37
-        versionCode = 120
-        versionName = "0.50.0"
+        versionCode = 121
+        versionName = "0.51.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -105,6 +106,8 @@ dependencies {
     testImplementation(libs.androidx.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.okhttp.mockwebserver)
 
     // Compose
     implementation(libs.androidx.activity.compose)
@@ -121,6 +124,7 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.core)
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.room.runtime)
@@ -130,6 +134,7 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     implementation(libs.zxing)
     implementation(libs.zxingcpp.android)

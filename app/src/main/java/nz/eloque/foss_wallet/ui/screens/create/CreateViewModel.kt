@@ -7,12 +7,13 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
-import coil.ImageLoader
+import androidx.lifecycle.SavedStateHandle
+import coil.imageLoader
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
@@ -20,17 +21,13 @@ import coil.size.Scale
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassCreator
-import nz.eloque.foss_wallet.model.PassRelevantDate
-import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.toBitmap
-import java.time.ZonedDateTime
 import java.util.Locale
 import kotlin.coroutines.resume
 
@@ -41,46 +38,38 @@ class CreateViewModel
         application: Application,
         @param:ApplicationContext private val context: Context,
         private val passStore: PassStore,
+        savedStateHandle: SavedStateHandle,
     ) : AndroidViewModel(application) {
+        private val formState = CreateFormState(savedStateHandle)
+        val form: StateFlow<CreateForm> = formState.form
+
+        fun updateForm(transform: (CreateForm) -> CreateForm) = formState.update(transform)
+
         data class GeocodeResult(
             val displayName: String,
             val latitude: Double,
             val longitude: Double,
         )
 
-        suspend fun savePass(
-            name: String,
-            organization: String,
-            serialNumber: String,
-            type: PassType,
-            barcodes: List<BarCode>,
-            colors: PassColors?,
-            location: Location?,
-            relevantDates: List<PassRelevantDate>,
-            expirationDate: ZonedDateTime?,
-            iconUrl: Uri?,
-            logoUrl: Uri?,
-            stripUrl: Uri?,
-            thumbnailUrl: Uri?,
-            footerUrl: Uri?,
-            backgroundUrl: Uri?,
-        ): String {
+        suspend fun savePass(): String {
+            val form = form.value
             val pass =
                 PassCreator.create(
-                    name = name,
-                    type = type,
-                    barCodes = barcodes,
-                    organization = organization,
-                    serialNumber = serialNumber,
-                    colors = colors,
-                    location = location,
-                    relevantDates = relevantDates,
-                    expirationDate = expirationDate,
+                    name = form.name,
+                    type = form.type,
+                    barCodes = form.barcodes.map { it.toBarCode() },
+                    organization = form.organization,
+                    serialNumber = form.serialNumber,
+                    colors = form.passColors(),
+                    location = form.location,
+                    relevantDates = form.relevantDates(),
+                    expirationDate = form.expirationDate,
                 )!!
+            val iconUrl = form.iconUrl
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
             val iconBitmap = loadBitmapFromUrl(context, iconUrl, ICON_SIZE) ?: drawable.toBitmap(64, 64)
-            val logoBitmap = loadBitmapFromUrl(context, logoUrl, LOGO_SIZE)
+            val logoBitmap = loadBitmapFromUrl(context, form.logoUrl, LOGO_SIZE)
 
             val finalLogo =
                 when {
@@ -93,10 +82,10 @@ class CreateViewModel
                 PassBitmaps(
                     icon = iconBitmap,
                     logo = finalLogo,
-                    strip = loadBitmapFromUrl(context, stripUrl, STRIP_SIZE),
-                    thumbnail = loadBitmapFromUrl(context, thumbnailUrl, THUMBNAIL_SIZE),
-                    footer = loadBitmapFromUrl(context, footerUrl, FOOTER_SIZE),
-                    background = loadBitmapFromUrl(context, backgroundUrl, BACKGROUND_SIZE),
+                    strip = loadBitmapFromUrl(context, form.stripUrl, STRIP_SIZE),
+                    thumbnail = loadBitmapFromUrl(context, form.thumbnailUrl, THUMBNAIL_SIZE),
+                    footer = loadBitmapFromUrl(context, form.footerUrl, FOOTER_SIZE),
+                    background = loadBitmapFromUrl(context, form.backgroundUrl, BACKGROUND_SIZE),
                 )
 
             passStore.create(
@@ -125,7 +114,6 @@ class CreateViewModel
                 return BitmapFactory.decodeFile(imageUrl.path)
             }
 
-            val loader = ImageLoader(context)
             val request =
                 ImageRequest
                     .Builder(context)
@@ -134,9 +122,11 @@ class CreateViewModel
                     .size(targetSize)
                     .data(imageUrl)
                     .allowHardware(false) // IMPORTANT for Bitmap
+                    // Picker previews in the shared cache would otherwise be accepted at the wrong size
+                    .memoryCachePolicy(CachePolicy.DISABLED)
                     .build()
 
-            val result = loader.execute(request)
+            val result = context.imageLoader.execute(request)
             return if (result is SuccessResult) {
                 (result.drawable as? BitmapDrawable)?.bitmap
             } else {

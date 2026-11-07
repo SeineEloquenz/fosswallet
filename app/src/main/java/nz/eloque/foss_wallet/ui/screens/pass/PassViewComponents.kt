@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.pass
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +36,11 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.dialog.FullscreenDialog
+import nz.eloque.compose_kit.effect.UpdateBrightness
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
@@ -48,9 +54,13 @@ fun Barcodes(
     barcodes: List<BarCode>,
     legacyRendering: Boolean,
     barcodePosition: BarcodePosition,
+    increaseFullscreenBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val bitmaps = remember(barcodes, legacyRendering) { barcodes.map { it.toBitmap(legacyRendering = legacyRendering) } }
     val pagerState = rememberPagerState { barcodes.size }
+    val coroutineScope = rememberCoroutineScope()
+    var fullscreenPage by remember { mutableStateOf<Int?>(null) }
 
     Column(
         modifier = modifier,
@@ -60,15 +70,15 @@ fun Barcodes(
         HorizontalPager(
             state = pagerState,
             pageSpacing = 16.dp,
-        ) {
+        ) { page ->
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
-                Barcode(
-                    barcode = barcodes[it],
-                    legacyRendering = legacyRendering,
-                    barcodePosition = barcodePosition,
+                BarcodeCard(
+                    bitmap = bitmaps[page],
+                    altText = barcodes[page].altText,
+                    onClick = { fullscreenPage = page },
                 )
             }
         }
@@ -81,75 +91,55 @@ fun Barcodes(
             )
         }
     }
+
+    fullscreenPage?.let { initialPage ->
+        FullscreenBarcodes(
+            bitmaps = bitmaps,
+            initialPage = initialPage,
+            barcodePosition = barcodePosition,
+            increaseBrightness = increaseFullscreenBrightness,
+            onDismiss = { lastPage ->
+                fullscreenPage = null
+                coroutineScope.launch { pagerState.scrollToPage(lastPage) }
+            },
+        )
+    }
 }
 
 @Composable
-fun Barcode(
-    barcode: BarCode,
-    modifier: Modifier = Modifier,
-    legacyRendering: Boolean = false,
-    barcodePosition: BarcodePosition = BarcodePosition.Center,
+private fun BarcodeCard(
+    bitmap: Bitmap?,
+    altText: String?,
+    onClick: () -> Unit,
 ) {
-    val barcodeBitmap = remember(barcode, legacyRendering) { barcode.toBitmap(legacyRendering = legacyRendering) }
-
     Column(
         modifier =
-            modifier
+            Modifier
                 .clip(RoundedCornerShape(5.dp))
                 .background(Color.White)
                 .sizeIn(maxWidth = 320.dp, maxHeight = 260.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (barcodeBitmap != null) {
-            var showFullscreen by remember { mutableStateOf(false) }
-            val imageBitmap = remember(barcodeBitmap) { barcodeBitmap.asImageBitmap() }
-            val scaledWidth = (2.5.dp * barcodeBitmap.width).coerceIn(125.dp, 300.dp)
-            val isLinearBarcode = barcodeBitmap.height == 1
-            val aspectRatio =
-                if (isLinearBarcode) {
-                    scaledWidth / 90.dp
-                } else {
-                    barcodeBitmap.width.toFloat() / barcodeBitmap.height
-                }
-
+        if (bitmap != null) {
             Image(
-                bitmap = imageBitmap,
+                bitmap = remember(bitmap) { bitmap.asImageBitmap() },
                 contentDescription = stringResource(R.string.barcode),
                 modifier =
                     Modifier
                         .padding(10.dp)
-                        .padding(horizontal = if (isLinearBarcode) 10.dp else 0.dp)
-                        .widthIn(max = scaledWidth)
-                        .aspectRatio(aspectRatio)
+                        .padding(horizontal = if (bitmap.isLinearBarcode()) 10.dp else 0.dp)
+                        .widthIn(max = bitmap.barcodeWidth())
+                        .aspectRatio(bitmap.barcodeAspectRatio())
                         .weight(1f, fill = false)
-                        .clickable { showFullscreen = true },
+                        .clickable(onClick = onClick),
                 contentScale = ContentScale.FillBounds,
                 filterQuality = FilterQuality.None,
             )
-
-            if (showFullscreen) {
-                FullscreenDialog(
-                    onDismiss = { showFullscreen = false },
-                    contentAlignment = barcodePosition.alignment,
-                ) {
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = stringResource(R.string.barcode),
-                        modifier =
-                            Modifier
-                                .background(Color.White)
-                                .padding(24.dp)
-                                .aspectRatio(aspectRatio),
-                        contentScale = ContentScale.FillBounds,
-                        filterQuality = FilterQuality.None,
-                    )
-                }
-            }
         } else {
             BrokenBarcodeWarning()
         }
 
-        barcode.altText?.let {
+        altText?.let {
             AbbreviatingText(
                 text = it,
                 modifier = Modifier.padding(horizontal = 10.dp).padding(bottom = 4.dp),
@@ -159,6 +149,69 @@ fun Barcode(
         }
     }
 }
+
+@Composable
+private fun FullscreenBarcodes(
+    bitmaps: List<Bitmap?>,
+    initialPage: Int,
+    barcodePosition: BarcodePosition,
+    increaseBrightness: Boolean,
+    onDismiss: (lastPage: Int) -> Unit,
+) {
+    val pagerState = rememberPagerState(initialPage = initialPage) { bitmaps.size }
+
+    FullscreenDialog(onDismiss = { onDismiss(pagerState.currentPage) }) {
+        if (increaseBrightness) UpdateBrightness()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f),
+                pageSpacing = 16.dp,
+            ) { page ->
+                val bitmap = bitmaps[page]
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = barcodePosition.alignment,
+                ) {
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = remember(bitmap) { bitmap.asImageBitmap() },
+                            contentDescription = stringResource(R.string.barcode),
+                            modifier =
+                                Modifier
+                                    .background(Color.White)
+                                    .padding(24.dp)
+                                    .aspectRatio(bitmap.barcodeAspectRatio()),
+                            contentScale = ContentScale.FillBounds,
+                            filterQuality = FilterQuality.None,
+                        )
+                    } else {
+                        BrokenBarcodeWarning()
+                    }
+                }
+            }
+
+            if (bitmaps.size > 1) {
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    modifier = Modifier.padding(16.dp),
+                    activeColor = Color.White,
+                    inactiveColor = Color.White.copy(alpha = 0.3f),
+                )
+            }
+        }
+    }
+}
+
+private fun Bitmap.isLinearBarcode(): Boolean = height == 1
+
+private fun Bitmap.barcodeWidth(): Dp = (2.5.dp * width).coerceIn(125.dp, 300.dp)
+
+private fun Bitmap.barcodeAspectRatio(): Float = if (isLinearBarcode()) barcodeWidth() / 90.dp else width.toFloat() / height
 
 @Composable
 private fun BrokenBarcodeWarning() {

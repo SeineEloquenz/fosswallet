@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
@@ -25,15 +26,18 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
+import java.util.UUID
 
 class PassParser(
     val context: Context? = null,
+    private val onBarcodeFormatFallback: (String) -> Unit = {},
 ) {
     fun parse(
         passJson: JSONObject,
         overridingId: String? = null,
         bitmaps: PassBitmaps,
         addedAt: Instant = Instant.now(),
+        deviceId: UUID = UUID.randomUUID(),
     ): Pass {
         if (!passJson.has("description")) {
             Log.w(TAG, "Pass has no description.")
@@ -102,6 +106,7 @@ class PassParser(
             hasFooter = bitmaps.footer != null,
             hasBackground = bitmaps.background != null,
             addedAt = addedAt,
+            deviceId = deviceId,
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
             logoText = passJson.stringOrNull("logoText"),
@@ -199,8 +204,11 @@ class PassParser(
             null
         } else {
             val barcodeFormat = BarCode.formatFromString(barcodeFormatString)
+            if (barcodeFormat == null) {
+                onBarcodeFormatFallback(barcodeFormatString)
+            }
             BarCode(
-                barcodeFormat,
+                barcodeFormat ?: BarcodeFormat.QR_CODE,
                 barcodeJSON.getString("message"),
                 Charset.forName(barcodeJSON.optString("messageEncoding", BarCode.FALLBACK_CHARSET.toString())),
                 barcodeJSON.stringOrNull("altText"),

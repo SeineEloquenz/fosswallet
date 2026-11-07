@@ -16,6 +16,7 @@ private const val SYNC_INTERVAL = "syncInterval"
 private const val SYNC_ENABLED = "syncEnabled"
 private const val BARCODE_POSITION = "barcodePosition"
 private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
+private const val FULLSCREEN_ONLY_BRIGHTNESS = "fullscreenOnlyBrightness"
 private const val SORT_OPTION = "walletViewSortOption"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
 
@@ -55,6 +56,10 @@ class SettingsStore
         fun increasePassViewBrightness(): Boolean = prefs.getBoolean(PASS_VIEW_BRIGHTNESS, false)
 
         fun enablePassViewBrightness(enabled: Boolean) = prefs.edit { putBoolean(PASS_VIEW_BRIGHTNESS, enabled) }
+
+        fun fullscreenOnlyBrightness(): Boolean = prefs.getBoolean(FULLSCREEN_ONLY_BRIGHTNESS, false)
+
+        fun setFullscreenOnlyBrightness(enabled: Boolean) = prefs.edit { putBoolean(FULLSCREEN_ONLY_BRIGHTNESS, enabled) }
 
         fun syncInterval(): Duration {
             val amount = prefs.getLong(SYNC_INTERVAL, 60)

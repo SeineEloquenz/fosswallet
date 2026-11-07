@@ -1,12 +1,15 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +17,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import nz.eloque.foss_wallet.api.ImportResult
+import nz.eloque.foss_wallet.api.ImportOutcome
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassType
@@ -25,11 +29,16 @@ import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.PassStore
 import nz.eloque.foss_wallet.persistence.SettingsStore
-import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.tag.TagRepository
 
 data class QueryState(
     val query: String = "",
+)
+
+/** The outcome of one imported file, and whether the app should open the imported pass. */
+data class ImportEvent(
+    val outcome: ImportOutcome,
+    val openPass: Boolean,
 )
 
 /** A sorted list of pass groups, keyed by their (nullable) group id. */
@@ -117,7 +126,29 @@ class WalletViewModel
         fun filter(query: String) =
             viewModelScope.launch(Dispatchers.IO) { baseQueryState.value = baseQueryState.value.copy(query = query) }
 
-        suspend fun add(loadResult: PassLoadResult): ImportResult = passStore.add(loadResult)
+        private val importEventChannel = Channel<ImportEvent>(Channel.BUFFERED)
+        val importEvents: Flow<ImportEvent> = importEventChannel.receiveAsFlow()
+
+        private val _importing = MutableStateFlow(false)
+        val importing: StateFlow<Boolean> = _importing.asStateFlow()
+
+        fun import(uris: List<Uri>) {
+            val contentResolver = getApplication<Application>().contentResolver
+            importFiles(uris.map { uri -> { contentResolver.openInputStream(uri)?.use { it.readBytes() } } })
+        }
+
+        fun import(bytes: ByteArray) = importFiles(listOf { bytes })
+
+        private fun importFiles(files: List<suspend () -> ByteArray?>) =
+            viewModelScope.launch(Dispatchers.IO) {
+                _importing.value = true
+                files.forEach { read ->
+                    val bytes = runCatching { read() }.getOrNull()
+                    val outcome = bytes?.let { passStore.import(it) } ?: ImportOutcome.Invalid
+                    importEventChannel.send(ImportEvent(outcome, openPass = files.size == 1))
+                }
+                _importing.value = false
+            }
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 

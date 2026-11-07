@@ -1,0 +1,4 @@
+* Přijímání certifikátů CA nainstalovaných uživatelem
+* Lokalizace alternativních textů čárových kódů
+* Přidány další možnosti sdílení
+* Opraven jas při listování mezi kartami

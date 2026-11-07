@@ -1,0 +1,5 @@
+* Unterstützung von Hintergrundbilder bei Pässen
+* Verbesserung der Lesbarkeit der Export-Ergebnisse von pkpasses
+* Anzeige, wenn ein Pass in das Archiv importiert wurde, dessen Datum in der Vergangenheit liegt
+* Neugestaltung der Eingabefelder in den Einstellungen
+* Korrektur der vertikalen Ausrichtung von Kurzpässen

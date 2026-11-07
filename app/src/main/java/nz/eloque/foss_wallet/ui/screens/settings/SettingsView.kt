@@ -100,6 +100,14 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 checked = settings.value.increasePassViewBrightness,
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enablePassViewBrightness(it) } },
             )
+            if (settings.value.increasePassViewBrightness) {
+                HorizontalDivider()
+                SettingsSwitch(
+                    title = stringResource(R.string.fullscreen_only_brightness),
+                    checked = settings.value.fullscreenOnlyBrightness,
+                    onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.setFullscreenOnlyBrightness(it) } },
+                )
+            }
             HorizontalDivider()
             ComboBox(
                 title = stringResource(R.string.barcode_position),

@@ -22,6 +22,7 @@ data class SettingsUiState(
     val syncInterval: Duration = 1.toDuration(DurationUnit.HOURS),
     val barcodePosition: BarcodePosition = BarcodePosition.Center,
     val increasePassViewBrightness: Boolean = false,
+    val fullscreenOnlyBrightness: Boolean = false,
     val askBeforeDelete: Boolean = true,
 )
 
@@ -50,6 +51,7 @@ class SettingsViewModel
                         syncInterval = settingsStore.syncInterval(),
                         barcodePosition = settingsStore.barcodePosition(),
                         increasePassViewBrightness = settingsStore.increasePassViewBrightness(),
+                        fullscreenOnlyBrightness = settingsStore.fullscreenOnlyBrightness(),
                         askBeforeDelete = settingsStore.deleteConfirmationEnabled(),
                     )
             }
@@ -57,7 +59,7 @@ class SettingsViewModel
 
         fun refresh() = update()
 
-        fun enableSync(enabled: Boolean) {
+        suspend fun enableSync(enabled: Boolean) {
             settingsStore.enableSync(enabled)
             if (enabled) {
                 updateScheduler.enableSync()
@@ -67,7 +69,7 @@ class SettingsViewModel
             update()
         }
 
-        fun setSyncInterval(duration: Duration) {
+        suspend fun setSyncInterval(duration: Duration) {
             settingsStore.setSyncInterval(duration)
             updateScheduler.updateSyncInterval()
             update()
@@ -80,6 +82,11 @@ class SettingsViewModel
 
         fun enablePassViewBrightness(enabled: Boolean) {
             settingsStore.enablePassViewBrightness(enabled)
+            update()
+        }
+
+        fun setFullscreenOnlyBrightness(enabled: Boolean) {
+            settingsStore.setFullscreenOnlyBrightness(enabled)
             update()
         }
 
