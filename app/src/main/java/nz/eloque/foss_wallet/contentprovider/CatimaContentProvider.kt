@@ -253,7 +253,7 @@ class CatimaContentProvider : ContentProvider() {
         crossRefs.forEach { crossRef ->
             cursor
                 .newRow()
-                .add("cardId", crossRef.passId)
+                .add("cardId", crossRef.passId.hashCode())
                 .add("groupId", crossRef.tagLabel)
         }
         return cursor
