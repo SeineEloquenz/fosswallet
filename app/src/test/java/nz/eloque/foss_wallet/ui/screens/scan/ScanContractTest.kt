@@ -7,7 +7,6 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -38,13 +37,13 @@ class ScanContractTest {
     }
 
     @Test
-    fun `file preview opens the selected PDF with a read grant`() {
+    fun `file preview opens the selected PDF without re-granting access`() {
         val uri = Uri.parse("content://sender/123")
         val intent = FilePreviewContract().createIntent(RuntimeEnvironment.getApplication(), FilePreviewInput(uri, "application/pdf"))
         assertEquals(uri, intent.data)
         assertEquals("application/pdf", intent.type)
         assertEquals("nz.eloque.foss_wallet.ui.screens.create.ScanActivity", intent.component!!.className)
-        assertTrue(intent.flags and Intent.FLAG_GRANT_READ_URI_PERMISSION != 0)
+        assertEquals(0, intent.flags and Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
     @Test

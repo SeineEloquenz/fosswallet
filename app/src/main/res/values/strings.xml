@@ -20,7 +20,7 @@
     <string name="ask_before_delete">Ask before delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>
-    <string name="import_pass">Import pass</string>
+    <string name="import_pass">Import file</string>
     <string name="about">About</string>
     <string name="webview">Open URL</string>
     <string name="open_from_clipboard">Open from clipboard</string>
@@ -188,4 +188,5 @@
     <string name="choose_another_file">Choose another file</string>
     <string name="use_this_barcode">Use this barcode</string>
     <string name="no_barcode_in_view">No barcode in view. Zoom or move to a barcode.</string>
+    <string name="no_barcode_on_page">No barcode in view. Zoom, move or try another page.</string>
 </resources>

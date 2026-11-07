@@ -50,9 +50,9 @@ class FilePreviewContract : ActivityResultContract<FilePreviewInput, BarCode?>()
         context: Context,
         input: FilePreviewInput,
     ): Intent =
+        // No grant flag. Re-granting a URI the app can read but not grant throws SecurityException.
         Intent(context, ScanActivity::class.java)
             .setDataAndType(input.uri, input.mimeType)
-            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
     override fun parseResult(
         resultCode: Int,

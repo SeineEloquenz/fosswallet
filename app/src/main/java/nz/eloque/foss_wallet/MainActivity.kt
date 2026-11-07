@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -28,11 +27,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.shortcut.ShortcutService
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletApp
 import nz.eloque.foss_wallet.ui.screens.create.scanSource
-import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewContract
 import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
+import nz.eloque.foss_wallet.ui.screens.scan.rememberFilePreviewQueue
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.ui.theme.WalletTheme
 
@@ -81,27 +79,16 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
             ImportEventsEffect(walletViewModel, navController)
-            val previewLauncher =
-                rememberLauncherForActivityResult(FilePreviewContract()) { barcode ->
-                    if (barcode != null) navController.navigate(Route.ScanResult(barcode))
-                }
+            val previewFiles = rememberFilePreviewQueue(navController)
             val file = incomingFile
             var importHandled by rememberSaveable(importRequestId) { mutableStateOf(false) }
             LaunchedEffect(importRequestId, file) {
                 if (importHandled) return@LaunchedEffect
                 importHandled = true
-                val source =
-                    if (file != null && ShortcutService.SCHEME != file.uri.scheme) {
-                        withContext(Dispatchers.IO) { contentResolver.scanSource(file.uri, file.mimeType) }
-                    } else {
-                        null
-                    }
-                if (source != null) {
-                    previewLauncher.launch(FilePreviewInput(file!!.uri, file.mimeType))
-                    return@LaunchedEffect
-                }
-
-                if (file != null && ShortcutService.SCHEME != file.uri.scheme) {
+                if (file == null || ShortcutService.SCHEME == file.uri.scheme) return@LaunchedEffect
+                if (withContext(Dispatchers.IO) { contentResolver.scanSource(file.uri, file.mimeType) } != null) {
+                    previewFiles(listOf(FilePreviewInput(file.uri, file.mimeType)))
+                } else {
                     walletViewModel.import(listOf(file.uri))
                 }
             }
@@ -119,6 +106,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     WalletApp(
                         navController,
+                        previewFiles,
                     )
                 }
             }

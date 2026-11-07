@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.ui.screens.wallet
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -22,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +45,6 @@ import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.create.scanSource
-import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewContract
 import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
@@ -56,6 +53,7 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @Composable
 fun WalletScreen(
     navController: NavHostController,
+    previewFiles: (List<FilePreviewInput>) -> Unit,
     walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -67,18 +65,6 @@ fun WalletScreen(
     var classifyingFiles by remember { mutableStateOf(false) }
     val loading = importing || classifyingFiles
 
-    var previewQueue by remember { mutableStateOf<List<Uri>>(emptyList()) }
-    val previewLauncher =
-        rememberLauncherForActivityResult(FilePreviewContract()) { barcode ->
-            previewQueue = previewQueue.drop(1)
-            if (barcode != null) navController.navigate(Route.ScanResult(barcode))
-        }
-    LaunchedEffect(previewQueue.firstOrNull()) {
-        previewQueue.firstOrNull()?.let { uri ->
-            previewLauncher.launch(FilePreviewInput(uri))
-        }
-    }
-
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             coroutineScope.launch {
@@ -89,7 +75,7 @@ fun WalletScreen(
                     }
                 if (passUris.isNotEmpty()) walletViewModel.import(passUris, openPass = uris.size == 1)
                 classifyingFiles = false
-                previewQueue = previewUris
+                previewFiles(previewUris.map { FilePreviewInput(it) })
             }
         }
     ImportEventsEffect(walletViewModel, navController)

@@ -200,7 +200,8 @@ fun ImagePreview(
                 if (found != null) {
                     Button(onClick = { onScanned(found.result) }) { Text(stringResource(R.string.use_this_barcode)) }
                 } else if (notFound) {
-                    Text(stringResource(R.string.no_barcode_in_view), color = Color.White, textAlign = TextAlign.Center)
+                    val hint = if ((page?.pageCount ?: 1) > 1) R.string.no_barcode_on_page else R.string.no_barcode_in_view
+                    Text(stringResource(hint), color = Color.White, textAlign = TextAlign.Center)
                 }
             }
         }

@@ -24,6 +24,7 @@ import nz.eloque.foss_wallet.ui.screens.create.AdvancedAddScreen
 import nz.eloque.foss_wallet.ui.screens.create.CreateScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassScreen
 import nz.eloque.foss_wallet.ui.screens.pass.PassViewModel
+import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
 import nz.eloque.foss_wallet.ui.screens.scan.ScanScreen
 import nz.eloque.foss_wallet.ui.screens.scan.ScanViewModel
 import nz.eloque.foss_wallet.ui.screens.settings.SettingsScreen
@@ -34,6 +35,7 @@ import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 @Composable
 fun WalletApp(
     navController: NavHostController,
+    previewFiles: (List<FilePreviewInput>) -> Unit,
     modifier: Modifier = Modifier,
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
@@ -53,7 +55,7 @@ fun WalletApp(
             popExitTransition = { slideBackward().initialContentExit },
         ) {
             composable<Route.Wallet> {
-                WalletScreen(navController)
+                WalletScreen(navController, previewFiles)
             }
             composable<Route.Scan> {
                 ScanScreen(navController, scanViewModel)
