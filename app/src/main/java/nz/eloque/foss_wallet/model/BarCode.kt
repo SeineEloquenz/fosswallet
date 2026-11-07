@@ -114,6 +114,7 @@ data class BarCode(
                 "PKBarcodeFormatDataMatrix" to BarcodeFormat.DATA_MATRIX,
                 "PKBarcodeFormatEAN8" to BarcodeFormat.EAN_8,
                 "PKBarcodeFormatEAN13" to BarcodeFormat.EAN_13,
+                "PKBarcodeFormatI2of5" to BarcodeFormat.ITF,
                 "PKBarcodeFormatITF" to BarcodeFormat.ITF,
                 "PKBarcodeFormatUPCA" to BarcodeFormat.UPC_A,
                 "PKBarcodeFormatUPCE" to BarcodeFormat.UPC_E,
