@@ -11,12 +11,13 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
+import nz.eloque.foss_wallet.model.decodeBitmap
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.Hash
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
@@ -35,7 +36,7 @@ class PassParser(
     fun parse(
         passJson: JSONObject,
         overridingId: String? = null,
-        bitmaps: PassBitmaps,
+        images: PassImages,
         addedAt: Instant = Instant.now(),
         deviceId: UUID = UUID.randomUUID(),
     ): Pass {
@@ -98,13 +99,8 @@ class PassParser(
             organization = organizationName,
             serialNumber = serialNumber,
             type = type,
-            colors = parsePassColors(passJson) ?: bitmaps.logo.derivePassColors(),
+            colors = parsePassColors(passJson) ?: images.first("logo")?.decodeBitmap().derivePassColors(),
             barCodes = parseBarcodes(passJson),
-            hasLogo = bitmaps.logo != null,
-            hasStrip = bitmaps.strip != null,
-            hasThumbnail = bitmaps.thumbnail != null,
-            hasFooter = bitmaps.footer != null,
-            hasBackground = bitmaps.background != null,
             addedAt = addedAt,
             deviceId = deviceId,
             relevantDates = parseRelevantDates(passJson),
@@ -119,7 +115,7 @@ class PassParser(
             secondaryFields = fieldContainer?.collectFields("secondaryFields") ?: listOf(),
             auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields") ?: listOf(),
             backFields = fieldContainer?.collectFields("backFields") ?: listOf(),
-        )
+        ).withImages(images)
     }
 
     private fun parseRelevantDate(passJson: JSONObject): PassRelevantDate? =

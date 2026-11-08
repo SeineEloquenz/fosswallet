@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -21,22 +20,22 @@ import nz.eloque.compose_kit.layout.FairRow
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.field.PassField
+import java.io.File
 
 @Composable
 fun HeaderRow(
     pass: Pass,
+    logo: File?,
     modifier: Modifier = Modifier,
     isSelectable: Boolean = true,
 ) {
-    val context = LocalContext.current
-
     BoxWithConstraints(modifier = modifier) {
         Row(
             modifier = Modifier.height(38.dp),
             horizontalArrangement = Arrangement.spacedBy(PassCardDefaults.spacing),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            pass.logoFile(context)?.let {
+            logo?.let {
                 AsyncImage(
                     model = it,
                     contentDescription = stringResource(R.string.image),

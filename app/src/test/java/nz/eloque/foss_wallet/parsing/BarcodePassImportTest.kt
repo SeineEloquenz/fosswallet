@@ -2,7 +2,7 @@ package nz.eloque.foss_wallet.parsing
 
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import nz.eloque.foss_wallet.model.PassImages
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -10,7 +10,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.mockito.Mockito
 
 @RunWith(Parameterized::class)
 class BarcodePassImportTest(
@@ -35,7 +34,7 @@ class BarcodePassImportTest(
                 .put("serialNumber", "barcode-test")
                 .put(barcodeKey, if (barcodeKey == "barcodes") JSONArray().put(barcodeJson) else barcodeJson)
 
-        val pass = PassParser().parse(passJson, bitmaps = Mockito.mock(PassBitmaps::class.java))
+        val pass = PassParser().parse(passJson, images = PassImages(emptyMap()))
         val barcode = pass.barCodes.single()
 
         assertEquals(

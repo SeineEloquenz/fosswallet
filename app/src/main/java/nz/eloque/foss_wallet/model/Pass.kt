@@ -11,6 +11,7 @@ import java.io.File
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.LinkedList
+import java.util.Locale
 import java.util.UUID
 
 @Entity(tableName = "Pass")
@@ -48,7 +49,7 @@ data class Pass(
     val auxiliaryFields: List<PassField> = LinkedList(),
     val backFields: List<PassField> = LinkedList(),
 ) {
-    fun iconFile(context: Context): File = coilImageModel(context, "icon", true)!!
+    fun iconFile(context: Context): File? = coilImageModel(context, "icon", true) ?: logoFile(context)
 
     fun logoFile(context: Context): File? = coilImageModel(context, "logo", hasLogo)
 
@@ -97,21 +98,24 @@ data class Pass(
         context: Context,
         type: String,
         exists: Boolean,
-    ): File? = if (exists) File(context.filesDir, "$id/$type.png") else null
+    ): File? = if (exists) resolveImage(File(context.filesDir, id), type, Locale.getDefault().toLanguageTag()) else null
 
     fun originalPassFile(context: Context): File? {
         val file = File(context.filesDir, "$id/${OriginalPass.FILE_PATH}")
         return if (file.exists()) file else null
     }
 
+    fun withImages(images: PassImages): Pass =
+        copy(
+            hasLogo = images.has("logo"),
+            hasStrip = images.has("strip"),
+            hasThumbnail = images.has("thumbnail"),
+            hasFooter = images.has("footer"),
+            hasBackground = images.has("background"),
+        )
+
     fun deleteFiles(context: Context) {
-        iconFile(context).delete()
-        logoFile(context)?.delete()
-        stripFile(context)?.delete()
-        thumbnailFile(context)?.delete()
-        footerFile(context)?.delete()
-        backgroundFile(context)?.delete()
-        File(context.filesDir, id).delete()
+        File(context.filesDir, id).deleteRecursively()
     }
 
     companion object {

@@ -80,7 +80,7 @@ class ShortcutService
             )
 
         private fun Pass.adaptiveIcon(): IconCompat? {
-            val bitmap = BitmapFactory.decodeFile(iconFile(context).path) ?: return null
+            val bitmap = BitmapFactory.decodeFile(iconFile(context)?.path ?: return null) ?: return null
             return IconCompat.createWithAdaptiveBitmap(wrapInAdaptiveBounds(bitmap))
         }
 
