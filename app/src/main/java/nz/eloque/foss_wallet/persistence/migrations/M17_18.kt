@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import java.time.Instant
 import java.time.ZoneOffset
@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 
 val M_17_18 =
     object : Migration(17, 18) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             val rows =
                 connection.prepare("SELECT id, relevantDate, expirationDate FROM Pass").use { statement ->
                     buildList {

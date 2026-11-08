@@ -8,7 +8,7 @@ import android.database.MatrixCursor
 import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.toArgb
-import androidx.room.InvalidationTracker
+import androidx.room3.InvalidationTracker
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

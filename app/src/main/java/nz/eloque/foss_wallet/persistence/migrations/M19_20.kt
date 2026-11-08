@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.persistence.TypeConverters
@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 
 val M_19_20 =
     object : Migration(19, 20) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             val converters = TypeConverters()
 
             val updates =

@@ -1,16 +1,16 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.execSQL
+import androidx.sqlite.async.executeSQL
 
 val M_23_24 =
     object : Migration(23, 24) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             // ---------------------------------------------------------
             // Create PassMetadata table
             // ---------------------------------------------------------
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS PassMetadata (
                     passId TEXT NOT NULL PRIMARY KEY,
@@ -27,7 +27,7 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Backfill metadata from old Pass table
             // ---------------------------------------------------------
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO PassMetadata (passId, groupId, archived, autoArchive, renderLegacy)
                 SELECT id, groupId, archived, autoArchive, renderLegacy
@@ -39,7 +39,7 @@ val M_23_24 =
             // Rebuild Pass table (remove moved columns)
             // ---------------------------------------------------------
             // Renaming Pass itself would make SQLite repoint PassMetadata's foreign key at the old table
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 CREATE TABLE Pass_new (
                     id TEXT NOT NULL PRIMARY KEY,
@@ -75,19 +75,19 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Recreate index (IMPORTANT: DROP first for schema match)
             // ---------------------------------------------------------
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 DROP INDEX IF EXISTS index_PassMetadata_groupId
                 """.trimIndent(),
             )
 
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 CREATE INDEX index_PassMetadata_groupId ON PassMetadata(groupId)
                 """.trimIndent(),
             )
 
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 CREATE INDEX index_PassMetadata_passId ON PassMetadata(passId)
                 """.trimIndent(),
@@ -96,7 +96,7 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Copy data into the new Pass table
             // ---------------------------------------------------------
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO Pass_new (
                     id,
@@ -160,7 +160,7 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Replace the old table
             // ---------------------------------------------------------
-            connection.execSQL("DROP TABLE Pass")
-            connection.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
+            connection.executeSQL("DROP TABLE Pass")
+            connection.executeSQL("ALTER TABLE Pass_new RENAME TO Pass")
         }
     }

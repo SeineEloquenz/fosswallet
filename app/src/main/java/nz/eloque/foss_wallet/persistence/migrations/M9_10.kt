@@ -1,13 +1,13 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.execSQL
+import androidx.sqlite.async.executeSQL
 
 val M_9_10 =
     object : Migration(9, 10) {
-        override fun migrate(connection: SQLiteConnection) {
-            connection.execSQL(
+        override suspend fun migrate(connection: SQLiteConnection) {
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `Pass_new` (
                   `id` TEXT NOT NULL,
@@ -41,7 +41,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO Pass_new (
                     id, description, formatVersion, organization, serialNumber,
@@ -60,11 +60,11 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            connection.execSQL("DROP TABLE Pass")
+            connection.executeSQL("DROP TABLE Pass")
 
-            connection.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
+            connection.executeSQL("ALTER TABLE Pass_new RENAME TO Pass")
 
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `localization_new` (
                   `passId` TEXT NOT NULL,
@@ -77,7 +77,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            connection.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO localization_new (
                     passId, lang, label, text
@@ -88,8 +88,8 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            connection.execSQL("DROP TABLE localization")
+            connection.executeSQL("DROP TABLE localization")
 
-            connection.execSQL("ALTER TABLE localization_new RENAME TO localization")
+            connection.executeSQL("ALTER TABLE localization_new RENAME TO localization")
         }
     }

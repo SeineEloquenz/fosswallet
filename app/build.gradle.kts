@@ -88,7 +88,7 @@ aboutLibraries {
     offlineMode = true
 }
 
-room {
+room3 {
     schemaDirectory("$projectDir/schemas")
 }
 
@@ -131,9 +131,8 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.sqlite.async)
     implementation(libs.androidx.sqlite.framework)
-    testImplementation(libs.androidx.room.testing)
 
     implementation(libs.coil)
     implementation(libs.coil.compose)

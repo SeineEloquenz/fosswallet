@@ -3,8 +3,7 @@ package nz.eloque.foss_wallet.app
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import androidx.room.immediateTransaction
-import androidx.room.useWriterConnection
+import androidx.room3.withWriteTransaction
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -58,8 +57,7 @@ object AppModule {
     @Provides
     fun provideTransactionalExecutor(walletDb: WalletDb): TransactionalExecutor =
         object : TransactionalExecutor {
-            override suspend fun <T> runTransactionally(callable: suspend () -> T): T =
-                walletDb.useWriterConnection { it.immediateTransaction { callable() } }
+            override suspend fun <T> runTransactionally(callable: suspend () -> T): T = walletDb.withWriteTransaction { callable() }
         }
 
     @Provides

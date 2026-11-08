@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.persistence.pass
 
 import android.content.Context
-import androidx.room.Room
+import androidx.room3.Room
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest

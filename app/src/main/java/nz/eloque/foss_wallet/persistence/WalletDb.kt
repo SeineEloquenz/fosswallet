@@ -1,11 +1,11 @@
 package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
-import androidx.room.AutoMigration
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room3.AutoMigration
+import androidx.room3.ColumnTypeConverters
+import androidx.room3.Database
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
@@ -67,7 +67,7 @@ fun buildDb(context: Context) =
     ],
     exportSchema = true,
 )
-@TypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)
+@ColumnTypeConverters(nz.eloque.foss_wallet.persistence.TypeConverters::class)
 abstract class WalletDb : RoomDatabase() {
     abstract fun passDao(): PassDao
 

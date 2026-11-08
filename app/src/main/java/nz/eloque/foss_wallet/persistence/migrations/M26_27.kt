@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
 import android.util.Log
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONArray
@@ -17,7 +17,7 @@ private val FIELD_COLUMNS = listOf("headerFields", "primaryFields", "secondaryFi
 
 val M_26_27 =
     object : Migration(26, 27) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             val updates = mutableListOf<Pair<String, List<String>>>()
 
             connection.prepare("SELECT id, ${FIELD_COLUMNS.joinToString(", ")} FROM Pass").use { statement ->
