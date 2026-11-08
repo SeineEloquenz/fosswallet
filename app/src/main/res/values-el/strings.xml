@@ -104,6 +104,7 @@
     <string name="delete_confirmation_message">Διαγραφή επιλεγμένων πάσων? Αυτή η ενέργεια δεν μπορεί να αναστραφεί.</string>
     <string name="dont_ask_again">Να μην ερωτηθώ ξανά</string>
     <string name="ask_before_delete">Επιβεβαίωση πριν την διαγραφή</string>
+    <string name="import_pass">Εισαγωγή πάσου</string>
     <string name="open_from_clipboard">Άνοιγμα μέσω clipboard</string>
     <string name="save">Αποθήκευση</string>
     <string name="manual_entry">Χειροκίνητη προσθήκη</string>

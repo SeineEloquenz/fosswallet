@@ -74,6 +74,7 @@
     <string name="delete_confirmation_message">Eliminar o(s) pase(s) seleccionado(s)? A acción non é reversible.</string>
     <string name="dont_ask_again">Non preguntar outra vez</string>
     <string name="ask_before_delete">Preguntar antes de eliminar</string>
+    <string name="import_pass">Importar pase</string>
     <string name="webview">Abrir URL</string>
     <string name="open_from_clipboard">Abrir desde o portapapeis</string>
     <string name="the_archive">Arquivo</string>

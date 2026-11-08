@@ -72,6 +72,7 @@
     <string name="ask_before_delete">Demanar abans d\'esborrar</string>
     <string name="invalid_pass_toast">La targeta no s\'ha pogut carregar. Estàs segur de què és un .pkpass vàlid?</string>
     <string name="add_pass">Afegir targeta</string>
+    <string name="import_pass">Importar targeta</string>
     <string name="open_from_clipboard">Obri des del Porta-retalls</string>
     <string name="update_successful">Passi actualitzat correctament</string>
     <string name="update_failed">L\'actualització del passi ha fallat</string>

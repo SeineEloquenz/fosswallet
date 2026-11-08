@@ -26,17 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
@@ -44,8 +39,6 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
-import nz.eloque.foss_wallet.ui.screens.create.scanSource
-import nz.eloque.foss_wallet.ui.screens.scan.FilePreviewInput
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -53,30 +46,15 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @Composable
 fun WalletScreen(
     navController: NavHostController,
-    previewFiles: (List<FilePreviewInput>) -> Unit,
     walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val contentResolver = context.contentResolver
-    val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
-    val importing by walletViewModel.importing.collectAsState()
-    var classifyingFiles by remember { mutableStateOf(false) }
-    val loading = importing || classifyingFiles
+    val loading by walletViewModel.importing.collectAsState()
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
-            coroutineScope.launch {
-                classifyingFiles = true
-                val (previewUris, passUris) =
-                    withContext(Dispatchers.IO) {
-                        uris.partition { contentResolver.scanSource(it) != null }
-                    }
-                if (passUris.isNotEmpty()) walletViewModel.import(passUris, openPass = uris.size == 1)
-                classifyingFiles = false
-                previewFiles(previewUris.map { FilePreviewInput(it) })
-            }
+            walletViewModel.import(uris)
         }
     ImportEventsEffect(walletViewModel, navController)
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
@@ -154,15 +132,13 @@ fun WalletScreen(
                             ),
                             FabMenuItem(
                                 icon = Icons.Default.Add,
-                                title = stringResource(R.string.import_file),
+                                title = stringResource(R.string.import_pass),
                                 onClick = {
                                     launcher.launch(
                                         arrayOf(
                                             "application/json+zip",
                                             "application/octet-stream",
                                             "text/json",
-                                            "image/*",
-                                            "application/pdf",
                                         ).plus(PkpassMimeTypes),
                                     )
                                 },

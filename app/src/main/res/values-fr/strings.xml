@@ -114,6 +114,7 @@
     <string name="dont_ask_again">Ne plus demander</string>
     <string name="ask_before_delete">Confirmer avant de supprimer</string>
     <string name="delete_confirmation_message">Supprimer les cartes sélectionnées ? Ceci ne pourra pas être annulé.</string>
+    <string name="import_pass">Importer une carte</string>
     <string name="open_from_clipboard">Ouvrir depuis le presse papier</string>
     <string name="manual_entry">Entrée manuelle</string>
     <string name="advanced">Avancé</string>

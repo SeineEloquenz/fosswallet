@@ -111,6 +111,7 @@
     <string name="pass_background_color">Taustavärv</string>
     <string name="pass_foreground_color">Esiplaani värv</string>
     <string name="pass_label_color">Sildi värv</string>
+    <string name="import_pass">Impordi dokument</string>
     <string name="open_from_clipboard">Ava lõikelaualt</string>
     <string name="manual_entry">Käsitsi sisestus</string>
     <string name="advanced">Lisavalikud</string>

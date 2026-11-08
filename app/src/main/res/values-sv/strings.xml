@@ -121,6 +121,7 @@
     <string name="delete_confirmation_message">Ta bort markerade kort? Detta kan inte ångras.</string>
     <string name="ask_before_delete">Fråga innan borttagning</string>
     <string name="dont_ask_again">Fråga inte igen</string>
+    <string name="import_pass">Importera kort</string>
     <string name="open_from_clipboard">Öppna från urklipp</string>
     <string name="the_archive">Arkiv</string>
     <string name="show_archived_passes">Visa arkiverade kort</string>

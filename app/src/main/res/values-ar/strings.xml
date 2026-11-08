@@ -53,6 +53,7 @@
     <string name="ask_before_delete">السؤال قبل الحذف</string>
     <string name="invalid_pass_toast">تعذر تحميل البطاقة. هل أنت متأكد من أنه ملف .pkpass صالح؟</string>
     <string name="add_pass">إضافة بطاقة</string>
+    <string name="import_pass">استيراد بطاقة</string>
     <string name="webview">فتح الرابط</string>
     <string name="open_from_clipboard">فتح من الحافظة</string>
     <string name="made_with_love">صنع بكل حب ❤ في ألمانيا</string>

@@ -112,6 +112,7 @@
     <string name="pass_label_color">Colore dell\'etichetta</string>
     <string name="no_text_in_clipboard">Nessun testo negli appunti</string>
     <string name="advanced">Avanzato</string>
+    <string name="import_pass">Importa biglietto</string>
     <string name="manual_entry">Inserimento manuale</string>
     <string name="strip">Striscia</string>
     <string name="scan_code">Scansiona codice</string>

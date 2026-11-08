@@ -40,6 +40,7 @@
     <string name="ask_before_delete">Pergunte antes de apagar</string>
     <string name="invalid_pass_toast">Não foi possível carregar o passe. Tem certeza que este é um .pkpass válido?</string>
     <string name="add_pass">Adicionar passe</string>
+    <string name="import_pass">Importar passe</string>
     <string name="webview">Abrir URL</string>
     <string name="open_from_clipboard">Abrir da área de transferência</string>
     <string name="made_with_love">Feito com ❤ na Alemanha</string>

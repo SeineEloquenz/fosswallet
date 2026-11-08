@@ -132,28 +132,23 @@ class WalletViewModel
         private val _importing = MutableStateFlow(false)
         val importing: StateFlow<Boolean> = _importing.asStateFlow()
 
-        fun import(
-            uris: List<Uri>,
-            openPass: Boolean = uris.size == 1,
-        ) {
+        fun import(uris: List<Uri>) {
             val contentResolver = getApplication<Application>().contentResolver
-            importFiles(uris.map { uri -> { contentResolver.openInputStream(uri)?.use { it.readBytes() } } }, openPass)
+            importFiles(uris.map { uri -> { contentResolver.openInputStream(uri)?.use { it.readBytes() } } })
         }
 
         fun import(bytes: ByteArray) = importFiles(listOf { bytes })
 
-        private fun importFiles(
-            files: List<suspend () -> ByteArray?>,
-            openPass: Boolean = files.size == 1,
-        ) = viewModelScope.launch(Dispatchers.IO) {
-            _importing.value = true
-            files.forEach { read ->
-                val bytes = runCatching { read() }.getOrNull()
-                val outcome = bytes?.let { passStore.import(it) } ?: ImportOutcome.Invalid
-                importEventChannel.send(ImportEvent(outcome, openPass = openPass))
+        private fun importFiles(files: List<suspend () -> ByteArray?>) =
+            viewModelScope.launch(Dispatchers.IO) {
+                _importing.value = true
+                files.forEach { read ->
+                    val bytes = runCatching { read() }.getOrNull()
+                    val outcome = bytes?.let { passStore.import(it) } ?: ImportOutcome.Invalid
+                    importEventChannel.send(ImportEvent(outcome, openPass = files.size == 1))
+                }
+                _importing.value = false
             }
-            _importing.value = false
-        }
 
         fun addTag(tag: Tag) = viewModelScope.launch(Dispatchers.IO) { tagRepository.insert(tag) }
 

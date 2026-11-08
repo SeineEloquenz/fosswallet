@@ -19,6 +19,7 @@
     <string name="ask_before_delete">Pergunte antes de excluir</string>
     <string name="invalid_pass_toast">Não foi possível carregar o arquivo .pkpass. Tem certeza de que este é um arquivo .pkpass válido?</string>
     <string name="add_pass">Adicionar passe</string>
+    <string name="import_pass">Importar passe</string>
     <string name="about">Sobre</string>
     <string name="webview">Abrir URL</string>
     <string name="open_from_clipboard">Abrir da área de transferência</string>

@@ -20,7 +20,7 @@
     <string name="ask_before_delete">Ask before delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>
-    <string name="import_file">Import file</string>
+    <string name="import_pass">Import pass</string>
     <string name="about">About</string>
     <string name="webview">Open URL</string>
     <string name="open_from_clipboard">Open from clipboard</string>

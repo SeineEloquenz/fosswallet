@@ -117,6 +117,7 @@
     <string name="attachment_name">Nombre del archivo adjunto</string>
     <string name="delete_attachment">Eliminar archivo adjunto</string>
     <string name="delete_confirmation_message">¿Eliminar pase(s) seleccionado(s)? Esta acción no se puede deshacer.</string>
+    <string name="import_pass">Importar pase</string>
     <string name="manual_entry">Entrada manual</string>
     <string name="scan_code">Escanear código</string>
     <string name="barcode_step_title">Añadir código de barras</string>

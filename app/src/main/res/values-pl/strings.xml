@@ -91,6 +91,7 @@
     <string name="delete_confirmation_message">Usunąć wybrane przepustki? Tej czynności nie można cofnąć.</string>
     <string name="dont_ask_again">Nie pytaj więcej</string>
     <string name="ask_before_delete">Zapytaj przed usunięciem</string>
+    <string name="import_pass">Importuj przepustkę</string>
     <string name="webview">Otwórz URL</string>
     <string name="open_from_clipboard">Otwórz ze schowka</string>
     <string name="pass_deleted">Przepustka została pomyślnie usunięta</string>

@@ -91,6 +91,7 @@
     <string name="delete_confirmation_message">Удалить выбранные пропуска? Это действие не может быть отменено.</string>
     <string name="dont_ask_again">Больше не спрашивать</string>
     <string name="ask_before_delete">Спрашивать перед удалением</string>
+    <string name="import_pass">Импортировать пропуск</string>
     <string name="open_from_clipboard">Открыть из буфера обмена</string>
     <string name="save">Сохранить</string>
     <string name="manual_entry">Ручной ввод</string>

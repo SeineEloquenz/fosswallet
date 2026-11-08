@@ -96,6 +96,7 @@
     <string name="add_another_barcode">Einen weiteren Barcode hinzufügen</string>
     <string name="barcode_alt_text">Alternativer Barcode-Text</string>
     <string name="save">Speichern</string>
+    <string name="import_pass">Pass importieren</string>
     <string name="no_text_in_clipboard">Kein Text in der Zwischenablage</string>
     <string name="additional_fields">Zusätzliche Felder</string>
     <string name="pass_location">Ort</string>
