@@ -68,7 +68,7 @@ class PassRepository
         ) {
             val id = pass.id
             val metadata = passDao.metadata(id) ?: PassMetadata(id)
-            val archived = AutoArchiver.shouldBeAutoArchived(pass, metadata)
+            val archived = AutoArchiver.shouldBeAutoArchived(pass, metadata, passDao.findById(id)?.pass)
             // Files must exist before the row is written, since observers resolve image paths on emission.
             images.saveToDisk(context, id)
             originalPass?.saveToDisk(context, id)
