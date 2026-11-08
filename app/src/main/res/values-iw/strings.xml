@@ -75,7 +75,6 @@
     <string name="no_url_in_clipboard">אין כתובת URL בלוח העתקה</string>
     <string name="barcode_value_invalid">הערך המתקבל אינו קוד %1$s תקין</string>
     <string name="help_translate">עזור בתרגום</string>
-    <string name="choose_image">בחר תמונה</string>
     <string name="clear_selection">נקה בחירה</string>
     <string name="no_barcode_format_given">תבנית הברקוד לא נבחרה! קוד QR נבחר כברירת המחדל. ייתכן שהברקוד הזה לא יסרק כראוי.</string>
     <string name="relevant_date_latest">התאריך הרלוונטי החדש ביותר</string>
@@ -87,7 +86,6 @@
     <string name="collapse">צמצם</string>
     <string name="expand">הרחב</string>
     <string name="select_image_with_barcode">בחר תמונה עם ברקוד</string>
-    <string name="no_barcode_found">ברקוד לא נמצא</string>
     <string name="logo">לוגו</string>
     <string name="the_archive">ארכיון</string>
     <string name="footer">כותרת תחתונה</string>

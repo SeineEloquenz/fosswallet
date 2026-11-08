@@ -78,7 +78,6 @@
     <string name="no_url_in_clipboard">Ve schránce se nenachází žádná adresa URL</string>
     <string name="barcode_value_invalid">Zadaná hodnota není platný kód %1$s</string>
     <string name="help_translate">Pomozte s překladem</string>
-    <string name="choose_image">Vybrat obrázek</string>
     <string name="clear_selection">Vymazat výběr</string>
     <string name="add_tag">Přidat štítek</string>
     <string name="remove_tag">Odebrat štítek</string>
@@ -87,7 +86,6 @@
     <string name="collapse">Sbalit</string>
     <string name="expand">Rozbalit</string>
     <string name="select_image_with_barcode">Vyberte obrázek s čárovým kódem</string>
-    <string name="no_barcode_found">Nenalezen žádný čárový kód</string>
     <string name="no_map_app_found">Nenalezena žádná mapová aplikace</string>
     <string name="no_calendar_app_found">Nenalezena žádná aplikace kalendáře</string>
     <string name="barcode_alt_text">Alternativní text čárového kódu</string>

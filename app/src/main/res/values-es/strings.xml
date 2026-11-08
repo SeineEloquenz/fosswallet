@@ -78,7 +78,6 @@
     <string name="no_url_in_clipboard">No hay enlaces en el portapapeles</string>
     <string name="barcode_value_invalid">El valor introducido no es un código de %1$s válido</string>
     <string name="help_translate">Ayuda a traducir</string>
-    <string name="choose_image">Elige una imagen</string>
     <string name="clear_selection">Deshacer selección</string>
     <string name="add_tag">Añadir etiqueta</string>
     <string name="remove_tag">Eliminar etiqueta</string>
@@ -130,7 +129,6 @@
     <string name="strip">Franja</string>
     <string name="open_in_map_app">Abrir en app de mapas</string>
     <string name="select_image_with_barcode">Seleccionar imagen con código de barras</string>
-    <string name="no_barcode_found">Código de barras no encontrado</string>
     <string name="no_map_app_found">No se encontró ninguna app de mapas</string>
     <string name="no_calendar_app_found">No se encontró ninguna app de calendario</string>
     <string name="created_pass_export_warning">Los pases creados no pueden exportarse en este momento</string>

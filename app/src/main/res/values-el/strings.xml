@@ -79,7 +79,6 @@
     <string name="no_url_in_clipboard">Δεν υπάρχει σύνδεσμος στο πρόχειρο</string>
     <string name="barcode_value_invalid">Η τιμή που δόθηκε δεν είναι έγκυρη %1$s</string>
     <string name="help_translate">Βοήθησε στη μετάφραση</string>
-    <string name="choose_image">Επιλογή εικόνας</string>
     <string name="clear_selection">Καθαρισμός επιλογής</string>
     <string name="add_tag">Προσθήκη ετικέτας</string>
     <string name="remove_tag">Αφαίρεση ετικέτας</string>
@@ -87,7 +86,6 @@
     <string name="collapse">Σύμπτυξη</string>
     <string name="expand">Ανάπτυξη</string>
     <string name="select_image_with_barcode">Επιλογή εικόνας με γραμμοκώδικα</string>
-    <string name="no_barcode_found">Δεν βρέθηκε γραμμοκώδικας</string>
     <string name="no_map_app_found">Δεν βρέθηκε εφαρμογή χαρτών</string>
     <string name="no_calendar_app_found">Δεν βρέθηκε εφαρμογή ημερολογίου</string>
     <string name="the_archive">Αρχείο</string>

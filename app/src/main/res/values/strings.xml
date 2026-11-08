@@ -107,7 +107,6 @@
     <string name="no_text_in_clipboard">No text in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
     <string name="help_translate">Help translate</string>
-    <string name="choose_image">Choose image</string>
     <string name="clear_selection">Clear selection</string>
     <string name="select_all">Select all</string>
     <string name="add_tag">Add tag</string>
@@ -131,7 +130,6 @@
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
     <string name="select_image_with_barcode">Select image with barcode</string>
-    <string name="no_barcode_found">No barcode found</string>
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
     <string name="created_pass_export_warning">Created passes cannot currently be exported</string>
@@ -180,4 +178,13 @@
     <string name="link_transit_provider_website">Transit provider website</string>
     <string name="link_transit_provider_phone_number">Call transit provider</string>
     <string name="link_transit_provider_email">Email transit provider</string>
+    <string name="take_photo">Take photo</string>
+    <string name="photo_capture_failed">Could not take photo. Please try again.</string>
+    <string name="preview_load_failed">Could not open this file. Please choose another image or PDF.</string>
+    <string name="previous_page">Previous</string>
+    <string name="next_page">Next</string>
+    <string name="choose_another_file">Choose another file</string>
+    <string name="use_this_barcode">Use this barcode</string>
+    <string name="no_barcode_in_view">No barcode in view. Zoom or move to a barcode.</string>
+    <string name="no_barcode_on_page">No barcode in view. Zoom, move or try another page.</string>
 </resources>

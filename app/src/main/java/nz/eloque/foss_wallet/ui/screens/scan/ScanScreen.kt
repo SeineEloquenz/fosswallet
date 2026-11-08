@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -12,6 +13,7 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 fun ScanScreen(
     navController: NavHostController,
     scanViewModel: ScanViewModel,
+    initialBarcode: BarCode? = null,
 ) {
     WalletScaffold(
         navController = navController,
@@ -21,6 +23,7 @@ fun ScanScreen(
         ScanView(
             navController = navController,
             scanViewModel = scanViewModel,
+            initialBarcode = initialBarcode,
         )
     }
 }

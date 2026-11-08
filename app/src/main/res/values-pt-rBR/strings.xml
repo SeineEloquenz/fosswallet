@@ -98,7 +98,6 @@
     <string name="no_text_in_clipboard">Não há texto na área de transferência</string>
     <string name="barcode_value_invalid">O valor fornecido não é um código %1$s válido</string>
     <string name="help_translate">Ajude a traduzir</string>
-    <string name="choose_image">Escolher imagem</string>
     <string name="clear_selection">Limpar seleção</string>
     <string name="select_all">Selecionar tudo</string>
     <string name="add_tag">Adicionar etiqueta</string>
@@ -122,7 +121,6 @@
     <string name="collapse">Recolher</string>
     <string name="expand">Expandir</string>
     <string name="select_image_with_barcode">Selecionar uma imagem com código de barras</string>
-    <string name="no_barcode_found">Nenhum código de barras encontrado</string>
     <string name="no_map_app_found">Nenhum aplicativo de mapas encontrado</string>
     <string name="no_calendar_app_found">Nenhum aplicativo de calendário encontrado</string>
     <string name="created_pass_export_warning">No momento, os passes criados não podem ser exportados</string>
