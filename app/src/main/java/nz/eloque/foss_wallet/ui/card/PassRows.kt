@@ -86,7 +86,7 @@ fun FieldsRow(
                 fields.forEach {
                     PassField(
                         field = it,
-                        horizontalAlignment = horizontalAlignment,
+                        horizontalAlignment = it.textAlignment?.horizontalAlignment() ?: horizontalAlignment,
                         fontSize = fontSize,
                         isSelectable = isSelectable,
                     )

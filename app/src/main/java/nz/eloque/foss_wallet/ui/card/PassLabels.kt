@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.Hyphens
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,12 +63,7 @@ fun PassField(
     isSelectable: Boolean = true,
     dataDetectorTypes: Set<DataDetectorType> = emptySet(),
 ) {
-    val textAlign =
-        when (horizontalAlignment) {
-            Alignment.End -> TextAlign.End
-            Alignment.CenterHorizontally -> TextAlign.Center
-            else -> TextAlign.Start
-        }
+    val textAlign = horizontalAlignment.textAlign()
 
     Column(
         modifier = modifier,
