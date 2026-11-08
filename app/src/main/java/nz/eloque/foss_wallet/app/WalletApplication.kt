@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.SvgDecoder
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.svg.SvgDecoder
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 import nz.eloque.foss_wallet.persistence.BackfillWorker
@@ -17,7 +18,7 @@ import kotlin.concurrent.thread
 class WalletApplication :
     Application(),
     Configuration.Provider,
-    ImageLoaderFactory {
+    SingletonImageLoader.Factory {
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
     @Inject lateinit var settingsStore: SettingsStore
@@ -31,9 +32,9 @@ class WalletApplication :
         thread(name = "WorkManagerInit") { BackfillWorker.enqueueIfNeeded(WorkManager.getInstance(this), settingsStore) }
     }
 
-    override fun newImageLoader(): ImageLoader =
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
         ImageLoader
-            .Builder(this)
+            .Builder(context)
             .components { add(SvgDecoder.Factory()) }
             .build()
 }
