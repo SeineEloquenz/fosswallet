@@ -118,6 +118,11 @@ fun PassView(
                 )
             }
         }
+        if (pass.additionalInfoFields.isNotEmpty()) {
+            Section(stringResource(R.string.additional_info)) {
+                BackFields(pass.additionalInfoFields)
+            }
+        }
         Section(stringResource(R.string.attachments)) {
             AttachmentList(
                 attachments = localizedPass.attachments,
@@ -192,6 +197,10 @@ private fun PassPreview() {
                 mutableListOf(
                     PassField("data1", "data1", PassContent.Plain("Longer Value here i guess")),
                     PassField("data2", "data2", PassContent.Plain("Shorter Value")),
+                ),
+            additionalInfoFields =
+                mutableListOf(
+                    PassField("entry", "Entry", PassContent.Plain("Gate 3, opens 90 minutes before kick-off")),
                 ),
         )
     PassView(
