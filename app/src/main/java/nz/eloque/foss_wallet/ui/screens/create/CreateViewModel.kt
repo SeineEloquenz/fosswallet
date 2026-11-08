@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -12,12 +11,14 @@ import android.os.Build
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import coil.imageLoader
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import coil.size.Precision
-import coil.size.Scale
+import coil3.BitmapImage
+import coil3.imageLoader
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
+import coil3.size.Precision
+import coil3.size.Scale
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -133,7 +134,7 @@ class CreateViewModel
 
             val result = context.imageLoader.execute(request)
             return if (result is SuccessResult) {
-                (result.drawable as? BitmapDrawable)?.bitmap
+                (result.image as? BitmapImage)?.bitmap
             } else {
                 null
             }
