@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.driver.AndroidSQLiteDriver
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
@@ -34,6 +35,7 @@ fun buildDb(context: Context) =
         .addMigrations(M_19_20)
         .addMigrations(M_23_24)
         .addMigrations(M_26_27)
+        .setDriver(AndroidSQLiteDriver())
         .build()
 
 @Database(

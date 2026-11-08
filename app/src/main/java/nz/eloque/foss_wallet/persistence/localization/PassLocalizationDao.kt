@@ -12,11 +12,11 @@ interface PassLocalizationDao {
     fun all(): Flow<List<PassLocalization>>
 
     @Query("SELECT * FROM localization WHERE passId=:passId AND lang=:lang")
-    fun byPassId(
+    suspend fun byPassId(
         passId: Int,
         lang: String,
     ): List<PassLocalization>
 
     @Upsert
-    fun insert(localization: PassLocalization): Long
+    suspend fun insert(localization: PassLocalization): Long
 }

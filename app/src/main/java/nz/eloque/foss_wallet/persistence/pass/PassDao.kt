@@ -32,7 +32,7 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun findById(id: String): PassWithMetadata?
+    suspend fun findById(id: String): PassWithMetadata?
 
     @Transaction
     @Query(
@@ -66,13 +66,13 @@ interface PassDao {
     suspend fun dissociate(passId: String)
 
     @Upsert
-    fun insert(pass: Pass)
+    suspend fun insert(pass: Pass)
 
     @Upsert
-    fun insert(passMetadata: PassMetadata)
+    suspend fun insert(passMetadata: PassMetadata)
 
     @Upsert
-    fun insert(group: PassGroup): Long
+    suspend fun insert(group: PassGroup): Long
 
     @Upsert
     suspend fun insert(attachment: Attachment)

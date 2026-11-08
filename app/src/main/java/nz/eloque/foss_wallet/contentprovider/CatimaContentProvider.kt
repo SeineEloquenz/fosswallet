@@ -13,8 +13,12 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import nz.eloque.foss_wallet.BuildConfig
 import nz.eloque.foss_wallet.model.PassTagCrossRef
@@ -108,6 +112,7 @@ class CatimaContentProvider : ContentProvider() {
             )
     }
 
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private lateinit var passRepository: PassRepository
     private lateinit var tagRepository: TagRepository
     private lateinit var settingsStore: SettingsStore
@@ -123,20 +128,20 @@ class CatimaContentProvider : ContentProvider() {
         settingsStore = entryPoint.settingsStore()
 
         val invalidationTracker = entryPoint.walletDb().invalidationTracker
-        invalidationTracker.addObserver(notifyingObserver(CARDS_URI, "Pass", "PassMetadata"))
-        invalidationTracker.addObserver(notifyingObserver(GROUPS_URI, "tag"))
-        invalidationTracker.addObserver(notifyingObserver(CARD_GROUPS_URI, "PassTag"))
+        invalidationTracker.notifyOnChange(CARDS_URI, "Pass", "PassMetadata")
+        invalidationTracker.notifyOnChange(GROUPS_URI, "tag")
+        invalidationTracker.notifyOnChange(CARD_GROUPS_URI, "PassTag")
 
         return true
     }
 
-    private fun notifyingObserver(
+    private fun InvalidationTracker.notifyOnChange(
         uri: Uri,
         vararg tables: String,
-    ) = object : InvalidationTracker.Observer(tables) {
-        override fun onInvalidated(tables: Set<String>) {
-            context?.contentResolver?.notifyChange(uri, null)
-        }
+    ) {
+        createFlow(*tables, emitInitialState = false)
+            .onEach { context?.contentResolver?.notifyChange(uri, null) }
+            .launchIn(scope)
     }
 
     private fun Cursor.notifying(uri: Uri): Cursor = apply { setNotificationUri(context!!.contentResolver, uri) }

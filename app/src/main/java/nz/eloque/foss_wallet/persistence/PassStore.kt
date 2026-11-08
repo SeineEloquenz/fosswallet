@@ -45,7 +45,7 @@ class PassStore
     ) {
         fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().toLanguageTag()) } }
 
-        fun passById(id: String) = passRepository.findById(id)
+        suspend fun passById(id: String) = passRepository.findById(id)
 
         fun passFlowById(id: String) = passRepository.flowById(id)
 

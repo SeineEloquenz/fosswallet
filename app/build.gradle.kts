@@ -132,6 +132,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.sqlite.framework)
     testImplementation(libs.androidx.room.testing)
 
     implementation(libs.coil)

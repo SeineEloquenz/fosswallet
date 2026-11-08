@@ -1,12 +1,13 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 
 val M_9_10 =
     object : Migration(9, 10) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL(
+        override fun migrate(connection: SQLiteConnection) {
+            connection.execSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `Pass_new` (
                   `id` TEXT NOT NULL,
@@ -40,7 +41,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.execSQL(
                 """
                 INSERT INTO Pass_new (
                     id, description, formatVersion, organization, serialNumber,
@@ -59,11 +60,11 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL("DROP TABLE Pass")
+            connection.execSQL("DROP TABLE Pass")
 
-            db.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
+            connection.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
 
-            db.execSQL(
+            connection.execSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `localization_new` (
                   `passId` TEXT NOT NULL,
@@ -76,7 +77,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.execSQL(
                 """
                 INSERT INTO localization_new (
                     passId, lang, label, text
@@ -87,8 +88,8 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL("DROP TABLE localization")
+            connection.execSQL("DROP TABLE localization")
 
-            db.execSQL("ALTER TABLE localization_new RENAME TO localization")
+            connection.execSQL("ALTER TABLE localization_new RENAME TO localization")
         }
     }

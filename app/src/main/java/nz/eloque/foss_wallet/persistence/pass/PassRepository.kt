@@ -41,7 +41,8 @@ class PassRepository
         fun flowById(id: String): Flow<LocalizedPassWithTags?> =
             passDao.flowById(id).map { it?.applyLocalization(Locale.getDefault().toLanguageTag()) }
 
-        fun findById(id: String): LocalizedPassWithTags? = passDao.findById(id)?.applyLocalization(Locale.getDefault().toLanguageTag())
+        suspend fun findById(id: String): LocalizedPassWithTags? =
+            passDao.findById(id)?.applyLocalization(Locale.getDefault().toLanguageTag())
 
         fun flowByGroup(groupId: Long): Flow<List<LocalizedPassWithTags>> =
             passDao.flowByGroup(groupId).map { passes -> passes.map { it.applyLocalization(Locale.getDefault().toLanguageTag()) } }
@@ -86,7 +87,7 @@ class PassRepository
             passDao.insert(attachment)
         }
 
-        fun insert(group: PassGroup): PassGroup {
+        suspend fun insert(group: PassGroup): PassGroup {
             val id = passDao.insert(group)
             return group.copy(id = id)
         }
