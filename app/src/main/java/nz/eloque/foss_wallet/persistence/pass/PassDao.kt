@@ -148,15 +148,6 @@ interface PassDao {
 
     @Query(
         """
-        UPDATE PassMetadata
-        SET renderLegacy = NOT renderLegacy
-        WHERE passId = :passId
-    """,
-    )
-    suspend fun toggleLegacyRendering(passId: String)
-
-    @Query(
-        """
         SELECT p.*
         FROM Pass p
         INNER JOIN PassMetadata m

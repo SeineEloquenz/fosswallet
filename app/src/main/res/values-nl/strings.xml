@@ -58,7 +58,6 @@
     <string name="libraries">Bibliotheken</string>
     <string name="relevant_date_latest">Nieuwste relevante datum</string>
     <string name="relevant_date_earliest">Oudste relevante datum</string>
-    <string name="compatibility_mode">Compatibiliteitsmodus</string>
     <string name="wallet">Portemonnee</string>
     <string name="pass_deleted">Pasje succesvol verwijderd</string>
     <string name="pass_imported">Pasje succesvol geïmporteerd</string>

@@ -130,8 +130,6 @@ class PassStore
             tag: Tag,
         ) = passRepository.untag(pass, tag)
 
-        suspend fun toggleLegacyRendering(pass: Pass) = passRepository.toggleLegacyRendering(pass)
-
         suspend fun group(passes: Set<Pass>): PassGroup {
             val group = passRepository.insert(PassGroup())
             passes.forEach { passRepository.associate(it, group) }

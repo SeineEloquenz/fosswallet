@@ -33,7 +33,6 @@ data class PassMetadata(
     val groupId: Long? = null,
     val archived: Boolean = false,
     val autoArchive: Boolean = true,
-    val renderLegacy: Boolean = false,
     val updatedAt: Instant? = null,
     val registeredDeviceId: UUID? = null,
 )

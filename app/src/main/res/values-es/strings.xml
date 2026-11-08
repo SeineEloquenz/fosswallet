@@ -64,7 +64,6 @@
     <string name="pass_deleted">Pase eliminado con éxito</string>
     <string name="pass_imported">Pase importado con éxito</string>
     <string name="libraries">Librerías</string>
-    <string name="compatibility_mode">Modo de compatibilidad</string>
     <string name="create_pass">Crear pase</string>
     <string name="pass_name">Nombre del pase</string>
     <string name="barcode_value">Valor del código de barras</string>

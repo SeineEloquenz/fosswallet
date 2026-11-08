@@ -62,7 +62,6 @@
     <string name="pass_view">Vue de la carte</string>
     <string name="pass_deleted">Carte supprimée avec succès</string>
     <string name="pass_imported">Carte importée avec succès</string>
-    <string name="compatibility_mode">Mode compatibilité</string>
     <string name="webview">Ouvrir l\'URL</string>
     <string name="create_pass">Créer une carte</string>
     <string name="pass_name">Nom de la carte</string>

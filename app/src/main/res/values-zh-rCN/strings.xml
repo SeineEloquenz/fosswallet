@@ -40,7 +40,6 @@
     <string name="to">到</string>
     <string name="details">详情</string>
     <string name="share_passes">分享凭证</string>
-    <string name="compatibility_mode">兼容模式</string>
     <string name="archive">归档</string>
     <string name="unarchive">取消归档</string>
     <string name="status_not_updated">您的凭证已是最新版本</string>
