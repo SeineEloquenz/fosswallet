@@ -30,6 +30,7 @@ fun rememberDetectedLinks(
 ): AnnotatedString {
     val context = LocalContext.current
     val detected by produceState(text, text, types) {
+        if (types.isEmpty()) return@produceState
         val classifier = context.getSystemService(TextClassificationManager::class.java)?.textClassifier ?: return@produceState
         value = classifier.detectLinks(text, types, styles)
     }
