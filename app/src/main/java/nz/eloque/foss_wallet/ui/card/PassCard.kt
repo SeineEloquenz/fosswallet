@@ -129,7 +129,7 @@ fun PassCard(
                     modifier = Modifier.height(90.dp),
                     isSelectable = showEntirePass,
                 )
-                passFields = listOf(pass.secondaryFields, pass.auxiliaryFields)
+                passFields = listOf(pass.secondaryFields) + pass.auxiliaryRows()
             }
 
             is PassType.Generic, PassType.Event -> {
@@ -142,7 +142,7 @@ fun PassCard(
                 )
                 passFields =
                     if (pass.type is PassType.Event) {
-                        listOf(pass.auxiliaryFields)
+                        pass.auxiliaryRows()
                     } else {
                         listOf(pass.secondaryFields, pass.auxiliaryFields)
                     }
