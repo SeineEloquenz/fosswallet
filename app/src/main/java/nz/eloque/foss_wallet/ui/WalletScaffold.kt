@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.scaffold.AppScaffold
 import nz.eloque.foss_wallet.R
@@ -22,10 +21,9 @@ import nz.eloque.foss_wallet.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScaffold(
-    navController: NavController,
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.wallet),
-    toolWindow: Boolean = false,
+    onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
@@ -42,8 +40,8 @@ fun WalletScaffold(
         },
         modifier = modifier,
         navigationIcon = {
-            if (toolWindow) {
-                IconButton(onClick = { navController.popBackStack() }) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowBack,
                         contentDescription = stringResource(R.string.back),

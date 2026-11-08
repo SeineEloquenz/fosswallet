@@ -18,7 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,15 +59,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val file = fileFrom(intent)
+        val initialRoutes = listOfNotNull(Route.Wallet, ShortcutService.passId(intent.data)?.let { Route.Pass(it) })
 
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
+            val backStack = rememberNavBackStack(*initialRoutes.toTypedArray())
             val coroutineScope = rememberCoroutineScope()
-            ImportEventsEffect(walletViewModel, navController)
+            ImportEventsEffect(walletViewModel, onOpenPass = { backStack.add(Route.Pass(it)) })
             val previewLauncher =
                 rememberLauncherForActivityResult(FilePreviewContract()) { barcode ->
-                    if (barcode != null) navController.navigate(Route.ScanResult(barcode))
+                    if (barcode != null) backStack.add(Route.ScanResult(barcode))
                 }
             var importHandled by rememberSaveable { mutableStateOf(false) }
             LaunchedEffect(Unit) {
@@ -92,9 +93,7 @@ class MainActivity : ComponentActivity() {
                         androidx.compose.ui.Modifier
                             .fillMaxSize(),
                 ) {
-                    WalletApp(
-                        navController,
-                    )
+                    WalletApp(backStack)
                 }
             }
         }

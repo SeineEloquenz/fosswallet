@@ -8,14 +8,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import nz.eloque.compose_kit.navigation.slideBackward
 import nz.eloque.compose_kit.navigation.slideForward
-import nz.eloque.foss_wallet.shortcut.ShortcutService
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.ui.screens.LibrariesScreen
 import nz.eloque.foss_wallet.ui.screens.UpdateFailureScreen
 import nz.eloque.foss_wallet.ui.screens.about.AboutScreen
@@ -33,70 +34,111 @@ import nz.eloque.foss_wallet.ui.screens.webview.WebviewScreen
 
 @Composable
 fun WalletApp(
-    navController: NavHostController,
+    backStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
     passViewModel: PassViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
     scanViewModel: ScanViewModel = viewModel(),
 ) {
+    val onBack: () -> Unit = { backStack.removeLastOrNull() }
+    val onOpenPass: (String) -> Unit = { backStack.add(Route.Pass(it)) }
+    val popToWallet: () -> Unit = { while (backStack.size > 1) backStack.removeLastOrNull() }
+    val replaceTop: (Route) -> Unit = { backStack[backStack.lastIndex] = it }
+    val scanScreen: @Composable (BarCode?) -> Unit = { initialBarcode ->
+        ScanScreen(
+            scanViewModel = scanViewModel,
+            onBack = onBack,
+            onScanned = { replaceTop(Route.ScanResult(it)) },
+            onCancelled = popToWallet,
+            onPassCreated = { replaceTop(Route.Pass(it)) },
+            onOpenUrl = { backStack.add(Route.Webview(it)) },
+            onManualEntry = { backStack.add(Route.Create(it)) },
+            initialBarcode = initialBarcode,
+        )
+    }
+
     Surface(
         modifier =
             modifier
                 .fillMaxSize(),
     ) {
-        NavHost(
-            navController = navController,
-            startDestination = Route.Wallet,
-            enterTransition = { slideForward().targetContentEnter },
-            exitTransition = { slideForward().initialContentExit },
-            popEnterTransition = { slideBackward().targetContentEnter },
-            popExitTransition = { slideBackward().initialContentExit },
-            predictivePopEnterTransition = { slideBackward().targetContentEnter },
-            predictivePopExitTransition = { slideBackward().initialContentExit },
-        ) {
-            composable<Route.Wallet> {
-                WalletScreen(navController)
-            }
-            composable<Route.Scan> {
-                ScanScreen(navController, scanViewModel)
-            }
-            composable<Route.ScanResult> { backStackEntry ->
-                ScanScreen(
-                    navController,
-                    scanViewModel,
-                    initialBarcode = backStackEntry.toRoute<Route.ScanResult>().toBarCode(),
-                )
-            }
-            composable<Route.Archive> {
-                ArchiveScreen(navController)
-            }
-            composable<Route.About> {
-                AboutScreen(navController)
-            }
-            composable<Route.Webview> { backStackEntry ->
-                WebviewScreen(navController, backStackEntry.toRoute<Route.Webview>().url)
-            }
-            composable<Route.Settings> {
-                SettingsScreen(navController, settingsViewModel)
-            }
-            composable<Route.Libraries> {
-                LibrariesScreen(navController)
-            }
-            composable<Route.Create> {
-                CreateScreen(navController)
-            }
-            composable<Route.AdvancedAdd> {
-                AdvancedAddScreen(navController)
-            }
-            composable<Route.Pass>(
-                deepLinks = listOf(navDeepLink<Route.Pass>(basePath = ShortcutService.BASE_URI)),
-            ) { backStackEntry ->
-                PassScreen(backStackEntry.toRoute<Route.Pass>().passId, navController, passViewModel)
-            }
-            composable<Route.UpdateFailure> { backStackEntry ->
-                val route = backStackEntry.toRoute<Route.UpdateFailure>()
-                UpdateFailureScreen(route.reason, route.rationale, navController)
-            }
-        }
+        NavDisplay(
+            backStack = backStack,
+            onBack = onBack,
+            transitionSpec = { slideForward() },
+            popTransitionSpec = { slideBackward() },
+            predictivePopTransitionSpec = { slideBackward() },
+            entryDecorators =
+                listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                ),
+            entryProvider =
+                entryProvider {
+                    entry<Route.Wallet> {
+                        WalletScreen(
+                            onOpenPass = onOpenPass,
+                            onOpenArchive = { backStack.add(Route.Archive) },
+                            onOpenSettings = { backStack.add(Route.Settings) },
+                            onOpenAdvancedAdd = { backStack.add(Route.AdvancedAdd) },
+                            onOpenScan = { backStack.add(Route.Scan) },
+                        )
+                    }
+                    entry<Route.Scan> { scanScreen(null) }
+                    entry<Route.ScanResult> { key -> scanScreen(key.toBarCode()) }
+                    entry<Route.Archive> {
+                        ArchiveScreen(
+                            onBack = onBack,
+                            onOpenPass = onOpenPass,
+                            onOpenSettings = { backStack.add(Route.Settings) },
+                        )
+                    }
+                    entry<Route.About> {
+                        AboutScreen(onBack = onBack, onOpenLibraries = { backStack.add(Route.Libraries) })
+                    }
+                    entry<Route.Webview> { key ->
+                        WebviewScreen(url = key.url, onBack = onBack, onOpenPass = onOpenPass)
+                    }
+                    entry<Route.Settings> {
+                        SettingsScreen(
+                            onBack = onBack,
+                            onOpenAbout = { backStack.add(Route.About) },
+                            settingsViewModel = settingsViewModel,
+                        )
+                    }
+                    entry<Route.Libraries> {
+                        LibrariesScreen(onBack = onBack)
+                    }
+                    entry<Route.Create> { key ->
+                        CreateScreen(
+                            initialBarcode = key.toBarCode(),
+                            onBack = onBack,
+                            onScanCancelled = popToWallet,
+                            onPassCreated = {
+                                popToWallet()
+                                onOpenPass(it)
+                            },
+                        )
+                    }
+                    entry<Route.AdvancedAdd> {
+                        AdvancedAddScreen(
+                            onBack = onBack,
+                            onOpenUrl = { backStack.add(Route.Webview(it)) },
+                            onCreate = { backStack.add(it?.let(Route::Create) ?: Route.Create()) },
+                        )
+                    }
+                    entry<Route.Pass> { key ->
+                        PassScreen(
+                            passId = key.passId,
+                            passViewModel = passViewModel,
+                            onBack = onBack,
+                            onShowUpdateFailure = { reason, rationale -> backStack.add(Route.UpdateFailure(reason, rationale)) },
+                        )
+                    }
+                    entry<Route.UpdateFailure> { key ->
+                        UpdateFailureScreen(key.reason, key.rationale, onBack = onBack)
+                    }
+                },
+        )
     }
 }

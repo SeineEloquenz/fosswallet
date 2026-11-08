@@ -8,7 +8,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
@@ -20,11 +19,12 @@ import java.io.ByteArrayInputStream
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebviewView(
-    navController: NavHostController,
     walletViewModel: WalletViewModel,
     url: String,
+    onImported: () -> Unit,
+    onOpenPass: (passId: String) -> Unit,
 ) {
-    ImportEventsEffect(walletViewModel, navController, onImported = { navController.popBackStack() })
+    ImportEventsEffect(walletViewModel, onOpenPass, onImported = onImported)
 
     AndroidView(factory = {
         val webview = WebView(it)

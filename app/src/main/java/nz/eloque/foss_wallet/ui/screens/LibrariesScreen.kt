@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import nz.eloque.foss_wallet.R
@@ -17,10 +16,9 @@ import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LibrariesScreen(navController: NavHostController) {
+fun LibrariesScreen(onBack: () -> Unit) {
     WalletScaffold(
-        navController = navController,
-        toolWindow = true,
+        onBack = onBack,
         title = stringResource(id = R.string.libraries),
     ) {
         val libraries by produceLibraries(R.raw.aboutlibraries)

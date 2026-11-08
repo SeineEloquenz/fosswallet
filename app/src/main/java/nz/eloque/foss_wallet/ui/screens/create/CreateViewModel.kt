@@ -18,12 +18,15 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Precision
 import coil.size.Scale
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.toPng
@@ -32,16 +35,22 @@ import nz.eloque.foss_wallet.utils.toBitmap
 import java.util.Locale
 import kotlin.coroutines.resume
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = CreateViewModel.Factory::class)
 class CreateViewModel
-    @Inject
+    @AssistedInject
     constructor(
         application: Application,
         @param:ApplicationContext private val context: Context,
         private val passStore: PassStore,
         savedStateHandle: SavedStateHandle,
+        @Assisted initialBarcode: BarCode?,
     ) : AndroidViewModel(application) {
-        private val formState = CreateFormState(savedStateHandle)
+        @AssistedFactory
+        interface Factory {
+            fun create(initialBarcode: BarCode?): CreateViewModel
+        }
+
+        private val formState = CreateFormState(savedStateHandle, initialBarcode)
         val form: StateFlow<CreateForm> = formState.form
 
         fun updateForm(transform: (CreateForm) -> CreateForm) = formState.update(transform)

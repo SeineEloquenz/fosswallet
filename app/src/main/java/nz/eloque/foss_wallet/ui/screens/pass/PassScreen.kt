@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -57,7 +56,6 @@ import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.ui.AllowOnLockscreen
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.screens.wallet.DeleteConfirmationDialog
 import nz.eloque.foss_wallet.utils.asString
@@ -66,8 +64,9 @@ import nz.eloque.foss_wallet.utils.asString
 @Composable
 fun PassScreen(
     passId: String,
-    navController: NavHostController,
     passViewModel: PassViewModel,
+    onBack: () -> Unit,
+    onShowUpdateFailure: (reason: String, rationale: String) -> Unit,
 ) {
     val passFlow: Flow<LocalizedPassWithTags> =
         remember(passId) {
@@ -105,14 +104,14 @@ fun PassScreen(
 
             WalletScaffold(
                 snackbarHostState = snackbarHostState,
-                navController = navController,
                 title = currentPass.pass.description,
-                toolWindow = true,
+                onBack = onBack,
                 actions = {
                     Actions(
                         pass = currentPass.pass,
                         metadata = currentPass.metadata,
-                        navController = navController,
+                        onDeleted = onBack,
+                        onShowUpdateFailure = onShowUpdateFailure,
                         snackbarHostState = snackbarHostState,
                         passViewModel = passViewModel,
                     )
@@ -160,7 +159,8 @@ fun PassScreen(
 fun Actions(
     pass: Pass,
     metadata: PassMetadata,
-    navController: NavHostController,
+    onDeleted: () -> Unit,
+    onShowUpdateFailure: (reason: String, rationale: String) -> Unit,
     snackbarHostState: SnackbarHostState,
     passViewModel: PassViewModel,
 ) {
@@ -178,7 +178,7 @@ fun Actions(
             settingsStore = passViewModel.settingsStore,
             onConfirm = {
                 coroutineScope.launch(Dispatchers.IO) { passViewModel.delete(pass) }
-                navController.popBackStack()
+                onDeleted()
                 Toast.makeText(context, resources.getString(R.string.pass_deleted), Toast.LENGTH_SHORT).show()
             },
             onDismiss = {
@@ -247,11 +247,9 @@ fun Actions(
                                         is FailureReason.Exception -> {
                                             coroutineScope.launch(Dispatchers.Main) {
                                                 val exception = result.reason.exception
-                                                navController.navigate(
-                                                    Route.UpdateFailure(
-                                                        exception.message ?: exception.javaClass.name,
-                                                        exception.asString(),
-                                                    ),
+                                                onShowUpdateFailure(
+                                                    exception.message ?: exception.javaClass.name,
+                                                    exception.asString(),
                                                 )
                                             }
                                         }

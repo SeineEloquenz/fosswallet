@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import com.google.zxing.BarcodeFormat
+import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import org.junit.Assert.assertEquals
@@ -21,20 +22,17 @@ import java.time.ZonedDateTime
 @Config(sdk = [34])
 class CreateFormStateTest {
     @Test
-    fun `scanned barcode route starts the form with that barcode`() {
-        val handle =
-            SavedStateHandle(
-                mapOf("format" to "AZTEC", "message" to "#UT01\u0000x", "encoding" to "ISO-8859-1"),
-            )
+    fun `scanned barcode starts the form with that barcode`() {
+        val barcode = BarCode(BarcodeFormat.AZTEC, "#UT01\u0000x", Charsets.ISO_8859_1, null)
 
-        val form = CreateFormState(handle).form.value
+        val form = CreateFormState(SavedStateHandle(), barcode).form.value
 
         assertEquals(listOf(BarcodeDraft("#UT01\u0000x", "", BarcodeFormat.AZTEC, Charsets.ISO_8859_1)), form.barcodes)
     }
 
     @Test
-    fun `plain create route starts with an empty form`() {
-        assertEquals(CreateForm(), CreateFormState(SavedStateHandle()).form.value)
+    fun `plain create starts with an empty form`() {
+        assertEquals(CreateForm(), CreateFormState(SavedStateHandle(), null).form.value)
     }
 
     @SuppressLint("RestrictedApi")
@@ -59,10 +57,10 @@ class CreateFormStateTest {
                 iconUrl = "content://media/external/images/1".toUri(),
             )
         val handle = SavedStateHandle()
-        CreateFormState(handle).update { edited }
+        CreateFormState(handle, null).update { edited }
 
         val savedState = parcelRoundTrip(handle.savedStateProvider().saveState())
-        val restored = CreateFormState(SavedStateHandle.createHandle(savedState, null)).form.value
+        val restored = CreateFormState(SavedStateHandle.createHandle(savedState, null), null).form.value
 
         assertEquals(edited.copy(location = null), restored.copy(location = null))
         assertEquals(49.0, restored.location!!.latitude, 0.0)

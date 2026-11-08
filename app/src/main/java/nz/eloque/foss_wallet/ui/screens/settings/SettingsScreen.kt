@@ -7,24 +7,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    navController: NavHostController,
+    onBack: () -> Unit,
+    onOpenAbout: () -> Unit,
     settingsViewModel: SettingsViewModel,
 ) {
     WalletScaffold(
-        navController = navController,
-        toolWindow = true,
+        onBack = onBack,
         actions = {
-            IconButton(onClick = {
-                navController.navigate(Route.About)
-            }) {
+            IconButton(onClick = onOpenAbout) {
                 Icon(imageVector = Icons.Default.Info, contentDescription = stringResource(R.string.about))
             }
         },

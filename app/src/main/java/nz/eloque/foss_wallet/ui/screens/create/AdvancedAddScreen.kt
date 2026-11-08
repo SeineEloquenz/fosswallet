@@ -16,27 +16,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdvancedAddScreen(navController: NavHostController) {
+fun AdvancedAddScreen(
+    onBack: () -> Unit,
+    onOpenUrl: (url: String) -> Unit,
+    onCreate: (BarCode?) -> Unit,
+) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val clipboard = LocalClipboard.current
     val coroutineScope = rememberCoroutineScope()
 
     WalletScaffold(
-        navController = navController,
-        toolWindow = true,
+        onBack = onBack,
         title = stringResource(R.string.advanced),
     ) {
         Column(
@@ -74,7 +75,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
 
                         withContext(Dispatchers.Main) {
                             if (value.startsWith("https://") || value.startsWith("http://")) {
-                                navController.navigate(Route.Webview(value))
+                                onOpenUrl(value)
                             } else {
                                 val barcode =
                                     BarCode(
@@ -83,7 +84,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
                                         encoding = Charsets.UTF_8,
                                         altText = value,
                                     )
-                                navController.navigate(Route.Create(barcode))
+                                onCreate(barcode)
                             }
                         }
                     }
@@ -94,7 +95,7 @@ fun AdvancedAddScreen(navController: NavHostController) {
             }
 
             Button(
-                onClick = { navController.navigate(Route.Create()) },
+                onClick = { onCreate(null) },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.manual_entry))

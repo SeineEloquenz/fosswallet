@@ -10,15 +10,13 @@ import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import nz.eloque.compose_kit.components.About
 import nz.eloque.compose_kit.components.AboutLink
 import nz.eloque.foss_wallet.BuildConfig
 import nz.eloque.foss_wallet.R
-import nz.eloque.foss_wallet.ui.Route
 
 @Composable
-fun AboutView(navController: NavHostController) {
+fun AboutView(onOpenLibraries: () -> Unit) {
     About(
         appName = stringResource(R.string.app_name),
         icon = painterResource(R.drawable.icon),
@@ -50,7 +48,7 @@ fun AboutView(navController: NavHostController) {
                 AboutLink.Action(
                     icon = Icons.AutoMirrored.Filled.LibraryBooks,
                     label = stringResource(R.string.libraries),
-                    onClick = { navController.navigate(Route.Libraries) },
+                    onClick = onOpenLibraries,
                 ),
             ),
     )

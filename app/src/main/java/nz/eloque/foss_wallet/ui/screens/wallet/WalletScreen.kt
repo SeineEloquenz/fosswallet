@@ -29,15 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.fab.FabMenu
 import nz.eloque.compose_kit.fab.FabMenuItem
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 
@@ -45,7 +43,11 @@ import nz.eloque.foss_wallet.utils.PkpassMimeTypes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
-    navController: NavHostController,
+    onOpenPass: (passId: String) -> Unit,
+    onOpenArchive: () -> Unit,
+    onOpenSettings: () -> Unit,
+    onOpenAdvancedAdd: () -> Unit,
+    onOpenScan: () -> Unit,
     walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val listState = rememberLazyListState()
@@ -56,13 +58,12 @@ fun WalletScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             walletViewModel.import(uris)
         }
-    ImportEventsEffect(walletViewModel, navController)
+    ImportEventsEffect(walletViewModel, onOpenPass)
     val selectedPasses = remember { mutableStateSetOf<LocalizedPassWithTags>() }
     val visiblePasses = remember { mutableStateOf<Set<LocalizedPassWithTags>>(emptySet()) }
     val allVisibleSelected = visiblePasses.value.isNotEmpty() && visiblePasses.value.all { selectedPasses.contains(it) }
 
     WalletScaffold(
-        navController = navController,
         title = stringResource(id = R.string.wallet),
         actions = {
             if (selectedPasses.isNotEmpty()) {
@@ -87,17 +88,13 @@ fun WalletScreen(
                     )
                 }
             }
-            IconButton(onClick = {
-                navController.navigate(Route.Archive)
-            }) {
+            IconButton(onClick = onOpenArchive) {
                 Icon(
                     imageVector = Icons.Default.Archive,
                     contentDescription = stringResource(R.string.the_archive),
                 )
             }
-            IconButton(onClick = {
-                navController.navigate(Route.Settings)
-            }) {
+            IconButton(onClick = onOpenSettings) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = stringResource(R.string.settings),
@@ -119,16 +116,12 @@ fun WalletScreen(
                             FabMenuItem(
                                 icon = Icons.Default.MoreHoriz,
                                 title = stringResource(R.string.advanced),
-                                onClick = {
-                                    navController.navigate(Route.AdvancedAdd)
-                                },
+                                onClick = onOpenAdvancedAdd,
                             ),
                             FabMenuItem(
                                 icon = Icons.Default.QrCodeScanner,
                                 title = stringResource(R.string.barcode),
-                                onClick = {
-                                    navController.navigate(Route.Scan)
-                                },
+                                onClick = onOpenScan,
                             ),
                             FabMenuItem(
                                 icon = Icons.Default.Add,
@@ -149,7 +142,8 @@ fun WalletScreen(
         },
     ) { scrollBehavior ->
         WalletView(
-            navController = navController,
+            onOpenPass = onOpenPass,
+            onOpenArchive = onOpenArchive,
             walletViewModel = walletViewModel,
             listState = listState,
             scrollBehavior = scrollBehavior,
