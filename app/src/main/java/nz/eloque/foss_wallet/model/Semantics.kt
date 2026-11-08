@@ -2,14 +2,13 @@ package nz.eloque.foss_wallet.model
 
 import nz.eloque.foss_wallet.parsing.TimeParser
 import nz.eloque.foss_wallet.utils.stringOrNull
+import org.json.JSONException
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
 
-/** The pass-level semantic tags the app reads. */
+/** The pass-level semantic tags the app uses, read from [Pass.semantics]. */
 data class Semantics(
-    /** Every tag as stored, never localized. */
-    val json: String,
     val eventName: String? = null,
     val eventStartDate: ZonedDateTime? = null,
     val eventEndDate: ZonedDateTime? = null,
@@ -23,45 +22,36 @@ data class Semantics(
     val departureStationName: String? = null,
     val departureAirportName: String? = null,
 ) {
-    /** The event or journey the tags describe. */
-    fun timeframe(): Timeframe? {
-        if (eventStartDate != null || eventEndDate != null) {
-            return Timeframe(
-                start = eventStartDate,
-                end = eventEndDate ?: eventStartDate?.plusDuration(),
-                location = venueName,
-            )
-        }
-        val departure = currentDepartureDate ?: originalDepartureDate
-        val arrival = currentArrivalDate ?: departure?.plusDuration() ?: originalArrivalDate
-        if (departure == null && arrival == null) return null
-        return Timeframe(
-            start = departure,
-            end = arrival,
-            location = departureStationName ?: departureAirportName ?: departureLocationDescription,
-        )
-    }
+    val departureDate: ZonedDateTime? get() = currentDepartureDate ?: originalDepartureDate
 
-    private fun ZonedDateTime.plusDuration(): ZonedDateTime? = duration?.let { plus(it) }
+    val arrivalDate: ZonedDateTime? get() = currentArrivalDate ?: originalArrivalDate
 
     companion object {
-        fun fromJson(json: JSONObject): Semantics =
-            Semantics(
-                json = json.toString(),
-                eventName = json.stringOrNull("eventName"),
-                eventStartDate = json.dateOrNull("eventStartDate"),
-                eventEndDate = json.dateOrNull("eventEndDate"),
-                duration = json.optDouble("duration").takeIf { it.isFinite() && it > 0 }?.let { Duration.ofSeconds(it.toLong()) },
-                venueName = json.stringOrNull("venueName"),
-                currentDepartureDate = json.dateOrNull("currentDepartureDate"),
-                originalDepartureDate = json.dateOrNull("originalDepartureDate"),
-                currentArrivalDate = json.dateOrNull("currentArrivalDate"),
-                originalArrivalDate = json.dateOrNull("originalArrivalDate"),
-                departureLocationDescription = json.stringOrNull("departureLocationDescription"),
-                departureStationName = json.stringOrNull("departureStationName"),
-                departureAirportName = json.stringOrNull("departureAirportName"),
+        fun fromJson(json: String?): Semantics? {
+            val semantics =
+                try {
+                    JSONObject(json ?: return null)
+                } catch (_: JSONException) {
+                    return null
+                }
+            return Semantics(
+                eventName = semantics.stringOrNull("eventName"),
+                eventStartDate = semantics.dateOrNull("eventStartDate"),
+                eventEndDate = semantics.dateOrNull("eventEndDate"),
+                duration = semantics.optDouble("duration").takeIf { it.isFinite() && it > 0 }?.let { Duration.ofSeconds(it.toLong()) },
+                venueName = semantics.stringOrNull("venueName"),
+                currentDepartureDate = semantics.dateOrNull("currentDepartureDate"),
+                originalDepartureDate = semantics.dateOrNull("originalDepartureDate"),
+                currentArrivalDate = semantics.dateOrNull("currentArrivalDate"),
+                originalArrivalDate = semantics.dateOrNull("originalArrivalDate"),
+                departureLocationDescription = semantics.stringOrNull("departureLocationDescription"),
+                departureStationName = semantics.stringOrNull("departureStationName"),
+                departureAirportName = semantics.stringOrNull("departureAirportName"),
             )
+        }
 
         private fun JSONObject.dateOrNull(key: String): ZonedDateTime? = stringOrNull(key)?.let { TimeParser.parseAbsoluteOrNull(it) }
     }
 }
+
+fun Pass.parsedSemantics(): Semantics? = Semantics.fromJson(semantics)

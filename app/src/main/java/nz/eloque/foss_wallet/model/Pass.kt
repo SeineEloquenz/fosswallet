@@ -50,7 +50,8 @@ data class Pass(
     /** Action URLs, emails and phone numbers, keyed by their pass.json key such as `transferURL`. */
     @ColumnInfo(defaultValue = "{}")
     val links: Map<String, String> = emptyMap(),
-    val semantics: Semantics? = null,
+    /** Raw JSON of the pass-level semantic tags. */
+    val semantics: String? = null,
     val headerFields: List<PassField> = LinkedList(),
     val primaryFields: List<PassField> = LinkedList(),
     val secondaryFields: List<PassField> = LinkedList(),
@@ -108,7 +109,16 @@ data class Pass(
     fun updatable(): Boolean = webService() != null
 
     /** When the pass stops being useful, the earlier of its expiration and the end of its event or journey. */
-    fun endsAt(): Instant? = listOfNotNull(expirationDate, semantics?.timeframe()?.end).minOfOrNull { it.toInstant() }
+    fun endsAt(): Instant? {
+        val semanticEnd = parsedSemantics()?.endDate()?.toInstant()
+        return listOfNotNull(expirationDate?.toInstant(), semanticEnd).minOrNull()
+    }
+
+    private fun Semantics.endDate(): ZonedDateTime? =
+        eventEndDate
+            ?: currentArrivalDate
+            ?: duration?.let { (eventStartDate ?: departureDate)?.plus(it) }
+            ?: originalArrivalDate
 
     private fun coilImageModel(
         context: Context,
