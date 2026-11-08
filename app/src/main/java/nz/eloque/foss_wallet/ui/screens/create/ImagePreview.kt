@@ -74,6 +74,7 @@ fun ImagePreview(
     val resolver = LocalContext.current.contentResolver
     var pageIndex by remember(uri) { mutableIntStateOf(0) }
     var page by remember(uri, pageIndex) { mutableStateOf<PreviewPage?>(null) }
+    var pageCount by remember(uri) { mutableIntStateOf(1) }
     var failed by remember(uri, pageIndex) { mutableStateOf(false) }
     var zoom by remember(uri, pageIndex) { mutableFloatStateOf(1f) }
     var pan by remember(uri, pageIndex) { mutableStateOf(Offset.Zero) }
@@ -83,8 +84,12 @@ fun ImagePreview(
 
     LaunchedEffect(uri, pageIndex) {
         try {
-            page = withContext(Dispatchers.IO) { loadPreviewPage(resolver, uri, pageIndex, mimeType) }
+            val loaded = withContext(Dispatchers.IO) { loadPreviewPage(resolver, uri, pageIndex, mimeType) }
+            pageCount = loaded.pageCount
+            page = loaded
         } catch (_: java.io.IOException) {
+            failed = true
+        } catch (_: OutOfMemoryError) {
             failed = true
         } catch (_: SecurityException) {
             failed = true
@@ -165,7 +170,7 @@ fun ImagePreview(
                     CircularProgressIndicator(color = Color.White)
                 }
             }
-            val pageCount = page?.pageCount ?: 1
+
             if (pageCount > 1) {
                 Row(
                     Modifier.fillMaxWidth().padding(12.dp),
@@ -200,7 +205,7 @@ fun ImagePreview(
                 if (found != null) {
                     Button(onClick = { onScanned(found.result) }) { Text(stringResource(R.string.use_this_barcode)) }
                 } else if (notFound) {
-                    val hint = if ((page?.pageCount ?: 1) > 1) R.string.no_barcode_on_page else R.string.no_barcode_in_view
+                    val hint = if (pageCount > 1) R.string.no_barcode_on_page else R.string.no_barcode_in_view
                     Text(stringResource(hint), color = Color.White, textAlign = TextAlign.Center)
                 }
             }

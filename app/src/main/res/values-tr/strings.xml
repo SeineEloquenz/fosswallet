@@ -78,7 +78,6 @@
     <string name="to">Şuna</string>
     <string name="help_translate">Çeviriye yardım et</string>
     <string name="barcode_value_invalid">Belirtilen değer geçerli bir %1$s kodu değil</string>
-    <string name="choose_image">Resim seç</string>
     <string name="clear_selection">Seçimi temizle</string>
     <string name="color">Renk</string>
     <string name="icon">İkon</string>
@@ -95,7 +94,6 @@
     <string name="selected_location">Seçilen: %1$s</string>
     <string name="no_map_app_found">Harita uygulaması bulunamadı</string>
     <string name="no_calendar_app_found">Takvim uygulaması bulunamadı</string>
-    <string name="no_barcode_found">Barkod bulunamadı</string>
     <string name="manual_entry">Manuel giriş</string>
     <string name="pass_location">Konum</string>
     <string name="pass_label_color">Etiket rengi</string>

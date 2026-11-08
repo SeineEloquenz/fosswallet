@@ -44,7 +44,7 @@ class ScanContract : ActivityResultContract<Unit, BarCode?>() {
     }
 }
 
-/** Opens a picked/shared file in the same scanner preview and preserves the typed barcode result. */
+/** Opens a file in the [ScanActivity] preview and returns the chosen barcode, or null if cancelled. */
 class FilePreviewContract : ActivityResultContract<FilePreviewInput, BarCode?>() {
     override fun createIntent(
         context: Context,

@@ -79,14 +79,12 @@
     <string name="help_translate">Aiuta a tradurre</string>
     <string name="barcode_value_invalid">Il valore fornito non è un codice %1$s valido</string>
     <string name="clear_selection">Cancella selezione</string>
-    <string name="choose_image">Scegli immagine</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Riduci</string>
     <string name="color">Colore</string>
     <string name="add_tag">Aggiungi tag</string>
     <string name="remove_tag">Rimuovi tag</string>
     <string name="tag_label">Etichetta del tag</string>
-    <string name="no_barcode_found">Nessun codice a barre trovato</string>
     <string name="select_image_with_barcode">Seleziona l’immagine con il codice</string>
     <string name="no_map_app_found">Nessuna app mappe trovata</string>
     <string name="no_calendar_app_found">Nessuna app calendario trovata</string>
@@ -114,7 +112,6 @@
     <string name="pass_label_color">Colore dell\'etichetta</string>
     <string name="no_text_in_clipboard">Nessun testo negli appunti</string>
     <string name="advanced">Avanzato</string>
-    <string name="import_pass">Importa biglietto</string>
     <string name="manual_entry">Inserimento manuale</string>
     <string name="strip">Striscia</string>
     <string name="scan_code">Scansiona codice</string>

@@ -154,7 +154,7 @@ fun WalletScreen(
                             ),
                             FabMenuItem(
                                 icon = Icons.Default.Add,
-                                title = stringResource(R.string.import_pass),
+                                title = stringResource(R.string.import_file),
                                 onClick = {
                                     launcher.launch(
                                         arrayOf(

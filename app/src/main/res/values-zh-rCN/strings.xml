@@ -84,10 +84,8 @@
     <string name="store_card">会员卡</string>
     <string name="barcode_format">条码格式</string>
     <string name="barcode_value_invalid">提供的值不是有效的 %1$s 码</string>
-    <string name="choose_image">选择图片</string>
     <string name="tag_label">标签名称</string>
     <string name="select_image_with_barcode">选择带有条码的图片</string>
-    <string name="no_barcode_found">未找到条码</string>
     <string name="no_map_app_found">未找到地图应用</string>
     <string name="no_calendar_app_found">未找到日历应用</string>
     <string name="save">保存</string>
@@ -113,7 +111,6 @@
     <string name="pass_foreground_color">前景颜色</string>
     <string name="pass_label_color">标签颜色</string>
     <string name="strip">横幅图片</string>
-    <string name="import_pass">导入凭证</string>
     <string name="open_from_clipboard">从剪贴板打开</string>
     <string name="manual_entry">手动输入</string>
     <string name="advanced">高级</string>

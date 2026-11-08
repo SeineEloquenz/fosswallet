@@ -20,7 +20,7 @@
     <string name="ask_before_delete">Ask before delete</string>
     <string name="invalid_pass_toast">Pass could not be loaded. Are you sure this is a valid .pkpass?</string>
     <string name="add_pass">Add pass</string>
-    <string name="import_pass">Import file</string>
+    <string name="import_file">Import file</string>
     <string name="about">About</string>
     <string name="webview">Open URL</string>
     <string name="open_from_clipboard">Open from clipboard</string>
@@ -107,7 +107,6 @@
     <string name="no_text_in_clipboard">No text in clipboard</string>
     <string name="barcode_value_invalid">The given value is not a valid %1$s code</string>
     <string name="help_translate">Help translate</string>
-    <string name="choose_image">Choose image</string>
     <string name="clear_selection">Clear selection</string>
     <string name="select_all">Select all</string>
     <string name="add_tag">Add tag</string>
@@ -131,7 +130,6 @@
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
     <string name="select_image_with_barcode">Select image with barcode</string>
-    <string name="no_barcode_found">No barcode found</string>
     <string name="no_map_app_found">No map app found</string>
     <string name="no_calendar_app_found">No calendar app found</string>
     <string name="created_pass_export_warning">Created passes cannot currently be exported</string>

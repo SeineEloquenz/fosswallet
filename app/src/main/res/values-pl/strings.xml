@@ -79,7 +79,6 @@
     <string name="boarding_pass">Karta pokładowa</string>
     <string name="store_card">Karta sklepowa</string>
     <string name="no_text_in_clipboard">Brak tekstu w schowku</string>
-    <string name="no_barcode_found">Nie znaleziono kodu kreskowego</string>
     <string name="no_map_app_found">Nie znaleziono aplikacji z mapami</string>
     <string name="selected_location">Wybrano: %1$s</string>
     <string name="barcode_alt_text">Alternatywny tekst kodu kreskowego</string>
@@ -92,7 +91,6 @@
     <string name="delete_confirmation_message">Usunąć wybrane przepustki? Tej czynności nie można cofnąć.</string>
     <string name="dont_ask_again">Nie pytaj więcej</string>
     <string name="ask_before_delete">Zapytaj przed usunięciem</string>
-    <string name="import_pass">Importuj przepustkę</string>
     <string name="webview">Otwórz URL</string>
     <string name="open_from_clipboard">Otwórz ze schowka</string>
     <string name="pass_deleted">Przepustka została pomyślnie usunięta</string>
@@ -112,7 +110,6 @@
     <string name="logo">Logo</string>
     <string name="strip">Pas</string>
     <string name="help_translate">Pomóż w tłumaczeniu</string>
-    <string name="choose_image">Wybierz obraz</string>
     <string name="clear_selection">Wyczyść zaznaczone</string>
     <string name="select_all">Zaznacz wszystko</string>
     <string name="add_tag">Dodaj tag</string>

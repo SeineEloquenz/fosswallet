@@ -17,7 +17,7 @@ data class PreviewViewport(
     val left = (width - imageWidth * scale) / 2f + panX
     val top = (height - imageHeight * scale) / 2f + panY
 
-    /** Scale around the previous finger centroid, then follow its movement without clamping to the file. */
+    /** Applies a pinch and drag gesture around [centroidX], [centroidY]. */
     fun transformed(
         centroidX: Float,
         centroidY: Float,

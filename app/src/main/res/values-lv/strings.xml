@@ -76,7 +76,6 @@
     <string name="logo">Logotips</string>
     <string name="barcode_value_invalid">Norādītā vērtība nav derīgs %1$s kods</string>
     <string name="selected_location">Izvēlēts: %1$s</string>
-    <string name="no_barcode_found">Svītrkods nav atrasts</string>
     <string name="barcode_value">Svītrkoda vērtība</string>
     <string name="logo_text">Logotipa teksts</string>
     <string name="pass_foreground_color">Priekšplāna krāsa</string>

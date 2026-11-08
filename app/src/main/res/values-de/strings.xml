@@ -83,7 +83,6 @@
     <string name="no_url_in_clipboard">Keine URL in der Zwischenablage</string>
     <string name="barcode_value_invalid">Der Wert ist kein valider %1$s-Code</string>
     <string name="help_translate">Hilf übersetzen</string>
-    <string name="choose_image">Bild auswählen</string>
     <string name="clear_selection">Auswahl leeren</string>
     <string name="add_tag">Tag hinzufügen</string>
     <string name="remove_tag">Tag entfernen</string>
@@ -91,14 +90,12 @@
     <string name="tag_label">Tag Label</string>
     <string name="collapse">Einklappen</string>
     <string name="expand">Erweitern</string>
-    <string name="no_barcode_found">Keinen Barcode gefunden</string>
     <string name="select_image_with_barcode">Wähle ein Bild mit einem Barcode aus</string>
     <string name="no_map_app_found">Keine Kartenapp gefunden</string>
     <string name="no_calendar_app_found">Keine Kalendarapp gefunden</string>
     <string name="add_another_barcode">Einen weiteren Barcode hinzufügen</string>
     <string name="barcode_alt_text">Alternativer Barcode-Text</string>
     <string name="save">Speichern</string>
-    <string name="import_pass">Pass importieren</string>
     <string name="no_text_in_clipboard">Kein Text in der Zwischenablage</string>
     <string name="additional_fields">Zusätzliche Felder</string>
     <string name="pass_location">Ort</string>

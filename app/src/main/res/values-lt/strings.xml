@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="help_translate">Padėti versti</string>
-    <string name="choose_image">Pasirinkti vaizdą</string>
     <string name="clear_selection">Valyti pasirinkimą</string>
     <string name="add_tag">Pridėti žymę</string>
     <string name="remove_tag">Šalinti žymę</string>

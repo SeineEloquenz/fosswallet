@@ -8,6 +8,7 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.graphics.createBitmap
+import java.io.FileNotFoundException
 
 fun ContentResolver.scanSource(
     uri: Uri,
@@ -32,7 +33,7 @@ data class PreviewPage(
     val pageCount: Int,
 )
 
-/** Open only the requested PDF page, keeping memory usage independent of page count. */
+/** Decodes the image, or renders only the requested page of a PDF. */
 fun loadPreviewPage(
     resolver: ContentResolver,
     uri: Uri,
@@ -50,7 +51,7 @@ fun loadPreviewPage(
             }
         return PreviewPage(bitmap, 1)
     }
-    return resolver.openFileDescriptor(uri, "r")!!.use { descriptor ->
+    return (resolver.openFileDescriptor(uri, "r") ?: throw FileNotFoundException(uri.toString())).use { descriptor ->
         PdfRenderer(descriptor).use { renderer ->
             renderer.openPage(pageIndex).use { page ->
                 val scale = minOf(3f, 4096f / maxOf(page.width, page.height))

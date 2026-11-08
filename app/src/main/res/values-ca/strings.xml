@@ -41,7 +41,6 @@
     <string name="pass_view_brightness">Augmentar la brillantor</string>
     <string name="help_translate">Ajuda a traduir</string>
     <string name="webview">Obre l\'URL</string>
-    <string name="choose_image">Tria una imatge</string>
     <string name="compatibility_mode">Mode de compatibilitat</string>
     <string name="barcode_position">Posició del codi de barres en pantalla completa</string>
     <string name="barcode_format">Format del codi de barres</string>
@@ -73,7 +72,6 @@
     <string name="ask_before_delete">Demanar abans d\'esborrar</string>
     <string name="invalid_pass_toast">La targeta no s\'ha pogut carregar. Estàs segur de què és un .pkpass vàlid?</string>
     <string name="add_pass">Afegir targeta</string>
-    <string name="import_pass">Importar targeta</string>
     <string name="open_from_clipboard">Obri des del Porta-retalls</string>
     <string name="update_successful">Passi actualitzat correctament</string>
     <string name="update_failed">L\'actualització del passi ha fallat</string>
@@ -123,7 +121,6 @@
     <string name="collapse">Contreure</string>
     <string name="expand">Expandir</string>
     <string name="select_image_with_barcode">Seleccionar una imatge amb codi de barres</string>
-    <string name="no_barcode_found">No s\'ha trobat cap codi de barres</string>
     <string name="no_map_app_found">No s\'ha trobat cap aplicació de mapes</string>
     <string name="no_calendar_app_found">No s\'ha trobat cap aplicació de calendari</string>
     <string name="create_boarding_pass">Crea targeta d\'embarcament</string>

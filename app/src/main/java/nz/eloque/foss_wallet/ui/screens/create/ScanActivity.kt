@@ -111,7 +111,7 @@ class ScanActivity : AppCompatActivity() {
         val capture = imageCapture ?: return
         if (isCapturing) return
         isCapturing = true
-        capture.targetRotation = previewView!!.display.rotation
+        previewView?.display?.let { capture.targetRotation = it.rotation }
         val file = File.createTempFile("barcode-", ".jpg", cacheDir)
         capturedFiles.add(file)
         capture.takePicture(

@@ -78,7 +78,6 @@
     <string name="no_url_in_clipboard">Lõikelaual pole ühtegi võrguaadressi</string>
     <string name="barcode_value_invalid">Antud väärtus pole korrektne %1$s kood</string>
     <string name="help_translate">Aita tõlkida</string>
-    <string name="choose_image">Vali pilt</string>
     <string name="clear_selection">Tühjenda valik</string>
     <string name="add_tag">Lisa silt</string>
     <string name="remove_tag">Eemalda silt</string>
@@ -87,7 +86,6 @@
     <string name="collapse">Ahenda vaadet</string>
     <string name="expand">Laienda vaadet</string>
     <string name="select_image_with_barcode">Vali triipkoodiga pilt</string>
-    <string name="no_barcode_found">Mitte mingisugust triipkoodi ei leidu</string>
     <string name="no_map_app_found">Ühtegi kaardirakendust ei leidu</string>
     <string name="no_calendar_app_found">Ühtegi kalendrirakendust ei leidu</string>
     <string name="save">Salvesta</string>
@@ -113,7 +111,6 @@
     <string name="pass_background_color">Taustavärv</string>
     <string name="pass_foreground_color">Esiplaani värv</string>
     <string name="pass_label_color">Sildi värv</string>
-    <string name="import_pass">Impordi dokument</string>
     <string name="open_from_clipboard">Ava lõikelaualt</string>
     <string name="manual_entry">Käsitsi sisestus</string>
     <string name="advanced">Lisavalikud</string>

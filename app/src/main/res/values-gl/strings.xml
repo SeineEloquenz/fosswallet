@@ -74,7 +74,6 @@
     <string name="delete_confirmation_message">Eliminar o(s) pase(s) seleccionado(s)? A acción non é reversible.</string>
     <string name="dont_ask_again">Non preguntar outra vez</string>
     <string name="ask_before_delete">Preguntar antes de eliminar</string>
-    <string name="import_pass">Importar pase</string>
     <string name="webview">Abrir URL</string>
     <string name="open_from_clipboard">Abrir desde o portapapeis</string>
     <string name="the_archive">Arquivo</string>
@@ -104,7 +103,6 @@
     <string name="no_text_in_clipboard">Sen texto no portapapeis</string>
     <string name="barcode_value_invalid">O valor proporcionado non é un código %1$s válido</string>
     <string name="help_translate">Colabora na tradución</string>
-    <string name="choose_image">Elixe unha imaxe</string>
     <string name="clear_selection">Limpar selección</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="add_tag">Engadir etiqueta</string>
@@ -122,7 +120,6 @@
     <string name="collapse">Contraer</string>
     <string name="expand">Despregar</string>
     <string name="select_image_with_barcode">Elixe unha imaxe con código de barras</string>
-    <string name="no_barcode_found">Non se atopa un código de barras</string>
     <string name="no_map_app_found">Non se atopa unha app de mapas</string>
     <string name="no_calendar_app_found">Non se atopa unha app de calendario</string>
     <string name="tag_label">Nome da etiqueta</string>

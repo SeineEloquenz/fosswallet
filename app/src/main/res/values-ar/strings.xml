@@ -53,7 +53,6 @@
     <string name="ask_before_delete">السؤال قبل الحذف</string>
     <string name="invalid_pass_toast">تعذر تحميل البطاقة. هل أنت متأكد من أنه ملف .pkpass صالح؟</string>
     <string name="add_pass">إضافة بطاقة</string>
-    <string name="import_pass">استيراد بطاقة</string>
     <string name="webview">فتح الرابط</string>
     <string name="open_from_clipboard">فتح من الحافظة</string>
     <string name="made_with_love">صنع بكل حب ❤ في ألمانيا</string>
@@ -109,7 +108,6 @@
     <string name="strip">صورة الشريط العلوي</string>
     <string name="barcode_value_invalid">هذه القيمة ليست كود %1$s صحيحاً</string>
     <string name="help_translate">ساعد في الترجمة</string>
-    <string name="choose_image">اختيار صورة</string>
     <string name="clear_selection">مسح التحديد</string>
     <string name="select_all">تحديد الكل</string>
     <string name="add_tag">إضافة علامة</string>
@@ -124,7 +122,6 @@
     <string name="collapse">إخفاء</string>
     <string name="expand">عرض المزيد</string>
     <string name="select_image_with_barcode">حدد صورة بها باركود</string>
-    <string name="no_barcode_found">لم يتم العثور على باركود</string>
     <string name="no_map_app_found">لم يتم العثور على تطبيق خرائط</string>
     <string name="no_calendar_app_found">لم يتم العثور على تطبيق تقويم</string>
     <string name="created_pass_export_warning">البطاقات المُنشأة لا يمكن تصديرها في الوقت الحالي</string>

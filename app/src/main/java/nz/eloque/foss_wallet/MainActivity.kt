@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,8 +36,6 @@ import nz.eloque.foss_wallet.ui.theme.WalletTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val walletViewModel: WalletViewModel by viewModels()
-    private var incomingFile by mutableStateOf<IncomingFile?>(null)
-    private var importRequestId by mutableIntStateOf(0)
 
     private data class IncomingFile(
         val uri: Uri,
@@ -55,24 +52,11 @@ class MainActivity : ComponentActivity() {
         return uri?.let { IncomingFile(it, intent.type) }
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        incomingFile = fileFrom(intent)
-        importRequestId++
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("import_request_id", importRequestId)
-        super.onSaveInstanceState(outState)
-    }
-
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        importRequestId = savedInstanceState?.getInt("import_request_id") ?: 0
-        incomingFile = fileFrom(intent)
+        val file = fileFrom(intent)
 
         enableEdgeToEdge()
         setContent {
@@ -80,9 +64,8 @@ class MainActivity : ComponentActivity() {
             val coroutineScope = rememberCoroutineScope()
             ImportEventsEffect(walletViewModel, navController)
             val previewFiles = rememberFilePreviewQueue(navController)
-            val file = incomingFile
-            var importHandled by rememberSaveable(importRequestId) { mutableStateOf(false) }
-            LaunchedEffect(importRequestId, file) {
+            var importHandled by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
                 if (importHandled) return@LaunchedEffect
                 importHandled = true
                 if (file == null || ShortcutService.SCHEME == file.uri.scheme) return@LaunchedEffect
