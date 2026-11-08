@@ -8,12 +8,16 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.statement.readRawBytes
+import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.runBlocking
 import nz.eloque.foss_wallet.ui.ImportEventsEffect
 import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 import nz.eloque.foss_wallet.utils.PkpassMimeTypes
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import java.io.ByteArrayInputStream
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -56,36 +60,36 @@ class CustomWebViewClient(
         request: WebResourceRequest?,
     ): WebResourceResponse? = interceptRequest(view, request)
 
+    private val client = HttpClient(OkHttp)
+
     private fun interceptRequest(
         webView: WebView?,
         request: WebResourceRequest?,
-    ): WebResourceResponse? {
-        return try {
-            val okhttp: OkHttpClient = OkHttpClient.Builder().build()
-            val okHttpRequest =
-                Request.Builder().also {
-                    it.url(request?.url.toString())
-                    for (header in request!!.requestHeaders) {
-                        if (header.key.startsWith("sec-ch-ua")) continue
-                        it.addHeader(header.key, header.value)
-                    }
+    ): WebResourceResponse? =
+        try {
+            val (contentType, body) =
+                runBlocking {
+                    val response =
+                        client.get(request!!.url.toString()) {
+                            for (header in request.requestHeaders) {
+                                if (header.key.startsWith("sec-ch-ua") || HttpHeaders.isUnsafe(header.key)) continue
+                                header(header.key, header.value)
+                            }
+                        }
+                    response.headers[HttpHeaders.ContentType]?.split(";")?.first() to response.readRawBytes()
                 }
-            val response = okhttp.newCall(okHttpRequest.build()).execute()
-
-            val contentType = response.headers["content-type"]?.split(";")?.first()
 
             if (PkpassMimeTypes.contains(contentType)) {
-                return handlePkPassResponse(response)
+                handlePkPassResponse(body)
             } else {
-                WebResourceResponse(contentType, "UTF-8", response.body.byteStream())
+                WebResourceResponse(contentType, "UTF-8", ByteArrayInputStream(body))
             }
         } catch (_: Exception) {
             super.shouldInterceptRequest(webView, request)
         }
-    }
 
-    private fun handlePkPassResponse(response: Response): WebResourceResponse {
-        walletViewModel.import(response.body.byteStream().readBytes())
+    private fun handlePkPassResponse(body: ByteArray): WebResourceResponse {
+        walletViewModel.import(body)
         return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
     }
 }

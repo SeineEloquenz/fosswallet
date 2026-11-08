@@ -151,7 +151,8 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
 
     // http requests
-    implementation(libs.okhttp)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
 
     implementation(libs.androidx.hilt.work)
 

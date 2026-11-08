@@ -1,10 +1,11 @@
 package nz.eloque.foss_wallet.api
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
 import nz.eloque.foss_wallet.model.PassWebService
-import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -21,7 +22,7 @@ class PassbookApiTest {
     fun setUp() {
         server = MockWebServer()
         server.start()
-        api = PassbookApi(OkHttpClient.Builder().build())
+        api = PassbookApi(HttpClient(OkHttp))
     }
 
     @After
