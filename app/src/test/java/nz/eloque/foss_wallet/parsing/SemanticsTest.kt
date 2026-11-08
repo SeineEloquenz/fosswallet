@@ -2,6 +2,7 @@ package nz.eloque.foss_wallet.parsing
 
 import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.persistence.TypeConverters
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -25,7 +26,8 @@ class SemanticsTest {
                 )
             }
 
-        assertEquals(passSemantics.toString(), pass.semantics)
+        assertEquals(passSemantics.toString(), pass.semantics?.json)
+        assertEquals("Concert", pass.semantics?.eventName)
         assertEquals(fieldSemantics.toString(), pass.primaryFields.single().semantics)
     }
 
@@ -48,6 +50,14 @@ class SemanticsTest {
         val field = FieldParser.parse(JSONObject().put("key", "seat").put("value", "12").put("semantics", fieldSemantics))
 
         assertEquals(field, PassField.fromJson(field.toJson()))
+    }
+
+    @Test
+    fun `pass semantics survive storage`() {
+        val semantics = parse { it.put("semantics", passSemantics) }.semantics!!
+        val converters = TypeConverters()
+
+        assertEquals(semantics, converters.toSemantics(converters.fromSemantics(semantics)))
     }
 
     private fun parse(configure: (JSONObject) -> JSONObject) =

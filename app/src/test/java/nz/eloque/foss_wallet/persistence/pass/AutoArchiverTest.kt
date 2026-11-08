@@ -5,6 +5,8 @@ import junit.framework.TestCase.assertTrue
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Semantics
+import org.json.JSONObject
 import org.junit.Test
 import java.time.Instant
 import java.time.ZoneOffset
@@ -28,7 +30,7 @@ class AutoArchiverTest {
             barCodes = emptySet(),
             addedAt = added,
             expirationDate = expiration?.atZone(ZoneOffset.UTC),
-            semantics = semantics,
+            semantics = semantics?.let { Semantics.fromJson(JSONObject(it)) },
         )
 
     private fun metadata(
@@ -280,6 +282,5 @@ class AutoArchiverTest {
     @Test
     fun `does not archive without a known end`() {
         assertFalse(archivedWith("""{"eventStartDate":"2024-01-01T10:00:00Z","venueName":"Hall"}"""))
-        assertFalse(archivedWith("not json"))
     }
 }

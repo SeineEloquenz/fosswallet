@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import nz.eloque.compose_kit.chip.ChipRow
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.Tag
+import nz.eloque.foss_wallet.model.timeframe
 import nz.eloque.foss_wallet.ui.components.CalendarButton
 import nz.eloque.foss_wallet.ui.components.LocationButton
 import nz.eloque.foss_wallet.ui.components.tag.TagChooser
@@ -54,30 +54,17 @@ fun PassCardFooter(
 
         var tagChooserShown by remember { mutableStateOf(false) }
 
-        if (pass.relevantDates.any { it is PassRelevantDate.DateInterval }) {
-            val interval: PassRelevantDate.DateInterval =
-                pass.relevantDates.filterIsInstance<PassRelevantDate.DateInterval>()[0]
+        val timeframe = pass.timeframe()
+        timeframe?.start?.let { start ->
             CalendarButton(
-                title = pass.description,
-                start = interval.startDate,
-                end = interval.endDate,
+                title = pass.semantics?.eventName ?: pass.description,
+                start = start,
+                end = timeframe.end,
+                location = timeframe.location,
             )
             if (showDates) {
                 Text(
-                    text = interval.startDate.prettyDate(),
-                )
-            }
-        } else if (pass.relevantDates.any { it is PassRelevantDate.Date }) {
-            val date: PassRelevantDate.Date =
-                pass.relevantDates.filterIsInstance<PassRelevantDate.Date>()[0]
-            CalendarButton(
-                title = pass.description,
-                start = date.date,
-                end = pass.expirationDate,
-            )
-            if (showDates) {
-                Text(
-                    text = date.date.prettyDate(),
+                    text = start.prettyDate(),
                 )
             }
         }

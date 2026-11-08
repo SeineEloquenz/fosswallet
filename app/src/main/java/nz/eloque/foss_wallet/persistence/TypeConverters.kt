@@ -9,6 +9,7 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassLocation
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Semantics
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.parsing.TimeParser
@@ -154,4 +155,10 @@ class TypeConverters {
     @TypeConverter
     fun toLinks(str: String): Map<String, String> =
         JSONObject(str).let { json -> json.keys().asSequence().associateWith { json.getString(it) } }
+
+    @TypeConverter
+    fun fromSemantics(semantics: Semantics): String = semantics.json
+
+    @TypeConverter
+    fun toSemantics(str: String): Semantics = Semantics.fromJson(JSONObject(str))
 }
