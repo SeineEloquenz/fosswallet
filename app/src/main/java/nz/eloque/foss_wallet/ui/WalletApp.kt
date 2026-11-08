@@ -51,6 +51,8 @@ fun WalletApp(
             exitTransition = { slideForward().initialContentExit },
             popEnterTransition = { slideBackward().targetContentEnter },
             popExitTransition = { slideBackward().initialContentExit },
+            predictivePopEnterTransition = { slideBackward().targetContentEnter },
+            predictivePopExitTransition = { slideBackward().initialContentExit },
         ) {
             composable<Route.Wallet> {
                 WalletScreen(navController)
