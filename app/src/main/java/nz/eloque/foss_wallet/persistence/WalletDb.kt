@@ -37,7 +37,7 @@ fun buildDb(context: Context) =
         .build()
 
 @Database(
-    version = 29,
+    version = 30,
     entities = [
         Pass::class, PassMetadata::class, PassLocalization::class, PassGroup::class, Tag::class, PassTagCrossRef::class, Attachment::class,
     ],
@@ -61,6 +61,7 @@ fun buildDb(context: Context) =
         AutoMigration(from = 25, to = 26),
         AutoMigration(from = 27, to = 28),
         AutoMigration(from = 28, to = 29),
+        AutoMigration(from = 29, to = 30),
     ],
     exportSchema = true,
 )

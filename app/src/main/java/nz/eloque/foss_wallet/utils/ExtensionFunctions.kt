@@ -99,6 +99,8 @@ fun InputStream.toByteArray(): ByteArray {
 
 fun JSONObject.stringOrNull(key: String): String? = if (this.has(key)) this.getString(key) else null
 
+fun JSONObject.doubleOrNull(key: String): Double? = optDouble(key).takeUnless { it.isNaN() }
+
 infix fun <T : CharSequence> T.inIgnoreCase(charSequence: T?): Boolean = charSequence?.contains(this, ignoreCase = true) == true
 
 @Composable

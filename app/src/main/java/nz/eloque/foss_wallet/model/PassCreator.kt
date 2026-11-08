@@ -76,7 +76,7 @@ object PassCreator {
             addedAt = Instant.now(),
             logoText = name,
             colors = colors,
-            locations = location?.let { listOf(it) } ?: emptyList(),
+            locations = location?.let { listOf(PassLocation(it.latitude, it.longitude)) } ?: emptyList(),
             relevantDates = relevantDates,
             expirationDate = expirationDate,
             headerFields = headerFields,

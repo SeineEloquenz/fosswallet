@@ -2,7 +2,6 @@ package nz.eloque.foss_wallet.ui.components
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.location.Location
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -17,10 +16,11 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import nz.eloque.compose_kit.scaffold.LocalSnackbarHostState
 import nz.eloque.foss_wallet.R
+import nz.eloque.foss_wallet.model.PassLocation
 
 @Composable
 fun LocationButton(
-    location: Location,
+    location: PassLocation,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

@@ -1,11 +1,12 @@
 package nz.eloque.foss_wallet.persistence
 
-import android.location.Location
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.PassBeacon
 import nz.eloque.foss_wallet.model.PassColors
+import nz.eloque.foss_wallet.model.PassLocation
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
@@ -111,25 +112,10 @@ class TypeConverters {
     }
 
     @TypeConverter
-    fun fromLocations(locations: List<Location>): String {
-        val json = JSONArray()
-        locations.forEach {
-            val locJson = JSONObject()
-            locJson.put("latitude", it.latitude)
-            locJson.put("longitude", it.longitude)
-            json.put(locJson)
-        }
-        return json.toString()
-    }
+    fun fromLocations(locations: List<PassLocation>): String = JSONArray(locations.map { it.toJson() }).toString()
 
     @TypeConverter
-    fun toLocations(str: String): List<Location> =
-        JSONArray(str).map {
-            val location = Location("")
-            location.latitude = it.getDouble("latitude")
-            location.longitude = it.getDouble("longitude")
-            location
-        }
+    fun toLocations(str: String): List<PassLocation> = JSONArray(str).map { PassLocation.fromJson(it) }
 
     @TypeConverter
     fun fromBarcodes(barcodes: Set<BarCode>): String {
@@ -155,4 +141,17 @@ class TypeConverters {
 
     @TypeConverter
     fun toFields(str: String): List<PassField> = JSONArray(str).map { PassField.fromJson(it) }
+
+    @TypeConverter
+    fun fromBeacons(beacons: List<PassBeacon>): String = JSONArray(beacons.map { it.toJson() }).toString()
+
+    @TypeConverter
+    fun toBeacons(str: String): List<PassBeacon> = JSONArray(str).map { PassBeacon.fromJson(it) }
+
+    @TypeConverter
+    fun fromLinks(links: Map<String, String>): String = JSONObject(links).toString()
+
+    @TypeConverter
+    fun toLinks(str: String): Map<String, String> =
+        JSONObject(str).let { json -> json.keys().asSequence().associateWith { json.getString(it) } }
 }

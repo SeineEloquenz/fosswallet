@@ -19,6 +19,7 @@ private const val PASS_VIEW_BRIGHTNESS = "passViewBrightness"
 private const val FULLSCREEN_ONLY_BRIGHTNESS = "fullscreenOnlyBrightness"
 private const val SORT_OPTION = "walletViewSortOption"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
+private const val BACKFILLED_PARSER_VERSION = "backfilledParserVersion"
 
 sealed class BarcodePosition(
     val alignment: Alignment,
@@ -50,6 +51,10 @@ class SettingsStore
         private val prefs: SharedPreferences,
     ) {
         fun isSyncEnabled(): Boolean = prefs.getBoolean(SYNC_ENABLED, false)
+
+        fun backfilledParserVersion(): Int = prefs.getInt(BACKFILLED_PARSER_VERSION, 0)
+
+        fun setBackfilledParserVersion(version: Int) = prefs.edit { putInt(BACKFILLED_PARSER_VERSION, version) }
 
         fun enableSync(enabled: Boolean) = prefs.edit { putBoolean(SYNC_ENABLED, enabled) }
 

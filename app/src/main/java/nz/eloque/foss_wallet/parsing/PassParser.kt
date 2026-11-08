@@ -1,7 +1,6 @@
 package nz.eloque.foss_wallet.parsing
 
 import android.content.Context
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
@@ -10,8 +9,10 @@ import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassBeacon
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassImages
+import nz.eloque.foss_wallet.model.PassLocation
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
@@ -19,6 +20,7 @@ import nz.eloque.foss_wallet.model.decodeBitmap
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.utils.Hash
+import nz.eloque.foss_wallet.utils.doubleOrNull
 import nz.eloque.foss_wallet.utils.forEach
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONException
@@ -78,17 +80,7 @@ class PassParser(
                 else -> PassType.Generic
             }
 
-        val locations =
-            if (passJson.has("locations")) {
-                passJson.getJSONArray("locations").map { locJson ->
-                    Location("").also {
-                        it.latitude = locJson.getDouble("latitude")
-                        it.longitude = locJson.getDouble("longitude")
-                    }
-                }
-            } else {
-                listOf()
-            }
+        val locations = passJson.optJSONArray("locations")?.map { PassLocation.fromJson(it) } ?: listOf()
 
         val fieldContainer = passJson.optJSONObject(type.jsonKey)
 
@@ -105,18 +97,37 @@ class PassParser(
             deviceId = deviceId,
             relevantDates = parseRelevantDates(passJson),
             expirationDate = parseExpiration(passJson),
+            voided = passJson.optBoolean("voided"),
             logoText = passJson.stringOrNull("logoText") ?: passJson.stringOrNull("eventLogoText"),
             authToken = passJson.stringOrNull("authenticationToken"),
             webServiceUrl = passJson.stringOrNull("webServiceURL"),
             passTypeIdentifier = passJson.stringOrNull("passTypeIdentifier"),
             locations = locations,
+            beacons = parseBeacons(passJson),
+            maxDistance = passJson.doubleOrNull("maxDistance"),
+            links = LINK_KEYS.mapNotNull { key -> passJson.stringOrNull(key)?.let { key to it } }.toMap(),
+            semantics = passJson.optJSONObject("semantics")?.toString(),
             headerFields = fieldContainer?.collectFields("headerFields") ?: listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields") ?: listOf(),
             secondaryFields = fieldContainer?.collectFields("secondaryFields") ?: listOf(),
             auxiliaryFields = fieldContainer?.collectFields("auxiliaryFields") ?: listOf(),
             backFields = fieldContainer?.collectFields("backFields") ?: listOf(),
+            additionalInfoFields = fieldContainer?.collectFields("additionalInfoFields") ?: listOf(),
         ).withImages(images)
     }
+
+    private fun parseBeacons(passJson: JSONObject): List<PassBeacon> =
+        passJson
+            .optJSONArray("beacons")
+            ?.map { beaconJson ->
+                try {
+                    PassBeacon.fromJson(beaconJson)
+                } catch (e: JSONException) {
+                    Log.w(TAG, "Skipping invalid beacon: $e")
+                    null
+                }
+            }?.filterNotNull()
+            ?: listOf()
 
     private fun parseRelevantDate(passJson: JSONObject): PassRelevantDate? =
         try {
@@ -263,5 +274,40 @@ class PassParser(
 
     companion object {
         private const val TAG = "PassParser"
+
+        /** Bump when the parser reads new data, so stored passes are re-parsed from their originals on the next start. */
+        const val VERSION = 1
+
+        private val LINK_KEYS =
+            listOf(
+                "accessibilityURL",
+                "addOnURL",
+                "bagPolicyURL",
+                "changeSeatURL",
+                "contactVenueEmail",
+                "contactVenuePhoneNumber",
+                "contactVenueWebsite",
+                "directionsInformationURL",
+                "entertainmentURL",
+                "managementURL",
+                "merchandiseURL",
+                "orderFoodURL",
+                "parkingInformationURL",
+                "purchaseAdditionalBaggageURL",
+                "purchaseLoungeAccessURL",
+                "purchaseParkingURL",
+                "purchaseWifiURL",
+                "registerServiceAnimalURL",
+                "reportLostBagURL",
+                "requestWheelchairURL",
+                "sellURL",
+                "trackBagsURL",
+                "transferURL",
+                "transitInformationURL",
+                "transitProviderEmail",
+                "transitProviderPhoneNumber",
+                "transitProviderWebsiteURL",
+                "upgradeURL",
+            )
     }
 }
