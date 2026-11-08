@@ -45,6 +45,7 @@ import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.pager.HorizontalPagerIndicator
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
+import nz.eloque.foss_wallet.model.field.DataDetectorType
 import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassField
@@ -234,6 +235,7 @@ fun BackFields(fields: List<PassField>) {
                 field = it,
                 maxLines = Int.MAX_VALUE,
                 style = MaterialTheme.typography.bodyLarge,
+                dataDetectorTypes = it.dataDetectorTypes ?: DataDetectorType.entries.toSet(),
             )
         }
     }

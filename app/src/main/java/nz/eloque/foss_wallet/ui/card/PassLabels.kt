@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import nz.eloque.compose_kit.input.AbbreviatingText
 import nz.eloque.compose_kit.layout.FairRow
 import nz.eloque.compose_kit.layout.findMaxAllowedWidth
+import nz.eloque.foss_wallet.model.field.DataDetectorType
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassField
 
@@ -61,6 +62,7 @@ fun PassField(
     maxLines: Int = 1,
     style: TextStyle = passFieldContentStyle,
     isSelectable: Boolean = true,
+    dataDetectorTypes: Set<DataDetectorType> = emptySet(),
 ) {
     val textAlign =
         when (horizontalAlignment) {
@@ -80,9 +82,11 @@ fun PassField(
             style = PassCardDefaults.labelStyle,
             useTooltip = isSelectable,
         )
+        val html = remember(field.content) { field.content.parseHtml() }
+        val text = rememberDetectedLinks(html, dataDetectorTypes, linkStyle)
         val content = @Composable {
             Text(
-                text = field.content.parseHtml(),
+                text = text,
                 fontSize = fontSize,
                 textAlign = textAlign,
                 overflow = TextOverflow.Ellipsis,
