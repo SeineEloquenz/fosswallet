@@ -37,12 +37,10 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Rebuild Pass table (remove moved columns)
             // ---------------------------------------------------------
-
-            db.execSQL("ALTER TABLE Pass RENAME TO Pass_old")
-
+            // Renaming Pass itself would make SQLite repoint PassMetadata's foreign key at the old table
             db.execSQL(
                 """
-                CREATE TABLE Pass (
+                CREATE TABLE Pass_new (
                     id TEXT NOT NULL PRIMARY KEY,
                     description TEXT NOT NULL,
                     formatVersion INTEGER NOT NULL,
@@ -95,11 +93,11 @@ val M_23_24 =
             )
 
             // ---------------------------------------------------------
-            // Copy data back into new Pass table
+            // Copy data into the new Pass table
             // ---------------------------------------------------------
             db.execSQL(
                 """
-                INSERT INTO Pass (
+                INSERT INTO Pass_new (
                     id,
                     description,
                     formatVersion,
@@ -154,13 +152,14 @@ val M_23_24 =
                     secondaryFields,
                     auxiliaryFields,
                     backFields
-                FROM Pass_old
+                FROM Pass
                 """.trimIndent(),
             )
 
             // ---------------------------------------------------------
-            // Drop old table
+            // Replace the old table
             // ---------------------------------------------------------
-            db.execSQL("DROP TABLE Pass_old")
+            db.execSQL("DROP TABLE Pass")
+            db.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
         }
     }
