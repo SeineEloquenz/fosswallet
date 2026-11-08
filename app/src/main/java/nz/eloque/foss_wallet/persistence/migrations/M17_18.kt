@@ -1,48 +1,42 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.migration.Migration
+import androidx.sqlite.SQLiteConnection
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 val M_17_18 =
     object : Migration(17, 18) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            val cursor = db.query("SELECT id, relevantDate, expirationDate FROM Pass")
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(0)
-                val relevantDateMillis = if (!cursor.isNull(1)) cursor.getString(1) else null
-                val expirationDateMillis = if (!cursor.isNull(2)) cursor.getString(2) else null
-
-                val relevantIso =
-                    relevantDateMillis?.let {
-                        ZonedDateTime
-                            .ofInstant(
-                                Instant.ofEpochSecond(it.toLong()),
-                                ZoneOffset.UTC,
-                            ).toString()
+        override suspend fun migrate(connection: SQLiteConnection) {
+            val rows =
+                connection.prepare("SELECT id, relevantDate, expirationDate FROM Pass").use { statement ->
+                    buildList {
+                        while (statement.step()) {
+                            add(Triple(statement.getText(0), statement.getTextOrNull(1), statement.getTextOrNull(2)))
+                        }
                     }
+                }
 
-                val expirationIso =
-                    expirationDateMillis?.let {
-                        ZonedDateTime
-                            .ofInstant(
-                                Instant.ofEpochSecond(it.toLong()),
-                                ZoneOffset.UTC,
-                            ).toString()
-                    }
-
-                db.execSQL(
+            connection
+                .prepare(
                     """
                     UPDATE Pass SET
                         relevantDate = ?,
                         expirationDate = ?
                     WHERE id = ?
                     """.trimIndent(),
-                    arrayOf(relevantIso, expirationIso, id),
-                )
-            }
-            cursor.close()
+                ).use { update ->
+                    rows.forEach { (id, relevantDateSeconds, expirationDateSeconds) ->
+                        update.bindTextOrNull(1, relevantDateSeconds?.let(::isoFromEpochSeconds))
+                        update.bindTextOrNull(2, expirationDateSeconds?.let(::isoFromEpochSeconds))
+                        update.bindText(3, id)
+                        update.step()
+                        update.reset()
+                    }
+                }
         }
     }
+
+private fun isoFromEpochSeconds(seconds: String): String =
+    ZonedDateTime.ofInstant(Instant.ofEpochSecond(seconds.toLong()), ZoneOffset.UTC).toString()

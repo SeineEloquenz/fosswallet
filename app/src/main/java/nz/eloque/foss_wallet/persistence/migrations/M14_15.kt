@@ -1,19 +1,20 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.AutoMigrationSpec
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.migration.AutoMigrationSpec
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.async.executeSQL
 
 @Suppress("ClassName")
 class M14_15 : AutoMigrationSpec {
-    override fun onPostMigrate(db: SupportSQLiteDatabase) {
-        db.execSQL(
+    override suspend fun onPostMigrate(connection: SQLiteConnection) {
+        connection.executeSQL(
             """
             UPDATE pass
             SET relevantDate = NULL
             WHERE relevantDate = 0
             """.trimIndent(),
         )
-        db.execSQL(
+        connection.executeSQL(
             """
             UPDATE pass
             SET expirationDate = NULL

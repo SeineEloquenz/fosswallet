@@ -1,6 +1,6 @@
 package nz.eloque.foss_wallet.model.field
 
-import androidx.room.Entity
+import androidx.room3.Entity
 import nz.eloque.foss_wallet.utils.inIgnoreCase
 import nz.eloque.foss_wallet.utils.stringOrNull
 import org.json.JSONObject

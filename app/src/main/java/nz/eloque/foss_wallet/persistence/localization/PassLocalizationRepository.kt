@@ -11,10 +11,10 @@ class PassLocalizationRepository
     ) {
         fun all(): Flow<List<PassLocalization>> = localizationDao.all()
 
-        fun byPassId(
+        suspend fun byPassId(
             passId: Int,
             lang: String,
         ): Set<PassLocalization> = localizationDao.byPassId(passId, lang).toSet()
 
-        fun insert(localization: PassLocalization): Long = localizationDao.insert(localization)
+        suspend fun insert(localization: PassLocalization): Long = localizationDao.insert(localization)
     }

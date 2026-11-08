@@ -1,15 +1,15 @@
 package nz.eloque.foss_wallet.model
 
-import androidx.room.Embedded
-import androidx.room.Relation
+import androidx.room3.Embedded
+import androidx.room3.Relation
 import nz.eloque.foss_wallet.utils.toMapping
 
 data class PassWithLocalization(
     @Embedded
     val pass: Pass,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "passId",
+        parentColumns = ["id"],
+        entityColumns = ["passId"],
     )
     val localizations: List<PassLocalization>,
 ) {

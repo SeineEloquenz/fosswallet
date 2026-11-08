@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.DeleteColumn
-import androidx.room.migration.AutoMigrationSpec
+import androidx.room3.DeleteColumn
+import androidx.room3.migration.AutoMigrationSpec
 
 @Suppress("ClassName")
 @DeleteColumn(

@@ -1,9 +1,9 @@
 package nz.eloque.foss_wallet.model
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room3.Embedded
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
+import androidx.room3.Relation
 
 @Entity
 data class PassGroup(
@@ -13,8 +13,8 @@ data class PassGroup(
 data class GroupWithPasses(
     @Embedded val group: PassGroup,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "groupId",
+        parentColumns = ["id"],
+        entityColumns = ["groupId"],
     )
     val passes: List<Pass>,
 )

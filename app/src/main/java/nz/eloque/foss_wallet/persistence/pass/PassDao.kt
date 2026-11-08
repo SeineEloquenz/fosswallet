@@ -1,12 +1,12 @@
 package nz.eloque.foss_wallet.persistence.pass
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Upsert
+import androidx.room3.Dao
+import androidx.room3.Delete
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Transaction
+import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
@@ -32,7 +32,7 @@ interface PassDao {
 
     @Transaction
     @Query("SELECT * FROM pass WHERE id=:id")
-    fun findById(id: String): PassWithMetadata?
+    suspend fun findById(id: String): PassWithMetadata?
 
     @Transaction
     @Query(
@@ -66,13 +66,13 @@ interface PassDao {
     suspend fun dissociate(passId: String)
 
     @Upsert
-    fun insert(pass: Pass)
+    suspend fun insert(pass: Pass)
 
     @Upsert
-    fun insert(passMetadata: PassMetadata)
+    suspend fun insert(passMetadata: PassMetadata)
 
     @Upsert
-    fun insert(group: PassGroup): Long
+    suspend fun insert(group: PassGroup): Long
 
     @Upsert
     suspend fun insert(attachment: Attachment)

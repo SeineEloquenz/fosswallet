@@ -1,7 +1,8 @@
 package nz.eloque.foss_wallet.persistence.pass
 
 import android.content.Context
-import androidx.room.Room
+import androidx.room3.Room
+import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest
 import nz.eloque.foss_wallet.model.Pass
@@ -38,7 +39,7 @@ class AutoArchiveBehaviorTest {
         db =
             Room
                 .inMemoryDatabaseBuilder(context, WalletDb::class.java)
-                .allowMainThreadQueries()
+                .setDriver(AndroidSQLiteDriver())
                 .build()
         passDao = db.passDao()
         passRepository = PassRepository(context, passDao)

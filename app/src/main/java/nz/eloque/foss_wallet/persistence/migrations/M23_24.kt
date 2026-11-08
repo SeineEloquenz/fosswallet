@@ -1,15 +1,16 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.async.executeSQL
 
 val M_23_24 =
     object : Migration(23, 24) {
-        override fun migrate(db: SupportSQLiteDatabase) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             // ---------------------------------------------------------
             // Create PassMetadata table
             // ---------------------------------------------------------
-            db.execSQL(
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS PassMetadata (
                     passId TEXT NOT NULL PRIMARY KEY,
@@ -26,7 +27,7 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Backfill metadata from old Pass table
             // ---------------------------------------------------------
-            db.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO PassMetadata (passId, groupId, archived, autoArchive, renderLegacy)
                 SELECT id, groupId, archived, autoArchive, renderLegacy
@@ -37,12 +38,10 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Rebuild Pass table (remove moved columns)
             // ---------------------------------------------------------
-
-            db.execSQL("ALTER TABLE Pass RENAME TO Pass_old")
-
-            db.execSQL(
+            // Renaming Pass itself would make SQLite repoint PassMetadata's foreign key at the old table
+            connection.executeSQL(
                 """
-                CREATE TABLE Pass (
+                CREATE TABLE Pass_new (
                     id TEXT NOT NULL PRIMARY KEY,
                     description TEXT NOT NULL,
                     formatVersion INTEGER NOT NULL,
@@ -76,30 +75,30 @@ val M_23_24 =
             // ---------------------------------------------------------
             // Recreate index (IMPORTANT: DROP first for schema match)
             // ---------------------------------------------------------
-            db.execSQL(
+            connection.executeSQL(
                 """
                 DROP INDEX IF EXISTS index_PassMetadata_groupId
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.executeSQL(
                 """
                 CREATE INDEX index_PassMetadata_groupId ON PassMetadata(groupId)
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.executeSQL(
                 """
                 CREATE INDEX index_PassMetadata_passId ON PassMetadata(passId)
                 """.trimIndent(),
             )
 
             // ---------------------------------------------------------
-            // Copy data back into new Pass table
+            // Copy data into the new Pass table
             // ---------------------------------------------------------
-            db.execSQL(
+            connection.executeSQL(
                 """
-                INSERT INTO Pass (
+                INSERT INTO Pass_new (
                     id,
                     description,
                     formatVersion,
@@ -154,13 +153,14 @@ val M_23_24 =
                     secondaryFields,
                     auxiliaryFields,
                     backFields
-                FROM Pass_old
+                FROM Pass
                 """.trimIndent(),
             )
 
             // ---------------------------------------------------------
-            // Drop old table
+            // Replace the old table
             // ---------------------------------------------------------
-            db.execSQL("DROP TABLE Pass_old")
+            connection.executeSQL("DROP TABLE Pass")
+            connection.executeSQL("ALTER TABLE Pass_new RENAME TO Pass")
         }
     }

@@ -1,8 +1,8 @@
 package nz.eloque.foss_wallet.persistence.localization
 
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room3.Dao
+import androidx.room3.Query
+import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 import nz.eloque.foss_wallet.model.PassLocalization
 
@@ -12,11 +12,11 @@ interface PassLocalizationDao {
     fun all(): Flow<List<PassLocalization>>
 
     @Query("SELECT * FROM localization WHERE passId=:passId AND lang=:lang")
-    fun byPassId(
+    suspend fun byPassId(
         passId: Int,
         lang: String,
     ): List<PassLocalization>
 
     @Upsert
-    fun insert(localization: PassLocalization): Long
+    suspend fun insert(localization: PassLocalization): Long
 }

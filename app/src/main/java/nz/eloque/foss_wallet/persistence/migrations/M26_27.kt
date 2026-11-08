@@ -1,8 +1,8 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
 import android.util.Log
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.migration.Migration
+import androidx.sqlite.SQLiteConnection
 import nz.eloque.foss_wallet.utils.map
 import org.json.JSONArray
 import org.json.JSONException
@@ -17,13 +17,13 @@ private val FIELD_COLUMNS = listOf("headerFields", "primaryFields", "secondaryFi
 
 val M_26_27 =
     object : Migration(26, 27) {
-        override fun migrate(db: SupportSQLiteDatabase) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             val updates = mutableListOf<Pair<String, List<String>>>()
 
-            db.query("SELECT id, ${FIELD_COLUMNS.joinToString(", ")} FROM Pass").use { cursor ->
-                while (cursor.moveToNext()) {
-                    val id = cursor.getString(0)
-                    val columns = FIELD_COLUMNS.indices.map { if (cursor.isNull(it + 1)) "[]" else cursor.getString(it + 1) }
+            connection.prepare("SELECT id, ${FIELD_COLUMNS.joinToString(", ")} FROM Pass").use { statement ->
+                while (statement.step()) {
+                    val id = statement.getText(0)
+                    val columns = FIELD_COLUMNS.indices.map { statement.getTextOrNull(it + 1) ?: "[]" }
                     val migrated = columns.map { V27FieldContent.migrateColumn(it) }
                     if (migrated != columns) {
                         updates.add(id to migrated)
@@ -32,8 +32,12 @@ val M_26_27 =
             }
 
             val setClause = FIELD_COLUMNS.joinToString(", ") { "$it = ?" }
-            updates.forEach { (id, columns) ->
-                db.execSQL("UPDATE Pass SET $setClause WHERE id = ?", (columns + id).toTypedArray())
+            connection.prepare("UPDATE Pass SET $setClause WHERE id = ?").use { update ->
+                updates.forEach { (id, columns) ->
+                    (columns + id).forEachIndexed { index, value -> update.bindText(index + 1, value) }
+                    update.step()
+                    update.reset()
+                }
             }
             Log.i(TAG, "Normalised date fields on ${updates.size} pass(es)")
         }

@@ -1,12 +1,13 @@
 package nz.eloque.foss_wallet.persistence.migrations
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.async.executeSQL
 
 val M_9_10 =
     object : Migration(9, 10) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL(
+        override suspend fun migrate(connection: SQLiteConnection) {
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `Pass_new` (
                   `id` TEXT NOT NULL,
@@ -40,7 +41,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO Pass_new (
                     id, description, formatVersion, organization, serialNumber,
@@ -59,11 +60,11 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL("DROP TABLE Pass")
+            connection.executeSQL("DROP TABLE Pass")
 
-            db.execSQL("ALTER TABLE Pass_new RENAME TO Pass")
+            connection.executeSQL("ALTER TABLE Pass_new RENAME TO Pass")
 
-            db.execSQL(
+            connection.executeSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `localization_new` (
                   `passId` TEXT NOT NULL,
@@ -76,7 +77,7 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL(
+            connection.executeSQL(
                 """
                 INSERT INTO localization_new (
                     passId, lang, label, text
@@ -87,8 +88,8 @@ val M_9_10 =
                 """.trimIndent(),
             )
 
-            db.execSQL("DROP TABLE localization")
+            connection.executeSQL("DROP TABLE localization")
 
-            db.execSQL("ALTER TABLE localization_new RENAME TO localization")
+            connection.executeSQL("ALTER TABLE localization_new RENAME TO localization")
         }
     }

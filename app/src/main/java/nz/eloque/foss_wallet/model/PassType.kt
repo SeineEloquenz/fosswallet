@@ -1,7 +1,7 @@
 package nz.eloque.foss_wallet.model
 
 import androidx.annotation.StringRes
-import androidx.room.Entity
+import androidx.room3.Entity
 import nz.eloque.foss_wallet.R
 
 sealed class PassType(

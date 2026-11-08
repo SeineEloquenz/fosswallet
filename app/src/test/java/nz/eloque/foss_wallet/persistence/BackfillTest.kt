@@ -2,7 +2,8 @@ package nz.eloque.foss_wallet.persistence
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
-import androidx.room.Room
+import androidx.room3.Room
+import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest
 import nz.eloque.foss_wallet.api.PassbookApi
@@ -50,7 +51,7 @@ class BackfillTest {
         db =
             Room
                 .inMemoryDatabaseBuilder(context, WalletDb::class.java)
-                .allowMainThreadQueries()
+                .setDriver(AndroidSQLiteDriver())
                 .build()
         passRepository = PassRepository(context, db.passDao())
         passStore =
