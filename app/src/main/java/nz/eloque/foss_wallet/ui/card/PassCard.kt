@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -92,6 +93,7 @@ fun PassCard(
     PassCardBase(
         colors = pass.colors ?: PassColors.Fallback,
         shape = shape,
+        dimmed = pass.voided,
         footer = {
             PassCardFooter(
                 localizedPass = localizedPass,
@@ -208,6 +210,7 @@ private fun PassCardBase(
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     backgroundImage: File? = null,
+    dimmed: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val fixedDensity = DisplayMetrics.DENSITY_DEVICE_STABLE.toFloat() / DisplayMetrics.DENSITY_DEFAULT
@@ -218,7 +221,7 @@ private fun PassCardBase(
         LocalPassLabelColor provides colors.label,
     ) {
         Surface(
-            modifier = modifier,
+            modifier = if (dimmed) modifier.alpha(DIMMED_ALPHA) else modifier,
             shape = shape,
             color = colors.background,
             contentColor = colors.foreground,
@@ -251,3 +254,5 @@ private fun PassCardBase(
         }
     }
 }
+
+private const val DIMMED_ALPHA = 0.5f

@@ -157,6 +157,58 @@ class AutoArchiverTest {
     }
 
     @Test
+    fun `returns true when a held pass becomes voided`() {
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass().copy(voided = true),
+                metadata = metadata(),
+                previous = pass(),
+                now = now,
+            )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `returns false when a pass is imported already voided`() {
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass().copy(voided = true),
+                metadata = metadata(),
+                previous = null,
+                now = now,
+            )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `returns false when a voided pass stays voided after being unarchived`() {
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass().copy(voided = true),
+                metadata = metadata(),
+                previous = pass().copy(voided = true),
+                now = now,
+            )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `returns false when a voided pass has autoArchive disabled`() {
+        val result =
+            AutoArchiver.shouldBeAutoArchived(
+                pass = pass().copy(voided = true),
+                metadata = metadata(autoArchive = false),
+                previous = pass(),
+                now = now,
+            )
+
+        assertFalse(result)
+    }
+
+    @Test
     fun `expiration comparison is timezone safe`() {
         val expiration =
             ZonedDateTime.of(
