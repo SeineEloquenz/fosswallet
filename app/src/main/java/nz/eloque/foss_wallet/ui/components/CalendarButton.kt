@@ -24,6 +24,7 @@ fun CalendarButton(
     title: String,
     start: ZonedDateTime,
     end: ZonedDateTime?,
+    location: String?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -37,15 +38,9 @@ fun CalendarButton(
                 it.type = "vnd.android.cursor.item/event"
                 it.putExtra("beginTime", start.toEpochSecond() * 1000)
                 it.putExtra("allDay", false)
-                it.putExtra(
-                    "endTime",
-                    if (end != null) {
-                        end.toEpochSecond() * 1000
-                    } else {
-                        start.plus(30, ChronoUnit.MINUTES).toEpochSecond() * 1000
-                    },
-                )
+                it.putExtra("endTime", (end ?: start.plus(30, ChronoUnit.MINUTES)).toEpochSecond() * 1000)
                 it.putExtra("title", title)
+                location?.let { location -> it.putExtra("eventLocation", location) }
             }
 
         try {

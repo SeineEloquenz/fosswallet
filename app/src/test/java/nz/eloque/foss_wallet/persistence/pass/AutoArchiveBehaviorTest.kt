@@ -7,7 +7,9 @@ import kotlinx.coroutines.test.runTest
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Semantics
 import nz.eloque.foss_wallet.persistence.WalletDb
+import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -127,7 +129,7 @@ class AutoArchiveBehaviorTest {
                     type = PassType.Event,
                     barCodes = setOf(),
                     addedAt = fixedAddedBeforeExpiry,
-                    semantics = """{"eventEndDate":"${fixedExpiredDate.toOffsetDateTime()}"}""",
+                    semantics = Semantics.fromJson(JSONObject().put("eventEndDate", fixedExpiredDate.toOffsetDateTime().toString())),
                 )
             passDao.insert(pass)
             passDao.insert(PassMetadata(pass.id))

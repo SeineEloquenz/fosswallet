@@ -16,6 +16,7 @@ import nz.eloque.foss_wallet.model.PassLink
 import nz.eloque.foss_wallet.model.PassLocation
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
+import nz.eloque.foss_wallet.model.Semantics
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.decodeBitmap
 import nz.eloque.foss_wallet.model.field.PassField
@@ -107,7 +108,7 @@ class PassParser(
             beacons = parseBeacons(passJson),
             maxDistance = passJson.doubleOrNull("maxDistance"),
             links = PassLink.entries.mapNotNull { link -> passJson.stringOrNull(link.key)?.let { link.key to it } }.toMap(),
-            semantics = passJson.optJSONObject("semantics")?.toString(),
+            semantics = passJson.optJSONObject("semantics")?.let { Semantics.fromJson(it) },
             headerFields = fieldContainer?.collectFields("headerFields") ?: listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields") ?: listOf(),
             secondaryFields = fieldContainer?.collectFields("secondaryFields") ?: listOf(),
