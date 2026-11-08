@@ -35,7 +35,6 @@ class BarcodesTest {
         composeRule.setContent {
             Barcodes(
                 barcodes = List(3) { barcode("Barcode $it") },
-                legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
                 increaseFullscreenBrightness = false,
             )
@@ -65,7 +64,6 @@ class BarcodesTest {
         composeRule.setContent {
             Barcodes(
                 barcodes = List(3) { barcode("Barcode $it") },
-                legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
                 increaseFullscreenBrightness = false,
             )
@@ -92,7 +90,6 @@ class BarcodesTest {
         composeRule.setContent {
             Barcodes(
                 barcodes = listOf(barcode("Single barcode")),
-                legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
                 increaseFullscreenBrightness = false,
             )

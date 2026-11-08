@@ -24,26 +24,17 @@ data class BarCode(
             it.put("altText", altText)
         }
 
-    fun hasLegacyRepresentation(): Boolean {
-        val legacyRepresentation = encode(legacyRendering = true) ?: return false
-        val representation = encode(legacyRendering = false) ?: return false
-
-        return representation != legacyRepresentation
-    }
-
     fun isNotValid() = encode() == null
 
+    /** Encodes [message] as [encoding] bytes without an ECI segment. */
     internal fun encode(
         width: Int = 0,
         height: Int = 0,
-        legacyRendering: Boolean = false,
     ): BitMatrix? {
-        val marginHint = Pair(EncodeHintType.MARGIN, 0)
-        val characterSetHint = Pair(EncodeHintType.CHARACTER_SET, encoding)
-        val encodeHints = if (legacyRendering) mapOf(marginHint) else mapOf(marginHint, characterSetHint)
-
+        // A CHARACTER_SET hint makes zxing insert an ECI segment, which ticket and boarding scanners reject (#184, #312).
+        val bytesAsLatin1 = String(message.toByteArray(encoding), Charsets.ISO_8859_1)
         return try {
-            MultiFormatWriter().encode(message, format, width, height, encodeHints)
+            MultiFormatWriter().encode(bytesAsLatin1, format, width, height, mapOf(EncodeHintType.MARGIN to 0))
         } catch (_: Exception) {
             null
         }
@@ -52,9 +43,8 @@ data class BarCode(
     fun toBitmap(
         width: Int = 0,
         height: Int = 0,
-        legacyRendering: Boolean = false,
     ): Bitmap? {
-        val bitMatrix = encode(width, height, legacyRendering) ?: return null
+        val bitMatrix = encode(width, height) ?: return null
 
         val w = bitMatrix.width
         val h = bitMatrix.height

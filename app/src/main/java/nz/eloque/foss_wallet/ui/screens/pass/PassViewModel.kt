@@ -65,8 +65,6 @@ class PassViewModel
 
         fun increaseFullscreenBrightness(): Boolean = settingsStore.increasePassViewBrightness() && settingsStore.fullscreenOnlyBrightness()
 
-        fun toggleLegacyRendering(pass: Pass) = viewModelScope.launch(Dispatchers.IO) { passStore.toggleLegacyRendering(pass) }
-
         fun attach(
             pass: Pass,
             name: String,

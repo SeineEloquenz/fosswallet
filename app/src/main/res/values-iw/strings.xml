@@ -60,7 +60,6 @@
     <string name="date_added">תאריך הוספה</string>
     <string name="filter">מיין לפי</string>
     <string name="libraries">סיפריות</string>
-    <string name="compatibility_mode">מצב תאימות</string>
     <string name="create_pass">צור אישור</string>
     <string name="pass_name">שם האישור</string>
     <string name="barcode_value">ערך ברקוד</string>

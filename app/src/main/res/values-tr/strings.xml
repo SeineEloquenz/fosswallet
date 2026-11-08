@@ -60,7 +60,6 @@
     <string name="relevant_date_earliest">En eski ilgili tarih</string>
     <string name="filter">Şuna göre sırala</string>
     <string name="libraries">Kütüphaneler</string>
-    <string name="compatibility_mode">Uyumluluk modu</string>
     <string name="create_pass">Kart oluştur</string>
     <string name="pass_name">Kart adı</string>
     <string name="barcode_value">Barkod değeri</string>

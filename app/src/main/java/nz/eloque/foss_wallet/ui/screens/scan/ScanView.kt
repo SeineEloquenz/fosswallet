@@ -64,7 +64,6 @@ fun ScanView(
         initialBarcode?.let {
             Barcodes(
                 barcodes = listOf(it),
-                legacyRendering = false,
                 barcodePosition = BarcodePosition.Center,
                 increaseFullscreenBrightness = false,
             )

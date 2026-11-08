@@ -144,7 +144,6 @@ fun PassScreen(
                             barcodePosition = passViewModel.barcodePosition(),
                             increaseFullscreenBrightness = passViewModel.increaseFullscreenBrightness(),
                             scrollBehavior = scrollBehavior,
-                            onRenderingChange = { passViewModel.toggleLegacyRendering(pagePass.pass) },
                             onAttachmentAdd = { name, bytes -> passViewModel.attach(pagePass.pass, name, bytes) },
                             onAttachmentDelete = { attachment -> passViewModel.delete(attachment) },
                         )

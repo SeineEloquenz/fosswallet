@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Attachment
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +29,6 @@ import nz.eloque.compose_kit.components.Section
 import nz.eloque.compose_kit.effect.ForceOrientation
 import nz.eloque.compose_kit.effect.Orientation
 import nz.eloque.compose_kit.picker.FilePicker
-import nz.eloque.compose_kit.settings.SettingsSwitch
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
@@ -62,14 +60,11 @@ fun PassView(
     onTagCreate: (Tag) -> Unit,
     barcodePosition: BarcodePosition,
     increaseFullscreenBrightness: Boolean,
-    onRenderingChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val pass = localizedPass.pass
     val metadata = localizedPass.metadata
-
-    val hasLegacyRepresentation = remember(pass.barCodes) { pass.barCodes.any { it.hasLegacyRepresentation() } }
     val context = LocalContext.current
     ForceOrientation(Orientation.Locked)
     Column(
@@ -85,7 +80,6 @@ fun PassView(
             barcode = {
                 Barcodes(
                     barcodes = pass.barCodes.toList(),
-                    legacyRendering = metadata.renderLegacy && hasLegacyRepresentation,
                     barcodePosition = barcodePosition,
                     increaseFullscreenBrightness = increaseFullscreenBrightness,
                 )
@@ -111,15 +105,6 @@ fun PassView(
             }
         }
 
-        if (hasLegacyRepresentation) {
-            Card {
-                SettingsSwitch(
-                    title = stringResource(R.string.compatibility_mode),
-                    checked = metadata.renderLegacy,
-                    onCheckedChange = onRenderingChange,
-                )
-            }
-        }
         if (pass.additionalInfoFields.isNotEmpty()) {
             Section(stringResource(R.string.additional_info)) {
                 BackFields(pass.additionalInfoFields)
@@ -215,7 +200,6 @@ private fun PassPreview() {
         onTagCreate = {},
         barcodePosition = BarcodePosition.Center,
         increaseFullscreenBrightness = false,
-        onRenderingChange = {},
         onAttachmentAdd = { _, _ -> },
         onAttachmentDelete = {},
     )
