@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 30,
-    "identityHash": "7d499f26f5bdf0bf1846d9634828d987",
+    "identityHash": "10052376df45bf1269c7b4b15e211478",
     "entities": [
       {
         "tableName": "Pass",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `hasBackground` INTEGER NOT NULL DEFAULT 0, `deviceId` TEXT NOT NULL, `colors` TEXT, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `voided` INTEGER NOT NULL DEFAULT 0, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `beacons` TEXT NOT NULL DEFAULT '[]', `maxDistance` REAL, `links` TEXT NOT NULL DEFAULT '{}', `semantics` TEXT, `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `additionalInfoFields` TEXT NOT NULL DEFAULT '[]', PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `description` TEXT NOT NULL, `formatVersion` INTEGER NOT NULL, `organization` TEXT NOT NULL, `serialNumber` TEXT NOT NULL, `type` TEXT NOT NULL, `barCodes` TEXT NOT NULL, `addedAt` INTEGER NOT NULL, `hasLogo` INTEGER NOT NULL, `hasStrip` INTEGER NOT NULL, `hasThumbnail` INTEGER NOT NULL, `hasFooter` INTEGER NOT NULL, `hasBackground` INTEGER NOT NULL DEFAULT 0, `deviceId` TEXT NOT NULL, `colors` TEXT, `relevantDates` TEXT NOT NULL, `expirationDate` TEXT, `voided` INTEGER NOT NULL DEFAULT 0, `logoText` TEXT, `authToken` TEXT, `webServiceUrl` TEXT, `passTypeIdentifier` TEXT, `locations` TEXT NOT NULL, `beacons` TEXT NOT NULL DEFAULT '[]', `maxDistance` REAL, `links` TEXT NOT NULL DEFAULT '{}', `headerFields` TEXT NOT NULL, `primaryFields` TEXT NOT NULL, `secondaryFields` TEXT NOT NULL, `auxiliaryFields` TEXT NOT NULL, `backFields` TEXT NOT NULL, `additionalInfoFields` TEXT NOT NULL DEFAULT '[]', PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -160,11 +160,6 @@
             "affinity": "TEXT",
             "notNull": true,
             "defaultValue": "'{}'"
-          },
-          {
-            "fieldPath": "semantics",
-            "columnName": "semantics",
-            "affinity": "TEXT"
           },
           {
             "fieldPath": "headerFields",
@@ -519,7 +514,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7d499f26f5bdf0bf1846d9634828d987')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '10052376df45bf1269c7b4b15e211478')"
     ]
   }
 }

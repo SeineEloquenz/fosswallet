@@ -107,7 +107,6 @@ class PassParser(
             beacons = parseBeacons(passJson),
             maxDistance = passJson.doubleOrNull("maxDistance"),
             links = PassLink.entries.mapNotNull { link -> passJson.stringOrNull(link.key)?.let { link.key to it } }.toMap(),
-            semantics = passJson.optJSONObject("semantics")?.toString(),
             headerFields = fieldContainer?.collectFields("headerFields") ?: listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields") ?: listOf(),
             secondaryFields = fieldContainer?.collectFields("secondaryFields") ?: listOf(),

@@ -50,8 +50,6 @@ data class Pass(
     /** Action URLs, emails and phone numbers, keyed by their pass.json key such as `transferURL`. */
     @ColumnInfo(defaultValue = "{}")
     val links: Map<String, String> = emptyMap(),
-    /** Raw JSON of the pass-level semantic tags. */
-    val semantics: String? = null,
     val headerFields: List<PassField> = LinkedList(),
     val primaryFields: List<PassField> = LinkedList(),
     val secondaryFields: List<PassField> = LinkedList(),
