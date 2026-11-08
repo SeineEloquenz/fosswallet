@@ -15,13 +15,13 @@ import nz.eloque.foss_wallet.api.UpdateScheduler
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassGroup
+import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.Tag
 import nz.eloque.foss_wallet.notifications.NotificationService
 import nz.eloque.foss_wallet.parsing.PassParser
 import nz.eloque.foss_wallet.persistence.loader.InvalidInputException
 import nz.eloque.foss_wallet.persistence.loader.InvalidPassException
 import nz.eloque.foss_wallet.persistence.loader.Loader
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.persistence.loader.PassLoadResult
 import nz.eloque.foss_wallet.persistence.loader.PassLoader
 import nz.eloque.foss_wallet.persistence.localization.PassLocalizationRepository
@@ -43,7 +43,7 @@ class PassStore
         private val shortcutService: ShortcutService,
         private val passbookApi: PassbookApi,
     ) {
-        fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().language) } }
+        fun allPasses() = passRepository.all().map { passes -> passes.map { it.applyLocalization(Locale.getDefault().toLanguageTag()) } }
 
         fun passById(id: String) = passRepository.findById(id)
 
@@ -54,15 +54,15 @@ class PassStore
         fun filtered(query: String) =
             passRepository.filtered(query).map { passes ->
                 passes.map {
-                    it.applyLocalization(Locale.getDefault().language)
+                    it.applyLocalization(Locale.getDefault().toLanguageTag())
                 }
             }
 
         suspend fun create(
             pass: Pass,
-            bitmaps: PassBitmaps,
+            images: PassImages,
         ) {
-            passRepository.insert(pass, bitmaps, null)
+            passRepository.insert(pass, images, null)
         }
 
         suspend fun add(loadResult: PassLoadResult): ImportResult {
@@ -99,7 +99,7 @@ class PassStore
             notificationService.createNotificationChannel()
             val localizedPass =
                 loadResult.pass
-                    .applyLocalization(Locale.getDefault().language)
+                    .applyLocalization(Locale.getDefault().toLanguageTag())
             localizedPass.updatedFields(pass).forEach { notificationService.post(it.changeMessage) }
             return UpdateResult.Success(UpdateContent.Pass(localizedPass))
         }
@@ -168,7 +168,7 @@ class PassStore
         private suspend fun insert(loadResult: PassLoadResult) {
             transactionalExecutor.runTransactionally {
                 val passWithLocalization = loadResult.pass
-                passRepository.insert(passWithLocalization.pass, loadResult.bitmaps, loadResult.originalPass)
+                passRepository.insert(passWithLocalization.pass, loadResult.images, loadResult.originalPass)
                 passWithLocalization.localizations
                     .map {
                         it.copy(

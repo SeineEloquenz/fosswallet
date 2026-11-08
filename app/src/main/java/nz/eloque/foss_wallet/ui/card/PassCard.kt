@@ -106,10 +106,16 @@ fun PassCard(
         modifier = modifier,
         onClick = onClick,
         onLongClick = onLongClick,
-        backgroundImage = if (pass.type is PassType.Event && !pass.hasStrip) pass.backgroundFile(context) else null,
+        backgroundImage =
+            if (pass.type is PassType.Event && !pass.hasStrip) {
+                remember(localizedPass) { pass.backgroundFile(context) }
+            } else {
+                null
+            },
     ) {
         HeaderRow(
             pass = pass,
+            logo = remember(localizedPass) { pass.logoFile(context) },
             modifier = horizontalPaddingModifier,
             isSelectable = showEntirePass,
         )
@@ -119,7 +125,7 @@ fun PassCard(
             PassType.Event if pass.hasStrip -> {
                 StripImagePrimary(
                     primaryFields = listOf(),
-                    stripImage = pass.stripFile(context),
+                    stripImage = remember(localizedPass) { pass.stripFile(context) },
                     modifier = Modifier.height(90.dp),
                     isSelectable = showEntirePass,
                 )
@@ -129,7 +135,7 @@ fun PassCard(
             is PassType.Generic, PassType.Event -> {
                 ThumbnailPrimary(
                     primaryFields = pass.primaryFields,
-                    thumbnail = pass.thumbnailFile(context),
+                    thumbnail = remember(localizedPass) { pass.thumbnailFile(context) },
                     modifier = horizontalPaddingModifier.height(90.dp),
                     secondaryFields = if (pass.type is PassType.Event) pass.secondaryFields else null,
                     isSelectable = showEntirePass,
@@ -160,7 +166,7 @@ fun PassCard(
             is PassType.Coupon, PassType.StoreCard -> {
                 StripImagePrimary(
                     primaryFields = pass.primaryFields,
-                    stripImage = pass.stripFile(context),
+                    stripImage = remember(localizedPass) { pass.stripFile(context) },
                     modifier = Modifier.height(150.dp),
                     isSelectable = showEntirePass,
                 )
@@ -182,7 +188,7 @@ fun PassCard(
             ) {
                 if (pass.type is PassType.Boarding && pass.hasFooter) {
                     AsyncImage(
-                        model = pass.footerFile(context),
+                        model = remember(localizedPass) { pass.footerFile(context) },
                         contentDescription = stringResource(R.string.image),
                         modifier = Modifier.height(16.dp),
                     )

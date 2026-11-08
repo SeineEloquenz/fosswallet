@@ -1,66 +1,26 @@
 package nz.eloque.foss_wallet.persistence.loader
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.core.graphics.createBitmap
+import nz.eloque.foss_wallet.model.IMAGE_NAMES
 import nz.eloque.foss_wallet.model.OriginalPass
+import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.PassLocalization
 import nz.eloque.foss_wallet.model.PassWithLocalization
+import nz.eloque.foss_wallet.model.decodeBitmap
 import nz.eloque.foss_wallet.parsing.LocalizationParser
 import nz.eloque.foss_wallet.parsing.PassParser
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.time.Instant
 import java.util.UUID
 import java.util.zip.ZipInputStream
 
 data class PassLoadResult(
     val pass: PassWithLocalization,
-    val bitmaps: PassBitmaps,
+    val images: PassImages,
     val originalPass: OriginalPass,
 )
-
-data class PassBitmaps(
-    val icon: Bitmap,
-    val logo: Bitmap?,
-    val strip: Bitmap?,
-    val thumbnail: Bitmap?,
-    val footer: Bitmap?,
-    val background: Bitmap?,
-) {
-    fun saveToDisk(
-        context: Context,
-        id: String,
-    ) {
-        val directory = File(context.filesDir, id)
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
-        save(directory, "icon.png", icon)
-        save(directory, "logo.png", logo)
-        save(directory, "strip.png", strip)
-        save(directory, "thumbnail.png", thumbnail)
-        save(directory, "footer.png", footer)
-        save(directory, "background.png", background)
-    }
-
-    private fun save(
-        directory: File,
-        path: String,
-        bitmap: Bitmap?,
-    ) {
-        bitmap?.let {
-            FileOutputStream(File(directory, path)).use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-            }
-        }
-    }
-}
 
 class PassLoader(
     private val passParser: PassParser,
@@ -86,12 +46,8 @@ class PassLoader(
     ): PassLoadResult {
         val localizations: MutableSet<PassLocalization> = HashSet()
         var passJson: JSONObject? = null
-        var logo: Bitmap? = null
-        var icon: Bitmap? = null
-        var strip: Bitmap? = null
-        var thumbnail: Bitmap? = null
-        var footer: Bitmap? = null
-        var background: Bitmap? = null
+        val images: MutableMap<String, MutableMap<String, ByteArray>> = HashMap()
+        val pixels: MutableMap<Pair<String, String>, Int> = HashMap()
         ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             var entry = zip.nextEntry
             while (entry != null) {
@@ -110,28 +66,16 @@ class PassLoader(
                             passJson = JsonLoader.load(TextDecoder.decode(passBytes))
                         }
 
-                        in Regex("logo@?.*\\.png") -> {
-                            logo = chooseBetter(logo, loadImage(baos))
-                        }
-
-                        in Regex("icon@?.*\\.png") -> {
-                            icon = chooseBetter(icon, loadImage(baos))
-                        }
-
-                        in Regex("strip@?.*\\.png") -> {
-                            strip = chooseBetter(strip, loadImage(baos))
-                        }
-
-                        in Regex("thumbnail@?.*\\.png") -> {
-                            thumbnail = chooseBetter(thumbnail, loadImage(baos))
-                        }
-
-                        in Regex("footer@?.*\\.png") -> {
-                            footer = chooseBetter(footer, loadImage(baos))
-                        }
-
-                        in Regex("background@?.*\\.png") -> {
-                            background = chooseBetter(background, loadImage(baos))
+                        in IMAGE_REGEX -> {
+                            val (rawLanguage, name) = IMAGE_REGEX.matchEntire(entry.name)!!.destructured
+                            val language = rawLanguage.replace('_', '-')
+                            val size = passBytes.decodeBitmap()?.let { it.width * it.height }
+                            if (size == null) {
+                                Log.w(TAG, "Failed parsing image ${entry.name}")
+                            } else if (size >= (pixels[language to name] ?: 0)) {
+                                pixels[language to name] = size
+                                images.getOrPut(language) { HashMap() }[name] = passBytes
+                            }
                         }
 
                         in LOCALIZATION_FILE_REGEX -> {
@@ -146,14 +90,11 @@ class PassLoader(
                 entry = zip.nextEntry
             }
         }
-        if (icon == null) {
-            icon = logo ?: createBitmap(100, 100)
-        }
+        val passImages = PassImages(images.remove("").orEmpty(), images)
         // TODO check signature before returning
         if (passJson != null) {
-            val bitmaps = PassBitmaps(icon, logo, strip, thumbnail, footer, background)
-            val pass = passParser.parse(passJson, resultingId, bitmaps, addedAt = addedAt, deviceId = deviceId)
-            return PassLoadResult(PassWithLocalization(pass, localizations.toList()), bitmaps, OriginalPass(bytes))
+            val pass = passParser.parse(passJson, resultingId, passImages, addedAt = addedAt, deviceId = deviceId)
+            return PassLoadResult(PassWithLocalization(pass, localizations.toList()), passImages, OriginalPass(bytes))
         } else {
             throw InvalidPassException()
         }
@@ -161,39 +102,18 @@ class PassLoader(
 
     operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
-    private fun loadImage(baos: ByteArrayOutputStream): Bitmap? {
-        val array = baos.toByteArray()
-        val image = BitmapFactory.decodeByteArray(array, 0, array.size)
-        return if (image == null) {
-            Log.w(TAG, "Failed parsing image from pkpass! Is it missing?")
-            null
-        } else {
-            image
-        }
-    }
-
     private fun parseLocalization(
         lang: String,
         baos: ByteArrayOutputStream,
     ): Set<PassLocalization> = LocalizationParser.parseStrings(lang, TextDecoder.decode(baos.toByteArray()))
 
-    private fun chooseBetter(
-        left: Bitmap?,
-        right: Bitmap?,
-    ): Bitmap? =
-        when {
-            left == null && right == null -> null
-            left == null -> right
-            right == null -> left
-            left.pixels() > right.pixels() -> left
-            else -> right
-        }
-
-    private fun Bitmap.pixels(): Int = this.height * this.width
-
     companion object {
         private const val TAG = "PassLoader"
-        private val LOCALIZATION_FILE_REGEX =
-            Regex("^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*\\.lproj/pass\\.strings$")
+
+        // The language becomes a directory name on disk, so it must never admit path separators or dots.
+        private const val LANGUAGE = "[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*"
+        private val LOCALIZATION_FILE_REGEX = Regex("^$LANGUAGE\\.lproj/pass\\.strings$")
+        private val IMAGE_REGEX =
+            Regex("^(?:($LANGUAGE)\\.lproj/)?(${IMAGE_NAMES.joinToString("|")})(?:@[^/]*)?\\.png$")
     }
 }

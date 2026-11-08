@@ -1,13 +1,12 @@
 package nz.eloque.foss_wallet.parsing
 
 import com.google.zxing.BarcodeFormat
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
+import nz.eloque.foss_wallet.model.PassImages
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.mockito.Mockito
 
 class BarcodeFallbackWarningTest {
     @Test
@@ -41,6 +40,6 @@ class BarcodeFallbackWarningTest {
                 "barcodes",
                 JSONArray().put(JSONObject().put("format", format).put("message", "123456")),
             ),
-        bitmaps = Mockito.mock(PassBitmaps::class.java),
+        images = PassImages(emptyMap()),
     )
 }

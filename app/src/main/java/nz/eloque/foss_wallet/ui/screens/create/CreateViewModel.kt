@@ -25,8 +25,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassCreator
+import nz.eloque.foss_wallet.model.PassImages
+import nz.eloque.foss_wallet.model.toPng
 import nz.eloque.foss_wallet.persistence.PassStore
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.toBitmap
 import java.util.Locale
 import kotlin.coroutines.resume
@@ -78,26 +79,21 @@ class CreateViewModel
                     else -> drawable.toBitmap(256, 256)
                 }
 
-            val bitmaps =
-                PassBitmaps(
-                    icon = iconBitmap,
-                    logo = finalLogo,
-                    strip = loadBitmapFromUrl(context, form.stripUrl, STRIP_SIZE),
-                    thumbnail = loadBitmapFromUrl(context, form.thumbnailUrl, THUMBNAIL_SIZE),
-                    footer = loadBitmapFromUrl(context, form.footerUrl, FOOTER_SIZE),
-                    background = loadBitmapFromUrl(context, form.backgroundUrl, BACKGROUND_SIZE),
+            val images =
+                PassImages(
+                    listOf(
+                        "icon" to iconBitmap,
+                        "logo" to finalLogo,
+                        "strip" to loadBitmapFromUrl(context, form.stripUrl, STRIP_SIZE),
+                        "thumbnail" to loadBitmapFromUrl(context, form.thumbnailUrl, THUMBNAIL_SIZE),
+                        "footer" to loadBitmapFromUrl(context, form.footerUrl, FOOTER_SIZE),
+                        "background" to loadBitmapFromUrl(context, form.backgroundUrl, BACKGROUND_SIZE),
+                    ).mapNotNull { (name, bitmap) -> bitmap?.let { name to it.toPng() } }.toMap(),
                 )
 
             passStore.create(
-                pass =
-                    pass.copy(
-                        hasLogo = bitmaps.logo != null,
-                        hasStrip = bitmaps.strip != null,
-                        hasThumbnail = bitmaps.thumbnail != null,
-                        hasFooter = bitmaps.footer != null,
-                        hasBackground = bitmaps.background != null,
-                    ),
-                bitmaps = bitmaps,
+                pass = pass.withImages(images),
+                images = images,
             )
 
             return pass.id

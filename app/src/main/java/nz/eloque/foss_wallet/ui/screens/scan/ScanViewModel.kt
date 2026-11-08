@@ -11,14 +11,15 @@ import jakarta.inject.Inject
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.model.PassCreator
+import nz.eloque.foss_wallet.model.PassImages
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.TransitType
 import nz.eloque.foss_wallet.model.field.PassContent
 import nz.eloque.foss_wallet.model.field.PassDateTime
 import nz.eloque.foss_wallet.model.field.PassField
+import nz.eloque.foss_wallet.model.toPng
 import nz.eloque.foss_wallet.persistence.PassStore
-import nz.eloque.foss_wallet.persistence.loader.PassBitmaps
 import nz.eloque.foss_wallet.utils.toBitmap
 import java.time.ZoneId
 import java.time.format.FormatStyle
@@ -126,26 +127,9 @@ class ScanViewModel
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.icon, null)!!
 
-            val bitmaps =
-                PassBitmaps(
-                    icon = drawable.toBitmap(64, 64),
-                    logo = null,
-                    strip = null,
-                    thumbnail = null,
-                    footer = null,
-                    background = null,
-                )
-
             passStore.create(
-                pass =
-                    pass.copy(
-                        hasLogo = bitmaps.logo != null,
-                        hasStrip = bitmaps.strip != null,
-                        hasThumbnail = bitmaps.thumbnail != null,
-                        hasFooter = bitmaps.footer != null,
-                        hasBackground = bitmaps.background != null,
-                    ),
-                bitmaps = bitmaps,
+                pass = pass,
+                images = PassImages(mapOf("icon" to drawable.toBitmap(64, 64).toPng())),
             )
 
             return pass.id
