@@ -14,10 +14,14 @@ internal object AutoArchiver {
         if (metadata.archived) return true
         if (!metadata.autoArchive) return false
         if (pass.voided && previous?.voided == false) return true
+        return endedWhileHeld(pass, now)
+    }
 
-        val expiration = pass.expirationDate?.toInstant() ?: return false
-        val expired = !expiration.isAfter(now)
-        val expiredWhileHeld = pass.addedAt.isBefore(expiration)
-        return expired && expiredWhileHeld
+    fun endedWhileHeld(
+        pass: Pass,
+        now: Instant = Instant.now(),
+    ): Boolean {
+        val end = pass.endsAt() ?: return false
+        return !end.isAfter(now) && pass.addedAt.isBefore(end)
     }
 }
