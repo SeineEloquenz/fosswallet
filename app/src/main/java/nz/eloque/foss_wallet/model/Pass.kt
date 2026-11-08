@@ -85,6 +85,9 @@ data class Pass(
             else -> false
         }
 
+    /** Auxiliary fields split into the event ticket rows 0 and 1, without empty rows. */
+    fun auxiliaryRows(): List<List<PassField>> = auxiliaryFields.partition { it.row != 1 }.toList().filter { it.isNotEmpty() }
+
     fun allFields(): List<PassField> = headerFields + primaryFields + secondaryFields + auxiliaryFields + backFields + additionalInfoFields
 
     fun updatedFields(oldPass: Pass): List<PassField> {
