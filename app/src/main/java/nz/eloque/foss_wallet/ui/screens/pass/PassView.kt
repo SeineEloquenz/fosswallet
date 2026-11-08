@@ -35,6 +35,7 @@ import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.Attachment
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
 import nz.eloque.foss_wallet.model.Pass
+import nz.eloque.foss_wallet.model.PassLink
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.model.Tag
@@ -43,6 +44,7 @@ import nz.eloque.foss_wallet.model.field.PassField
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.AttachmentList
+import nz.eloque.foss_wallet.ui.components.PassLinks
 import nz.eloque.foss_wallet.utils.prettyDateTime
 import java.time.Instant
 import java.time.ZoneId
@@ -123,6 +125,8 @@ fun PassView(
                 BackFields(pass.additionalInfoFields)
             }
         }
+        PassLinks(remember(pass.links) { PassLink.of(pass.links) })
+
         Section(stringResource(R.string.attachments)) {
             AttachmentList(
                 attachments = localizedPass.attachments,
