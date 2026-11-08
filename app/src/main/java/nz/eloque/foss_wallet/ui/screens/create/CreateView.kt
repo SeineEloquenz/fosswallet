@@ -74,7 +74,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.navigation.NavHostController
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -88,7 +87,6 @@ import nz.eloque.compose_kit.picker.ImagePicker
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.PassCreator
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.scan.ScanContract
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -99,8 +97,9 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateView(
-    navController: NavHostController,
     createViewModel: CreateViewModel,
+    onScanCancelled: () -> Unit,
+    onPassCreated: (passId: String) -> Unit,
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -133,7 +132,7 @@ fun CreateView(
     val scanLauncher =
         rememberLauncherForActivityResult(ScanContract()) { scanned ->
             if (scanned == null) {
-                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
+                onScanCancelled()
                 return@rememberLauncherForActivityResult
             }
             update { f ->
@@ -536,9 +535,7 @@ fun CreateView(
                             val savedPassId = createViewModel.savePass()
                             withContext(Dispatchers.Main) {
                                 isSaving = false
-                                navController.navigate(Route.Pass(savedPassId)) {
-                                    popUpTo<Route.Wallet>()
-                                }
+                                onPassCreated(savedPassId)
                             }
                         }
                     },

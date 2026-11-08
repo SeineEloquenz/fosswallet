@@ -1,16 +1,14 @@
 package nz.eloque.foss_wallet.ui.screens.scan
 
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.google.zxing.BarcodeFormat
 import nz.eloque.foss_wallet.model.BarCode
-import nz.eloque.foss_wallet.ui.Route
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -56,18 +54,22 @@ class ScanResultTest {
 
     private fun showResult(barcode: BarCode) {
         val viewModel = mock(ScanViewModel::class.java)
+        var manualEntry by mutableStateOf<BarCode?>(null)
         composeRule.setContent {
-            val navController = rememberNavController()
-            NavHost(navController, startDestination = Route.ScanResult(barcode)) {
-                composable<Route.ScanResult> { entry ->
-                    val initialBarcode = entry.toRoute<Route.ScanResult>().toBarCode()
-                    assertEquals(barcode, initialBarcode)
-                    ScanView(navController, viewModel, initialBarcode)
-                }
-                composable<Route.Create> { entry ->
-                    assertEquals(barcode, entry.toRoute<Route.Create>().toBarCode())
-                    Text("Manual editor")
-                }
+            val entered = manualEntry
+            if (entered == null) {
+                ScanView(
+                    scanViewModel = viewModel,
+                    onScanned = {},
+                    onCancelled = {},
+                    onPassCreated = {},
+                    onOpenUrl = {},
+                    onManualEntry = { manualEntry = it },
+                    initialBarcode = barcode,
+                )
+            } else {
+                assertEquals(barcode, entered)
+                Text("Manual editor")
             }
         }
     }

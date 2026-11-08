@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.serialization.saved
-import androidx.navigation.toRoute
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +22,6 @@ import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
 import nz.eloque.foss_wallet.persistence.TypeConverters
-import nz.eloque.foss_wallet.ui.Route
 import java.nio.charset.Charset
 import java.time.ZonedDateTime
 
@@ -71,9 +69,9 @@ data class CreateForm(
 /** The create screen's form, kept in [savedStateHandle] so it survives configuration changes and process death. */
 class CreateFormState(
     savedStateHandle: SavedStateHandle,
+    initialBarcode: BarCode?,
 ) {
     private var saved by savedStateHandle.saved {
-        val initialBarcode = savedStateHandle.toRoute<Route.Create>().toBarCode()
         CreateForm(barcodes = listOfNotNull(initialBarcode?.let { BarcodeDraft.from(it) }))
     }
     private val _form = MutableStateFlow(saved)

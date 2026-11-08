@@ -46,21 +46,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import nz.eloque.compose_kit.components.SelectionIndicator
 import nz.eloque.compose_kit.components.SwipeToDismiss
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.LocalizedPassWithTags
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.card.PassCard
 import nz.eloque.foss_wallet.ui.components.GroupCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletView(
-    navController: NavController,
+    onOpenPass: (passId: String) -> Unit,
     walletViewModel: WalletViewModel,
     modifier: Modifier = Modifier,
+    onOpenArchive: () -> Unit = {},
     emptyIcon: ImageVector = Icons.Default.Wallet,
     archive: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
@@ -150,7 +149,7 @@ fun WalletView(
                 groupId = groupId!!,
                 passes = passes,
                 allTags = tags,
-                onClick = { navController.navigate(Route.Pass(it.id)) },
+                onClick = { onOpenPass(it.id) },
                 walletViewModel = walletViewModel,
                 selectedPasses = selectedPasses,
             )
@@ -183,7 +182,7 @@ fun WalletView(
                             if (selectedPasses.isNotEmpty()) {
                                 if (selectedPasses.contains(pass)) selectedPasses.remove(pass) else selectedPasses.add(pass)
                             } else {
-                                navController.navigate(Route.Pass(pass.pass.id))
+                                onOpenPass(pass.pass.id)
                             }
                         },
                         onLongClick = {
@@ -201,11 +200,7 @@ fun WalletView(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    TextButton(
-                        onClick = {
-                            navController.navigate(Route.Archive)
-                        },
-                    ) {
+                    TextButton(onClick = onOpenArchive) {
                         Text(
                             text = stringResource(R.string.show_archived_passes),
                         )

@@ -21,8 +21,6 @@ import androidx.compose.ui.platform.nativeClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.ui.WalletScaffold
 import nz.eloque.foss_wallet.ui.theme.Typography
@@ -32,12 +30,11 @@ import nz.eloque.foss_wallet.ui.theme.Typography
 fun UpdateFailureScreen(
     reason: String,
     rationale: String,
-    navController: NavHostController,
+    onBack: () -> Unit,
 ) {
     val clipboard = LocalClipboard.current
     WalletScaffold(
-        navController = navController,
-        toolWindow = true,
+        onBack = onBack,
         title = stringResource(R.string.details),
         actions = {
             IconButton(onClick = {
@@ -118,6 +115,6 @@ private fun UpdateFailureScreenPreview() {
         d
         awdw
         """.trimIndent(),
-        rememberNavController(),
+        onBack = {},
     )
 }

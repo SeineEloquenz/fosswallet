@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import de.nielstron.bcbp.IataBcbp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,27 +26,24 @@ import kotlinx.coroutines.withContext
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.BarCode
 import nz.eloque.foss_wallet.persistence.BarcodePosition
-import nz.eloque.foss_wallet.ui.Route
 import nz.eloque.foss_wallet.ui.screens.pass.Barcodes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScanView(
-    navController: NavHostController,
     scanViewModel: ScanViewModel,
+    onScanned: (BarCode) -> Unit,
+    onCancelled: () -> Unit,
+    onPassCreated: (passId: String) -> Unit,
+    onOpenUrl: (url: String) -> Unit,
+    onManualEntry: (BarCode) -> Unit,
     initialBarcode: BarCode? = null,
 ) {
     var initialScanHandled by rememberSaveable { mutableStateOf(initialBarcode != null) }
 
     val scanLauncher =
         rememberLauncherForActivityResult(ScanContract()) { barcode ->
-            if (barcode != null) {
-                navController.navigate(Route.ScanResult(barcode)) {
-                    popUpTo<Route.Scan> { inclusive = true }
-                }
-            } else {
-                navController.popBackStack<Route.Wallet>(inclusive = false, saveState = false)
-            }
+            if (barcode != null) onScanned(barcode) else onCancelled()
         }
 
     LaunchedEffect(initialScanHandled) {
@@ -80,13 +76,7 @@ fun ScanView(
                     onClick = {
                         coroutineScope.launch(Dispatchers.IO) {
                             val passId = scanViewModel.saveBcbpPass(it, bcbp)
-                            withContext(Dispatchers.Main) {
-                                navController.navigate(Route.Pass(passId)) {
-                                    popUpTo<Route.ScanResult> {
-                                        inclusive = true
-                                    }
-                                }
-                            }
+                            withContext(Dispatchers.Main) { onPassCreated(passId) }
                         }
                     },
                 ) {
@@ -94,20 +84,12 @@ fun ScanView(
                 }
             }
             if (it.message.startsWith("https://") || it.message.startsWith("http://")) {
-                TextButton(
-                    onClick = {
-                        navController.navigate(Route.Webview(it.message))
-                    },
-                ) {
+                TextButton(onClick = { onOpenUrl(it.message) }) {
                     Text(stringResource(R.string.webview))
                 }
             }
 
-            TextButton(
-                onClick = {
-                    navController.navigate(Route.Create(it))
-                },
-            ) {
+            TextButton(onClick = { onManualEntry(it) }) {
                 Text(stringResource(R.string.manual_entry))
             }
         }

@@ -9,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import kotlinx.coroutines.CompletableDeferred
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.api.ImportOutcome
@@ -20,7 +19,7 @@ import nz.eloque.foss_wallet.ui.screens.wallet.WalletViewModel
 @Composable
 fun ImportEventsEffect(
     walletViewModel: WalletViewModel,
-    navController: NavController,
+    onOpenPass: (passId: String) -> Unit,
     onImported: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -35,7 +34,7 @@ fun ImportEventsEffect(
                 acknowledged.await()
             }
             if (outcome is ImportOutcome.Single || outcome is ImportOutcome.Multiple) onImported()
-            if (event.openPass && outcome is ImportOutcome.Single) navController.navigate(Route.Pass(outcome.passId))
+            if (event.openPass && outcome is ImportOutcome.Single) onOpenPass(outcome.passId)
         }
     }
     fallbackWarning?.let { (formats, acknowledged) ->

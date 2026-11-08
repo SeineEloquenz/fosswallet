@@ -1,5 +1,6 @@
 package nz.eloque.foss_wallet.ui
 
+import androidx.navigation3.runtime.NavKey
 import com.google.zxing.BarcodeFormat
 import kotlinx.serialization.Serializable
 import nz.eloque.foss_wallet.model.BarCode
@@ -7,7 +8,7 @@ import java.nio.charset.Charset
 
 /** Every navigation destination of the app. */
 @Serializable
-sealed interface Route {
+sealed interface Route : NavKey {
     @Serializable
     data object Wallet : Route
 
