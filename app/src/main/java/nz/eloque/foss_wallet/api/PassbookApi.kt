@@ -1,38 +1,55 @@
 package nz.eloque.foss_wallet.api
 
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.network.sockets.SocketTimeoutException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.request
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.readRawBytes
+import io.ktor.client.statement.request
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.URLBuilder
+import io.ktor.http.contentType
+import io.ktor.http.takeFrom
+import kotlinx.io.IOException
 import nz.eloque.foss_wallet.model.PassWebService
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
-import okio.IOException
 import org.json.JSONObject
-import java.net.SocketTimeoutException
 
 class PassbookApi(
-    client: OkHttpClient = OkHttpClient(),
+    client: HttpClient = HttpClient(OkHttp),
 ) {
-    private val client = client.newBuilder().followRedirects(false).build()
+    private val client =
+        client.config {
+            followRedirects = false
+            install(HttpTimeout) {
+                connectTimeoutMillis = TIMEOUT_MILLIS
+                socketTimeoutMillis = TIMEOUT_MILLIS
+            }
+        }
 
     suspend fun getUpdated(
         service: PassWebService,
         registered: Boolean = false,
         onRegistered: suspend () -> Unit = {},
-    ): UpdateResult =
-        withContext(Dispatchers.IO) {
-            val first = fetch(service)
-            // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
-            if (first !is FetchOutcome.NeedsRegistration || registered || !register(service)) {
-                first.toUpdateResult()
-            } else {
-                onRegistered()
-                fetch(service).toUpdateResult()
-            }
+    ): UpdateResult {
+        val first = fetch(service)
+        // Some issuers gate the pass behind device registration and answer 204 until the device is registered.
+        return if (first !is FetchOutcome.NeedsRegistration || registered || !register(service)) {
+            first.toUpdateResult()
+        } else {
+            onRegistered()
+            fetch(service).toUpdateResult()
         }
+    }
 
     /**
      * Registers this device for the given pass using the PassKit web service protocol.
@@ -40,87 +57,96 @@ class PassbookApi(
     suspend fun register(service: PassWebService): Boolean {
         // There is no APNs token, issuers that validate the push token format will reject the registration.
         val body = JSONObject().put("pushToken", service.deviceId.toString()).toString()
-        return succeeds(service.registrationRequest().post(body.toRequestBody(JSON_MEDIA_TYPE)).build(), 200, 201)
+        return succeeds(HttpMethod.Post, service, body, 200, 201)
     }
 
     /**
      * Unregisters this device for the given pass using the PassKit web service protocol.
      */
-    suspend fun unregister(service: PassWebService): Boolean = succeeds(service.registrationRequest().delete().build(), 200)
+    suspend fun unregister(service: PassWebService): Boolean = succeeds(HttpMethod.Delete, service, null, 200)
 
-    private fun fetch(service: PassWebService): FetchOutcome {
-        val request = service.authorizedRequest("passes/${service.passTypeIdentifier}/${service.serialNumber}").build()
+    private suspend fun fetch(service: PassWebService): FetchOutcome {
+        val url = service.apiUrl("passes/${service.passTypeIdentifier}/${service.serialNumber}")
         val response =
             try {
-                executeFollowingRedirects(request)
-            } catch (e: SocketTimeoutException) {
-                Log.i(TAG, "Timeout while connecting to pass api at ${request.url}", e)
-                return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Timeout))
+                getFollowingRedirects(url, service.authToken)
             } catch (e: IOException) {
-                Log.i(TAG, "Failed to connect to pass api at ${request.url}", e)
+                if (e is HttpRequestTimeoutException || e is ConnectTimeoutException || e is SocketTimeoutException) {
+                    Log.i(TAG, "Timeout while connecting to pass api at $url", e)
+                    return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Timeout))
+                }
+                Log.i(TAG, "Failed to connect to pass api at $url", e)
                 return FetchOutcome.Result(UpdateResult.Failed(FailureReason.Exception(e)))
             }
-        return response.use {
-            when (it.code) {
-                204 -> FetchOutcome.NeedsRegistration
-                200 -> {
-                    val body = it.body.bytes()
-                    if (body.isEmpty()) {
-                        FetchOutcome.Result(UpdateResult.NotUpdated)
-                    } else {
-                        FetchOutcome.Result(UpdateResult.Success(UpdateContent.Downloaded(body)))
-                    }
+        return when (val status = response.status.value) {
+            204 -> {
+                FetchOutcome.NeedsRegistration
+            }
+
+            200 -> {
+                val body = response.readRawBytes()
+                if (body.isEmpty()) {
+                    FetchOutcome.Result(UpdateResult.NotUpdated)
+                } else {
+                    FetchOutcome.Result(UpdateResult.Success(UpdateContent.Downloaded(body)))
                 }
-                304 -> FetchOutcome.Result(UpdateResult.NotUpdated)
-                401, 403 -> FetchOutcome.Result(UpdateResult.Failed(FailureReason.Forbidden))
-                else -> FetchOutcome.Result(UpdateResult.Failed(FailureReason.Status(it.code)))
+            }
+
+            304 -> {
+                FetchOutcome.Result(UpdateResult.NotUpdated)
+            }
+
+            401, 403 -> {
+                FetchOutcome.Result(UpdateResult.Failed(FailureReason.Forbidden))
+            }
+
+            else -> {
+                FetchOutcome.Result(UpdateResult.Failed(FailureReason.Status(status)))
             }
         }
     }
 
-    private fun executeFollowingRedirects(request: Request): Response {
-        var response = client.newCall(request).execute()
+    private suspend fun getFollowingRedirects(
+        url: String,
+        authToken: String,
+    ): HttpResponse {
+        var response = client.get(url) { header(HttpHeaders.Authorization, "ApplePass $authToken") }
         repeat(MAX_REDIRECTS) {
-            if (!response.isRedirect) return response
-            val location = response.header("Location")?.let { response.request.url.resolve(it) } ?: return response
-            response.close()
+            val location = response.headers[HttpHeaders.Location]
+            if (response.status.value !in REDIRECT_CODES || location == null) return response
             // Issuers redirect to storage like S3 that rejects requests carrying the PassKit Authorization header.
-            val redirect =
-                response.request
-                    .newBuilder()
-                    .url(location)
-                    .removeHeader("Authorization")
-                    .build()
-            response = client.newCall(redirect).execute()
+            response = client.get(URLBuilder(response.request.url).takeFrom(location).build())
         }
         return response
     }
 
     private suspend fun succeeds(
-        request: Request,
+        method: HttpMethod,
+        service: PassWebService,
+        body: String?,
         vararg successCodes: Int,
-    ): Boolean =
-        withContext(Dispatchers.IO) {
-            try {
-                client.newCall(request).execute().use { response ->
-                    (response.code in successCodes).also { success ->
-                        if (!success) Log.i(TAG, "${request.method} ${request.url} returned ${response.code}")
+    ): Boolean {
+        val url = service.apiUrl("devices/${service.deviceId}/registrations/${service.passTypeIdentifier}/${service.serialNumber}")
+        return try {
+            val response =
+                client.request(url) {
+                    this.method = method
+                    header(HttpHeaders.Authorization, "ApplePass ${service.authToken}")
+                    if (body != null) {
+                        contentType(ContentType.Application.Json)
+                        setBody(body)
                     }
                 }
-            } catch (e: IOException) {
-                Log.i(TAG, "${request.method} ${request.url} failed", e)
-                false
+            (response.status.value in successCodes).also { success ->
+                if (!success) Log.i(TAG, "${method.value} $url returned ${response.status.value}")
             }
+        } catch (e: IOException) {
+            Log.i(TAG, "${method.value} $url failed", e)
+            false
         }
+    }
 
-    private fun PassWebService.authorizedRequest(path: String): Request.Builder =
-        Request
-            .Builder()
-            .url("$url/$API_VERSION/$path")
-            .header("Authorization", "ApplePass $authToken")
-
-    private fun PassWebService.registrationRequest(): Request.Builder =
-        authorizedRequest("devices/$deviceId/registrations/$passTypeIdentifier/$serialNumber")
+    private fun PassWebService.apiUrl(path: String): String = "$url/$API_VERSION/$path"
 
     private sealed interface FetchOutcome {
         fun toUpdateResult(): UpdateResult = (this as? Result)?.result ?: UpdateResult.NotUpdated
@@ -136,6 +162,7 @@ class PassbookApi(
         private const val TAG = "PassbookApi"
         private const val API_VERSION = "v1"
         private const val MAX_REDIRECTS = 5
-        private val JSON_MEDIA_TYPE = "application/json".toMediaType()
+        private const val TIMEOUT_MILLIS = 10_000L
+        private val REDIRECT_CODES = setOf(300, 301, 302, 303, 307, 308)
     }
 }
