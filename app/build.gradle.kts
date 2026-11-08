@@ -47,8 +47,8 @@ android {
         applicationId = "nz.eloque.foss_wallet"
         minSdk = 28
         targetSdk = 37
-        versionCode = 121
-        versionName = "0.51.0"
+        versionCode = 122
+        versionName = "0.52.0"
 
         vectorDrawables {
             useSupportLibrary = true

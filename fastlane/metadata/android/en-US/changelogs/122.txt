@@ -1,0 +1,10 @@
+* Add preview to image and PDF scanning
+* Show additional info fields and action links
+* Mark voided passes
+* Support pass field alignment
+* Support event ticket auxiliary field rows
+* Localize organization name, logo text and images
+* Format currency and numeric fields
+* Warn before falling back to QR for unsupported barcode formats
+* Support ITF barcodes from Apple passes
+* Notify Gadgetbridge of pass updates
