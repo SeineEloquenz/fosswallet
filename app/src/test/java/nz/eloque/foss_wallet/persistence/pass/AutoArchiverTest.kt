@@ -5,8 +5,6 @@ import junit.framework.TestCase.assertTrue
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.Semantics
-import org.json.JSONObject
 import org.junit.Test
 import java.time.Instant
 import java.time.ZoneOffset
@@ -18,7 +16,6 @@ class AutoArchiverTest {
     private fun pass(
         expiration: Instant? = null,
         added: Instant = now.minusSeconds(3600),
-        semantics: String? = null,
     ): Pass =
         Pass(
             id = "id",
@@ -30,7 +27,6 @@ class AutoArchiverTest {
             barCodes = emptySet(),
             addedAt = added,
             expirationDate = expiration?.atZone(ZoneOffset.UTC),
-            semantics = semantics?.let { Semantics.fromJson(JSONObject(it)) },
         )
 
     private fun metadata(
@@ -234,53 +230,5 @@ class AutoArchiverTest {
             )
 
         assertTrue(result)
-    }
-
-    private fun archivedWith(
-        semantics: String,
-        expiration: Instant? = null,
-    ) = AutoArchiver.shouldBeAutoArchived(
-        pass(expiration = expiration, added = now.minusSeconds(86400), semantics = semantics),
-        metadata(),
-        now = now,
-    )
-
-    @Test
-    fun `archives after the event ended`() {
-        assertTrue(archivedWith("""{"eventEndDate":"2024-01-01T11:00:00Z"}"""))
-        assertFalse(archivedWith("""{"eventEndDate":"2024-01-01T13:00:00Z"}"""))
-    }
-
-    @Test
-    fun `archives when the event ended before the expiration`() {
-        assertTrue(archivedWith("""{"eventEndDate":"2024-01-01T11:00:00Z"}""", expiration = now.plusSeconds(86400)))
-    }
-
-    @Test
-    fun `archives when the expiration is before the event end`() {
-        assertTrue(archivedWith("""{"eventEndDate":"2024-01-02T00:00:00Z"}""", expiration = now.minusSeconds(60)))
-    }
-
-    @Test
-    fun `uses start plus duration`() {
-        assertTrue(archivedWith("""{"eventStartDate":"2024-01-01T10:00:00Z","duration":3600}"""))
-        assertFalse(archivedWith("""{"eventStartDate":"2024-01-01T11:30:00Z","duration":3600}"""))
-        assertTrue(archivedWith("""{"currentDepartureDate":"2024-01-01T10:00:00Z","duration":3600}"""))
-    }
-
-    @Test
-    fun `prefers the current arrival and computed end over the original arrival`() {
-        assertFalse(archivedWith("""{"originalArrivalDate":"2024-01-01T11:00:00Z","currentArrivalDate":"2024-01-01T13:00:00Z"}"""))
-        assertFalse(
-            archivedWith(
-                """{"currentDepartureDate":"2024-01-01T11:30:00Z","duration":3600,"originalArrivalDate":"2024-01-01T11:00:00Z"}""",
-            ),
-        )
-        assertTrue(archivedWith("""{"originalArrivalDate":"2024-01-01T11:00:00Z"}"""))
-    }
-
-    @Test
-    fun `does not archive without a known end`() {
-        assertFalse(archivedWith("""{"eventStartDate":"2024-01-01T10:00:00Z","venueName":"Hall"}"""))
     }
 }

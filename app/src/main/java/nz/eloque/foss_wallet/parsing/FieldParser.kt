@@ -78,7 +78,6 @@ object FieldParser {
             label,
             content,
             changeMessage,
-            field.optJSONObject("semantics")?.toString(),
             field.textAlignmentOrNull(),
             field.dataDetectorTypesOrNull(),
             field.rowOrNull(),

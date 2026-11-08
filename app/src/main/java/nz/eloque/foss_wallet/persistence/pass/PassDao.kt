@@ -163,8 +163,8 @@ interface PassDao {
             ON p.id = m.passId
         WHERE m.archived = 0
           AND m.autoArchive = 1
-          AND (p.expirationDate IS NOT NULL OR p.semantics IS NOT NULL)
+          AND p.expirationDate IS NOT NULL
     """,
     )
-    suspend fun autoArchiveCandidates(): List<Pass>
+    suspend fun nonArchivedWithExpirationDate(): List<Pass>
 }

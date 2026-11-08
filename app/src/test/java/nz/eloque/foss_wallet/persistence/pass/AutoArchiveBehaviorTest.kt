@@ -7,9 +7,7 @@ import kotlinx.coroutines.test.runTest
 import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassMetadata
 import nz.eloque.foss_wallet.model.PassType
-import nz.eloque.foss_wallet.model.Semantics
 import nz.eloque.foss_wallet.persistence.WalletDb
-import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -114,29 +112,6 @@ class AutoArchiveBehaviorTest {
             assertNotNull(afterAutoArchiveRun)
             assertFalse(afterAutoArchiveRun!!.archived)
             assertTrue(afterAutoArchiveRun.autoArchive)
-        }
-
-    @Test
-    fun passWithEndedEventIsArchivedWithoutExpiration() =
-        runTest {
-            val pass =
-                Pass(
-                    id = "ended-event-pass",
-                    description = "Concert",
-                    formatVersion = 1,
-                    organization = "Test Org",
-                    serialNumber = "126",
-                    type = PassType.Event,
-                    barCodes = setOf(),
-                    addedAt = fixedAddedBeforeExpiry,
-                    semantics = Semantics.fromJson(JSONObject().put("eventEndDate", fixedExpiredDate.toOffsetDateTime().toString())),
-                )
-            passDao.insert(pass)
-            passDao.insert(PassMetadata(pass.id))
-
-            passRepository.archiveExpiredPasses(now = fixedNow)
-
-            assertTrue(passDao.findById(pass.id)!!.metadata.archived)
         }
 
     @Test

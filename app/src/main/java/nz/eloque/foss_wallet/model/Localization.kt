@@ -21,16 +21,6 @@ fun Pass.applyLocalization(mapping: Map<String, PassLocalization>): Pass =
         backFields = backFields.applyLocalization(mapping),
         additionalInfoFields = additionalInfoFields.applyLocalization(mapping),
         barCodes = barCodes.applyLocalization(mapping),
-        semantics = semantics?.applyLocalization(mapping),
-    )
-
-private fun Semantics.applyLocalization(mapping: Map<String, PassLocalization>): Semantics =
-    copy(
-        eventName = mapping.localize(eventName),
-        venueName = mapping.localize(venueName),
-        departureLocationDescription = mapping.localize(departureLocationDescription),
-        departureStationName = mapping.localize(departureStationName),
-        departureAirportName = mapping.localize(departureAirportName),
     )
 
 private fun List<PassField>.applyLocalization(mapping: Map<String, PassLocalization>): List<PassField> =
