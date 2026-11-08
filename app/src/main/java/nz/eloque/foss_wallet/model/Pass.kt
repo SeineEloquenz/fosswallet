@@ -108,18 +108,6 @@ data class Pass(
 
     fun updatable(): Boolean = webService() != null
 
-    /** When the pass stops being useful, the earlier of its expiration and the end of its event or journey. */
-    fun endsAt(): Instant? {
-        val semanticEnd = parsedSemantics()?.endDate()?.toInstant()
-        return listOfNotNull(expirationDate?.toInstant(), semanticEnd).minOrNull()
-    }
-
-    private fun Semantics.endDate(): ZonedDateTime? =
-        eventEndDate
-            ?: currentArrivalDate
-            ?: duration?.let { (eventStartDate ?: departureDate)?.plus(it) }
-            ?: originalArrivalDate
-
     private fun coilImageModel(
         context: Context,
         type: String,

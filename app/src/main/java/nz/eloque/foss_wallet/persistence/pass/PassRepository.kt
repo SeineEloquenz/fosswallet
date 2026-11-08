@@ -132,8 +132,11 @@ class PassRepository
 
         suspend fun archiveExpiredPasses(now: Instant = Instant.now()) {
             passDao
-                .autoArchiveCandidates()
-                .filter { AutoArchiver.endedWhileHeld(it, now) }
-                .forEach { passDao.archive(it.id) }
+                .nonArchivedWithExpirationDate()
+                .filter { pass ->
+                    pass.expirationDate?.toInstant()?.let { expiration ->
+                        !expiration.isAfter(now) && pass.addedAt.isBefore(expiration)
+                    } ?: false
+                }.forEach { passDao.archive(it.id) }
         }
     }

@@ -115,29 +115,6 @@ class AutoArchiveBehaviorTest {
         }
 
     @Test
-    fun passWithEndedEventIsArchivedWithoutExpiration() =
-        runTest {
-            val pass =
-                Pass(
-                    id = "ended-event-pass",
-                    description = "Concert",
-                    formatVersion = 1,
-                    organization = "Test Org",
-                    serialNumber = "126",
-                    type = PassType.Event,
-                    barCodes = setOf(),
-                    addedAt = fixedAddedBeforeExpiry,
-                    semantics = """{"eventEndDate":"${fixedExpiredDate.toOffsetDateTime()}"}""",
-                )
-            passDao.insert(pass)
-            passDao.insert(PassMetadata(pass.id))
-
-            passRepository.archiveExpiredPasses(now = fixedNow)
-
-            assertTrue(passDao.findById(pass.id)!!.metadata.archived)
-        }
-
-    @Test
     fun nonExpiredPassDoesNotGetArchived() =
         runTest {
             val nonExpiredPass =
