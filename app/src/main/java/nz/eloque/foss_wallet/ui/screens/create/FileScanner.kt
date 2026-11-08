@@ -125,7 +125,8 @@ object FileScanner {
         return scanFrom(bitmap)
     }
 
-    fun scanFrom(bitmap: Bitmap): ScanResult? = barcodeReader.read(bitmap).firstOrNull()?.toScanResult()
+    @Synchronized
+    fun scanFrom(bitmap: Bitmap): ScanResult? = barcodeReader.read(bitmap).firstNotNullOfOrNull { it.toScanResult() }
 
     /** Converts a zxing-cpp result, falling back to QR for formats the app cannot render. */
     fun BarcodeReader.Result.toScanResult(): ScanResult? {
