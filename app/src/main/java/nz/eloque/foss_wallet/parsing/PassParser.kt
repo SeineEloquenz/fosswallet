@@ -12,6 +12,7 @@ import nz.eloque.foss_wallet.model.Pass
 import nz.eloque.foss_wallet.model.PassBeacon
 import nz.eloque.foss_wallet.model.PassColors
 import nz.eloque.foss_wallet.model.PassImages
+import nz.eloque.foss_wallet.model.PassLink
 import nz.eloque.foss_wallet.model.PassLocation
 import nz.eloque.foss_wallet.model.PassRelevantDate
 import nz.eloque.foss_wallet.model.PassType
@@ -105,7 +106,7 @@ class PassParser(
             locations = locations,
             beacons = parseBeacons(passJson),
             maxDistance = passJson.doubleOrNull("maxDistance"),
-            links = LINK_KEYS.mapNotNull { key -> passJson.stringOrNull(key)?.let { key to it } }.toMap(),
+            links = PassLink.entries.mapNotNull { link -> passJson.stringOrNull(link.key)?.let { link.key to it } }.toMap(),
             semantics = passJson.optJSONObject("semantics")?.toString(),
             headerFields = fieldContainer?.collectFields("headerFields") ?: listOf(),
             primaryFields = fieldContainer?.collectFields("primaryFields") ?: listOf(),
@@ -277,37 +278,5 @@ class PassParser(
 
         /** Bump when the parser reads new data, so stored passes are re-parsed from their originals on the next start. */
         const val VERSION = 1
-
-        private val LINK_KEYS =
-            listOf(
-                "accessibilityURL",
-                "addOnURL",
-                "bagPolicyURL",
-                "changeSeatURL",
-                "contactVenueEmail",
-                "contactVenuePhoneNumber",
-                "contactVenueWebsite",
-                "directionsInformationURL",
-                "entertainmentURL",
-                "managementURL",
-                "merchandiseURL",
-                "orderFoodURL",
-                "parkingInformationURL",
-                "purchaseAdditionalBaggageURL",
-                "purchaseLoungeAccessURL",
-                "purchaseParkingURL",
-                "purchaseWifiURL",
-                "registerServiceAnimalURL",
-                "reportLostBagURL",
-                "requestWheelchairURL",
-                "sellURL",
-                "trackBagsURL",
-                "transferURL",
-                "transitInformationURL",
-                "transitProviderEmail",
-                "transitProviderPhoneNumber",
-                "transitProviderWebsiteURL",
-                "upgradeURL",
-            )
     }
 }
