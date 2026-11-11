@@ -142,4 +142,6 @@
     <string name="shortcut_failed">Otselingi lisamine ei õnnestunud</string>
     <string name="fullscreen_only_brightness">Vaid triipkoodi täisekraanivaates</string>
     <string name="last_updated">Viimane uuendus: %1$s</string>
+    <string name="barcode_format_fallback_title">Triipkoodi vorming ei säilunud</string>
+    <string name="barcode_format_fallback_warning">Järgnevad triipkoodivormingud pole toetatud:\n%1$s\n\nNad asendatakse QR-koodidega, mis aga ei pruugi olla korrektselt skaneeritavad.</string>
 </resources>
