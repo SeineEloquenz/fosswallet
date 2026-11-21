@@ -142,4 +142,23 @@
     <string name="shortcut_unsupported">Dein Launcher unterstützt das Anpinnen von Verknüpfungen nicht</string>
     <string name="fullscreen_only_brightness">Nur in der Barcode-Vollbildansicht</string>
     <string name="last_updated">Zuletzt aktualisiert %1$s</string>
+    <string name="additional_info">Zusätzliche Information</string>
+    <string name="barcode_format_fallback_title">Barcode-Format wurde nicht beibehalten</string>
+    <string name="links">Links</string>
+    <string name="no_app_for_link">Keine App zum Öffnen des Links gefunden</string>
+    <string name="link_transfer">Übertragen</string>
+    <string name="link_sell">Verkaufen</string>
+    <string name="link_upgrade">Upgrade</string>
+    <string name="link_change_seat">Platz wechseln</string>
+    <string name="link_add_on">Add-ons</string>
+    <string name="link_order_food">Essen bestellen</string>
+    <string name="link_entertainment">Unterhaltung</string>
+    <string name="link_purchase_lounge_access">Zugang zur Lounge kaufen</string>
+    <string name="link_purchase_wifi">WLAN kaufen</string>
+    <string name="link_report_lost_bag">Verlorenes Gepäck melden</string>
+    <string name="link_request_wheelchair">Rollstuhl anfordern</string>
+    <string name="take_photo">Foto schießen</string>
+    <string name="preview_load_failed">Datei konnte nicht geöffnet werden. Bitte ein anderes Bild oder PDF Datei auswählen.</string>
+    <string name="choose_another_file">Andere Datei auswählen</string>
+    <string name="use_this_barcode">Diesen Barcode benutzen</string>
 </resources>

@@ -142,4 +142,19 @@
     <string name="shortcut_failed">Non se puido crear o atallo</string>
     <string name="fullscreen_only_brightness">So na vista a pantalla completa dos códigos</string>
     <string name="last_updated">Última actualización %1$s</string>
+    <string name="additional_info">Info adicional</string>
+    <string name="barcode_format_fallback_title">Non se conservou o formato do código</string>
+    <string name="barcode_format_fallback_warning">Os seguintes códigos de barras non son compatibles:\n%1$s\n\nVanse substituír por códigos QR, que poderían dar resultados incorrectos ao escanealos.</string>
+    <string name="links">Ligazóns</string>
+    <string name="no_app_for_link">Non se atopan apps para abrir esta ligazón</string>
+    <string name="link_management">Xestionar</string>
+    <string name="link_transfer">Transferir</string>
+    <string name="link_sell">Vender</string>
+    <string name="link_upgrade">Mellorar</string>
+    <string name="link_change_seat">Cambiar de asento</string>
+    <string name="link_add_on">Complementos</string>
+    <string name="link_order_food">Pedir comida</string>
+    <string name="link_merchandise">Tenda</string>
+    <string name="link_entertainment">Entretemento</string>
+    <string name="link_purchase_additional_baggage">Mercar equipaxe extra</string>
 </resources>

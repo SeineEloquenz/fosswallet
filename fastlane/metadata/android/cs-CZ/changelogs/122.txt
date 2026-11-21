@@ -1,0 +1,10 @@
+* Přidání náhledu při skenování obrázků a souborů PDF
+* Zobrazení dalších informačních polí a odkazů na akce
+* Označení neplatných vstupenek
+* Podpora zarovnání polí vstupenek
+* Podpora řádků pomocných polí u vstupenek na akce
+* Lokalizace názvu organizace, textu loga a obrázků
+* Formátování měnových a číselných polí
+* Upozornění před přechodem na QR kód v případě nepodporovaných formátů čárových kódů
+* Podpora čárových kódů ITF z vstupenek Apple
+* Oznámení aktualizací vstupenek do Gadgetbridge
